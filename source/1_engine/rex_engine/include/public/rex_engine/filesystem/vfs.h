@@ -144,6 +144,15 @@ namespace rex
     REX_NO_DISCARD rsl::vector<rsl::string> list_dirs(rsl::string_view path);
     REX_NO_DISCARD rsl::vector<rsl::string> list_files(rsl::string_view path);
 
+    // --------------------------
+    // ABSOLUTE PATH IMPLEMENTATIONS
+    // --------------------------
+
+    // --------------------------------
+    // READING
+    // --------------------------------
+    REX_NO_DISCARD ReadRequest read_file_from_abs_async(rsl::string_view filepath);
+
   } // namespace vfs
 } // namespace rex
 
