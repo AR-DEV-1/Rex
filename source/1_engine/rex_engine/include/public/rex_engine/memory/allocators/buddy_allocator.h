@@ -24,10 +24,6 @@ namespace rex
 		using size_type = s32;
 		using pointer = void*;
 
-		BuddyAllocator()
-			: m_buffer(nullptr)
-			, m_head()
-		{}
 		explicit BuddyAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
 		{
 			m_buffer = alloc_unique<rsl::byte[]>(alloc, size);

@@ -19,14 +19,6 @@ namespace rex
       rsl::string_view head;
       rsl::string_view tail;
     };
-    // Splits the path into a head and a tail
-    // the tail is the last pathname component
-    // the head is everything leading up to that
-    SplitResult split(rsl::string_view path);
-    // Splits the path into a head and a tail
-    // the head is the directory and the stem
-    // the tail is the extension
-    SplitResult split_ext(rsl::string_view path);
     struct SplitRootResult
     {
       rsl::string_view drive;
@@ -34,76 +26,23 @@ namespace rex
       rsl::string_view tail;
     };
 
-    // -------------------------------------------------------------------------
-    // THESE FUNCTIONS ARE REQUIRED TO BE IMPLEMENTED BY PLATFORM SPECIFIC CODE
-    // -------------------------------------------------------------------------
-    
-    // Returns the current working directory
-    rsl::string_view cwd();
-
-    // Sets a new working directory and returns the old one
-    // A valid and existing path is expected or an assert is raised
-    scratch_string set_cwd(rsl::string_view dir);
-
-    // Returns the path of the current user's temp folder
-    scratch_string temp_path();
-
-    // For symlinks, returns the path the link points to
-    // Otherwise returns the input
-    scratch_string real_path(rsl::string_view path);
-
-    // Returns if the given path is an absolute path
-    bool is_absolute(rsl::string_view path);
-
-    // Returns if a file is under a certain directory
-    bool is_under_dir(rsl::string_view path, rsl::string_view dir);
-
-    // Returns true if the given path points to a junction
-    bool is_junction(rsl::string_view path);
-
-    // Returns true if the given path points to a symlink
-    bool is_link(rsl::string_view path);
-
-    // Splits the path into a head and a tail
-    // the head is either the mount point or an empty string
-    // the tail is everything else
-    SplitResult split_origin(rsl::string_view path);
-
-    // Split the path into 3 components
-    // drive - root - tail
-    // drive: mounting point
-    // root: string of separators after the drive
-    // tail: everything after the root
-    // eg: c:/Users/Sam (Windows)
-    // drive: C:
-    // root: /
-    // tail: Users/Sam
-    SplitRootResult split_root(rsl::string_view path);
-
-    // Returns true if absolute paths on this platform have a drive letter
-    bool abs_needs_drive();
-
-    // -------------------------------------------------------------------------
-    // END OF PLATFORM SPECIFIC FUNCTIONS
-    // -------------------------------------------------------------------------
-
     namespace internal
     {
-      void join_string_view(scratch_string& str, rsl::string_view arg);
+      void join_string_view(rsl::big_stack_string& str, rsl::string_view arg);
       template <typename Enum, rsl::enable_if_t<rsl::is_enum_v<Enum>, bool> = true>
-      void join_enum(scratch_string& str, Enum e)
+      void join_enum(rsl::big_stack_string& str, Enum e)
       {
         rsl::string_view enum_name = rsl::enum_refl::enum_name(e);
         join_impl(str, enum_name);
       }
       template <typename PathLikeType>
-      void join_path_like(scratch_string& str, PathLikeType&& arg)
+      void join_path_like(rsl::big_stack_string& str, PathLikeType&& arg)
       {
         join_string_view(str, rsl::string_view(rsl::forward<PathLikeType>(arg))); // NOLINT(google-readability-casting)
       }
 
       template <typename PathLikeType>
-      void join_impl(scratch_string& str, PathLikeType&& firstArg)
+      void join_impl(rsl::big_stack_string& str, PathLikeType&& firstArg)
       {
         if constexpr (rsl::is_same_v<rsl::string_view, PathLikeType>)
         {
@@ -120,12 +59,107 @@ namespace rex
       }
 
       template <typename PathLikeType, typename... Args>
-      void join_impl(scratch_string& str, PathLikeType&& firstArg, Args&&... args)
+      void join_impl(rsl::big_stack_string& str, PathLikeType&& firstArg, Args&&... args)
       {
         join_impl(str, rsl::forward<PathLikeType>(firstArg));
         join_impl(str, rsl::forward<Args>(args)...);          // append the rest
       }
     }                                                         // namespace internal
+
+    // -------------------------------------------------------------------------
+    // THESE FUNCTIONS ARE REQUIRED TO BE IMPLEMENTED BY PLATFORM SPECIFIC CODE
+    // -------------------------------------------------------------------------
+    
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
+
+    // Returns the current working directory
+    rsl::string_view cwd();
+
+    // Sets a new working directory and returns the old one
+    // A valid and existing path is expected or an assert is raised
+    scratch_string set_cwd(rsl::string_view dir);
+
+    // Returns if the given path is an absolute path
+    bool is_absolute(rsl::string_view path);
+
+    // Returns if a file is under a certain directory
+    bool is_under_dir(rsl::string_view path, rsl::string_view dir);
+
+    // Returns true if the given path points to a junction
+    bool is_junction(rsl::string_view path);
+
+    // Returns true if the given path points to a symlink
+    bool is_link(rsl::string_view path);
+
+    // Returns true if absolute paths on this platform have a drive letter
+    bool abs_needs_drive();
+
+    // --------------------------------
+    // UTILITY
+    // --------------------------------
+
+    // Returns the path of the current user's temp folder
+    scratch_string temp_path();
+
+    // For symlinks, returns the path the link points to
+    // Otherwise returns the input
+    scratch_string real_path(rsl::string_view path);
+
+    // Splits the path into a head and a tail
+    // the head is either the mount point or an empty string
+    // the tail is everything else
+    SplitResult split_origin(rsl::string_view path);
+
+    // Split the path into 3 components
+    // drive - root - tail
+    // drive: mounting point
+    // root: string of separators after the drive
+    // tail: everything after the root
+    // eg: c:/Users/Sam (Windows)
+    // drive: C:
+    // root: /
+    // tail: Users/Sam
+
+    SplitRootResult split_root(rsl::string_view path);
+
+    // ------------------------------------------------------------------------------
+    //                          ABSOLUTE PATH IMPLEMENTATIONS
+    // ------------------------------------------------------------------------------
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
+
+    // --------------------------------
+    // UTILITY
+    // --------------------------------
+    // For symlinks, returns the path the link points to
+    // Otherwise returns the input
+    scratch_string real_path_from_abs(rsl::string_view path);
+
+    // -------------------------------------------------------------------------
+    // END OF PLATFORM SPECIFIC FUNCTIONS
+    // -------------------------------------------------------------------------
+
+    // --------------------------------
+    // CONVERTING
+    // --------------------------------
+    // Returns the absolute path for the given path
+    scratch_string abs_path(rsl::string_view path);
+
+    // Changes the extension of a path string_view
+    // If extension argument is empty, the extension is removed
+    // if the path doesn't have an extension, the extension specified gets appended
+    scratch_string change_extension(rsl::string_view path, rsl::string_view extension);
+
+    // Returns the fullpath without the drive, if it's present
+    rsl::string_view remove_drive(rsl::string_view path);
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
     // returns the seperation char for paths
     char8 seperation_char();
 
@@ -143,33 +177,12 @@ namespace rex
     const rsl::vector<rsl::string_view>& invalid_path_names();
     // returns an array of invalid characters for directories
     const rsl::vector<char8>& invalid_path_chars();
-    // Join multiple paths together
-    template <typename... PathLikeTypes>
-    scratch_string join(PathLikeTypes&&... paths)
-    {
-      scratch_string res;
-      res.reserve(max_path_length());
-      internal::join_impl(res, rsl::forward<PathLikeTypes>(paths)...);
-
-      if(!res.empty())
-      {
-        res.pop_back(); // remove the last seperation char
-      }
-
-      return res;
-    }
 
     // returns true if it's a valid path, returns false otherwise
     bool is_valid_path(rsl::string_view path);
     // returns true if it's a valid filename, returns false otherwise
     bool is_valid_filename(rsl::string_view filename);
 
-    // removes leading and trailing quotes from a path
-    rsl::string_view remove_quotes(rsl::string_view path);
-    // Changes the extension of a path string_view
-    // If extension argument is empty, the extension is removed
-    // if the path doesn't have an extension, the extension specified gets appended
-    scratch_string change_extension(rsl::string_view path, rsl::string_view extension);
     // Returns the directory path of the given path
     rsl::string_view dir_name(rsl::string_view path);
     // Returns the extension of the given path
@@ -178,10 +191,14 @@ namespace rex
     rsl::string_view filename(rsl::string_view path);
     // Returns the filename of the given path without its extension
     rsl::string_view stem(rsl::string_view path);
-    // Returns the fullpath without the drive, if it's present
-    rsl::string_view remove_drive(rsl::string_view path);
-    // Returns the absolute path for the given path
-    scratch_string abs_path(rsl::string_view path);
+
+    // returns how deep a path is
+    // basically counts the number of slashes
+    // it does this without converting it to an absolute path
+		// a file directly under the root has a depth of 1, any subdirectory increments depth by 1
+    // this makes it so that the root always has a depth of 0
+    s32 depth(rsl::string_view path, rsl::string_view root = cwd());
+
     // Retruns the root directory path of the given path
     rsl::string_view path_root(rsl::string_view path);
     // Returns a random directory, but doesn't create it
@@ -204,12 +221,6 @@ namespace rex
     // Returns true if 2 paths point to the same file or directory
     bool is_same(rsl::string_view path1, rsl::string_view path2);
 
-    // returns how deep a path is
-    // basically counts the number of slashes
-    // it does this without converting it to an absolute path
-		// a file directly under the root has a depth of 1, any subdirectory increments depth by 1
-    // this makes it so that the root always has a depth of 0
-    s32 depth(rsl::string_view path, rsl::string_view root = cwd());
     // returns how deep from the root path is
     // basically counts the number of slashes
     // a file directly under the root has a depth of 1, any subdirectory increments depth by 1
@@ -223,6 +234,65 @@ namespace rex
     bool is_root(rsl::string_view path);
     // Returns true if both paths are on the same mount
     bool has_same_root(rsl::string_view lhs, rsl::string_view rhs);
+
+    // --------------------------------
+    // UTILITY
+    // --------------------------------
+
+    // Splits the path into a head and a tail
+    // the tail is the last pathname component
+    // the head is everything leading up to that
+    SplitResult split(rsl::string_view path);
+    // Splits the path into a head and a tail
+    // the head is the directory and the stem
+    // the tail is the extension
+    SplitResult split_ext(rsl::string_view path);
+
+    // Join multiple paths together
+    template <typename... PathLikeTypes>
+    scratch_string join(PathLikeTypes&&... paths)
+    {
+      // To avoid over allocation we generate the full path on the stack
+      // after which we copy this memory into a heap based allocation
+      // has a little impact on performance, but reduces less memory
+      rsl::big_stack_string stack_res;
+      internal::join_impl(stack_res, rsl::forward<PathLikeTypes>(paths)...);
+
+      if (!stack_res.empty())
+      {
+        stack_res.pop_back(); // remove the last seperation char
+      }
+
+      scratch_string res;
+      res.assign(stack_res.to_view());
+
+      return res;
+    }
+
+    // removes leading and trailing quotes from a path
+    rsl::string_view remove_quotes(rsl::string_view path);
+
+    // ------------------------------------------------------------------------------
+    //                          ABSOLUTE PATH IMPLEMENTATIONS
+    // ------------------------------------------------------------------------------
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
+
+    // Returns a relative path to path, starting from the start directory
+    scratch_string rel_path_from_abs(rsl::string_view path, rsl::string_view start);
+    // Returns true if 2 paths point to the same file or directory
+    bool is_same_from_abs(rsl::string_view path1, rsl::string_view path2);
+
+    // returns how deep from the root path is
+    // basically counts the number of slashes
+    // a file directly under the root has a depth of 1, any subdirectory increments depth by 1
+    // this makes it so that the root always has a depth of 0
+    s32 abs_depth_from_abs(rsl::string_view path);
+    // Returns true if both paths are on the same mount
+    bool has_same_root_from_abs(rsl::string_view lhs, rsl::string_view rhs);
+
   } // namespace path
 } // namespace rex
 

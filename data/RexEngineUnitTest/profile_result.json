@@ -1,0 +1,692 @@
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":13700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":4396,"ts":1742667293252291584.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":4396,"ts":1742667293254994688.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":9900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":4396,"ts":1742667293257377280.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":31500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":4396,"ts":1742667293260222720.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":9100,"name":"This is a test name","ph":"X","pid":0,"tid":4396,"ts":1742667296451271680.0,"args":{"File": "d:/engines/rex/tests/1_engine/rex_engine_unit_test/src/profiling/test_scoped_timer.cpp","Line": 11}}
+
+,{"cat":"function","dur":56794000,"name":"This is a test name","ph":"X","pid":0,"tid":4396,"ts":1742667296452208384.0,"args":{"File": "d:/engines/rex/tests/1_engine/rex_engine_unit_test/src/profiling/test_scoped_timer.cpp","Line": 21}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":14000,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":5032,"ts":1742667540765452288.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":7500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":5032,"ts":1742667540768206336.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":10100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":5032,"ts":1742667540770791936.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":41400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":5032,"ts":1742667540773481984.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":9800,"name":"This is a test name","ph":"X","pid":0,"tid":5032,"ts":1742667550228731904.0,"args":{"File": "d:/engines/rex/tests/1_engine/rex_engine_unit_test/src/profiling/test_scoped_timer.cpp","Line": 11}}
+
+,{"cat":"function","dur":54322800,"name":"This is a test name","ph":"X","pid":0,"tid":5032,"ts":1742667550229682176.0,"args":{"File": "d:/engines/rex/tests/1_engine/rex_engine_unit_test/src/profiling/test_scoped_timer.cpp","Line": 21}}
+
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":13500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":20092,"ts":1742668009230789632.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6200,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":20092,"ts":1742668009233533952.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":11100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":20092,"ts":1742668009932315648.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":27600,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":20092,"ts":1742668009934969088.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":24000,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25812,"ts":1742668135969231104.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":5900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25812,"ts":1742668135971944192.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":13800,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25812,"ts":1742668135974305024.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":30500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25812,"ts":1742668135976713216.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":41500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25532,"ts":1742668297670064896.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25532,"ts":1742668297672873472.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":12200,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25532,"ts":1742668297675356416.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":26700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25532,"ts":1742668297677685248.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":13900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":31928,"ts":1742668369294028032.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":8100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":31928,"ts":1742668369296731136.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":11500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":31928,"ts":1742668369299182848.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":34900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":31928,"ts":1742668369302004480.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":15700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":13308,"ts":1742668430840253440.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":8200,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":13308,"ts":1742668430843139584.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":9600,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":13308,"ts":1742668430845826816.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":26900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":13308,"ts":1742668430848418304.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":13300,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32192,"ts":1742668602609361664.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32192,"ts":1742668602612150272.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":10600,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32192,"ts":1742668602614965248.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":25800,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32192,"ts":1742668602617602304.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":22400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":29784,"ts":1742668789107053824.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":29784,"ts":1742668789109889280.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":14500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":29784,"ts":1742668789112425472.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":30900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":29784,"ts":1742668789115014912.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":15700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":8752,"ts":1742669124409708032.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6800,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":8752,"ts":1742669124412490496.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":9900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":8752,"ts":1742669124415125760.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":26500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":8752,"ts":1742669124417730304.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":56700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32036,"ts":1742669172881027584.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":10000,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32036,"ts":1742669172885223680.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":29400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32036,"ts":1742669172888292096.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":47400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32036,"ts":1742669172891633664.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":22200,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":17532,"ts":1742669224158605568.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":5700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":17532,"ts":1742669224161418496.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":17300,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":17532,"ts":1742669224164120832.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":30400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":17532,"ts":1742669224166678528.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":26100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":29204,"ts":1742669281009328128.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":7900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":29204,"ts":1742669281123941120.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":16900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":29204,"ts":1742669281126594304.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":37400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":29204,"ts":1742669281129453312.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":24300,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":19092,"ts":1742669326485456896.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6600,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":19092,"ts":1742669326488297216.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":14000,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":19092,"ts":1742669326490791168.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":29000,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":19092,"ts":1742669326493375232.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":23900,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":2484,"ts":1742669440428615680.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":8100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":2484,"ts":1742669440431344896.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":14000,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":2484,"ts":1742669440433920512.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":29400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":2484,"ts":1742669440436390400.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":23300,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25636,"ts":1742669989493355520.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6800,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25636,"ts":1742669989496163584.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":10100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25636,"ts":1742669989498727168.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":25400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":25636,"ts":1742669989501293312.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":23500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":27996,"ts":1742670217733387520.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":27996,"ts":1742670217736142848.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":12400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":27996,"ts":1742670217738489344.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":31100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":27996,"ts":1742670217740943872.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":23200,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":8576,"ts":1742670258743556352.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6800,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":8576,"ts":1742670258746416128.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":14700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":8576,"ts":1742670258749071872.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":31400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":8576,"ts":1742670258751654400.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":26700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":27824,"ts":1742670303864810496.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":7400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":27824,"ts":1742670303867834368.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":15100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":27824,"ts":1742670303870562304.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":36100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":27824,"ts":1742670303873248512.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":24000,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32908,"ts":1742672569804119552.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32908,"ts":1742672569806865408.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":9500,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32908,"ts":1742672569809227520.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":28700,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":32908,"ts":1742672569811790080.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":23800,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":1296,"ts":1742673112234530048.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":6100,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":1296,"ts":1742673112237299712.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":10400,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":1296,"ts":1742673112239867904.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+{
+"otherData": {},
+"displayTimeUnit": "ns",
+"traceEvents":[{}
+
+,{"cat":"function","dur":26800,"name":"void __cdecl rex::CoreApplication::loop(void)","ph":"X","pid":0,"tid":1296,"ts":1742673112242494720.0,"args":{"File": "d:/engines/rex/source/1_engine/rex_engine/src/app/core_application.cpp","Line": 199}}
+
+]}
+

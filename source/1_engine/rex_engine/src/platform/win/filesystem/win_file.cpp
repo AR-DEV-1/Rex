@@ -108,28 +108,28 @@ namespace rex
       return memory::Blob(rsl::move(buffer));
     }
     // Read from a file
-    void read_file(rsl::string_view path, rsl::byte* buffer, s64 size)
+    s32 read_file(rsl::string_view path, rsl::byte* buffer, s64 size)
     {
       const scratch_string full_path = path::abs_path(path);
 
       if (!exists(full_path))
       {
         REX_ERROR(LogFile, "Failed to read file as it doesn't exist: {}", quoted(full_path));
-        return;
+        return 0;
       }
 
       internal::file_info file_info = internal::open_file_for_reading(full_path);
       if (!file_info.handle.is_valid())
       {
         REX_ERROR(LogFile, "Failed to open file {}", quoted(full_path));
-        return;
+        return 0;
       }
 
       // prepare a buffer to receive the file content
       // early return if the file is empty
       if (file_info.file_size == 0)
       {
-        return;
+        return 0;
       }
 
       if (file_info.file_size > size)
@@ -140,6 +140,8 @@ namespace rex
       // actually read the file
       DWORD bytes_read = 0;
       WIN_CALL(ReadFile(file_info.handle.get(), buffer, static_cast<DWORD>(size), &bytes_read, NULL));
+
+      return bytes_read;
     }
     // Save content to a file
     Error write_to_file(rsl::string_view filepath, const void* data, card64 size)
@@ -348,6 +350,11 @@ namespace rex
     Error create(rsl::string_view path)
     {
       scratch_string full_path = path::abs_path(path);
+
+      if (!rex::path::is_valid_path(path))
+      {
+        return Error::create_with_log(LogFile, "Cannot create file at \"{}\" as it's an invalid path", full_path);
+      }
 
       if(file::exists(full_path))
       {

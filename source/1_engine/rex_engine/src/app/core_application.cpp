@@ -10,6 +10,7 @@
 #include "rex_engine/frameinfo/frameinfo.h"
 #include "rex_engine/memory/memory_tracking.h"
 #include "rex_engine/settings/settings.h"
+#include "rex_engine/settings/hardcoded_boot_settings.h"
 #include "rex_std/bonus/utility.h"
 
 #include "rex_engine/diagnostics/log.h"
@@ -236,8 +237,10 @@ namespace rex
   //--------------------------------------------------------------------------------------------
   void CoreApplication::init_boot_settings()
   {
-    // Allocate a buffer to use for reading the file's content
-    ini::Ini boot_settings = ini::read_from_file(vfs::abs_path(MountingPoint::EngineSettings, "boot.ini"));
+    scratch_string abs_boot_ini_path = vfs::abs_path("rex/settings/boot.ini");
+    ini::Ini boot_settings = vfs::exists(abs_boot_ini_path)
+      ? ini::read_from_file(abs_boot_ini_path)
+      : ini::parse(g_hardcoded_boot_ini);
 
     init_allocators(boot_settings);
   }

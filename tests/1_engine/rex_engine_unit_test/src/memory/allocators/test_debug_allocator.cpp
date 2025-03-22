@@ -1,6 +1,6 @@
 #include "rex_unit_test/rex_catch2.h"
 
-#include "rex_engine/memory/debug_allocator.h"
+#include "rex_engine/memory/allocators/debug_allocator.h"
 #include "rex_engine/engine/types.h"
 
 TEST_CASE("TEST - Debug Allocator - Allocation And Deallocation")

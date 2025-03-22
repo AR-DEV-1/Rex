@@ -1,6 +1,6 @@
 #include "rex_unit_test/rex_catch2.h"
 
-#include "rex_engine/memory/untracked_allocator.h"
+#include "rex_engine/memory/allocators/untracked_allocator.h"
 #include "rex_unit_test/test_object.h"
 
 TEST_CASE("TEST - Untracked Allocator - Allocation")

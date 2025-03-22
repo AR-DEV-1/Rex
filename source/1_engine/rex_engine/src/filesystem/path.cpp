@@ -21,7 +21,7 @@ namespace rex
     namespace internal
     {
       // concat the arg to the string in filepath format
-      void join_string_view(scratch_string& str, rsl::string_view arg)
+      void join_string_view(rsl::big_stack_string& str, rsl::string_view arg)
       {
         if(arg.empty())
         {
@@ -77,6 +77,10 @@ namespace rex
       }
 
     } // namespace internal
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
 
     // returns the seperation char for paths
     char8 seperation_char()
@@ -171,17 +175,23 @@ namespace rex
         return false;
       }
 
-      rsl::string_view filename = path::filename(path);
-      bool has_invalid_name = rsl::any_of(invalid_path_names().cbegin(), invalid_path_names().cend(), [filename](rsl::string_view invalid_name) { return invalid_name == filename; });
+      const scratch_vector<rsl::string_view> splitted_path = rsl::split<GlobalScratchAllocator>(path, "/\\");
+      bool has_invalid_name = false;
+      for (rsl::string_view sub : splitted_path)
+      {
+         has_invalid_name |= rsl::any_of(invalid_path_names().cbegin(), invalid_path_names().cend(),
+          [sub](rsl::string_view invalid_name)
+          {
+            return rsl::stricmp(invalid_name.data(), sub.data()) == 0;
+          });
+      }
+
       if (has_invalid_name)
       {
         return false;
       }
 
       return true;
-
-      //const rsl::string_view invalid_chars(invalid_path_chars().data(), invalid_path_chars().size());
-      //return path.find_first_of(invalid_chars) == path.npos(); // NOLINT(readability-static-accessed-through-instance)
     }
     // returns true if it's a valid filename, returns false otherwise
     bool is_valid_filename(rsl::string_view filename)
@@ -275,6 +285,11 @@ namespace rex
 
       return path;
     }
+
+    // --------------------------------
+    // CONVERTING
+    // --------------------------------
+
     // Returns the absolute path for the given path
     scratch_string abs_path(rsl::string_view path)
     {
@@ -301,7 +316,9 @@ namespace rex
       // Get the current working directory and prepend it to the path
       rsl::string_view current_dir = path::cwd();
       scratch_string res         = path::join(current_dir, path);
-      return res.replace("\\", "/");
+      res.replace("\\", "/");
+
+      return res;
     }
     // Returns the root directory path of the given path
     rsl::string_view path_root(rsl::string_view path)
@@ -368,7 +385,7 @@ namespace rex
       }
 
       // split the first path into different path components
-      const rsl::vector<rsl::string_view> splitted = rsl::split(paths.front(), "/\\");
+      const scratch_vector<rsl::string_view> splitted = rsl::split<GlobalScratchAllocator>(paths.front(), "/\\");
       auto furthest_path_component_it              = splitted.cbegin();
 
       // iterate over the other paths
@@ -377,10 +394,14 @@ namespace rex
         const rsl::string_view path = paths[i];
 
         // split the path into different path components
-        const rsl::vector<rsl::string_view> splitted_path = rsl::split(path, "/\\");
+        const scratch_vector<rsl::string_view> splitted_path = rsl::split<GlobalScratchAllocator>(path, "/\\");
 
         // find the first mismatch with the first path in the list
-        auto res = rsl::mismatch(splitted.cbegin(), splitted.cend(), splitted_path.cbegin(), splitted_path.cend());
+        auto res = rsl::mismatch(splitted.cbegin(), splitted.cend(), splitted_path.cbegin(), splitted_path.cend(),
+          [](char8 c1, char8 c2)
+          {
+            return rsl::to_lower(c1) == rsl::to_lower(c2);
+          });
 
         // if None are equal, return an empty path
         if(res.lhs_it == splitted.cbegin())
@@ -412,8 +433,8 @@ namespace rex
     // Converts forward slashes to backward slashes
     scratch_string norm_path(rsl::string_view path)
     {
-      const temp_vector<rsl::string_view> splitted_path = rsl::split<GlobalSingleFrameAllocator>(path, "/\\");
-      temp_vector<rsl::string_view> norm_splitted(rsl::Capacity(splitted_path.size()));
+      const scratch_vector<rsl::string_view> splitted_path = rsl::split<GlobalScratchAllocator>(path, "/\\");
+      scratch_vector<rsl::string_view> norm_splitted(rsl::Capacity(splitted_path.size()));
 
       // loop over each path component in the given path
       for(const rsl::string_view path_comp: splitted_path)
@@ -465,57 +486,25 @@ namespace rex
       return rel_path(path, cwd());
     }
     // Returns a relative path to path, starting from the start directory
-    scratch_string rel_path(rsl::string_view path, rsl::string_view root)
+    scratch_string rel_path(rsl::string_view path, rsl::string_view start)
     {
       // Return a path that can be appended to root and you'd get the path that "path" points to
 
       // Get rid of all unnecessary path tokens, making parsing of the path easier
       scratch_string norm_path  = path::norm_path(path);
-      scratch_string norm_root = path::norm_path(root);
+      scratch_string norm_start = path::norm_path(start);
 
       // If both paths are empty, just return an empty path
-      if(norm_path.empty() && norm_root.empty())
+      if(norm_path.empty() && norm_start.empty())
       {
         return scratch_string("");
       }
 
       // Convert both path to their absolute paths, so its even easier to parse
 			scratch_string abs_norm_path = abs_path(norm_path);
-			scratch_string abs_norm_root = abs_path(norm_root);
+			scratch_string abs_norm_root = abs_path(norm_start);
 
-      // Make them lower case so we ignore any casing during string comparison
-      rsl::to_lower(abs_norm_path.cbegin(), abs_norm_path.begin(), abs_norm_path.size());
-      rsl::to_lower(abs_norm_root.cbegin(), abs_norm_root.begin(), abs_norm_root.size());
-
-      // If both paths are equal, return an empty string
-      if (is_same(abs_norm_path, abs_norm_root))
-      {
-        return scratch_string("");
-      }
-
-      // If paths are pointing to different root
-      // return the absolute path of the former
-      if (!has_same_root(abs_norm_root, abs_norm_root))
-      {
-        return abs_norm_path;
-      }
-
-      // If there is a mismatch however, we need to find where this happens and construct a path from the root to this path
-      // Afterwards we can just append the remaining path
-      rsl::vector<rsl::string_view> paths{ abs_norm_path, abs_norm_root };
-      rsl::string_view common = common_path(paths);
-
-      rsl::string_view diff_in_path = abs_norm_path.substr(common.length());
-      rsl::string_view diff_in_root = abs_norm_root.substr(common.length());
-
-      s32 num_parent_dir_tokens = depth(diff_in_root);
-      scratch_string result;
-			for (card32 i = 0; i < num_parent_dir_tokens; ++i)
-			{
-				result = path::join(result, "..");
-			}
-      result = path::join(result, diff_in_path);
-      return result;
+      return rel_path_from_abs(abs_norm_path, abs_norm_root);
     }
 
     // Returns if the given path has an extension
@@ -568,14 +557,16 @@ namespace rex
     {
       // simply convert the files into their actual files on disk
       // then do a string wise comparison
-      scratch_string real_path1 = real_path(path1);
-      scratch_string real_path2 = real_path(path2);
+      scratch_string abs_path1 = abs_path(path1);
+      scratch_string abs_path2 = abs_path(path2);
 
-      rsl::to_lower(real_path1.cbegin(), real_path1.begin(), real_path1.size());
-      rsl::to_lower(real_path2.cbegin(), real_path2.begin(), real_path2.size());
-      
-      return real_path1 == real_path2;
+      return is_same_from_abs(abs_path1, abs_path2);
     }
+
+    // --------------------------------
+    // UTILITY
+    // --------------------------------
+    // 
     // Splits the path into a head and a tail
     // the tail is the last pathname component
     // the head is everything leading up to that
@@ -650,15 +641,7 @@ namespace rex
     {
       scratch_string fullpath = abs_path(norm_path(path));
 
-      if (is_root(fullpath))
-      {
-        return 0;
-      }
-
-      s32 slash_count = rsl::count(fullpath.cbegin(), fullpath.cend(), '/');
-      s32 backwards_slash_count = rsl::count(fullpath.cbegin(), fullpath.cend(), '\\');
-
-      return (slash_count + backwards_slash_count);
+      return abs_depth_from_abs(fullpath);
     }
     bool has_drive(rsl::string_view path)
     {
@@ -699,10 +682,90 @@ namespace rex
       scratch_string lhs_fullpath = abs_path(lhs);
       scratch_string rhs_fullpath = abs_path(rhs);
 
-      SplitResult lhs_split = split_origin(lhs_fullpath);
-      SplitResult rhs_split = split_origin(rhs_fullpath);
+      return has_same_root_from_abs(lhs_fullpath, rhs_fullpath);
+    }
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
+
+    // Returns a relative path to path, starting from the start directory
+    scratch_string rel_path_from_abs(rsl::string_view path, rsl::string_view start)
+    {
+      REX_ASSERT_X(is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(is_absolute(start), "argument is expected to be absolute here: {}", start);
+
+      // If both paths are equal, return an empty string
+      if (is_same_from_abs(path, start))
+      {
+        return scratch_string("");
+      }
+
+      // If paths are pointing to different root
+      // return the absolute path of the former
+      if (!has_same_root(path, start))
+      {
+        return scratch_string(path);
+      }
+
+      // If there is a mismatch however, we need to find where this happens and construct a path from the root to this path
+      // Afterwards we can just append the remaining path
+      rsl::vector<rsl::string_view> paths{ path, start };
+      rsl::string_view common = common_path(paths);
+
+      rsl::string_view diff_in_path = path.substr(common.length());
+      rsl::string_view diff_in_root = path.substr(common.length());
+
+      s32 num_parent_dir_tokens = depth(diff_in_root);
+      scratch_string result;
+      for (card32 i = 0; i < num_parent_dir_tokens; ++i)
+      {
+        result = path::join(result, "..");
+      }
+      result = path::join(result, diff_in_path);
+      return result;
+    }
+    // Returns true if 2 paths point to the same file or directory
+    bool is_same_from_abs(rsl::string_view path1, rsl::string_view path2)
+    {
+      REX_ASSERT_X(is_absolute(path1), "argument is expected to be absolute here: {}", path1);
+      REX_ASSERT_X(is_absolute(path2), "argument is expected to be absolute here: {}", path2);
+
+      scratch_string real_path1 = real_path_from_abs(path1);
+      scratch_string real_path2 = real_path_from_abs(path2);
+
+      return rsl::stricmp(real_path1.data(), real_path2.data()) == 0;
+    }
+
+    // returns how deep from the root path is
+    // basically counts the number of slashes
+    // a file directly under the root has a depth of 1, any subdirectory increments depth by 1
+    // this makes it so that the root always has a depth of 0
+    s32 abs_depth_from_abs(rsl::string_view path)
+    {
+      REX_ASSERT_X(is_absolute(path), "argument is expected to be absolute here: {}", path);
+
+      if (is_root(path))
+      {
+        return 0;
+      }
+
+      s32 slash_count = rsl::count(path.cbegin(), path.cend(), '/');
+      s32 backwards_slash_count = rsl::count(path.cbegin(), path.cend(), '\\');
+
+      return (slash_count + backwards_slash_count);
+    }
+    // Returns true if both paths are on the same mount
+    bool has_same_root_from_abs(rsl::string_view lhs, rsl::string_view rhs)
+    {
+      REX_ASSERT_X(is_absolute(lhs), "argument is expected to be absolute here: {}", lhs);
+      REX_ASSERT_X(is_absolute(rhs), "argument is expected to be absolute here: {}", rhs);
+
+      SplitResult lhs_split = split_origin(lhs);
+      SplitResult rhs_split = split_origin(rhs);
 
       return rex::path::is_same(lhs_split.head, rhs_split.head);
     }
+
   } // namespace path
 } // namespace rex

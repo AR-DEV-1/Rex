@@ -103,6 +103,8 @@
 //                                      |              +----------------------------------------------------------------------------------------------------+
 //
 
+// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: MOUNT POINTS
+
 namespace rex
 {
   namespace vfs
@@ -181,32 +183,26 @@ namespace rex
     {
       return g_root;
     }
-
     rsl::string_view engine_root()
     {
       return g_root_paths.engine_root;
     }
-
     rsl::string_view editor_root()
     {
       return g_root_paths.editor_root;
     }
-
     rsl::string_view project_root()
     {
       return g_root_paths.project_root;
     }
-
     rsl::string_view sessions_root()
     {
       return g_root_paths.sessions_root;
     }
-
     rsl::string_view project_sessions_root()
     {
       return g_root_paths.project_sessions_root;
     }
-
     rsl::string_view current_session_root()
     {
       return g_root_paths.current_session_root;
@@ -249,7 +245,6 @@ namespace rex
         rsl::this_thread::sleep_for(1ms);
       }
     }
-
     void wait_for_read_requests()
     {
       while(g_vfs_state_controller.has_state(VfsState::Running))
@@ -264,7 +259,6 @@ namespace rex
         rsl::this_thread::sleep_for(20ms);
       }
     }
-
     void start_threads()
     {
       // This thread processes the read requests
@@ -298,7 +292,6 @@ namespace rex
       g_root_paths.project_sessions_root.assign(path::join(sessions_root(), project_name()));
       g_root_paths.current_session_root.assign(path::join(project_sessions_root(), current_timepoint_for_filename()));
     }
-
     void init()
     {
       g_vfs_state_controller.change_state(VfsState::Initializing);
@@ -318,7 +311,6 @@ namespace rex
 
       REX_INFO(LogVfs, "LogVfs initialized");
     }
-
     void set_root(rsl::string_view root)
     {
       if(root.empty())
@@ -339,7 +331,6 @@ namespace rex
 
       set_root_paths();
     }
-
     void mount(MountingPoint root, rsl::string_view path)
     {
       rsl::string_view full_path = vfs::abs_path(path);
@@ -353,7 +344,6 @@ namespace rex
         create_dir(full_path);
       }
     }
-
     void shutdown()
     {
       g_vfs_state_controller.change_state(VfsState::ShuttingDown);
@@ -385,43 +375,308 @@ namespace rex
       g_vfs_state_controller.change_state(VfsState::ShutDown);
     }
 
+    // --------------------------------
+    // CREATING
+    // --------------------------------
+    Error create_file(MountingPoint root, rsl::string_view filepath)
+    {
+      filepath = path::remove_quotes(filepath);
+
+      const scratch_string filepath = path::join(g_mounted_roots.at(root), filepath);
+      return create_file_from_abs(filepath);
+    }
+    Error create_file(rsl::string_view filepath)
+    {
+      filepath = path::remove_quotes(filepath);
+
+      const scratch_string filepath = abs_path(filepath);
+      return create_file_from_abs(filepath);
+    }
+    Error create_dir(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string filepath = path::join(g_mounted_roots.at(root), path);
+      return create_dir_from_abs(filepath);
+    }
+    Error create_dir(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string filepath = abs_path(path);
+      return create_dir_from_abs(filepath);
+    }
+    Error create_dirs(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string filepath = abs_path(path);
+      return create_dirs_from_abs(filepath);
+    }
+
+    // --------------------------------
+    // DELETING
+    // --------------------------------
+    Error delete_file(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string filepath = path::join(g_mounted_roots.at(root), path);
+      return delete_file_from_abs(filepath);
+    }
+    Error delete_file(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string fullpath = abs_path(path);
+      return delete_dir_from_abs(fullpath);
+    }
+    Error delete_dir(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
+      return delete_dir_from_abs(fullpath);
+    }
+    Error delete_dir(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string fullpath = abs_path(path);
+      return delete_dir_from_abs(fullpath);
+    }
+    Error delete_dir_recursive(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
+      return delete_dir_recursive_from_abs(fullpath);
+    }
+    Error delete_dir_recursive(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const scratch_string fullpath = abs_path(path);
+      return delete_dir_recursive_from_abs(fullpath);
+    }
+
+    // --------------------------------
+    // READING
+    // --------------------------------
     memory::Blob read_file(MountingPoint root, rsl::string_view filepath)
     {
-      filepath               = path::remove_quotes(filepath);
-      rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
-      return read_file(path);
+      filepath = path::remove_quotes(filepath);
+
+      const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
+      return read_file_from_abs(fullpath);
     }
     memory::Blob read_file(rsl::string_view filepath)
     {
+      filepath = path::remove_quotes(filepath);
+
       const scratch_string fullpath = abs_path(filepath);
-      return rex::file::read_file(fullpath);
+      return read_file_from_abs(fullpath);
     }
-    void read_file(MountingPoint root, rsl::string_view filepath, rsl::byte* buffer, s32 size)
+    s32 read_file(MountingPoint root, rsl::string_view filepath, rsl::byte* buffer, s32 size)
     {
       filepath = path::remove_quotes(filepath);
-      rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
-      read_file(path, buffer, size);
-    }
-    void read_file(rsl::string_view filepath, rsl::byte* buffer, s32 size)
-    {
-      const scratch_string fullpath = abs_path(filepath);
-      return rex::file::read_file(fullpath, buffer, size);
-    }
 
+      const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
+      return read_file_from_abs(fullpath, buffer, size);
+    }
+    s32 read_file(rsl::string_view filepath, rsl::byte* buffer, s32 size)
+    {
+      filepath = path::remove_quotes(filepath);
+
+      const scratch_string fullpath = abs_path(filepath);
+      return read_file_from_abs(fullpath, buffer, size);
+    }
+    ReadRequest read_file_async(rsl::string_view filepath)
+    {
+      filepath = path::remove_quotes(filepath);
+
+      const scratch_string fullpath = abs_path(filepath);
+      return read_file_from_abs_async(fullpath);
+    }
     ReadRequest read_file_async(MountingPoint root, rsl::string_view filepath)
     {
-      filepath                            = path::remove_quotes(filepath);
-      rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
-      return read_file_async(path);
+      filepath = path::remove_quotes(filepath);
+
+      const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
+      return read_file_from_abs_async(fullpath);
     }
 
-    ReadRequest read_file_async(rsl::string_view filepath)
+    // --------------------------------
+    // WRITING
+    // --------------------------------
+    Error write_to_file(MountingPoint root, rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend)
+    {
+      filepath = path::remove_quotes(filepath);
+
+      const rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
+      return write_to_file_from_abs(path, data, size, shouldAppend);
+    }
+    Error write_to_file(rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend)
+    {
+      return write_to_file(filepath, data, size, shouldAppend);
+    }
+    Error write_to_file(MountingPoint root, rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend)
+    {
+      return write_to_file(root, filepath, text.data(), text.length(), shouldAppend);
+    }
+    Error write_to_file(rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend)
+    {
+      return write_to_file(filepath, text.data(), text.length(), shouldAppend);
+    }
+    Error write_to_file(MountingPoint root, rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend)
+    {
+      return write_to_file(root, filepath, blob.data(), blob.size(), shouldAppend);
+    }
+    Error write_to_file(rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend)
+    {
+      return write_to_file(filepath, blob.data(), blob.size(), shouldAppend);
+    }
+
+    // --------------------------------
+    // CONVERTING
+    // --------------------------------
+    scratch_string abs_path(MountingPoint root, rsl::string_view path)
+    {
+      REX_ASSERT_X(g_vfs_state_controller.has_state(VfsState::Running), "Trying to use vfs before it's initialized");
+      REX_ASSERT_X(!path::is_absolute(path), "Passed an absolute path into a function that doesn't allow absolute paths");
+
+      path = path::remove_quotes(path);
+
+      return path::join(g_mounted_roots.at(root), path);
+    }
+    scratch_string abs_path(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      if (path::is_absolute(path))
+      {
+        return scratch_string(path);
+      }
+
+      return path::join(g_root, path);
+    }
+    rsl::string_view mount_path(MountingPoint mount)
+    {
+      if (g_mounted_roots.contains(mount))
+      {
+        return g_mounted_roots.at(mount);
+      }
+
+      return internal::no_mount_path();
+    }
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
+    bool exists(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
+      return exists_from_abs(fullpath);
+    }
+    bool exists(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+      const rsl::string_view fullpath = abs_path(path);
+
+      return exists_from_abs(fullpath);
+    }
+    bool is_file(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
+      return file::exists_from_abs(fullpath);
+    }
+    bool is_file(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = abs_path(path);
+      return file::exists_from_abs(fullpath);
+    }
+    bool is_dir(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
+      return directory::exists_from_abs(fullpath);
+    }
+    bool is_dir(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = abs_path(path);
+      return directory::exists_from_abs(fullpath);
+    }
+    bool is_mounted(MountingPoint mount)
+    {
+      return g_mounted_roots.contains(mount);
+    }
+
+    rsl::vector<rsl::string> list_entries(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
+      return list_entries_from_abs(fullpath);
+    }
+    rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
+      return list_dirs_from_abs(fullpath);
+    }
+    rsl::vector<rsl::string> list_files(MountingPoint root, rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
+      return list_files_from_abs(fullpath);
+    }
+    rsl::vector<rsl::string> list_entries(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = abs_path(path);
+      return list_entries_from_abs(fullpath);
+    }
+    rsl::vector<rsl::string> list_dirs(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = abs_path(path);
+      return list_dirs_from_abs(fullpath);
+    }
+    rsl::vector<rsl::string> list_files(rsl::string_view path)
+    {
+      path = path::remove_quotes(path);
+
+      const rsl::string_view fullpath = abs_path(path);
+      return list_files_from_abs(fullpath);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------------
+    //                                                  ABSOLUTE PATH IMPLEMENTATIONS
+    // --------------------------------------------------------------------------------------------------------------------------------
+
+    // --------------------------------
+    // READING
+    // --------------------------------
+    ReadRequest read_file_from_abs_async(rsl::string_view filepath)
     {
       const rsl::unique_lock lock(g_read_request_mutex);
 
       // If we already have a request for this file, add a new request to signal to the queued request
       auto it = g_queued_requests.find(filepath);
-      if(it != g_queued_requests.end())
+      if (it != g_queued_requests.end())
       {
         ReadRequest request(filepath, it->value.get());
         it->value->add_request_to_signal(&request);
@@ -440,241 +695,6 @@ namespace rex
 
       return request;
     }
-    Error create_file(MountingPoint root, rsl::string_view filepath)
-    {
-      const rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
-      return rex::file::create(path);
-    }
-    Error create_file(rsl::string_view filepath)
-    {
-      return rex::file::create(filepath);
-    }
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend)
-    {
-      return write_to_file(root, filepath, text.data(), text.length(), shouldAppend);
-    }
-    Error write_to_file(rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend)
-    {
-      return write_to_file(filepath, text.data(), text.length(), shouldAppend);
-    }
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend)
-    {
-      filepath = path::remove_quotes(filepath);
 
-      const rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
-      return write_to_file(path, data, size, shouldAppend);
-    }
-
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend)
-    {
-      filepath = path::remove_quotes(filepath);
-
-      const rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
-      return write_to_file(path, blob.data(), blob.size(), shouldAppend);
-    }
-
-    Error write_to_file(rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend)
-    {
-      return write_to_file(filepath, blob.data(), blob.size(), shouldAppend);
-    }
-
-    Error create_dir(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view filepath = path::join(g_mounted_roots.at(root), path);
-      return create_dir(filepath);
-    }
-    bool exists(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      rsl::string_view fullpath = abs_path(path);
-
-      return file::exists(fullpath) || directory::exists(fullpath);
-    }
-    bool exists(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view filepath = path::join(g_mounted_roots.at(root), path);
-      return file::exists(filepath) || directory::exists(filepath);
-    }
-
-    bool is_dir(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view filepath = path::join(g_mounted_roots.at(root), path);
-      return directory::exists(filepath);
-    }
-    bool is_dir(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      rsl::string_view fullpath = abs_path(path);
-      
-      return directory::exists(fullpath);
-    }
-    bool is_file(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view filepath = path::join(g_mounted_roots.at(root), path);
-      return file::exists(filepath);
-    }
-    bool is_file(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      rsl::string_view fullpath = abs_path(path);
-
-      return file::exists(fullpath);
-    }
-    scratch_string abs_path(MountingPoint root, rsl::string_view path)
-    {
-      REX_ASSERT_X(g_vfs_state_controller.has_state(VfsState::Running), "Trying to use vfs before it's initialized");
-      REX_ASSERT_X(!path::is_absolute(path), "Passed an absolute path into a function that doesn't allow absolute paths");
-
-      path = path::remove_quotes(path);
-
-      return path::join(g_mounted_roots.at(root), path);
-    }
-    scratch_string abs_path(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      if(path::is_absolute(path))
-      {
-        return scratch_string(path);
-      }
-
-      return path::join(g_root, path);
-    }
-
-    rsl::string_view mount_path(MountingPoint mount)
-    {
-      if(g_mounted_roots.contains(mount))
-      {
-        return g_mounted_roots.at(mount);
-      }
-
-      return internal::no_mount_path();
-    }
-
-    bool is_mounted(MountingPoint mount)
-    {
-      return g_mounted_roots.contains(mount);
-    }
-
-    rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view filepath = path::join(g_mounted_roots.at(root), path);
-      return list_dirs(filepath);
-    }
-    rsl::vector<rsl::string> list_entries(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view filepath = path::join(g_mounted_roots.at(root), path);
-      return list_entries(filepath);
-    }
-    rsl::vector<rsl::string> list_files(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view filepath = path::join(g_mounted_roots.at(root), path);
-      return list_files(filepath);
-    }
-    rsl::vector<rsl::string> list_dirs(rsl::string_view path)
-    {
-      return directory::list_dirs(path);
-    }
-    rsl::vector<rsl::string> list_entries(rsl::string_view path)
-    {
-      return directory::list_entries(path);
-    }
-    rsl::vector<rsl::string> list_files(rsl::string_view path)
-    {
-      return directory::list_files(path);
-    }
-
-    Error delete_dir(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      if (is_dir(fullpath))
-      {
-        return delete_dir(fullpath);
-      }
-
-      return Error::create_with_log(LogVfs, "Cannot delete \"{}\" as it's not a directory", fullpath);
-    }
-    Error delete_dir_recursive(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      if (is_dir(fullpath))
-      {
-        return delete_dir_recursive(fullpath);
-      }
-
-      return Error::create_with_log(LogVfs, "Cannot delete \"{}\" as it's not a directory", fullpath);
-    }
-    Error delete_file(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      if (is_file(fullpath))
-      {
-        return delete_file(fullpath);
-      }
-
-      return Error::create_with_log(LogVfs, "Cannot delete \"{}\" as it's not a file", fullpath);
-    }
-
-
-    Error write_to_file(rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend)
-    {
-      const rsl::string_view fullpath = abs_path(filepath);
-      if (shouldAppend)
-      {
-        return rex::file::append_text(fullpath, rsl::string_view((const char8*)data, narrow_cast<s32>(size)));
-      }
-      else
-      {
-        return rex::file::write_to_file(fullpath, data, size);
-      }
-    }
-
-    Error create_dir(rsl::string_view path)
-    {
-      const rsl::string_view fullpath = abs_path(path);
-      return directory::create(fullpath);
-    }
-
-    Error create_dirs(rsl::string_view path)
-    {
-      const rsl::string_view fullpath = abs_path(path);
-      return directory::create_recursive(fullpath);
-    }
-
-    Error delete_dir(rsl::string_view path)
-    {
-      const rsl::string_view fullpath = abs_path(path);
-      return directory::del(fullpath);
-    }
-    Error delete_dir_recursive(rsl::string_view path)
-    {
-      const rsl::string_view fullpath = abs_path(path);
-      return directory::del_recursive(fullpath);
-    }
-    Error delete_file(rsl::string_view path)
-    {
-      const rsl::string_view fullpath = abs_path(path);
-      return file::del(fullpath);
-    }
   } // namespace vfs
 } // namespace rex

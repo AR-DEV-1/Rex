@@ -17,11 +17,6 @@ namespace rex
 		using size_type = s32;
 		using pointer = void*;
 
-		CircularAllocator()
-			: m_buffer(nullptr)
-			, m_current(nullptr)
-			, m_end()
-		{}
 		explicit CircularAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
 			: m_buffer(alloc_unique<rsl::byte[]>(alloc, size))
 			, m_current(m_buffer.get())

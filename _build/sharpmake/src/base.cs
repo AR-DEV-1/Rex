@@ -1021,6 +1021,14 @@ public class TestProject : BasicCPPProject
     conf.SolutionFolder = "5_tests";
   }
 
+  protected override void SetupConfigSettings(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupConfigSettings(conf, target);
+
+    conf.VcxprojUserFile = new Configuration.VcxprojUserFileSettings();
+    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Path.Combine(Globals.Root, "data");
+  }
+
   protected override void SetupConfigRules(RexConfiguration conf, RexTarget target)
   {
     switch (target.Config)

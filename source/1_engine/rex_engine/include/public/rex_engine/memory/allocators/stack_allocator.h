@@ -18,10 +18,6 @@ namespace rex
     using size_type = s32;
     using pointer = void*;
 
-    StackAllocator()
-      : m_buffer(nullptr)
-      , m_current_marker(nullptr)
-    {}
     explicit StackAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
     {
       m_buffer = alloc_unique<rsl::byte[]>(alloc, size);

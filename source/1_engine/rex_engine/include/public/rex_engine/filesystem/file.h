@@ -15,10 +15,36 @@ namespace rex
   {
     DEFINE_YES_NO_ENUM(OverwriteIfExist);
 
+    // --------------------------------
+    // CREATING
+    // --------------------------------
+
+    // --------------------------------
+    // DELETING
+    // --------------------------------
+
+    // --------------------------------
+    // READING
+    // --------------------------------
+
+    // --------------------------------
+    // WRITING
+    // --------------------------------
+
+
+    // --------------------------------
+    // CONVERTING
+    // --------------------------------
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
+
+
     // Read from a file
     memory::Blob read_file(rsl::string_view path);
-    // Read from a file
-    void read_file(rsl::string_view path, rsl::byte* buffer, s64 size);
+    // Read from a file, returns number of bytes read
+    s32 read_file(rsl::string_view path, rsl::byte* buffer, s64 size);
     // Save content to a file
     Error write_to_file(rsl::string_view filepath, const void* data, card64 size);
     // Append a single line to a file

@@ -35,8 +35,14 @@ namespace rex
       return false;
     }
 
-    const s32 data_array = reinterpret_cast<const s32*>(rsl::addressof(obj));
+    constexpr size_t object_size = align(sizeof(T), alignof(s32));
+    const s32* data_array = reinterpret_cast<const s32*>(rsl::addressof(obj));
+    const s32* data_array_end = data_array + (object_size / sizeof(internal::s_invalid_obj_value));
     
-    return rsl::all_of(rsl::begin(data_array), rsl::end(data_array), [](s32 x) { return x == internal::s_invalid_obj_value; });
+    return rsl::all_of(data_array, data_array_end, 
+      [](s32 x) 
+      { 
+        return x == internal::s_invalid_obj_value; 
+      });
   }
 } // namespace rex

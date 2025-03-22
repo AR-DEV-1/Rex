@@ -6,5 +6,5 @@ TEST_CASE("TEST - Invalid object - Construction")
 {
 	int x = rex::invalid_obj<int>();
 
-	REX_CHECK(x == rex::s_invalid_obj_value);
+	REX_CHECK(rex::is_invalid(x) == true);
 }

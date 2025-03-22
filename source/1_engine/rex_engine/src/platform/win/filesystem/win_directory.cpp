@@ -34,7 +34,7 @@ namespace rex
           return;
         }
 
-        temp_vector<scratch_string> dirs;
+        temp_vector<rsl::string_view> dirs;
         scratch_string fullpath;
         do // NOLINT(cppcoreguidelines-avoid-do-while)
         {
@@ -49,7 +49,7 @@ namespace rex
           outResult.get().push_back(rsl::string(fullpath));
           if (goRecursive && directory::exists(fullpath))
           {
-            dirs.push_back(rsl::move(fullpath));
+            dirs.push_back(outResult.get().back());
           }
 
         } while (FindNextFileA(find_handle, &ffd) != 0);
@@ -67,12 +67,33 @@ namespace rex
         return;
       }
 
+      // We create the below functions to avoid having to allocate buffers to create absolute paths
+      // sometimes we're going very deep in callstacks, always having to allocate buffers for absolute paths
+      // while we already know we're an absolute path
+      // The belows funcs are to avoid all that
+      // They're not exposed to the user at the moment, but they can be in the future if required
+
+      void create_from_abs(rsl::string_view path)
+      {
+
+      }
+
+
+
+
+
+
     } // namespace internal
 
     // Create a new directory
     Error create(rsl::string_view path)
     {
       const scratch_string full_path = path::abs_path(path);
+      if (!rex::path::is_valid_path(path))
+      {
+        return Error::create_with_log(LogDirectory, "Cannot create directory \"{}\" as it's an invalid path", full_path);
+      }
+
       if(exists(full_path))
       {
         return Error::create_with_log(LogDirectory, "Cannot create directory \"{}\" as it already exists", full_path);
@@ -340,8 +361,13 @@ namespace rex
       {
         s32 length = rsl::strlen(ffd.cFileName);
         const rsl::string_view name(ffd.cFileName, length);
+        if (name == "." || name == "..")
+        {
+          continue;
+        }
+
         const scratch_string full_filename = path::join(path, name);
-        if (exists(full_filename) && name != "." && name != "..")
+        if (exists(full_filename))
         {
           ++num_dirs;
         }
@@ -423,8 +449,13 @@ namespace rex
       {
         s32 length = rsl::strlen(ffd.cFileName);
         const rsl::string_view name(ffd.cFileName, length);
+        if (name == "." || name == "..")
+        {
+          continue;
+        }
+
         const scratch_string full_filename = path::join(path, name);
-        if(exists(full_filename) && name != "." && name != "..")
+        if(exists(full_filename))
         {
           result.push_back(rsl::string(full_filename));
         }

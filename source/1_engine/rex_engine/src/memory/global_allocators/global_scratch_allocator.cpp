@@ -6,6 +6,8 @@ namespace rex
 {
   void* GlobalScratchAllocator::allocate(const s32 count)
   {
+    static s32 num_allocated = 0;
+    num_allocated += count;
     return mut_globals().allocators.scratch_allocator->allocate(count);
   }
   void GlobalScratchAllocator::deallocate(void* const ptr, s32 /*count*/)

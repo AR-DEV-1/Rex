@@ -23,7 +23,7 @@ namespace regina
 		//ImGuiIO& io = ImGui::GetIO();
 		//if (!rex::file::exists(rsl::string_view(io.IniFilename)))
 		//{
-			rex::TempString main_layout_settings = rex::path::join(rex::vfs::root(), "Regina", "main_editor_layout.ini");
+			rex::scratch_string main_layout_settings = rex::path::join(rex::vfs::root(), "Regina", "main_editor_layout.ini");
 			ImGui::LoadIniSettingsFromDisk(main_layout_settings.data());
 		//}
 

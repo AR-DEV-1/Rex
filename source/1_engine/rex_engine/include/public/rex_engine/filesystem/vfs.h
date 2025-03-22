@@ -75,48 +75,75 @@ namespace rex
     void mount(MountingPoint root, rsl::string_view path);
     void shutdown();
 
-    REX_NO_DISCARD memory::Blob read_file(MountingPoint root, rsl::string_view filepath);
-    REX_NO_DISCARD memory::Blob read_file(rsl::string_view filepath);
-    void read_file(MountingPoint root, rsl::string_view filepath, rsl::byte* buffer, s32 size);
-    void read_file(rsl::string_view filepath, rsl::byte* buffer, s32 size);
-    REX_NO_DISCARD ReadRequest read_file_async(rsl::string_view filepath);
-    REX_NO_DISCARD ReadRequest read_file_async(MountingPoint root, rsl::string_view filepath);
+    // All functions have an equivalent "_from_abs" function
+    // The "_from_abs" functions can be used for performance/memory optimisations
+    // They take the same arguments as input, but the arguments are expected to be an absolute path already
+    // Avoiding need to convert it to an abs path in later stacks
+
+    // --------------------------------
+    // CREATING
+    // --------------------------------
     Error create_file(MountingPoint root, rsl::string_view filepath);
     Error create_file(rsl::string_view filepath);
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend);
-    Error write_to_file(rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend);
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend);
-    Error write_to_file(rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend);
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend);
-    Error write_to_file(rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend);
     Error create_dir(MountingPoint root, rsl::string_view path);
     Error create_dir(rsl::string_view path);
     Error create_dirs(rsl::string_view path);
 
-    bool exists(rsl::string_view path);
-    bool exists(MountingPoint root, rsl::string_view path);
-    bool is_dir(MountingPoint root, rsl::string_view path);
-    bool is_dir(rsl::string_view path);
-    bool is_file(MountingPoint root, rsl::string_view path);
-    bool is_file(rsl::string_view path);
-    scratch_string abs_path(rsl::string_view path);
-    scratch_string abs_path(MountingPoint root, rsl::string_view path);
-
-    rsl::string_view mount_path(MountingPoint mount);
-    bool is_mounted(MountingPoint mount);
-    rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path);
-    rsl::vector<rsl::string> list_entries(MountingPoint root, rsl::string_view path);
-    rsl::vector<rsl::string> list_files(MountingPoint root, rsl::string_view path);
-    rsl::vector<rsl::string> list_dirs(rsl::string_view path);
-    rsl::vector<rsl::string> list_entries(rsl::string_view path);
-    rsl::vector<rsl::string> list_files(rsl::string_view path);
-
+    // --------------------------------
+    // DELETING
+    // --------------------------------
+    Error delete_file(MountingPoint root, rsl::string_view path);
+    Error delete_file(rsl::string_view path);
     Error delete_dir(MountingPoint root, rsl::string_view path);
     Error delete_dir(rsl::string_view path);
     Error delete_dir_recursive(MountingPoint root, rsl::string_view path);
     Error delete_dir_recursive(rsl::string_view path);
-    Error delete_file(MountingPoint root, rsl::string_view path);
-    Error delete_file(rsl::string_view path);
+
+    // --------------------------------
+    // READING
+    // --------------------------------
+    REX_NO_DISCARD memory::Blob read_file(MountingPoint root, rsl::string_view filepath);
+    REX_NO_DISCARD memory::Blob read_file(rsl::string_view filepath);
+    s32 read_file(MountingPoint root, rsl::string_view filepath, rsl::byte* buffer, s32 size);
+    s32 read_file(rsl::string_view filepath, rsl::byte* buffer, s32 size);
+    REX_NO_DISCARD ReadRequest read_file_async(MountingPoint root, rsl::string_view filepath);
+    REX_NO_DISCARD ReadRequest read_file_async(rsl::string_view filepath);
+
+    // --------------------------------
+    // WRITING
+    // --------------------------------
+    Error write_to_file(MountingPoint root, rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend);
+    Error write_to_file(rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend);
+    Error write_to_file(MountingPoint root, rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend);
+    Error write_to_file(rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend);
+    Error write_to_file(rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend);
+    Error write_to_file(MountingPoint root, rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend);
+
+    // --------------------------------
+    // CONVERTING
+    // --------------------------------
+    scratch_string abs_path(rsl::string_view path);
+    scratch_string abs_path(MountingPoint root, rsl::string_view path);
+    rsl::string_view mount_path(MountingPoint mount);
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
+    bool exists(rsl::string_view path);
+    bool exists(MountingPoint root, rsl::string_view path);
+    bool is_file(MountingPoint root, rsl::string_view path);
+    bool is_file(rsl::string_view path);
+    bool is_dir(MountingPoint root, rsl::string_view path);
+    bool is_dir(rsl::string_view path);
+    bool is_mounted(MountingPoint mount);
+
+    REX_NO_DISCARD rsl::vector<rsl::string> list_entries(MountingPoint root, rsl::string_view path);
+    REX_NO_DISCARD rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path);
+    REX_NO_DISCARD rsl::vector<rsl::string> list_files(MountingPoint root, rsl::string_view path);
+    REX_NO_DISCARD rsl::vector<rsl::string> list_entries(rsl::string_view path);
+    REX_NO_DISCARD rsl::vector<rsl::string> list_dirs(rsl::string_view path);
+    REX_NO_DISCARD rsl::vector<rsl::string> list_files(rsl::string_view path);
+
   } // namespace vfs
 } // namespace rex
 

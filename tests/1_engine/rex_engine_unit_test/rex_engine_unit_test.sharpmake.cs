@@ -40,5 +40,12 @@ public class RexEngineUnitTest : TestProject
     {
       conf.AdditionalCompilerOptions.Add("/utf-8");
     }
+
+    if (conf.VcxprojUserFile == null)
+    {
+      conf.VcxprojUserFile = new Configuration.VcxprojUserFileSettings();
+    }
+
+    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Path.Combine(Globals.Root, "data", "RexEngineUnitTest");
   }
 }
