@@ -509,11 +509,6 @@ namespace rex
       // split the first path into different path components
       PathIterator first_path_it(paths.front());
       const rsl::string_view first_path = paths.front();
-      rsl::string_view first_sub_path = *first_path_it;
-      //const scratch_vector<rsl::string_view> splitted = rsl::split<GlobalScratchAllocator>(paths.front(), "/\\");
-      card32 furthest_path_component_idx = 0;
-      PathIterator furthest_path_component_it              = first_path_it.begin();
-
       s32 furthest_common_path_found_idx = first_path.length();
 
       // iterate over the other paths
@@ -544,53 +539,6 @@ namespace rex
         }
 
         rsl::min(furthest_common_path_found_idx, first_mistmatch_index);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // split the path into different path components
-    //    PathIterator other_path_it(path);
-    //    s32 path_component_idx = 0;
-				//auto res = rsl::mismatch(first_path_it.begin(), first_path_it.end(), other_path_it.begin(), other_path_it.end(),
-				//	[&](rsl::string_view view1, rsl::string_view view2)
-				//	{
-    //        bool is_equal = rsl::strincmp(view1.data(), view2.data(), view1.length()) == 0;
-    //        if (is_equal)
-    //        {
-    //          ++path_component_idx;
-    //        }
-				//		return is_equal;
-				//	});
-
-    //    furthest_path_component_idx = rsl::max(furthest_path_component_idx, path_component_idx);
-        //const scratch_vector<rsl::string_view> splitted_path = rsl::split<GlobalScratchAllocator>(path, "/\\");
-
-        //// find the first mismatch with the first path in the list
-        //auto res = rsl::mismatch(splitted.cbegin(), splitted.cend(), splitted_path.cbegin(), splitted_path.cend(),
-        //  [](rsl::string_view view1, rsl::string_view view2)
-        //  {
-        //    return rsl::strincmp(view1.data(), view2.data(), view1.length()) == 0;
-        //  });
-
-        // if None are equal, return an empty path
-        //if(*res.lhs_it == first_sub_path)
-        //{
-        //  return "";
-        //}
-
-        // otherwise store the max iterator where the mismatch occurred on a previous run
-        //furthest_path_component_it = (rsl::max)(furthest_path_component_it, res.lhs_it);
       }
 
       card32 pos                        = 0;
@@ -600,23 +548,6 @@ namespace rex
         ++pos;
       }
       return first_path.substr(0, pos);
-
-
-      // store the index of the path component to figure out where the common path ends
-      //const card32 path_component_idx = rsl::distance(splitted.cbegin(), furthest_path_component_it);
-      //const card32 path_component_idx = depth(*furthest_path_component_it, first_sub_path);
-
-      //// count the path components, so we know where out substring should end
-      //const rsl::string_view first_path = paths.front();
-      //card32 pos                        = 0;
-      //for(card32 i = 0; i < path_component_idx; ++i)
-      //{
-      //  pos = first_path.find_first_of("/\\", pos);
-      //  ++pos;
-      //}
-
-      //// return the substring, this is the common path between all paths given
-      //return first_path.substr(0, pos);
     }
 
     // Normalizes the path, removing redundant dots for current and parent directories
