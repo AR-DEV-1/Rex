@@ -78,6 +78,7 @@ namespace rex
       if (current_dir != cached_wd)
       {
         cached_wd.assign(current_dir);
+        cached_wd.replace("\\", "/");
       }
 
       return cached_wd;
@@ -237,7 +238,7 @@ namespace rex
 
     scratch_string set_cwd_abspath(rsl::string_view dir)
     {
-      REX_ASSERT_X(is_absolute(dir), "argument is expected to be absolute here: {}", dir);
+      REX_ASSERT_X(is_absolute(dir) || is_drive(dir), "argument is expected to be absolute here: {}", dir);
       REX_ASSERT_X(directory::exists_abspath(dir), "dir specified for working dir doesn't exist. This is not allowed. Dir: {}", dir);
 
       rsl::string_view cwd = path::cwd();
@@ -248,7 +249,7 @@ namespace rex
 
     scratch_string real_path_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(is_absolute(path) || is_drive(path), "argument is expected to be absolute here: {}", path);
 
       path = rex::path::unsafe_norm_path(path);
 

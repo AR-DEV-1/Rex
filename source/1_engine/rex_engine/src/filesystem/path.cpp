@@ -10,6 +10,7 @@
 #include "rex_std/bonus/string.h"
 #include "rex_std/ctype.h"
 #include "rex_std/format.h"
+#include "rex_std/algorithm.h"
 // The current implementation of this namespace is Windows only
 
 namespace rex
@@ -84,29 +85,32 @@ namespace rex
 
       bool compare_paths(rsl::string_view path1, rsl::string_view path2)
       {
+        if (path1.length() != path2.length())
+        {
+          return false;
+        }
+
+        s32 count = path1.length();
         const char8* lhs = path1.data();
         const char8* rhs = path2.data();
 
-        while (*lhs && *rhs) // NOLINT
+        // we check count first, so if the paths are emtpy, we early out immediately
+        while (count && *lhs && *rhs) // NOLINT
         {
           const char8 lhs_lower = rsl::to_lower(*lhs);
           const char8 rhs_lower = rsl::to_lower(*rhs);
 
           if (lhs_lower != rhs_lower && !slash_compare(lhs_lower, rhs_lower))
           {
-            break;
+            return false;
           }
 
           ++lhs;
           ++rhs;
+          --count;
         }
 
-        const char8 lhs_lower = rsl::to_lower(*lhs);
-        const char8 rhs_lower = rsl::to_lower(*rhs);
-        return lhs_lower - rhs_lower;
-
-
-        rsl::stricmp(path1.data(), path2.data()) == 0;
+        return true;
       }
 
     } // namespace internal
@@ -134,10 +138,14 @@ namespace rex
       }
       else
       {
-				m_start = m_end + 1;
-				m_end = m_path.find_first_of("/\\", m_start + 1);
+				m_start = m_path.find_first_not_of("/\\", m_end);
+        if (m_start == m_path.npos())
+        {
+          *this = PathIterator();
+        }
       }
 
+      m_end = m_path.find_first_of("/\\", m_start + 1);
       return *this;
     }
     rsl::string_view PathIterator::operator*() const
@@ -255,6 +263,12 @@ namespace rex
 
       path = remove_drive(path);
       
+      // Now that the drive is removed, we can check if there's still a ':' present
+      if (path.contains(':'))
+      {
+        return false;
+      }
+
       bool has_invalid_chars = rsl::any_of(path.cbegin(), path.cend(),
         [](char8 c)
         {
@@ -269,10 +283,15 @@ namespace rex
       bool has_invalid_name = false;
       for (rsl::string_view sub : PathIterator(path))
       {
+        if (sub.empty())
+        {
+          continue;
+        }
+
         has_invalid_name |= rsl::any_of(invalid_path_names().cbegin(), invalid_path_names().cend(),
           [sub](rsl::string_view invalid_name)
           {
-            return rsl::stricmp(invalid_name.data(), sub.data()) == 0;
+            return internal::compare_paths(sub, invalid_name);
           });
       }
 
@@ -530,7 +549,7 @@ namespace rex
 
         // As mismatch returns the first iterator where a mismatch is found, we need to get the previous sub path index
         // However, if all subpaths match, that'd mean we'd get the sub path index of the "end()" iterator
-        s32 first_mistmatch_index = rsl::clamp_min(res.lhs_it.sub_path_index(), 0);
+        s32 first_mistmatch_index = rsl::max(res.lhs_it.sub_path_index(), res.rhs_it.sub_path_index());
 
         // If none are equal, we can't do any worse than this, so return an empty path
         if (first_mistmatch_index == 0)
@@ -538,7 +557,7 @@ namespace rex
           return "";
         }
 
-        rsl::min(furthest_common_path_found_idx, first_mistmatch_index);
+        furthest_common_path_found_idx = rsl::min(furthest_common_path_found_idx, first_mistmatch_index);
       }
 
       card32 pos                        = 0;
@@ -586,15 +605,17 @@ namespace rex
           if (!result.empty() && last_subpath != "..")
           {
             result.resize(last_size);
+            last_size = rsl::clamp_min(result.find_last_of("/\\"), 0);
+            last_subpath = result.substr(last_size);
             continue;
           }
         }
 
-        // in any other case, we add the path component to the list
-        path::join_to<path_stack_string>(result, subpath);
-
         last_size = result.size();
         last_subpath = subpath;
+
+        // in any other case, we add the path component to the list
+        path::join_to<path_stack_string>(result, subpath);
       }
 
       // For linux systems, an absolute path starts with a slash, and we need to add it back
@@ -711,6 +732,18 @@ namespace rex
     // Returns true if 2 paths point to the same file
     bool is_same(rsl::string_view path1, rsl::string_view path2)
     {
+      // if both paths are empty, they are equal
+      if (path1.empty() && path2.empty())
+      {
+        return true;
+      }
+
+      // If the string represenation matches, we're pointing to the same path
+      if (internal::compare_paths(path1, path2))
+      {
+        return true;
+      }
+
       // simply convert the files into their actual files on disk
       // then do a string wise comparison
       scratch_string abs_path1;
@@ -884,7 +917,7 @@ namespace rex
     // Returns a relative path to path, starting from the start directory
     scratch_string rel_path_abspath(rsl::string_view path, rsl::string_view start)
     {
-      REX_ASSERT_X(is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(is_absolute(path) || is_drive(path), "argument is expected to be absolute here: {}", path);
       REX_ASSERT_X(is_absolute(start), "argument is expected to be absolute here: {}", start);
 
       // If both paths are equal, return an empty string
@@ -920,8 +953,8 @@ namespace rex
     // Returns true if 2 paths point to the same file or directory
     bool is_same_abspath(rsl::string_view path1, rsl::string_view path2)
     {
-      REX_ASSERT_X(is_absolute(path1), "argument is expected to be absolute here: {}", path1);
-      REX_ASSERT_X(is_absolute(path2), "argument is expected to be absolute here: {}", path2);
+      REX_ASSERT_X(is_absolute(path1) || is_drive(path1), "argument is expected to be absolute here: {}", path1);
+      REX_ASSERT_X(is_absolute(path2) || is_drive(path2), "argument is expected to be absolute here: {}", path2);
 
       scratch_string real_path1 = real_path_abspath(path1);
       scratch_string real_path2 = real_path_abspath(path2);
@@ -935,7 +968,7 @@ namespace rex
     // this makes it so that the root always has a depth of 0
     s32 abs_depth_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(is_absolute(path) || is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (is_root(path))
       {
@@ -950,13 +983,13 @@ namespace rex
     // Returns true if both paths are on the same mount
     bool has_same_root_abspath(rsl::string_view lhs, rsl::string_view rhs)
     {
-      REX_ASSERT_X(is_absolute(lhs), "argument is expected to be absolute here: {}", lhs);
-      REX_ASSERT_X(is_absolute(rhs), "argument is expected to be absolute here: {}", rhs);
+      REX_ASSERT_X(is_absolute(lhs) || is_drive(lhs), "argument is expected to be absolute here: {}", lhs);
+      REX_ASSERT_X(is_absolute(rhs) || is_drive(rhs), "argument is expected to be absolute here: {}", rhs);
 
       SplitResult lhs_split = split_origin(lhs);
       SplitResult rhs_split = split_origin(rhs);
 
-      return rex::path::is_same_abspath(lhs_split.head, rhs_split.head);
+      return internal::compare_paths(lhs_split.head, rhs_split.head);
     }
 
   } // namespace path

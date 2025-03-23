@@ -28,7 +28,9 @@ namespace rex
         if (!path::is_absolute(fullpath))
         {
           fullpath = rex::path::abs_path(path);
+          path = fullpath;
         }
+        
         fullpath += "\\*";
         HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -49,7 +51,7 @@ namespace rex
             continue;
           }
 
-          fullsubpath = path::join(fullpath, name);
+          fullsubpath = path::join(path, name);
           outResult.get().push_back(rsl::string(fullsubpath));
           if (goRecursive && directory::exists_abspath(fullsubpath))
           {

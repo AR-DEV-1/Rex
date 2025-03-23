@@ -357,7 +357,7 @@ namespace rex
     // Read from a file
     memory::Blob read_file_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (!exists_abspath(path))
       {
@@ -392,7 +392,7 @@ namespace rex
     // Read from a file, returns number of bytes read
     s32 read_file_abspath(rsl::string_view path, rsl::byte* buffer, s64 size)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (!exists_abspath(path))
       {
@@ -428,7 +428,7 @@ namespace rex
     // Save content to a file
     Error write_to_file_abspath(rsl::string_view path, const void* data, card64 size)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (is_readonly_abspath(path))
       {
@@ -464,7 +464,7 @@ namespace rex
     // Append a single line to a file
     Error append_line_abspath(rsl::string_view path, rsl::string_view line)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (is_readonly_abspath(path))
       {
@@ -497,7 +497,7 @@ namespace rex
     // Append lines to a file
     Error append_lines_abspath(rsl::string_view path, const rsl::vector<rsl::string>& lines)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (is_readonly_abspath(path))
       {
@@ -533,7 +533,7 @@ namespace rex
     // Append text to a file
     Error append_text_abspath(rsl::string_view path, rsl::string_view txt)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (is_readonly_abspath(path))
       {
@@ -564,7 +564,7 @@ namespace rex
     // Trunc a file, removing all content
     Error trunc_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (is_readonly_abspath(path))
       {
@@ -624,7 +624,7 @@ namespace rex
     // Create a new empty file
     Error create_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (!rex::path::is_valid_path(path))
       {
@@ -653,7 +653,7 @@ namespace rex
     // Delete a file
     Error del_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (!file::exists_abspath(path))
       {
@@ -668,7 +668,7 @@ namespace rex
     // return the file size
     card64 size_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       const rsl::win::handle file = internal::open_file_for_attribs(path);
 
@@ -685,7 +685,7 @@ namespace rex
     // Check if a file exists
     bool exists_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       // It's possible the error returned here is ERROR_FILE_NOT_FOUND or ERROR_PATH_NOT_FOUND
       // because we can't ignore both, we just call it without wrapping it in WIN_CALL
@@ -708,7 +708,7 @@ namespace rex
     // Check if a file is marked read only
     bool is_readonly_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (!exists_abspath(path))
       {
@@ -721,7 +721,7 @@ namespace rex
     // Set a file to be readonly
     Error set_readonly_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (!exists_abspath(path))
       {
@@ -737,7 +737,7 @@ namespace rex
     // Remove the readonly flag of a file
     Error remove_readonly_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       if (!exists_abspath(path))
       {
@@ -753,7 +753,7 @@ namespace rex
     // Return the creation time of a file
     rsl::time_point creation_time_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       const rsl::win::handle file = internal::open_file_for_attribs(path);
 
@@ -771,7 +771,7 @@ namespace rex
     // Return the access time of a file
     rsl::time_point access_time_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       const rsl::win::handle file = internal::open_file_for_attribs(path);
 
@@ -789,7 +789,7 @@ namespace rex
     // Return the modification time of a file
     rsl::time_point modification_time_abspath(rsl::string_view path)
     {
-      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+      REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
       const rsl::win::handle file = internal::open_file_for_attribs(path);
 
