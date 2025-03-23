@@ -320,6 +320,21 @@ namespace rex
 
       return res;
     }
+    // Tries to convert the path to an abs path
+    // and returns a string_view to this
+    // This method works as it assumes using a scratch string
+    // who's underlying memory is not deallocated after it goes out of scope
+    rsl::string_view unsafe_abs_path(rsl::string_view path)
+    {
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return path;
+    }
     // Returns the root directory path of the given path
     rsl::string_view path_root(rsl::string_view path)
     {
@@ -398,9 +413,9 @@ namespace rex
 
         // find the first mismatch with the first path in the list
         auto res = rsl::mismatch(splitted.cbegin(), splitted.cend(), splitted_path.cbegin(), splitted_path.cend(),
-          [](char8 c1, char8 c2)
+          [](rsl::string_view view1, rsl::string_view view2)
           {
-            return rsl::to_lower(c1) == rsl::to_lower(c2);
+            return rsl::stricmp(view1.data(), view2.data()) == 0;
           });
 
         // if None are equal, return an empty path
@@ -501,10 +516,20 @@ namespace rex
       }
 
       // Convert both path to their absolute paths, so its even easier to parse
-			scratch_string abs_norm_path = abs_path(norm_path);
-			scratch_string abs_norm_root = abs_path(norm_start);
+      scratch_string abs_norm_path;
+      if (!is_absolute(norm_path))
+      {
+        abs_norm_path = abs_path(norm_path);
+        path = abs_norm_path;
+      }
+      scratch_string abs_norm_start;
+      if (!is_absolute(norm_start))
+      {
+        abs_norm_start = abs_path(norm_start);
+        start = abs_norm_start;
+      }
 
-      return rel_path_from_abs(abs_norm_path, abs_norm_root);
+      return rel_path_abspath(path, start);
     }
 
     // Returns if the given path has an extension
@@ -557,10 +582,19 @@ namespace rex
     {
       // simply convert the files into their actual files on disk
       // then do a string wise comparison
-      scratch_string abs_path1 = abs_path(path1);
-      scratch_string abs_path2 = abs_path(path2);
-
-      return is_same_from_abs(abs_path1, abs_path2);
+      scratch_string abs_path1;
+      if (!is_absolute(path1))
+      {
+        abs_path1 = abs_path(path1);
+        path1 = abs_path1;
+      }
+      scratch_string abs_path2;
+      if (!is_absolute(path2))
+      {
+        abs_path2 = abs_path(path2);
+        path2 = abs_path2;
+      }
+      return is_same_abspath(path1, path2);
     }
 
     // --------------------------------
@@ -641,7 +675,7 @@ namespace rex
     {
       scratch_string fullpath = abs_path(norm_path(path));
 
-      return abs_depth_from_abs(fullpath);
+      return abs_depth_abspath(fullpath);
     }
     bool has_drive(rsl::string_view path)
     {
@@ -682,7 +716,7 @@ namespace rex
       scratch_string lhs_fullpath = abs_path(lhs);
       scratch_string rhs_fullpath = abs_path(rhs);
 
-      return has_same_root_from_abs(lhs_fullpath, rhs_fullpath);
+      return has_same_root_abspath(lhs_fullpath, rhs_fullpath);
     }
 
     // --------------------------------
@@ -690,13 +724,13 @@ namespace rex
     // --------------------------------
 
     // Returns a relative path to path, starting from the start directory
-    scratch_string rel_path_from_abs(rsl::string_view path, rsl::string_view start)
+    scratch_string rel_path_abspath(rsl::string_view path, rsl::string_view start)
     {
       REX_ASSERT_X(is_absolute(path), "argument is expected to be absolute here: {}", path);
       REX_ASSERT_X(is_absolute(start), "argument is expected to be absolute here: {}", start);
 
       // If both paths are equal, return an empty string
-      if (is_same_from_abs(path, start))
+      if (is_same_abspath(path, start))
       {
         return scratch_string("");
       }
@@ -726,13 +760,13 @@ namespace rex
       return result;
     }
     // Returns true if 2 paths point to the same file or directory
-    bool is_same_from_abs(rsl::string_view path1, rsl::string_view path2)
+    bool is_same_abspath(rsl::string_view path1, rsl::string_view path2)
     {
       REX_ASSERT_X(is_absolute(path1), "argument is expected to be absolute here: {}", path1);
       REX_ASSERT_X(is_absolute(path2), "argument is expected to be absolute here: {}", path2);
 
-      scratch_string real_path1 = real_path_from_abs(path1);
-      scratch_string real_path2 = real_path_from_abs(path2);
+      scratch_string real_path1 = real_path_abspath(path1);
+      scratch_string real_path2 = real_path_abspath(path2);
 
       return rsl::stricmp(real_path1.data(), real_path2.data()) == 0;
     }
@@ -741,7 +775,7 @@ namespace rex
     // basically counts the number of slashes
     // a file directly under the root has a depth of 1, any subdirectory increments depth by 1
     // this makes it so that the root always has a depth of 0
-    s32 abs_depth_from_abs(rsl::string_view path)
+    s32 abs_depth_abspath(rsl::string_view path)
     {
       REX_ASSERT_X(is_absolute(path), "argument is expected to be absolute here: {}", path);
 
@@ -756,7 +790,7 @@ namespace rex
       return (slash_count + backwards_slash_count);
     }
     // Returns true if both paths are on the same mount
-    bool has_same_root_from_abs(rsl::string_view lhs, rsl::string_view rhs)
+    bool has_same_root_abspath(rsl::string_view lhs, rsl::string_view rhs)
     {
       REX_ASSERT_X(is_absolute(lhs), "argument is expected to be absolute here: {}", lhs);
       REX_ASSERT_X(is_absolute(rhs), "argument is expected to be absolute here: {}", rhs);

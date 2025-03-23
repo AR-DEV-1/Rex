@@ -75,8 +75,8 @@ namespace rex
     void mount(MountingPoint root, rsl::string_view path);
     void shutdown();
 
-    // All functions have an equivalent "_from_abs" function
-    // The "_from_abs" functions can be used for performance/memory optimisations
+    // All functions have an equivalent "_abspath" function
+    // The "_abspath" functions can be used for performance/memory optimisations
     // They take the same arguments as input, but the arguments are expected to be an absolute path already
     // Avoiding need to convert it to an abs path in later stacks
 
@@ -151,7 +151,7 @@ namespace rex
     // --------------------------------
     // READING
     // --------------------------------
-    REX_NO_DISCARD ReadRequest read_file_from_abs_async(rsl::string_view filepath);
+    REX_NO_DISCARD ReadRequest read_file_abspath_async(rsl::string_view filepath);
 
   } // namespace vfs
 } // namespace rex

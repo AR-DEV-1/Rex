@@ -88,12 +88,7 @@ namespace rex
     {
       scratch_string fulldir = rex::path::abs_path(dir);
 
-      REX_ASSERT_X(directory::exists(fulldir), "dir specified for working dir doesn't exist. This is not allowed. Dir: {}", fulldir);
-
-      rsl::string_view cwd = path::cwd();
-      SetCurrentDirectoryA(fulldir.data());
-
-      return scratch_string(cwd);
+      return set_cwd_abspath(fulldir);
     }
     // Returns the path of the current user's temp folder
     scratch_string temp_path()
@@ -111,7 +106,7 @@ namespace rex
       // of linking to a the same file (.lnk files, symlinks, hardlinks, junctions)
       scratch_string fullpath = abs_path(path);
 
-      return real_path_from_abs(fullpath);
+      return real_path_abspath(fullpath);
     }
     // Returns if the given path is an absolute path
     bool is_absolute(rsl::string_view path)
@@ -240,12 +235,25 @@ namespace rex
       return true;
     }
 
-    scratch_string real_path_from_abs(rsl::string_view path)
+    scratch_string set_cwd_abspath(rsl::string_view dir)
     {
-      scratch_string fullpath = rex::path::norm_path(fullpath);
+      REX_ASSERT_X(is_absolute(dir), "argument is expected to be absolute here: {}", dir);
+      REX_ASSERT_X(directory::exists_abspath(dir), "dir specified for working dir doesn't exist. This is not allowed. Dir: {}", dir);
+
+      rsl::string_view cwd = path::cwd();
+      SetCurrentDirectoryA(dir.data());
+
+      return scratch_string(cwd);
+    }
+
+    scratch_string real_path_abspath(rsl::string_view path)
+    {
+      REX_ASSERT_X(is_absolute(path), "argument is expected to be absolute here: {}", path);
+
+      scratch_string fullpath = rex::path::norm_path(path);
 
       // If the path doesn't exist, just return its input
-      if (!file::exists_from_abs(fullpath) && !directory::exists_from_abs(fullpath))
+      if (!file::exists_abspath(fullpath) && !directory::exists_abspath(fullpath))
       {
         return fullpath;
       }

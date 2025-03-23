@@ -131,13 +131,16 @@ namespace rex
     // --------------------------------
     // QUERYING
     // --------------------------------
+    // Sets a new working directory and returns the old one
+    // A valid and existing path is expected or an assert is raised
+    scratch_string set_cwd_abspath(rsl::string_view dir);
 
     // --------------------------------
     // UTILITY
     // --------------------------------
     // For symlinks, returns the path the link points to
     // Otherwise returns the input
-    scratch_string real_path_from_abs(rsl::string_view path);
+    scratch_string real_path_abspath(rsl::string_view path);
 
     // -------------------------------------------------------------------------
     // END OF PLATFORM SPECIFIC FUNCTIONS
@@ -148,6 +151,12 @@ namespace rex
     // --------------------------------
     // Returns the absolute path for the given path
     scratch_string abs_path(rsl::string_view path);
+
+    // Tries to convert the path to an abs path
+    // and returns a string_view to this
+    // This method works as it assumes using a scratch string
+    // who's underlying memory is not deallocated after it goes out of scope
+    rsl::string_view unsafe_abs_path(rsl::string_view path);
 
     // Changes the extension of a path string_view
     // If extension argument is empty, the extension is removed
@@ -281,17 +290,17 @@ namespace rex
     // --------------------------------
 
     // Returns a relative path to path, starting from the start directory
-    scratch_string rel_path_from_abs(rsl::string_view path, rsl::string_view start);
+    scratch_string rel_path_abspath(rsl::string_view path, rsl::string_view start);
     // Returns true if 2 paths point to the same file or directory
-    bool is_same_from_abs(rsl::string_view path1, rsl::string_view path2);
+    bool is_same_abspath(rsl::string_view path1, rsl::string_view path2);
 
     // returns how deep from the root path is
     // basically counts the number of slashes
     // a file directly under the root has a depth of 1, any subdirectory increments depth by 1
     // this makes it so that the root always has a depth of 0
-    s32 abs_depth_from_abs(rsl::string_view path);
+    s32 abs_depth_abspath(rsl::string_view path);
     // Returns true if both paths are on the same mount
-    bool has_same_root_from_abs(rsl::string_view lhs, rsl::string_view rhs);
+    bool has_same_root_abspath(rsl::string_view lhs, rsl::string_view rhs);
 
   } // namespace path
 } // namespace rex

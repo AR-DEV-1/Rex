@@ -378,40 +378,58 @@ namespace rex
     // --------------------------------
     // CREATING
     // --------------------------------
-    Error create_file(MountingPoint root, rsl::string_view filepath)
+    Error create_file(MountingPoint root, rsl::string_view path)
     {
-      filepath = path::remove_quotes(filepath);
+      path = path::remove_quotes(path);
 
-      const scratch_string filepath = path::join(g_mounted_roots.at(root), filepath);
-      return create_file_from_abs(filepath);
+      scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
+      return file::create_abspath(fullpath);
     }
-    Error create_file(rsl::string_view filepath)
+    Error create_file(rsl::string_view path)
     {
-      filepath = path::remove_quotes(filepath);
+      path = path::remove_quotes(path);
 
-      const scratch_string filepath = abs_path(filepath);
-      return create_file_from_abs(filepath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return file::create_abspath(path);
     }
     Error create_dir(MountingPoint root, rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const scratch_string filepath = path::join(g_mounted_roots.at(root), path);
-      return create_dir_from_abs(filepath);
+      scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
+      return directory::create_abspath(fullpath);
     }
     Error create_dir(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const scratch_string filepath = abs_path(path);
-      return create_dir_from_abs(filepath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return directory::create_abspath(path);
     }
     Error create_dirs(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const scratch_string filepath = abs_path(path);
-      return create_dirs_from_abs(filepath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return directory::create_recursive_abspath(path);
     }
 
     // --------------------------------
@@ -421,43 +439,61 @@ namespace rex
     {
       path = path::remove_quotes(path);
 
-      const scratch_string filepath = path::join(g_mounted_roots.at(root), path);
-      return delete_file_from_abs(filepath);
+      scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
+      return file::del_abspath(fullpath);
     }
     Error delete_file(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const scratch_string fullpath = abs_path(path);
-      return delete_dir_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return file::del_abspath(path);
     }
     Error delete_dir(MountingPoint root, rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
       const scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
-      return delete_dir_from_abs(fullpath);
+      return directory::del_abspath(fullpath);
     }
     Error delete_dir(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const scratch_string fullpath = abs_path(path);
-      return delete_dir_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return directory::del_abspath(path);
     }
     Error delete_dir_recursive(MountingPoint root, rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
       const scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
-      return delete_dir_recursive_from_abs(fullpath);
+      return directory::del_recursive_abspath(fullpath);
     }
     Error delete_dir_recursive(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const scratch_string fullpath = abs_path(path);
-      return delete_dir_recursive_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return directory::del_recursive_abspath(path);
     }
 
     // --------------------------------
@@ -468,42 +504,59 @@ namespace rex
       filepath = path::remove_quotes(filepath);
 
       const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
-      return read_file_from_abs(fullpath);
+      return file::read_file_abspath(fullpath);
     }
-    memory::Blob read_file(rsl::string_view filepath)
+    memory::Blob read_file(rsl::string_view path)
     {
-      filepath = path::remove_quotes(filepath);
+      path = path::remove_quotes(path);
 
-      const scratch_string fullpath = abs_path(filepath);
-      return read_file_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return file::read_file_abspath(path);
     }
     s32 read_file(MountingPoint root, rsl::string_view filepath, rsl::byte* buffer, s32 size)
     {
       filepath = path::remove_quotes(filepath);
 
       const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
-      return read_file_from_abs(fullpath, buffer, size);
+      return file::read_file_abspath(fullpath, buffer, size);
     }
-    s32 read_file(rsl::string_view filepath, rsl::byte* buffer, s32 size)
+    s32 read_file(rsl::string_view path, rsl::byte* buffer, s32 size)
     {
-      filepath = path::remove_quotes(filepath);
+      path = path::remove_quotes(path);
 
-      const scratch_string fullpath = abs_path(filepath);
-      return read_file_from_abs(fullpath, buffer, size);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return file::read_file_abspath(path, buffer, size);
     }
     ReadRequest read_file_async(rsl::string_view filepath)
     {
       filepath = path::remove_quotes(filepath);
 
-      const scratch_string fullpath = abs_path(filepath);
-      return read_file_from_abs_async(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(filepath))
+      {
+        fullpath = path::abs_path(filepath);
+        filepath = fullpath;
+      }
+      return read_file_abspath_async(filepath);
     }
     ReadRequest read_file_async(MountingPoint root, rsl::string_view filepath)
     {
       filepath = path::remove_quotes(filepath);
 
       const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
-      return read_file_from_abs_async(fullpath);
+      return read_file_abspath_async(fullpath);
     }
 
     // --------------------------------
@@ -514,11 +567,25 @@ namespace rex
       filepath = path::remove_quotes(filepath);
 
       const rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
-      return write_to_file_from_abs(path, data, size, shouldAppend);
+      return write_to_file(path, data, size, shouldAppend);
     }
-    Error write_to_file(rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend)
+    Error write_to_file(rsl::string_view path, const void* data, card64 size, AppendToFile shouldAppend)
     {
-      return write_to_file(filepath, data, size, shouldAppend);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      if (shouldAppend)
+      {
+        return rex::file::append_text_abspath(path, rsl::string_view((const char8*)data, narrow_cast<s32>(size)));
+      }
+      else
+      {
+        return rex::file::write_to_file_abspath(path, data, size);
+      }
     }
     Error write_to_file(MountingPoint root, rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend)
     {
@@ -578,42 +645,60 @@ namespace rex
       path = path::remove_quotes(path);
 
       const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return exists_from_abs(fullpath);
+      return directory::exists_abspath(fullpath) || file::exists_abspath(fullpath);
     }
     bool exists(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-      const rsl::string_view fullpath = abs_path(path);
 
-      return exists_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return directory::exists_abspath(path) || file::exists_abspath(path);
     }
     bool is_file(MountingPoint root, rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
       const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return file::exists_from_abs(fullpath);
+      return file::exists_abspath(fullpath);
     }
     bool is_file(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const rsl::string_view fullpath = abs_path(path);
-      return file::exists_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return file::exists_abspath(path);
     }
     bool is_dir(MountingPoint root, rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
       const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return directory::exists_from_abs(fullpath);
+      return directory::exists_abspath(fullpath);
     }
     bool is_dir(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const rsl::string_view fullpath = abs_path(path);
-      return directory::exists_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return directory::exists_abspath(path);
     }
     bool is_mounted(MountingPoint mount)
     {
@@ -625,42 +710,60 @@ namespace rex
       path = path::remove_quotes(path);
 
       const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return list_entries_from_abs(fullpath);
+      return list_entries(fullpath);
     }
     rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
       const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return list_dirs_from_abs(fullpath);
+      return list_dirs(fullpath);
     }
     rsl::vector<rsl::string> list_files(MountingPoint root, rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
       const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return list_files_from_abs(fullpath);
+      return list_files(fullpath);
     }
     rsl::vector<rsl::string> list_entries(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const rsl::string_view fullpath = abs_path(path);
-      return list_entries_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return list_entries(path);
     }
     rsl::vector<rsl::string> list_dirs(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const rsl::string_view fullpath = abs_path(path);
-      return list_dirs_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return list_dirs(path);
     }
     rsl::vector<rsl::string> list_files(rsl::string_view path)
     {
       path = path::remove_quotes(path);
 
-      const rsl::string_view fullpath = abs_path(path);
-      return list_files_from_abs(fullpath);
+      scratch_string fullpath;
+      if (!path::is_absolute(path))
+      {
+        fullpath = path::abs_path(path);
+        path = fullpath;
+      }
+
+      return list_files(path);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------
@@ -670,7 +773,7 @@ namespace rex
     // --------------------------------
     // READING
     // --------------------------------
-    ReadRequest read_file_from_abs_async(rsl::string_view filepath)
+    ReadRequest read_file_abspath_async(rsl::string_view filepath)
     {
       const rsl::unique_lock lock(g_read_request_mutex);
 
