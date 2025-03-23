@@ -36,7 +36,7 @@ namespace rex
       m_alloc.deallocate(ptr, sizeof(T));
     }
 
-    void operator()(T* ptr, card32 size)
+    void operator()(T* ptr, s64 size)
     {
       static_assert(sizeof(T) > 0, "can't delete an incomplete type"); // NOLINT(bugprone-sizeof-expression)
       m_alloc.deallocate(ptr, size);
@@ -69,14 +69,14 @@ namespace rex
   // Unique Array
   //----------------------
   template <typename T, typename Allocator, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
-  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, Allocator>> alloc_unique(card32 size)
+  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, Allocator>> alloc_unique(s64 size)
   {
     Allocator alloc;
     return alloc_unique<T>(alloc, size);
   }
 
   template <typename T, typename Allocator, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
-  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, Allocator>> alloc_unique(Allocator& alloc, card32 size)
+  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, Allocator>> alloc_unique(Allocator& alloc, s64 size)
   {
     using Elem = rsl::remove_extent_t<T>;
     Elem* ptr = static_cast<Elem*>(alloc.allocate(sizeof(Elem) * size));
@@ -95,7 +95,7 @@ namespace rex
   }
 
   template <typename T, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
-  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, GlobalDebugAllocator>> alloc_unique_debug(card32 size)
+  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, GlobalDebugAllocator>> alloc_unique_debug(s64 size)
   {
     GlobalDebugAllocator alloc;
     return alloc_unique<T>(alloc, size);
@@ -112,7 +112,7 @@ namespace rex
   }
 
   template <typename T, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
-  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, GlobalScratchAllocator>> alloc_unique_scratch(card32 size)
+  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, GlobalScratchAllocator>> alloc_unique_scratch(s64 size)
   {
     GlobalScratchAllocator alloc;
     return alloc_unique<T>(alloc, size);
@@ -129,7 +129,7 @@ namespace rex
   }
 
   template <typename T, rsl::enable_if_t<rsl::is_array_v<T>, bool> = true>
-  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, GlobalSingleFrameAllocator>> alloc_unique_temp(card32 size)
+  RSL_NO_DISCARD rsl::unique_array<rsl::remove_extent_t<T>, DeleterWithAllocator<rsl::remove_extent_t<T>, GlobalSingleFrameAllocator>> alloc_unique_temp(s64 size)
   {
     GlobalSingleFrameAllocator alloc;
     return alloc_unique<T>(alloc, size);

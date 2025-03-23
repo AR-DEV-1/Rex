@@ -191,7 +191,7 @@ TEST_CASE("TEST - Path - Common Path")
 	rex::TempCwd tmp_cwd("path_tests");
 
 	{
-		rsl::vector<rsl::string_view> paths =
+		rsl::range<rsl::string_view> paths =
 		{
 			"c:/bar/foo.txt",
 			"c:/bar/text.txt"
@@ -201,7 +201,7 @@ TEST_CASE("TEST - Path - Common Path")
 	}
 
 	{
-		rsl::vector<rsl::string_view> paths =
+		rsl::range<rsl::string_view> paths =
 		{
 			"c:/foo/foo.txt",
 			"c:/bar/text.txt"
@@ -211,7 +211,7 @@ TEST_CASE("TEST - Path - Common Path")
 	}
 
 	{
-		rsl::vector<rsl::string_view> paths =
+		rsl::range<rsl::string_view> paths =
 		{
 			"c:/bar/foo.txt",
 			"d:/bar/text.txt"
@@ -316,15 +316,15 @@ TEST_CASE("TEST - Path - Relative Path")
 	rsl::string_view rel_path = "path/to/dir";
 	s32 expected_depth = rex::path::abs_depth(rex::path::cwd());
 	expected_depth += rex::path::depth(rel_path);
-	rex::scratch_string rel_to_root;
+	rsl::string rel_to_root;
 	for (s32 i = 0; i < expected_depth; ++i)
 	{
-		rel_to_root = rex::path::join(rel_to_root, "..");
+		rex::path::join_to(rel_to_root, "..");
 	}
 
-	rex::scratch_string abs_path = rex::path::abs_path(rel_path);
+	rsl::string abs_path(rex::path::abs_path(rel_path));
 	rex::path::SplitResult split_res = rex::path::split_origin(abs_path);
-	rex::scratch_string cwd_drive(rex::path::split_origin(rex::path::cwd()).head);
+	rsl::string cwd_drive(rex::path::split_origin(rex::path::cwd()).head);
 
 	REX_CHECK(rex::path::is_same(rex::path::rel_path("/path//to//dir/", "/"), rex::path::join("path", "to", "dir")));
 	REX_CHECK(rex::path::is_same(rex::path::rel_path("/", rel_path), rel_to_root));

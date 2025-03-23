@@ -9,13 +9,13 @@
 
 namespace rex
 {
-  using StackMarker = s32;
+  using StackMarker = s64;
 
   template <typename BackendAllocator>
   class StackAllocator
   {
   public:
-    using size_type = s32;
+    using size_type = s64;
     using pointer = void*;
 
     explicit StackAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
@@ -25,7 +25,7 @@ namespace rex
     }
 
     // Allocate size bytes from the underlying buffer and return a pointer to it
-    REX_NO_DISCARD pointer allocate(size_type size, size_type alignment)
+    REX_NO_DISCARD pointer allocate(size_type size, s32 alignment)
     {
       RSL_ASSERT_X(can_allocate(size, alignment), "Stack allocator out of bounds! max size: ", m_buffer.count(), " new size: ", current_marker() + size);
 

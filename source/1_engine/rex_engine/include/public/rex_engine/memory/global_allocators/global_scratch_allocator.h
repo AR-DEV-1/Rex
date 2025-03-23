@@ -35,3 +35,15 @@ namespace rex
     return false;
   }
 }
+
+namespace rsl
+{
+  inline namespace v1
+  {
+    template <>
+    struct string_allocator_traits<rex::GlobalScratchAllocator>
+    {
+      constexpr static count_t sso_buff_size = 0;
+    };
+  }
+}

@@ -38,6 +38,8 @@ namespace rex
     vfs::shutdown();
 
     cmdline::shutdown();
+
+    end_profiling_session();
   }
 
   //--------------------------------------------------------------------------------------------

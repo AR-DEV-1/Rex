@@ -21,7 +21,7 @@ namespace rex
 	class BlockAllocator
 	{
 	public:
-		using size_type = s32;
+		using size_type = s64;
 		using pointer = void*;
 
 		BlockAllocator(size_type size, size_type blockSize, BackendAllocator alloc = BackendAllocator())

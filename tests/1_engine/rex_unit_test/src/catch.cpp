@@ -25,13 +25,13 @@ public:
 
   void testRunStarting(Catch::TestRunInfo const&) override
   {
-    s32 size = 1_kib;
+    s64 size = 1_kib;
 
     rex::mut_globals().allocators.single_frame_allocator = rsl::make_unique<rex::StackAllocator<rex::GlobalAllocator>>(size);
     rex::mut_globals().allocators.scratch_allocator = rsl::make_unique<rex::CircularAllocator<rex::GlobalAllocator>>(size);
   }
 
-  void testRunEnded(const Catch::TestRunStats& testRunStats) override
+  void testRunEnded(const Catch::TestRunStats&) override
   {
     rex::mut_globals().allocators.single_frame_allocator.reset();
     rex::mut_globals().allocators.scratch_allocator.reset();

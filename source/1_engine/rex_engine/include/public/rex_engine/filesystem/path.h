@@ -3,7 +3,9 @@
 #include "rex_std/bonus/string.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/vector.h"
+#include "rex_std/type_traits.h"
 #include "rex_std/bonus/utility.h"
+#include "rex_std/bonus/string.h"
 #include "rex_engine/engine/types.h"
 
 #include "rex_engine/string/tmp_string.h"
@@ -28,21 +30,36 @@ namespace rex
 
     namespace internal
     {
-      void join_string_view(rsl::big_stack_string& str, rsl::string_view arg);
-      template <typename Enum, rsl::enable_if_t<rsl::is_enum_v<Enum>, bool> = true>
-      void join_enum(rsl::big_stack_string& str, Enum e)
+      // concat the arg to the string in filepath format
+      template <typename StringLike>
+      void join_string_view(StringLike& str, rsl::string_view arg)
+      {
+        if (arg.empty())
+        {
+          return;
+        }
+
+        str += arg;
+
+        if (!str.ends_with(seperation_char()))
+        {
+          str += seperation_char();
+        }
+      }
+      template <typename StringLike, typename Enum, rsl::enable_if_t<rsl::is_enum_v<Enum>, bool> = true>
+      void join_enum(StringLike& str, Enum e)
       {
         rsl::string_view enum_name = rsl::enum_refl::enum_name(e);
         join_impl(str, enum_name);
       }
-      template <typename PathLikeType>
-      void join_path_like(rsl::big_stack_string& str, PathLikeType&& arg)
+      template <typename StringLike, typename PathLikeType>
+      void join_path_like(StringLike& str, PathLikeType&& arg)
       {
         join_string_view(str, rsl::string_view(rsl::forward<PathLikeType>(arg))); // NOLINT(google-readability-casting)
       }
 
-      template <typename PathLikeType>
-      void join_impl(rsl::big_stack_string& str, PathLikeType&& firstArg)
+      template <typename StringLike, typename PathLikeType>
+      void join_impl(StringLike& str, PathLikeType&& firstArg)
       {
         if constexpr (rsl::is_same_v<rsl::string_view, PathLikeType>)
         {
@@ -58,13 +75,37 @@ namespace rex
         }
       }
 
-      template <typename PathLikeType, typename... Args>
-      void join_impl(rsl::big_stack_string& str, PathLikeType&& firstArg, Args&&... args)
+      template <typename StringLike, typename PathLikeType, typename... Args>
+      void join_impl(StringLike& str, PathLikeType&& firstArg, Args&&... args)
       {
         join_impl(str, rsl::forward<PathLikeType>(firstArg));
         join_impl(str, rsl::forward<Args>(args)...);          // append the rest
       }
     }                                                         // namespace internal
+
+    class PathIterator
+    {
+		public:
+      PathIterator();
+      PathIterator(rsl::string_view path);
+
+      PathIterator& operator++();
+      rsl::string_view operator*() const;
+
+      PathIterator& begin();
+      PathIterator end();
+			bool operator==(const PathIterator& other);
+			bool operator!=(const PathIterator& other);
+
+      s32 sub_path_index() const;
+
+		private:
+      rsl::string_view m_path;
+      s32 m_start;
+      s32 m_end;
+      s32 m_sub_path_idx;
+    };
+
 
     // -------------------------------------------------------------------------
     // THESE FUNCTIONS ARE REQUIRED TO BE IMPLEMENTED BY PLATFORM SPECIFIC CODE
@@ -131,13 +172,16 @@ namespace rex
     // --------------------------------
     // QUERYING
     // --------------------------------
+    // Sets a new working directory and returns the old one
+    // A valid and existing path is expected or an assert is raised
+    scratch_string set_cwd_abspath(rsl::string_view dir);
 
     // --------------------------------
     // UTILITY
     // --------------------------------
     // For symlinks, returns the path the link points to
     // Otherwise returns the input
-    scratch_string real_path_from_abs(rsl::string_view path);
+    scratch_string real_path_abspath(rsl::string_view path);
 
     // -------------------------------------------------------------------------
     // END OF PLATFORM SPECIFIC FUNCTIONS
@@ -148,6 +192,18 @@ namespace rex
     // --------------------------------
     // Returns the absolute path for the given path
     scratch_string abs_path(rsl::string_view path);
+
+    // Tries to convert the path to an abs path
+    // and returns a string_view to this
+    // This method works as it assumes using a scratch string
+    // who's underlying memory is not deallocated after it goes out of scope
+    rsl::string_view unsafe_abs_path(rsl::string_view path);
+
+    // Tries to convert the path to an norm path
+    // and returns a string_view to this
+    // This method works as it assumes using a scratch string
+    // who's underlying memory is not deallocated after it goes out of scope
+    rsl::string_view unsafe_norm_path(rsl::string_view path);
 
     // Changes the extension of a path string_view
     // If extension argument is empty, the extension is removed
@@ -206,7 +262,7 @@ namespace rex
     // Returns a random filename, but doesn't create it
     scratch_string random_filename();
     // Returns the longest common sub-path of each pathname in the sequence
-    rsl::string_view common_path(const rsl::vector<rsl::string_view>& paths);
+    rsl::string_view common_path(rsl::range<rsl::string_view> paths);
     // Normalizes the path, removing redundant dots for current and parent directories
     // Converts forward slashes to backward slashes
     scratch_string norm_path(rsl::string_view path);
@@ -234,6 +290,10 @@ namespace rex
     bool is_root(rsl::string_view path);
     // Returns true if both paths are on the same mount
     bool has_same_root(rsl::string_view lhs, rsl::string_view rhs);
+    // Returns true if the path is normalized
+    // A path is normalized if it doesn't have any extra slashes
+    // and it doesn't have any "current_dir" and "parent_dir" tokens
+    bool is_normalized(rsl::string_view path);
 
     // --------------------------------
     // UTILITY
@@ -248,14 +308,30 @@ namespace rex
     // the tail is the extension
     SplitResult split_ext(rsl::string_view path);
 
+    template <typename ResultType = scratch_string, typename... PathLikeTypes>
+    void join_to(ResultType& outResult, PathLikeTypes&&... paths)
+    {
+      if (!outResult.empty() && !outResult.ends_with(seperation_char()))
+      {
+        outResult += seperation_char();
+      }
+
+      internal::join_impl(outResult, rsl::forward<PathLikeTypes>(paths)...);
+      
+      if (!outResult.empty())
+      {
+        outResult.pop_back();
+      }
+    }
+
     // Join multiple paths together
-    template <typename... PathLikeTypes>
-    scratch_string join(PathLikeTypes&&... paths)
+    template <typename ResultType = scratch_string, typename... PathLikeTypes>
+    ResultType join(PathLikeTypes&&... paths)
     {
       // To avoid over allocation we generate the full path on the stack
       // after which we copy this memory into a heap based allocation
-      // has a little impact on performance, but reduces less memory
-      rsl::big_stack_string stack_res;
+      // has a little impact on performance, but reduces memory usage
+      path_stack_string stack_res;
       internal::join_impl(stack_res, rsl::forward<PathLikeTypes>(paths)...);
 
       if (!stack_res.empty())
@@ -263,7 +339,15 @@ namespace rex
         stack_res.pop_back(); // remove the last seperation char
       }
 
-      scratch_string res;
+      // If the user is expected a stack string of the same size
+      // There's no point in copying it over to another one, just return this one
+      if constexpr (rsl::is_same_v<decltype(stack_res), ResultType>)
+      {
+        return stack_res;
+      }
+
+      // Now that we have the final result, copy it over into the destination type
+      ResultType res;
       res.assign(stack_res.to_view());
 
       return res;
@@ -281,19 +365,21 @@ namespace rex
     // --------------------------------
 
     // Returns a relative path to path, starting from the start directory
-    scratch_string rel_path_from_abs(rsl::string_view path, rsl::string_view start);
+    scratch_string rel_path_abspath(rsl::string_view path, rsl::string_view start);
     // Returns true if 2 paths point to the same file or directory
-    bool is_same_from_abs(rsl::string_view path1, rsl::string_view path2);
+    bool is_same_abspath(rsl::string_view path1, rsl::string_view path2);
 
     // returns how deep from the root path is
     // basically counts the number of slashes
     // a file directly under the root has a depth of 1, any subdirectory increments depth by 1
     // this makes it so that the root always has a depth of 0
-    s32 abs_depth_from_abs(rsl::string_view path);
+    s32 abs_depth_abspath(rsl::string_view path);
     // Returns true if both paths are on the same mount
-    bool has_same_root_from_abs(rsl::string_view lhs, rsl::string_view rhs);
+    bool has_same_root_abspath(rsl::string_view lhs, rsl::string_view rhs);
 
   } // namespace path
+
+  using path_stack_string = rsl::stack_string<char8, path::max_path_length()>;
 } // namespace rex
 
 #ifdef REX_PLATFORM_WINDOWS

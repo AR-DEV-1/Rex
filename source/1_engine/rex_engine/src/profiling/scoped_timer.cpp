@@ -144,14 +144,14 @@ namespace rex
 		auto high_res_start = floating_point_nano_seconds(m_start_timepoint.time_since_epoch());
 		auto elapsed_time = rsl::chrono::time_point_cast<rsl::chrono::nanoseconds>(end).time_since_epoch() - rsl::chrono::time_point_cast<rsl::chrono::nanoseconds>(m_start_timepoint).time_since_epoch();
 
-		new_profile_result(
-			{
-				rsl::big_stack_string(m_name),
-				high_res_start,
-				elapsed_time,
-				rsl::this_thread::get_id(),
-				m_source_location
-			});
+		//new_profile_result(
+		//	{
+		//		rsl::big_stack_string(m_name),
+		//		high_res_start,
+		//		elapsed_time,
+		//		rsl::this_thread::get_id(),
+		//		m_source_location
+		//	});
 
 		m_has_stopped = true;
 		return elapsed_time;

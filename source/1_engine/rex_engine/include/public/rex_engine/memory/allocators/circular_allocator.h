@@ -14,7 +14,7 @@ namespace rex
 	class CircularAllocator
 	{
 	public:
-		using size_type = s32;
+		using size_type = s64;
 		using pointer = void*;
 
 		explicit CircularAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
