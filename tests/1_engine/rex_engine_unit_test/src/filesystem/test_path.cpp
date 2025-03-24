@@ -387,10 +387,10 @@ TEST_CASE("TEST - Path - Relative Path")
 	REX_CHECK(rex::path::is_same(rex::path::rel_path("C:\\path\\to\\dir", "C:\\path"), rex::path::join("to", "dir")));
 	REX_CHECK(rex::path::is_same(rex::path::rel_path("C:\\path\\to\\..\\dir", "C:\\path"), rex::path::join("dir")));
 
-	REX_CHECK(rex::path::is_same(rex::path::rel_path("D:\\path\\to\\dir", "C:\\path\\to\\dir"), rex::path::join(rex::path::abs_path("D:\\path\\to\\dir"))));
-	REX_CHECK(rex::path::is_same(rex::path::rel_path("D:/path/to/dir", "C:/path/to/dir"), rex::path::join(rex::path::abs_path("D:/path/to/dir"))));
-	REX_CHECK(rex::path::is_same(rex::path::rel_path("D:\\", "C:\\"), rex::path::join(rex::path::abs_path("D:\\"))));
-	REX_CHECK(rex::path::is_same(rex::path::rel_path("D:/", "C:/"), rex::path::join(rex::path::abs_path("D:/"))));
+	REX_CHECK(rex::path::is_same(rex::path::rel_path("D:\\path\\to\\dir", "C:\\path\\to\\dir"), rex::path::abs_path("D:\\path\\to\\dir")));
+	REX_CHECK(rex::path::is_same(rex::path::rel_path("D:/path/to/dir", "C:/path/to/dir"), rex::path::abs_path("D:/path/to/dir")));
+	REX_CHECK(rex::path::is_same(rex::path::rel_path("D:\\", "C:\\"), rex::path::abs_path("D:\\")));
+	REX_CHECK(rex::path::is_same(rex::path::rel_path("D:/", "C:/"), rex::path::abs_path("D:/")));
 
 	// edge cases
 	REX_CHECK(rex::path::is_same(rex::path::rel_path("to/dir/", "path"), rex::path::join("..", "to", "dir")));

@@ -11,6 +11,10 @@
 #include "rex_std/ctype.h"
 #include "rex_std/format.h"
 #include "rex_std/algorithm.h"
+#include "rex_std/internal/algorithm/max.h"
+#include "rex_std/internal/algorithm/min.h"
+#include "rex_std/string_view.h"
+
 // The current implementation of this namespace is Windows only
 
 namespace rex
@@ -526,7 +530,6 @@ namespace rex
       }
 
       // split the first path into different path components
-      PathIterator first_path_it(paths.front());
       const rsl::string_view first_path = paths.front();
       s32 furthest_common_path_found_idx = first_path.length();
 
@@ -678,11 +681,11 @@ namespace rex
     // Returns if a file is under a certain directory
     bool is_under_dir(rsl::string_view path, rsl::string_view dir)
     {
+      path = path::unsafe_norm_path(path);
+      dir = path::unsafe_norm_path(dir);
+
       path = path::unsafe_abs_path(path);
       dir = path::unsafe_abs_path(dir);
-
-      //PathIterator path_it(path);
-      //PathIterator dir_it(dir);
 
       rsl::range<rsl::string_view> paths{ path, dir };
       rsl::string_view common = common_path(paths);
