@@ -1,5 +1,6 @@
 #include "rex_engine/filesystem/path.h"
 
+#include "rex_engine/engine/types.h"
 #include "rex_engine/engine/numeric.h"
 #include "rex_engine/filesystem/directory.h"
 #include "rex_engine/text_processing/text_processing.h"
