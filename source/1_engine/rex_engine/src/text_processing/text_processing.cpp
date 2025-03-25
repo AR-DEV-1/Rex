@@ -115,15 +115,6 @@ namespace rex
     return res;
   }
 
-  // Removes all spaces from a string
-  // we're taking a string by ref
-  // to reuse the memory
-  rsl::string& remove_spaces(rsl::string& input)
-  {
-    input.replace(" ", "");
-    return input;
-  }
-
   // removes leading and trailing quotes from a path
   rsl::string_view remove_quotes(rsl::string_view path)
   {
