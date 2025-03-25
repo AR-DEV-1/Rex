@@ -153,7 +153,18 @@ TEST_CASE("TEST - Path - Get Stem")
 
 TEST_CASE("TESt - Path - Remove Drive")
 {
-	REX_CHECK(false);
+	REX_CHECK(rex::path::remove_drive("d:/something") == "something");
+	REX_CHECK(rex::path::remove_drive("d://something") == "something");
+	REX_CHECK(rex::path::remove_drive("d:/\\something") == "something");
+	REX_CHECK(rex::path::remove_drive("d:\\something") == "something");
+	REX_CHECK(rex::path::remove_drive("d:\\\\something") == "something");
+	REX_CHECK(rex::path::remove_drive("") == "");
+	REX_CHECK(rex::path::remove_drive("/") == "/");
+	REX_CHECK(rex::path::remove_drive("\\") == "\\");
+	REX_CHECK(rex::path::remove_drive("d") == "d");
+	REX_CHECK(rex::path::remove_drive("d:") == "d:");
+	REX_CHECK(rex::path::remove_drive("something") == "something");
+	REX_CHECK(rex::path::remove_drive("path/to/dir") == "path/to/dir");
 }
 
 TEST_CASE("TEST - Path - Absolute Path")
