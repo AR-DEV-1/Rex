@@ -9,7 +9,7 @@
 #include "rex_engine/engine/types.h"
 
 #include "rex_engine/string/tmp_string.h"
-
+#include "rex_engine/text_processing/splitted_iterator.h"
 #include "rex_engine/engine/globals.h"
 
 namespace rex
@@ -83,29 +83,12 @@ namespace rex
       }
     }                                                         // namespace internal
 
-    class PathIterator
+    class PathIterator : public TextIterator
     {
 		public:
       PathIterator();
       PathIterator(rsl::string_view path);
-
-      PathIterator& operator++();
-      rsl::string_view operator*() const;
-
-      PathIterator& begin();
-      PathIterator end();
-			bool operator==(const PathIterator& other);
-			bool operator!=(const PathIterator& other);
-
-      s32 sub_path_index() const;
-
-		private:
-      rsl::string_view m_path;
-      s32 m_start;
-      s32 m_end;
-      s32 m_sub_path_idx;
     };
-
 
     // -------------------------------------------------------------------------
     // THESE FUNCTIONS ARE REQUIRED TO BE IMPLEMENTED BY PLATFORM SPECIFIC CODE

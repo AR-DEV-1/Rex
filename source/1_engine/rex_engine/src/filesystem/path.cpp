@@ -121,66 +121,11 @@ namespace rex
     } // namespace internal
 
     PathIterator::PathIterator()
-      : m_path()
-      , m_start(0)
-      , m_end(m_path.npos())
-      , m_sub_path_idx(-1)
     {}
+
     PathIterator::PathIterator(rsl::string_view path)
-      : m_path(path)
-      , m_start(0)
-      , m_end(path.find_first_of("/\\"))
-      , m_sub_path_idx(0)
+      : TextIterator(path, "/\\")
     {}
-
-    PathIterator& PathIterator::operator++()
-    {
-      ++m_sub_path_idx;
-
-      if (m_end == m_path.npos())
-      {
-        *this = PathIterator();
-      }
-      else
-      {
-				m_start = m_path.find_first_not_of("/\\", m_end);
-        if (m_start == m_path.npos())
-        {
-          *this = PathIterator();
-        }
-      }
-
-      m_end = m_path.find_first_of("/\\", m_start + 1);
-      return *this;
-    }
-    rsl::string_view PathIterator::operator*() const
-    {
-      s32 length = m_end != m_path.npos()
-        ? m_end - m_start
-        : m_path.length() - m_start;
-
-      return m_path.substr(m_start, length);
-    }
-    PathIterator& PathIterator::begin()
-    {
-      return *this;
-    }
-    PathIterator PathIterator::end()
-    {
-      return PathIterator();
-    }
-    bool PathIterator::operator==(const PathIterator& other)
-    {
-      return m_path == other.m_path;
-    }
-    bool PathIterator::operator!=(const PathIterator& other)
-    {
-      return !(*this == other);
-    }
-    s32 PathIterator::sub_path_index() const
-    {
-      return m_sub_path_idx;
-    }
 
     // --------------------------------
     // QUERYING
@@ -392,9 +337,10 @@ namespace rex
     // Returns the fullpath without the drive, if it's present
     rsl::string_view remove_drive(rsl::string_view path)
     {
-      if (is_absolute(path))
+      if (has_drive(path))
       {
-        return path.substr(path.find_first_of("/\\"));
+        s32 drive_length = 3;
+        return path.substr(path.find_first_not_of("/\\", drive_length));
       }
 
       return path;
@@ -543,8 +489,6 @@ namespace rex
         PathIterator other_path_it(path);
 
         // Iterate over both paths and find the first mismatch
-        s32 path_component_idx = 0;
-
         auto res = rsl::mismatch(first_path_it.begin(), first_path_it.end(), other_path_it.begin(), other_path_it.end(),
           [&](rsl::string_view view1, rsl::string_view view2)
           {
@@ -553,7 +497,7 @@ namespace rex
 
         // As mismatch returns the first iterator where a mismatch is found, we need to get the previous sub path index
         // However, if all subpaths match, that'd mean we'd get the sub path index of the "end()" iterator
-        s32 first_mistmatch_index = rsl::max(res.lhs_it.sub_path_index(), res.rhs_it.sub_path_index());
+        s32 first_mistmatch_index = (rsl::max)(res.lhs_it.sub_text_index(), res.rhs_it.sub_text_index());
 
         // If none are equal, we can't do any worse than this, so return an empty path
         if (first_mistmatch_index == 0)
@@ -561,7 +505,7 @@ namespace rex
           return "";
         }
 
-        furthest_common_path_found_idx = rsl::min(furthest_common_path_found_idx, first_mistmatch_index);
+        furthest_common_path_found_idx = (rsl::min)(furthest_common_path_found_idx, first_mistmatch_index);
       }
 
       card32 pos                        = 0;
