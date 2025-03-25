@@ -30,7 +30,7 @@ namespace rex
   bool is_invalid(const T& obj)
   {
     // If we're not aligned, we're not invalid
-    if (sizeof(obj) % sizeof(rex::internal::s_invalid_obj_value) != 0)
+    if constexpr (sizeof(obj) % sizeof(rex::internal::s_invalid_obj_value) != 0)
     {
       return false;
     }

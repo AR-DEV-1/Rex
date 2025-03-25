@@ -87,9 +87,9 @@ namespace rex
     // An existing path is expected or an assert is raised
     scratch_string set_cwd(rsl::string_view dir)
     {
-      scratch_string fulldir = rex::path::abs_path(dir);
+      dir = rex::path::unsafe_abs_path(dir);
 
-      return set_cwd_abspath(fulldir);
+      return set_cwd_abspath(dir);
     }
     // Returns the path of the current user's temp folder
     scratch_string temp_path()
@@ -157,6 +157,7 @@ namespace rex
       internal::ReparseTag const tag = internal::get_reparse_tag(path);
       return tag == internal::ReparseTag::Symlink;
     }
+
     // Splits the path into a head and a tail
     // the head is either the mount point or an empty string
     // the tail is everything else

@@ -24,7 +24,7 @@ namespace rex
 		{
 		}
 
-		REX_NO_DISCARD pointer allocate(size_type size, size_type alignment)
+		REX_NO_DISCARD pointer allocate(size_type size, s32 alignment)
 		{
 			REX_ASSERT_X(size <= m_buffer.count(), "Allocating more data the circular buffer holds.");
 

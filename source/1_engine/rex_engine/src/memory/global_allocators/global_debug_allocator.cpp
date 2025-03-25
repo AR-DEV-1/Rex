@@ -4,18 +4,18 @@
 
 namespace rex
 {
-  void* GlobalDebugAllocator::allocate(const s32 count)
+  void* GlobalDebugAllocator::allocate(const s64 count)
   {
     return m_alloc.allocate(count);
   }
-  void GlobalDebugAllocator::deallocate(void* const ptr, s32 /*count*/)
+  void GlobalDebugAllocator::deallocate(void* const ptr, s64 /*count*/)
   {
     return m_alloc.deallocate(ptr);
   }
 
-  s32 GlobalDebugAllocator::max_size() const
+  s64 GlobalDebugAllocator::max_size() const
   {
-    return (rsl::numeric_limits<s32>::max)();
+    return (rsl::numeric_limits<s64>::max)();
   }
 
 } // namespace rex

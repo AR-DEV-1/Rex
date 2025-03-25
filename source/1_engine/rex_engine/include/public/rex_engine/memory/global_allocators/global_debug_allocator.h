@@ -14,15 +14,15 @@ namespace rex
   class GlobalDebugAllocator
   {
   public:
-    void* allocate(const s32 count);    // deallocates the storage reference by the pointer p.
-    void deallocate(void* const ptr, s32 count);
+    void* allocate(const s64 count);    // deallocates the storage reference by the pointer p.
+    void deallocate(void* const ptr, s64 count);
     template <typename T>
     T* allocate()
     {
       return static_cast<T*>(allocate(sizeof(T)));
     }
 
-    s32 max_size() const;
+    s64 max_size() const;
 
     template <typename U, typename... Args>
     void construct(U* p, Args&&... args)
