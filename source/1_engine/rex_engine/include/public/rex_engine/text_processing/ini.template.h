@@ -7,6 +7,7 @@
 #include "rex_engine/engine/casting.h"
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/text_processing/text_processing.h"
+#include "rex_engine/text_processing/splitted_iterator.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_std/string_view.h"
 
@@ -23,15 +24,10 @@ namespace rex
 		{
 			for (const auto& item : items)
 			{
-				m_items[item.key] = item.value;
+				m_items[internal_string(item.key)] = internal_string(item.value);
 			}
 		}
 
-		template <typename Allocator>
-		rsl::string_view IniBlock<Allocator>::header() const
-		{
-			return m_header;
-		}
 		template <typename Allocator>
 		rsl::string_view IniBlock<Allocator>::get(rsl::string_view key, rsl::string_view def) const
 		{
@@ -44,9 +40,15 @@ namespace rex
 		}
 
 		template <typename Allocator>
-		const rsl::unordered_map<rsl::string_view, rsl::string_view>& IniBlock<Allocator>::all_items() const
+		const typename IniBlock<Allocator>::internal_hash_map& IniBlock<Allocator>::all_items() const
 		{
 			return m_items;
+		}
+
+		template <typename Allocator>
+		rsl::string_view IniBlock<Allocator>::header() const
+		{
+			return m_header;
 		}
 
 		// ----------------------
@@ -54,10 +56,15 @@ namespace rex
 		// ----------------------
 
 		template <typename Allocator>
-		TIni<Allocator>::TIni(rsl::unordered_map<rsl::string_view, IniBlock<Allocator>>&& headerWithItems)
-			: m_headers_with_items(headerWithItems)
-			, m_parse_error(Error::no_error())
-		{}
+		TIni<Allocator>::TIni(rsl::vector<HeaderWithItems<Allocator>, Allocator>&& headersWithItems)
+			: m_parse_error(Error::no_error())
+		{
+			for (const HeaderWithItems<Allocator>& block : headersWithItems)
+			{
+				m_headers_with_items[internal_string(block.header)] = IniBlock(block.header, block.items);
+			}
+		}
+
 		template <typename Allocator>
 		TIni<Allocator>::TIni(Error parseError)
 			: m_headers_with_items()
@@ -107,28 +114,31 @@ namespace rex
 		template <typename Allocator>
 		TIni<Allocator> parse(rsl::string_view iniContent)
 		{
-			const rsl::vector<rsl::string_view, Allocator> lines = rsl::split<Allocator>(iniContent, rex::endline());
+			using internal_string = typename IniBlock<Allocator>::internal_string;
 
 			rsl::string_view current_header;
 			rsl::vector<rsl::key_value<rsl::string_view, rsl::string_view>, Allocator> items;
 			rex::Error error = rex::Error::no_error();
-			rsl::unordered_map<
-				rsl::string_view,                 // key
-				IniBlock<Allocator>,              // value
-				rsl::hash<rsl::string_view>,      // hash
-				rsl::equal_to<rsl::string_view>,  // comparison
-				Allocator> headers_with_items;
 
-			auto add_new_header_with_items = [&headers_with_items](rsl::string_view header, const rsl::vector<rsl::key_value<rsl::string_view, rsl::string_view>, Allocator>& items)
+			rsl::vector<HeaderWithItems<Allocator>, Allocator> header_with_items;
+
+			auto add_new_header_with_items = [&header_with_items](rsl::string_view header, const rsl::vector<rsl::key_value<rsl::string_view, rsl::string_view>, Allocator>& items)
 				{
 					if (!items.empty())
 					{
-						headers_with_items.emplace(header, IniBlock<Allocator>(header, items));
+						auto& new_object = header_with_items.emplace_back();
+						new_object.header = header;
+						new_object.items = items;
 					}
 				};
 
-			for (rsl::string_view line : lines)
+			for (rsl::string_view line : LineIterator(iniContent))
 			{
+				if (line.empty())
+				{
+					continue;
+				}
+
 				// Make sure we remove all leading and trailing whitespaces
 				line = rex::strip(line);
 
@@ -177,7 +187,7 @@ namespace rex
 			}
 
 			add_new_header_with_items(current_header, items);
-			return TIni<Allocator>(rsl::move(headers_with_items));
+			return TIni<Allocator>(rsl::move(header_with_items));
 		}
 
 		template <typename Allocator>

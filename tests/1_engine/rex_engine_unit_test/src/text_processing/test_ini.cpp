@@ -36,11 +36,23 @@ TEST_CASE("TEST - Ini - with headers")
   REX_CHECK(ini_content.get("Test Header 1", "test_bool1") == "true");
   REX_CHECK(ini_content.get("Test Header 1", "test_bool2") == "1");
 
+  REX_CHECK(ini_content.get("Test Header 1", "TEST_INT") == "10");
+  REX_CHECK(ini_content.get("Test Header 1", "TEST_FLOAT") == "10.0");
+  REX_CHECK(ini_content.get("Test Header 1", "TEST_STRING") == "some string");
+  REX_CHECK(ini_content.get("Test Header 1", "TEST_BOOL1") == "true");
+  REX_CHECK(ini_content.get("Test Header 1", "TEST_BOOL2") == "1");
+
   REX_CHECK(ini_content.get("Test Header 2", "test_int") == "20");
   REX_CHECK(ini_content.get("Test Header 2", "test_float") == "20.0");
   REX_CHECK(ini_content.get("Test Header 2", "test_string") == "some other string");
   REX_CHECK(ini_content.get("Test Header 2", "test_bool1") == "false");
   REX_CHECK(ini_content.get("Test Header 2", "test_bool2") == "0");
+
+  REX_CHECK(ini_content.get("Test Header 2", "TEST_INT") == "20");
+  REX_CHECK(ini_content.get("Test Header 2", "TEST_FLOAT") == "20.0");
+  REX_CHECK(ini_content.get("Test Header 2", "TEST_STRING") == "some other string");
+  REX_CHECK(ini_content.get("Test Header 2", "TEST_BOOL1") == "false");
+  REX_CHECK(ini_content.get("Test Header 2", "TEST_BOOL2") == "0");
 }
 
 TEST_CASE("TEST - Ini - no headers")
@@ -65,6 +77,12 @@ TEST_CASE("TEST - Ini - no headers")
   REX_CHECK(ini_content.get("", "test_string") == "some string");
   REX_CHECK(ini_content.get("", "test_bool1") == "true");
   REX_CHECK(ini_content.get("", "test_bool2") == "1");
+
+  REX_CHECK(ini_content.get("", "TEST_INT") == "10");
+  REX_CHECK(ini_content.get("", "TEST_FLOAT") == "10.0");
+  REX_CHECK(ini_content.get("", "TEST_STRING") == "some string");
+  REX_CHECK(ini_content.get("", "TEST_BOOL1") == "true");
+  REX_CHECK(ini_content.get("", "TEST_BOOL2") == "1");
 }
 
 TEST_CASE("TEST - Ini - file without headers")
@@ -81,28 +99,46 @@ TEST_CASE("TEST - Ini - file without headers")
   REX_CHECK(ini_content.get("", "test_string") == "some string");
   REX_CHECK(ini_content.get("", "test_bool1") == "true");
   REX_CHECK(ini_content.get("", "test_bool2") == "1");
+
+  REX_CHECK(ini_content.get("", "TEST_INT") == "10");
+  REX_CHECK(ini_content.get("", "TEST_FLOAT") == "10.0");
+  REX_CHECK(ini_content.get("", "TEST_STRING") == "some string");
+  REX_CHECK(ini_content.get("", "TEST_BOOL1") == "true");
+  REX_CHECK(ini_content.get("", "TEST_BOOL2") == "1");
 }
 
 TEST_CASE("TEST - Ini - file with headers")
 {
-  rex::TempCwd tmp_cwd("settings_tests");
+	rex::TempCwd tmp_cwd("settings_tests");
 
-  rex::ini::Ini ini_content = rex::ini::read_from_file("test_settings_with_headers.ini");
+	rex::ini::Ini ini_content = rex::ini::read_from_file("test_settings_with_headers.ini");
 
-  REX_CHECK(ini_content.is_discarded() == false);
-  REX_CHECK(ini_content.all_blocks().size() == 2);
+	REX_CHECK(ini_content.is_discarded() == false);
+	REX_CHECK(ini_content.all_blocks().size() == 2);
 
-  REX_CHECK(ini_content.get("Test Header 1", "test_int") == "10");
-  REX_CHECK(ini_content.get("Test Header 1", "test_float") == "10.0");
-  REX_CHECK(ini_content.get("Test Header 1", "test_string") == "some string");
-  REX_CHECK(ini_content.get("Test Header 1", "test_bool1") == "true");
-  REX_CHECK(ini_content.get("Test Header 1", "test_bool2") == "1");
+	REX_CHECK(ini_content.get("Test Header 1", "test_int") == "10");
+	REX_CHECK(ini_content.get("Test Header 1", "test_float") == "10.0");
+	REX_CHECK(ini_content.get("Test Header 1", "test_string") == "some string");
+	REX_CHECK(ini_content.get("Test Header 1", "test_bool1") == "true");
+	REX_CHECK(ini_content.get("Test Header 1", "test_bool2") == "1");
 
-  REX_CHECK(ini_content.get("Test Header 2", "test_int") == "20");
-  REX_CHECK(ini_content.get("Test Header 2", "test_float") == "20.0");
-  REX_CHECK(ini_content.get("Test Header 2", "test_string") == "some other string");
-  REX_CHECK(ini_content.get("Test Header 2", "test_bool1") == "false");
-  REX_CHECK(ini_content.get("Test Header 2", "test_bool2") == "0");
+	REX_CHECK(ini_content.get("Test Header 1", "TEST_INT") == "10");
+	REX_CHECK(ini_content.get("Test Header 1", "TEST_FLOAT") == "10.0");
+	REX_CHECK(ini_content.get("Test Header 1", "TEST_STRING") == "some string");
+	REX_CHECK(ini_content.get("Test Header 1", "TEST_BOOL1") == "true");
+	REX_CHECK(ini_content.get("Test Header 1", "TEST_BOOL2") == "1");
+
+	REX_CHECK(ini_content.get("Test Header 2", "test_int") == "20");
+	REX_CHECK(ini_content.get("Test Header 2", "test_float") == "20.0");
+	REX_CHECK(ini_content.get("Test Header 2", "test_string") == "some other string");
+	REX_CHECK(ini_content.get("Test Header 2", "test_bool1") == "false");
+	REX_CHECK(ini_content.get("Test Header 2", "test_bool2") == "0");
+
+	REX_CHECK(ini_content.get("Test Header 2", "TEST_INT") == "20");
+	REX_CHECK(ini_content.get("Test Header 2", "TEST_FLOAT") == "20.0");
+	REX_CHECK(ini_content.get("Test Header 2", "TEST_STRING") == "some other string");
+	REX_CHECK(ini_content.get("Test Header 2", "TEST_BOOL1") == "false");
+	REX_CHECK(ini_content.get("Test Header 2", "TEST_BOOL2") == "0");
 }
 
 TEST_CASE("TEST - Ini - error detection")
