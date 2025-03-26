@@ -2,6 +2,8 @@
 
 #include "rex_engine/diagnostics/log.h"
 
+#include "rex_engine/platform/win/diagnostics/win_call.h"
+
 #include <coml2api.h>
 #include <objbase.h>
 #include <objidl.h>
@@ -82,6 +84,9 @@ namespace rex
             if(!is_initialized())
             {
               init_lib();
+
+              // It's possible, even on successfull initialization, that an error get set here
+              rex::win::clear_win_errors();
             }
             s_ref_count++;
           }
