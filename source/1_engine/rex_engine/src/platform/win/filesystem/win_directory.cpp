@@ -5,7 +5,6 @@
 #include "rex_engine/platform/win/diagnostics/win_call.h"
 #include "rex_std/bonus/platform.h"
 #include "rex_std/bonus/time/win/win_time_functions.h"
-#include "rex_engine/containers/temp_vector.h"
 #include "rex_std/bonus/utility/output_param.h"
 
 namespace rex

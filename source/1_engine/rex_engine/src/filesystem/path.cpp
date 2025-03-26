@@ -5,7 +5,6 @@
 #include "rex_engine/filesystem/directory.h"
 #include "rex_engine/text_processing/text_processing.h"
 #include "rex_engine/filesystem/file.h"
-#include "rex_engine/engine/debug_types.h"
 #include "rex_std/algorithm.h"
 #include "rex_std/bonus/platform.h"
 #include "rex_std/bonus/string.h"

@@ -8,7 +8,6 @@
 #include "rex_std/bonus/string.h"
 #include "rex_engine/engine/types.h"
 
-#include "rex_engine/string/tmp_string.h"
 #include "rex_engine/text_processing/splitted_iterator.h"
 #include "rex_engine/engine/globals.h"
 

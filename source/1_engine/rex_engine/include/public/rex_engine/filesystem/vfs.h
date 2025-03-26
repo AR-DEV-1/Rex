@@ -1,7 +1,6 @@
 #pragma once
 
 #include "rex_engine/engine/defines.h"
-#include "rex_engine/string/tmp_string.h"
 #include "rex_engine/filesystem/mounting_point.h"
 #include "rex_engine/filesystem/directory.h"
 #include "rex_engine/filesystem/read_request.h"
