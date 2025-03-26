@@ -32,7 +32,7 @@ namespace rex
         SourceFiles.Add(File);
       }
 
-      RexTarget vsTarget = new RexTarget(Platform.win64, DevEnv.vs2019, Config.debug | Config.debug_opt | Config.release, Compiler.MSVC);
+      RexTarget vsTarget = new RexTarget(Platform.win64, ProjectGen.Settings.IDE.ToDevEnv(), Config.debug | Config.debug_opt | Config.release, Compiler.MSVC);
 
       // Specify the targets for which we want to generate a configuration for.
       AddTargets(vsTarget);
