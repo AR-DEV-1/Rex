@@ -93,85 +93,50 @@ namespace rex
     // Read from a file
     memory::Blob read_file(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return read_file_abspath(path);
     }
     // Read from a file
     s32 read_file(rsl::string_view path, rsl::byte* buffer, s64 size)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return read_file_abspath(path, buffer, size);
     }
     // Save content to a file
     Error write_to_file(rsl::string_view path, const void* data, card64 size)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return write_to_file_abspath(path, data, size);
     }
     Error append_line(rsl::string_view path, rsl::string_view line)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
-     
+      path = path::unsafe_abs_path(path);
+
       return append_line_abspath(path, line);
     }
 
     // Append lines to a file
     Error append_lines(rsl::string_view path, const rsl::vector<rsl::string>& lines)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return append_lines_abspath(path, lines);
     }
     // Append text to a file
     Error append_text(rsl::string_view path, rsl::string_view txt)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
-      
+      path = path::unsafe_abs_path(path);
+
       return append_text_abspath(path, txt);
     }
     // Trunc a file, removing all content
     Error trunc(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
-     
+      path = path::unsafe_abs_path(path);
+
       return trunc_abspath(path);
     }
     // Copy a file, overwiting an existing one is possible
@@ -182,25 +147,13 @@ namespace rex
         return Error::create_with_log(LogFile, "Cannot copy a file to itself");
       }
 
-      scratch_string full_dst;
-      if (!path::is_absolute(dst))
-      {
-        full_dst = path::abs_path(dst);
-        dst = full_dst;
-      }
-
+      dst = path::unsafe_abs_path(dst);
       if (!overwriteIfExist && file::exists_abspath(dst))
       {
         return Error::create_with_log(LogFile, "Cannot copy to a file that already exists if overwriting is disabled");
       }
 
-      scratch_string full_src;
-      if (!path::is_absolute(src))
-      {
-        full_src = path::abs_path(src);
-        src = full_src;
-      }
-      
+      src = path::unsafe_abs_path(src);      
       return internal::copy_abspath_no_checks(src, dst, overwriteIfExist);
     }
     // Move/Rename a file, overwriting an existing one is possible
@@ -211,19 +164,8 @@ namespace rex
         return Error::create_with_log(LogFile, "Cannot move a file to itself");
       }
 
-      scratch_string full_dst;
-      if (!path::is_absolute(dst))
-      {
-        full_dst = path::abs_path(dst);
-        dst = full_dst;
-      }
-
-      scratch_string full_src;
-      if (!path::is_absolute(src))
-      {
-        full_src = path::abs_path(src);
-        src = full_src;
-      }
+      dst = path::unsafe_abs_path(dst);
+      src = path::unsafe_abs_path(src);
 
       if(file::exists_abspath(dst))
       {
@@ -235,124 +177,73 @@ namespace rex
     // Create a new empty file
     Error create(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return create_abspath(path);
     }
     // Delete a file
     Error del(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return del_abspath(path);
     }
     // return the file size
     card64 size(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return size_abspath(path);
     }
     // Check if a file exists
     bool exists(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return exists_abspath(path);
     }
     // Check if a file is marked read only
     bool is_readonly(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return is_readonly_abspath(path);
     }
     // Set a file to be readonly
     Error set_readonly(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return set_readonly_abspath(path);
     }
     // Remove the readonly flag of a file
     Error remove_readonly(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return remove_readonly_abspath(path);
     }
     // Return the creation time of a file
     rsl::time_point creation_time(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return creation_time_abspath(path);
     }
     // Return the access time of a file
     rsl::time_point access_time(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return access_time_abspath(path);
     }
     // Return the modification time of a file
     rsl::time_point modification_time(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return modification_time_abspath(path);
     }
-
 
     // Read from a file
     memory::Blob read_file_abspath(rsl::string_view path)

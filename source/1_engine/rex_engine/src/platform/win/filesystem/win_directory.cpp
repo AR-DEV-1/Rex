@@ -76,92 +76,51 @@ namespace rex
     // Create a new directory
     Error create(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return create_abspath(path);
     }
     // Create a directory recursively, creating all sub directories until the leaf dir
     Error create_recursive(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
+
       return create_recursive_abspath(path);
     }
     // Delete a directory
     Error del(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
+
       return del_abspath(path);
     }
     // Delete a directory recursively, including all files and sub folders
     Error del_recursive(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
+
       return del_recursive_abspath(path);
     }
     // Return if a directory exists
     bool exists(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
+
       return exists_abspath(path);
     }
     // Copy a directory and its content
     Error copy(rsl::string_view src, rsl::string_view dst) // NOLINT(misc-no-recursion)
     {
-      scratch_string full_src;
-      if (!path::is_absolute(src))
-      {
-        full_src = path::abs_path(src);
-        src = full_src;
-      }
-      scratch_string full_dst;
-      if (!path::is_absolute(dst))
-      {
-        full_dst = path::abs_path(dst);
-        dst = full_dst;
-      }
+      src = path::unsafe_abs_path(src);
+      dst = path::unsafe_abs_path(dst);
 
       return copy_abspath(src, dst);
     }
     // Move/Rename a directory
     Error move(rsl::string_view src, rsl::string_view dst)
     {
-      scratch_string full_src;
-      if (!path::is_absolute(src))
-      {
-        full_src = path::abs_path(src);
-        src = full_src;
-      }
-      scratch_string full_dst;
-      if (!path::is_absolute(dst))
-      {
-        full_dst = path::abs_path(dst);
-        dst = full_dst;
-      }
+      src = path::unsafe_abs_path(src);
+      dst = path::unsafe_abs_path(dst);
 
       return move_abspath(src, dst);
     }
@@ -176,11 +135,7 @@ namespace rex
       // 1 for the search query in the other func
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
-      scratch_string fullpath(path);
-      if (!path::is_absolute(fullpath))
-      {
-        fullpath = rex::path::abs_path(path);
-      }
+      scratch_string fullpath(path::unsafe_abs_path(path));
       WIN32_FIND_DATAA ffd;
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
@@ -222,11 +177,7 @@ namespace rex
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
       WIN32_FIND_DATAA ffd;
-      scratch_string fullpath(path);
-      if (!path::is_absolute(fullpath))
-      {
-        fullpath = rex::path::abs_path(path);
-      }
+      scratch_string fullpath(path::unsafe_abs_path(path));
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -281,11 +232,7 @@ namespace rex
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
       WIN32_FIND_DATAA ffd;
-      scratch_string fullpath(path);
-      if (!path::is_absolute(fullpath))
-      {
-        fullpath = rex::path::abs_path(path);
-      }
+      scratch_string fullpath(path::unsafe_abs_path(path));
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -329,11 +276,7 @@ namespace rex
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
       WIN32_FIND_DATAA ffd{};
-      scratch_string fullpath(path);
-      if (!path::is_absolute(fullpath))
-      {
-        fullpath = rex::path::abs_path(path);
-      }
+      scratch_string fullpath(path::unsafe_abs_path(path));
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -385,11 +328,7 @@ namespace rex
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
       WIN32_FIND_DATAA ffd;
-      scratch_string fullpath(path);
-      if (!path::is_absolute(fullpath))
-      {
-        fullpath = rex::path::abs_path(path);
-      }
+      scratch_string fullpath(path::unsafe_abs_path(path));
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -437,11 +376,7 @@ namespace rex
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
       WIN32_FIND_DATAA ffd {};
-      scratch_string fullpath(path);
-      if (!path::is_absolute(fullpath))
-      {
-        fullpath = rex::path::abs_path(path);
-      }
+      scratch_string fullpath(path::unsafe_abs_path(path));
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -478,34 +413,22 @@ namespace rex
     // Return the creation time of a directory
     rsl::time_point creation_time(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
+
       return creation_time_abspath(path);
     }
     // Return the access time of a directory
     rsl::time_point access_time(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
+
       return access_time_abspath(path);
     }
     // Return the modification time of a directory
     rsl::time_point modification_time(rsl::string_view path)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
+
       return modification_time_abspath(path);
     }
 

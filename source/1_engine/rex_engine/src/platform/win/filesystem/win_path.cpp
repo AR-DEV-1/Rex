@@ -105,7 +105,7 @@ namespace rex
     {
       // It's a bit tricky to get the real path as there are multiple ways
       // of linking to a the same file (.lnk files, symlinks, hardlinks, junctions)
-      scratch_string fullpath = abs_path(path);
+      rsl::string_view fullpath = unsafe_abs_path(path);
 
       return real_path_abspath(fullpath);
     }
