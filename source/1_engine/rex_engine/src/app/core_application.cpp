@@ -10,7 +10,6 @@
 #include "rex_engine/frameinfo/frameinfo.h"
 #include "rex_engine/memory/memory_tracking.h"
 #include "rex_engine/settings/settings.h"
-#include "rex_engine/settings/hardcoded_boot_settings.h"
 #include "rex_std/bonus/utility.h"
 
 #include "rex_engine/diagnostics/log.h"
