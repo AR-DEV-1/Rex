@@ -644,15 +644,6 @@ namespace rex
         });
 
       return res.rhs_it == path_it.end();
-      //return !common.empty() && common.starts_with(dir);
-
-      //for (rsl::string_view subpath : PathIterator(dir))
-      //{
-
-      //}
-
-      //scratch_string relative_path = rel_path_abspath(path, dir);
-      //return !relative_path.starts_with("..");
     }
 
     // Returns if the given path is a relative path

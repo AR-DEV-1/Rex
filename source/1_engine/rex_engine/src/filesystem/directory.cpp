@@ -11,12 +11,7 @@ namespace rex
     // possible going recursive over all the sub folders as well
     rsl::memory_size size(rsl::string_view path, Recursive goRecursive)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return size_abspath(path, goRecursive);
     }
