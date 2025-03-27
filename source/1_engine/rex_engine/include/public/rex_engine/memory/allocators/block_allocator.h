@@ -16,6 +16,21 @@ namespace rex
 {
 	DEFINE_LOG_CATEGORY(LogBlockAllocator);
 
+	//
+	// A block allocator allocates a block memory and splits it up into multiple blocks that are all linked together
+	// This allows to quickly get a fresh block of memory on allocation without having to look it up
+	// 
+	//   +-------------------------------------------------------------------------------------------------------------------------+
+	//   |    +--------------+				+--------------+				+--------------+				+--------------+				+--------------+     |
+	//   |    |              |				|              |				|              |				|              |				|              |		 |
+	//   |    |              |				|              |				|              |				|              |				|              |		 |
+	//   |    |    Block     |  --> 	|    Block     |  --> 	|    Block     |  --> 	|    Block     |  --> 	|    Block     |		 |
+	//   |    |              |				|              |				|              |				|              |				|              |		 |
+	//   |    |              |				|              |				|              |				|              |				|              |		 |
+	//   |    +--------------+				+--------------+				+--------------+				+--------------+				+--------------+		 |
+	//   +-------------------------------------------------------------------------------------------------------------------------+
+	//
+
 	namespace internal
 	{
 		struct BlockHeader
@@ -24,7 +39,6 @@ namespace rex
 		};
 	}
 
-	//Block allocator implementation
 	template <typename BackendAllocator>
 	class TBlockAllocator
 	{

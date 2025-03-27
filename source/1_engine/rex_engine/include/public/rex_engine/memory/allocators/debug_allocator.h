@@ -6,6 +6,9 @@
 
 namespace rex
 {
+  // A debug allocator uses a backend allocator and forwards the allocation to it
+  // in non-debug mode however, a debug allocator always returns nullptr
+
   template <typename Allocator>
   class DebugAllocator
   {
