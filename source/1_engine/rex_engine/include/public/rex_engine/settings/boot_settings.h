@@ -8,7 +8,7 @@ namespace rex
 {
 	struct BootSettings
 	{
-		s32 single_frame_heap_size = 4_kib;
-		s32 scratch_heap_size = 4_kib;
+		s64 single_frame_heap_size = 4_kib;
+		s64 scratch_heap_size = 4_kib;
 	};
 }
