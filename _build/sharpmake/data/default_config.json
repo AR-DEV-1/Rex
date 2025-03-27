@@ -48,7 +48,7 @@
   },
   "enable-auto-tests": {
     "Description": "Enable generation of auto test projects",
-    "Value": true
+    "Value": false
   },
   "graphics-api": {
     "Description": "Specify the graphics API to use. DX12 is the default.",
