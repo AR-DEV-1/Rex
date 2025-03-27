@@ -4,10 +4,17 @@
 #include "rex_engine/engine/defines.h"
 #include "rex_engine/memory/alloc_unique.h"
 
+#include "rex_engine/memory/memory_types.h"
+
 #include "rex_std/memory.h"
+#include "rex_std/stdlib.h"
+
+#include "rex_engine/diagnostics/log.h"
 
 namespace rex
 {
+	DEFINE_LOG_CATEGORY(LogBlockAllocator);
+
 	namespace internal
 	{
 		struct BlockHeader
@@ -27,8 +34,10 @@ namespace rex
 		BlockAllocator(size_type size, size_type blockSize, BackendAllocator alloc = BackendAllocator())
 		{
 			m_buffer = alloc_unique<rsl::byte[]>(alloc, size);
+			m_block_size = blockSize;
 			m_head = reinterpret_cast<internal::BlockHeader*>(m_buffer.get());
-			m_head->next = nullptr;
+
+			init_blocks();
 		}
 
 		REX_NO_DISCARD pointer allocate(size_type size, size_type alignment)
@@ -36,10 +45,10 @@ namespace rex
 			REX_UNUSED_PARAM(size); // Size cannot be used for buddy allocator
 			REX_UNUSED_PARAM(alignment); // Alignment cannot be used for buddy allocator
 
-			REX_ASSERT_X(size < m_block_size, "Trying to allocate something that's bigger than the block size of a block allocator");
+			REX_ASSERT_X(size < m_block_size, "Trying to allocate something that's bigger than the block size of a block allocator. alloc size: {} block size: {}", size, m_block_size);
 
 			internal::BlockHeader* current = m_head;
-			REX_ASSERT_X(current != nullptr, "Ran out of memory in the free list");
+			REX_ASSERT_X(current != nullptr, "Ran out of memory in the free list of the block allocator. Total size: {}", m_buffer.count());
 
 			remove_free_block(current);
 			return to_user_pointer(current);
@@ -91,6 +100,33 @@ namespace rex
 		}
 
 	private:
+		void init_blocks()
+		{
+			REX_ASSERT_X(m_buffer.get() != nullptr, "No backbuffer allocated for block allocator");
+			REX_ASSERT_X(m_block_size > 0, "Block size should always be bigger than 0");
+
+			rsl::byte* end = m_buffer.get() + m_buffer.count();
+			rsl::byte* current = m_buffer.get();
+			rsl::div_result res = rsl::div(m_buffer.count(), m_block_size);
+			s32 num_blocks = res.quot;
+			if (res.rem > 0)
+			{
+				REX_WARN(LogBlockAllocator, "Block size is not a good denominator for block allocator. total size: {}, block size: {}", m_buffer.count(), m_block_size);
+				end -= res.rem;
+			}
+
+			internal::BlockHeader* current_block = nullptr;
+			while (current != end)
+			{
+				current_block = reinterpret_cast<internal::BlockHeader*>(current);
+				current += sizeof(internal::BlockHeader) + m_block_size;
+				internal::BlockHeader* next_block = reinterpret_cast<internal::BlockHeader*>(current);
+				
+				current_block->next = next_block;
+			}
+			current_block->next = nullptr;
+
+		}
 		pointer to_user_pointer(internal::BlockHeader* block) const
 		{
 			rsl::byte* ptr = reinterpret_cast<rsl::byte*>(block);
