@@ -239,32 +239,45 @@ namespace rex
   //--------------------------------------------------------------------------------------------
   void CoreApplication::init_boot_settings()
   {
-    scratch_string abs_boot_ini_path = vfs::abs_path("rex/settings/boot.ini");
-    ini::Ini boot_settings = vfs::exists(abs_boot_ini_path)
-      ? ini::read_from_file(abs_boot_ini_path)
-      : ini::parse(g_hardcoded_boot_ini);
+    BootSettings default_boot_settings{};
 
-    init_allocators(boot_settings);
+    scratch_string abs_boot_ini_path = vfs::abs_path("rex/settings/boot.ini");
+    if (vfs::exists(abs_boot_ini_path))
+    {
+      default_boot_settings = parse_boot_settings(abs_boot_ini_path);
+    }
+
+    init_allocators(default_boot_settings);
   }
 
   //--------------------------------------------------------------------------------------------
-  void CoreApplication::init_allocators(const rex::ini::Ini& bootSettings)
+  void CoreApplication::init_allocators(const BootSettings& bootSettings)
   {
     // Read the settings of the file
-    s32 single_frame_heap_size = rsl::stoi(bootSettings.get("heaps", "single_frame_heap_size")).value();
-    s32 scratch_heap_size = rsl::stoi(bootSettings.get("heaps", "scratch_heap_size")).value();
-
-    REX_ASSERT_X(single_frame_heap_size > 0, "Single frame heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"single_frame_heap_size\" in memory_settings.ini");
-    REX_ASSERT_X(scratch_heap_size > 0, "Scratch heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"scratch_heap_size\" in memory_settings.ini");
+    REX_ASSERT_X(bootSettings.single_frame_heap_size > 0, "Single frame heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"single_frame_heap_size\" in memory_settings.ini");
+    REX_ASSERT_X(bootSettings.scratch_heap_size > 0, "Scratch heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"scratch_heap_size\" in memory_settings.ini");
 
     // Initialize the global heaps and its allocators using the settings loaded from disk
-    mut_globals().allocators.single_frame_allocator = rsl::make_unique<StackAllocator<GlobalAllocator>>(single_frame_heap_size);
-    mut_globals().allocators.scratch_allocator = rsl::make_unique<CircularAllocator<GlobalAllocator>>(scratch_heap_size);
+    mut_globals().allocators.single_frame_allocator = rsl::make_unique<StackAllocator<GlobalAllocator>>(bootSettings.single_frame_heap_size);
+    mut_globals().allocators.scratch_allocator = rsl::make_unique<CircularAllocator<GlobalAllocator>>(bootSettings.scratch_heap_size);
   }
 
   //--------------------------------------------------------------------------------------------
   void CoreApplication::init_globals()
   {
+  }
+
+  BootSettings CoreApplication::parse_boot_settings(rsl::string_view bootSettingsPath)
+  {
+    REX_ASSERT_X(vfs::exists(bootSettingsPath), "boot settings path for parsing doesn't exist. {}", bootSettingsPath);
+    ini::Ini boot_settings_ini = ini::read_from_file(bootSettingsPath);
+
+    BootSettings boot_settings{};
+
+    boot_settings.single_frame_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "single_frame_heap_size")).value_or(boot_settings.single_frame_heap_size);
+    boot_settings.scratch_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "scratch_heap_size")).value_or(boot_settings.scratch_heap_size);
+
+    return boot_settings;
   }
 
 } // namespace rex

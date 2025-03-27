@@ -3,6 +3,7 @@
 #include "rex_engine/app/core_application_state.h"
 #include "rex_engine/engine/state_controller.h"
 #include "rex_engine/engine/types.h"
+#include "rex_engine/settings/boot_settings.h"
 #include "rex_engine/frameinfo/frameinfo.h"
 #include "rex_engine/text_processing/ini.h"
 #include "rex_std/bonus/memory/memory_size.h"
@@ -54,8 +55,10 @@ namespace rex
     void mount_engine_paths();
     void load_settings();
     void init_boot_settings();
-    void init_allocators(const rex::ini::Ini& bootSettings);
+    void init_allocators(const BootSettings& bootSettings);
     void init_globals();
+
+    BootSettings parse_boot_settings(rsl::string_view bootSettingsPath);
 
   private:
     StateController<ApplicationState> m_app_state;
