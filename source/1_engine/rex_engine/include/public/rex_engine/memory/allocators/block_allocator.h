@@ -5,6 +5,7 @@
 #include "rex_engine/memory/alloc_unique.h"
 
 #include "rex_engine/memory/memory_types.h"
+#include "rex_engine/memory/global_allocators/global_allocator.h"
 
 #include "rex_std/memory.h"
 #include "rex_std/stdlib.h"
@@ -25,13 +26,13 @@ namespace rex
 
 	//Block allocator implementation
 	template <typename BackendAllocator>
-	class BlockAllocator
+	class TBlockAllocator
 	{
 	public:
 		using size_type = s64;
 		using pointer = void*;
 
-		BlockAllocator(size_type size, size_type blockSize, BackendAllocator alloc = BackendAllocator())
+		TBlockAllocator(size_type size, size_type blockSize, BackendAllocator alloc = BackendAllocator())
 		{
 			m_buffer = alloc_unique<rsl::byte[]>(alloc, size);
 			m_block_size = blockSize;
@@ -45,7 +46,7 @@ namespace rex
 			REX_UNUSED_PARAM(size); // Size cannot be used for buddy allocator
 			REX_UNUSED_PARAM(alignment); // Alignment cannot be used for buddy allocator
 
-			REX_ASSERT_X(size < m_block_size, "Trying to allocate something that's bigger than the block size of a block allocator. alloc size: {} block size: {}", size, m_block_size);
+			REX_ASSERT_X(size <= m_block_size, "Trying to allocate something that's bigger than the block size of a block allocator. alloc size: {} block size: {}", size, m_block_size);
 
 			internal::BlockHeader* current = m_head;
 			REX_ASSERT_X(current != nullptr, "Ran out of memory in the free list of the block allocator. Total size: {}", m_buffer.count());
@@ -66,6 +67,8 @@ namespace rex
 
 		void deallocate(pointer ptr, size_type size)
 		{
+			REX_UNUSED_PARAM(size);
+
 			rsl::byte* ptr_as_bytes = reinterpret_cast<rsl::byte*>(ptr);
 			ptr_as_bytes -= sizeof(internal::BlockHeader);
 			internal::BlockHeader* block = reinterpret_cast<internal::BlockHeader*>(ptr_as_bytes);
@@ -90,11 +93,11 @@ namespace rex
 			ptr->~T();
 		}
 
-		bool operator==(const BlockAllocator& rhs) const
+		bool operator==(const TBlockAllocator& rhs) const
 		{
 			return m_buffer.get() == rhs.m_buffer.get();
 		}
-		bool operator!=(const BlockAllocator& rhs) const
+		bool operator!=(const TBlockAllocator& rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -107,12 +110,11 @@ namespace rex
 
 			rsl::byte* end = m_buffer.get() + m_buffer.count();
 			rsl::byte* current = m_buffer.get();
-			rsl::div_result res = rsl::div(m_buffer.count(), m_block_size);
-			s32 num_blocks = res.quot;
-			if (res.rem > 0)
+			s64 rem = m_buffer.count() % (sizeof(internal::BlockHeader) + m_block_size);
+			if (rem > 0)
 			{
-				REX_WARN(LogBlockAllocator, "Block size is not a good denominator for block allocator. total size: {}, block size: {}", m_buffer.count(), m_block_size);
-				end -= res.rem;
+				REX_WARN(LogBlockAllocator, "Block size is not a good denominator for block allocator. increase by {} bytes to be perfectly matched", rem);
+				end -= rem;
 			}
 
 			internal::BlockHeader* current_block = nullptr;
@@ -142,4 +144,6 @@ namespace rex
 		size_type m_block_size;
 		internal::BlockHeader* m_head;
 	};
+
+	using BlockAllocator = TBlockAllocator<GlobalAllocator>;
 }

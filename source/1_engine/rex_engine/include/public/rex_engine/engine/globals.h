@@ -11,8 +11,8 @@ namespace rex
 	// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: REX GLOBALS
 	struct Allocators
 	{
-		rsl::unique_ptr<CircularAllocator<GlobalAllocator>> scratch_allocator;		// An allocator used for temp memory. deallocation isn't tracked. Memory may or may not last more than 1 frame
-		rsl::unique_ptr<StackAllocator<GlobalAllocator>> single_frame_allocator;	// An allocator used for memory that's used within a single frame. It gets reset at the beginning of the frame
+		rsl::unique_ptr<TCircularAllocator<GlobalAllocator>> scratch_allocator;		// An allocator used for temp memory. deallocation isn't tracked. Memory may or may not last more than 1 frame
+		rsl::unique_ptr<TStackAllocator<GlobalAllocator>> single_frame_allocator;	// An allocator used for memory that's used within a single frame. It gets reset at the beginning of the frame
 	};
 
 	struct Globals

@@ -44,9 +44,9 @@ namespace rex
       // Cannot use make_unique or alloc_unique here
       // make_unique would cause a circular dependency and we'd get a deadlock the second time the GlobalAllocator ctor is called
       // alloc_unique cannot be used here as that'd return a unique_ptr without a default_deleter argument
-      CircularAllocator<GlobalAllocator>* ptr = alloc.allocate<CircularAllocator<GlobalAllocator>>();
+      TCircularAllocator<GlobalAllocator>* ptr = alloc.allocate<TCircularAllocator<GlobalAllocator>>();
       alloc.construct(ptr, minimal_global_alloc_size, alloc);
-      mut_globals().allocators.scratch_allocator = rsl::unique_ptr<CircularAllocator<GlobalAllocator>>(ptr);
+      mut_globals().allocators.scratch_allocator = rsl::unique_ptr<TCircularAllocator<GlobalAllocator>>(ptr);
 
       return mut_globals().allocators.scratch_allocator != nullptr;
     }

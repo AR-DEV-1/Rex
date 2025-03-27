@@ -3,6 +3,7 @@
 #include "rex_engine/engine/types.h"
 #include "rex_engine/engine/defines.h"
 #include "rex_engine/memory/alloc_unique.h"
+#include "rex_engine/memory/global_allocators/global_allocator.h"
 
 #include "rex_std/memory.h"
 #include "rex_std/bonus/memory/zero_memory.h"
@@ -11,13 +12,13 @@ namespace rex
 {
 	// Ring buffer implementation
 	template <typename BackendAllocator>
-	class CircularAllocator
+	class TCircularAllocator
 	{
 	public:
 		using size_type = s64;
 		using pointer = void*;
 
-		explicit CircularAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
+		explicit TCircularAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
 			: m_buffer(alloc_unique<rsl::byte[]>(alloc, size))
 			, m_current(m_buffer.get())
 			, m_end(m_buffer.get() + m_buffer.count())
@@ -85,11 +86,11 @@ namespace rex
 			return m_buffer.get() <= ptr && ptr < m_end;
 		}
 
-		bool operator==(const CircularAllocator& rhs) const
+		bool operator==(const TCircularAllocator& rhs) const
 		{
 			return m_buffer.get() == rhs.m_buffer.get();
 		}
-		bool operator!=(const CircularAllocator& rhs) const
+		bool operator!=(const TCircularAllocator& rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -99,4 +100,6 @@ namespace rex
 		rsl::byte* m_current;
 		const rsl::byte* m_end;
 	};
+
+	using CircularAllocator = TCircularAllocator<GlobalAllocator>;
 }

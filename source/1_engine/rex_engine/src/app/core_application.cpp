@@ -257,8 +257,8 @@ namespace rex
     REX_ASSERT_X(bootSettings.scratch_heap_size > 0, "Scratch heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"scratch_heap_size\" in memory_settings.ini");
 
     // Initialize the global heaps and its allocators using the settings loaded from disk
-    mut_globals().allocators.single_frame_allocator = rsl::make_unique<StackAllocator<GlobalAllocator>>(bootSettings.single_frame_heap_size);
-    mut_globals().allocators.scratch_allocator = rsl::make_unique<CircularAllocator<GlobalAllocator>>(bootSettings.scratch_heap_size);
+    mut_globals().allocators.single_frame_allocator = rsl::make_unique<TStackAllocator<GlobalAllocator>>(bootSettings.single_frame_heap_size);
+    mut_globals().allocators.scratch_allocator = rsl::make_unique<TCircularAllocator<GlobalAllocator>>(bootSettings.scratch_heap_size);
   }
 
   //--------------------------------------------------------------------------------------------

@@ -107,7 +107,7 @@ namespace rex
 
   private:
     rsl::unordered_map<rsl::type_id_t, rsl::unique_ptr<EventDispatcherBase>> m_dispatchers;
-    StackAllocator<GlobalAllocator> m_event_allocator;
+    TStackAllocator<GlobalAllocator> m_event_allocator;
     rsl::vector<EventBase*> m_enqueued_events;
     static constexpr rsl::memory_size s_event_queue_byte_size = 256_kib;
   };

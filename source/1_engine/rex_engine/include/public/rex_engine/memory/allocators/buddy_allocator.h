@@ -3,6 +3,9 @@
 #include "rex_engine/engine/types.h"
 #include "rex_engine/engine/defines.h"
 
+#include "rex_engine/memory/global_allocators/global_allocator.h"
+#include "rex_engine/memory/alloc_unique.h"
+
 #include "rex_std/memory.h"
 
 namespace rex
@@ -18,17 +21,17 @@ namespace rex
 
 	//Buddy allocator implementation
 	template <typename BackendAllocator>
-	class BuddyAllocator
+	class TBuddyAllocator
 	{
 	public:
 		using size_type = s64;
 		using pointer = void*;
 
-		explicit BuddyAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
+		explicit TBuddyAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
 		{
 			m_buffer = alloc_unique<rsl::byte[]>(alloc, size);
 			m_head = reinterpret_cast<internal::BuddyBlockHeader*>(m_buffer.get());
-			m_head->size = m_buffer.count() - sizeof(internal::BuddyBlockHeader);
+			m_head->size = static_cast<s32>(m_buffer.count() - sizeof(internal::BuddyBlockHeader));
 			m_head->next = nullptr;
 		}
 
@@ -100,11 +103,11 @@ namespace rex
 			ptr->~T();
 		}
 
-		bool operator==(const BuddyAllocator& rhs) const
+		bool operator==(const TBuddyAllocator& rhs) const
 		{
 			return m_buffer.get() == rhs.m_buffer.get();
 		}
-		bool operator!=(const BuddyAllocator& rhs) const
+		bool operator!=(const TBuddyAllocator& rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -143,7 +146,9 @@ namespace rex
 		}
 
 	private:
-		rsl::unique_array<rsl::byte> m_buffer;
+		rsl::unique_array<rsl::byte, DeleterWithAllocator<rsl::byte, BackendAllocator>> m_buffer;
 		internal::BuddyBlockHeader* m_head;
 	};
+
+	using BuddyAllocator = TBuddyAllocator<GlobalAllocator>;
 }

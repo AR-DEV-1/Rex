@@ -27,8 +27,8 @@ public:
   {
     s64 size = 1_kib;
 
-    rex::mut_globals().allocators.single_frame_allocator = rsl::make_unique<rex::StackAllocator<rex::GlobalAllocator>>(size);
-    rex::mut_globals().allocators.scratch_allocator = rsl::make_unique<rex::CircularAllocator<rex::GlobalAllocator>>(size);
+    rex::mut_globals().allocators.single_frame_allocator = rsl::make_unique<rex::TStackAllocator<rex::GlobalAllocator>>(size);
+    rex::mut_globals().allocators.scratch_allocator = rsl::make_unique<rex::TCircularAllocator<rex::GlobalAllocator>>(size);
   }
 
   void testRunEnded(const Catch::TestRunStats&) override

@@ -12,13 +12,13 @@ namespace rex
   using StackMarker = s64;
 
   template <typename BackendAllocator>
-  class StackAllocator
+  class TStackAllocator
   {
   public:
     using size_type = s64;
     using pointer = void*;
 
-    explicit StackAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
+    explicit TStackAllocator(size_type size, BackendAllocator alloc = BackendAllocator())
     {
       m_buffer = alloc_unique<rsl::byte[]>(alloc, size);
       m_current_marker = m_buffer.get();
@@ -72,11 +72,11 @@ namespace rex
       return m_buffer.get() <= ptr && ptr < m_buffer.get() + m_buffer.count();
     }
 
-    bool operator==(const StackAllocator& rhs) const
+    bool operator==(const TStackAllocator& rhs) const
     {
       return m_buffer.get() == rhs.m_buffer.get();
     }
-    bool operator!=(const StackAllocator& rhs) const
+    bool operator!=(const TStackAllocator& rhs) const
     {
       return !(*this == rhs);
     }
@@ -111,7 +111,9 @@ namespace rex
     }
 
   private:
-    rsl::unique_array<rsl::byte, DeleterWithAllocator<rsl::byte, BackendAllocator>> m_buffer;
+		rsl::unique_array<rsl::byte, DeleterWithAllocator<rsl::byte, BackendAllocator>> m_buffer;
     rsl::byte* m_current_marker;
   };
+
+  using StackAllocator = TStackAllocator<GlobalAllocator>;
 }
