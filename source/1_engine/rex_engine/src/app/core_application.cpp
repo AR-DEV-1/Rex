@@ -274,8 +274,8 @@ namespace rex
 
     BootSettings boot_settings{};
 
-    boot_settings.single_frame_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "single_frame_heap_size")).value_or(boot_settings.single_frame_heap_size);
-    boot_settings.scratch_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "scratch_heap_size")).value_or(boot_settings.scratch_heap_size);
+    boot_settings.single_frame_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "single_frame_heap_size", "<invalid int>")).value_or(boot_settings.single_frame_heap_size);
+    boot_settings.scratch_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "scratch_heap_size", "<invalid int>")).value_or(boot_settings.scratch_heap_size);
 
     return boot_settings;
   }
