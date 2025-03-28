@@ -20,7 +20,6 @@
 #include "rex_std/mutex.h"
 #include "rex_std/thread.h"
 #include "rex_std/unordered_map.h"
-#include "rex_std/vector.h"
 
 #include <Windows.h>
 #include <processenv.h>
