@@ -5,6 +5,8 @@
 
 namespace rex
 {
+	// A text iterator is an iterator that can process text and split it based on any character in the deliminators list
+	// A text iterator stores a view to the text internally and will return subviews into it
 	class TextIterator
 	{
 	public:
@@ -29,6 +31,7 @@ namespace rex
 		s32 m_sub_text_idx;
 	};
 
+	// A line iterator is a text iterator that uses endline characters as deliminators
 	class LineIterator : public TextIterator
 	{
 	public:
