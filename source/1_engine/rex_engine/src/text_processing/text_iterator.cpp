@@ -1,4 +1,4 @@
-#include "rex_engine/text_processing/splitted_iterator.h"
+#include "rex_engine/text_processing/text_iterator.h"
 #include "rex_engine/text_processing/text_processing.h"
 
 namespace rex
