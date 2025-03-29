@@ -19,9 +19,9 @@ namespace rex
     {
       // This maps holds all the settings
       // it gets filled up on boot but can always be changed at runtime
-      rsl::unordered_map<rsl::string, rsl::string, hash_lower<rsl::string>, equal_to_lower<rsl::string>>& all_settings()
+      rsl::unordered_map<rsl::string, rsl::string, rsl::hash_lower<rsl::string>, rsl::equal_to_case_insensitive<rsl::string>>& all_settings()
       {
-        static rsl::unordered_map<rsl::string, rsl::string, hash_lower<rsl::string>, equal_to_lower<rsl::string>> all_settings_map;
+        static rsl::unordered_map<rsl::string, rsl::string, rsl::hash_lower<rsl::string>, rsl::equal_to_case_insensitive<rsl::string>> all_settings_map;
         return all_settings_map;
       }
 

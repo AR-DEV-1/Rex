@@ -29,7 +29,7 @@ namespace rsl
         const int32* p = reinterpret_cast<const int32*>(&guid);
         for (card32 i = 0; i < 4; ++i)
         {
-          seed = rsl::internal::hash_combine(seed, rsl::hash<int32>{}(*p));
+          seed = rsl::hash_combine(seed, rsl::hash<int32>{}(*p));
           ++p;
         }
 

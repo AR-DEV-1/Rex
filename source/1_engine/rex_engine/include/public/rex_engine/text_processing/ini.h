@@ -7,62 +7,11 @@
 #include "rex_std/string_view.h"
 #include "rex_std/vector.h"
 #include "rex_std/unordered_map.h"
+#include "rex_std/bonus/functional.h"
+#include "rex_std/bonus/string.h"
 
 namespace rex
 {
-  template <typename StringType>
-  struct hash_lower
-  {
-    constexpr rsl::hash_result operator()(const StringType& str) const
-    {
-      return rsl::crc32::compute_as_lower(str.data(), str.length());
-    }
-  };
-
-
-  template <typename TypeToCompare = void>
-  struct equal_to_lower
-  {
-    using is_transparent = rsl::true_type;
-
-    constexpr bool operator()(const TypeToCompare& lhs, const TypeToCompare& rhs) const
-    {
-      if (lhs.length() != rhs.length())
-      {
-        return false;
-      }
-
-      return rsl::strincmp(lhs.data(), rhs.data(), lhs.length()) == 0;
-    }
-
-    /// RSL Comment: Different from ISO C++ Standard at time of writing (22/Aug/2022)
-    // the standard doesn't template the second argument.
-    // we do so we can, for example, compare a string with a const char*
-    // without the second getting promoted to a string
-    template <typename TypeToCompare2>
-    constexpr bool operator()(const TypeToCompare& lhs, const TypeToCompare2& rhs) const
-    {
-      if (lhs.length() != rhs.length())
-      {
-        return false;
-      }
-
-      return rsl::strincmp(lhs.data(), rhs.data(), lhs.length()) == 0;
-    }
-
-    template <typename TypeToCompare2>
-    constexpr bool operator()(const TypeToCompare2& lhs, const TypeToCompare& rhs) const
-    {
-      if (lhs.length() != rhs.length())
-      {
-        return false;
-      }
-
-      return rsl::strincmp(lhs.data(), rhs.data(), lhs.length()) == 0;
-    }
-  };
-
-
   namespace ini
   {
 		// This holds a header (with or without a name)
@@ -71,12 +20,12 @@ namespace rex
 		class IniBlock
 		{
 		public:
-      using internal_string = rsl::basic_string<char8, rsl::char_traits<char8>, Allocator>;
+      using internal_string = rsl::basic_string<char8, rsl::ichar_traits<char8>, Allocator>;
       using internal_hash_map = rsl::unordered_map<
         internal_string,                 // key
         internal_string,                 // value
-        hash_lower<internal_string>,      // hash
-        equal_to_lower<internal_string>,  // comparison
+        rsl::hash_lower<internal_string>,      // hash
+        rsl::equal_to_case_insensitive<internal_string>,  // comparison
         Allocator>;
 
       IniBlock() = default;
@@ -107,8 +56,8 @@ namespace rex
       using internal_hash_map = rsl::unordered_map<
         internal_string,                 // key
         IniBlock<Allocator>,              // value
-        rsl::hash<internal_string>,      // hash
-        rsl::equal_to<internal_string>,  // comparison
+        rsl::hash_lower<internal_string>,      // hash
+        rsl::equal_to_case_insensitive<internal_string>,  // comparison
         Allocator>;
 
       // Construct an ini object with ini content

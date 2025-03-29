@@ -124,7 +124,7 @@ namespace rex
       u64 seed = 0;
       for (const ResourceView* cpuView : views)
       {
-        seed = rsl::internal::hash_combine(seed, rsl::comp_hash(cpuView));
+        seed = rsl::hash_combine(seed, rsl::comp_hash(cpuView));
       }
 
       if (m_resources_on_gpu.contains(seed))
@@ -143,7 +143,7 @@ namespace rex
       u64 seed = 0;
       for (const ResourceView* cpuView : views)
       {
-        seed = rsl::internal::hash_combine(seed, rsl::comp_hash(cpuView));
+        seed = rsl::hash_combine(seed, rsl::comp_hash(cpuView));
       }
 
       const ResourceView* result = gpuView.get();

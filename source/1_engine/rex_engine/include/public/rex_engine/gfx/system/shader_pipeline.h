@@ -31,8 +31,8 @@ namespace rsl
 			rsl::hash_result operator()(const rex::gfx::ShaderPipeline& pipeline) const
 			{
 				uint64 seed = 0;
-				seed = rsl::internal::hash_combine(seed, rsl::comp_hash(pipeline.vs));
-				seed = rsl::internal::hash_combine(seed, rsl::comp_hash(pipeline.ps));
+				seed = rsl::hash_combine(seed, rsl::comp_hash(pipeline.vs));
+				seed = rsl::hash_combine(seed, rsl::comp_hash(pipeline.ps));
 
 				return static_cast<hash_result>(seed);
 			}
