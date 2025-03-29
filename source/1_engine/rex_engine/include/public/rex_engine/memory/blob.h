@@ -31,7 +31,7 @@ namespace rex
       {
         // "release" sets internal count to 0
         // so we need to make sure we cache this data before actually calling release.
-        const s32 total_size = data.byte_size();
+        const s32 total_size = static_cast<s32>(data.byte_size());
         m_data         = rsl::unique_array<rsl::byte>((rsl::byte*)data.release(), total_size); // NOLINT(google-readability-casting)
       }
       // Initialize a blob from a pointer with size.

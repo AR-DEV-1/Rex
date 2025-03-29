@@ -2,6 +2,8 @@
 
 #include "rex_engine/diagnostics/log.h"
 
+#include "rex_engine/platform/win/diagnostics/win_call.h"
+
 #include <coml2api.h>
 #include <objbase.h>
 #include <objidl.h>
@@ -45,7 +47,7 @@ namespace rex
           }
 
           // Read a symbolic link's path and return the path it actually points to
-          TempString read_link(rsl::string_view filepath) // NOLINT(readability-convert-member-functions-to-static)
+          scratch_string read_link(rsl::string_view filepath) // NOLINT(readability-convert-member-functions-to-static)
           {
             IShellLinkW* psl = nullptr;
             HRESULT hres     = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, reinterpret_cast<LPVOID*>(&psl)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -73,7 +75,7 @@ namespace rex
               psl->Release();
             }
 
-            return TempString(res);
+            return scratch_string(res);
           }
 
           // Increase the amount of reference the com lib has on this thread
@@ -82,6 +84,9 @@ namespace rex
             if(!is_initialized())
             {
               init_lib();
+
+              // It's possible, even on successfull initialization, that an error get set here
+              rex::win::clear_win_errors();
             }
             s_ref_count++;
           }
@@ -137,7 +142,7 @@ namespace rex
       }
 
       // Read a symbolic link's path and return the path it actually points to
-      TempString read_link(rsl::string_view filepath)
+      scratch_string read_link(rsl::string_view filepath)
       {
         return internal::com_library().read_link(filepath);
       }

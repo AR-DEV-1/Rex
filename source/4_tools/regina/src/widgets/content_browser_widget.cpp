@@ -500,7 +500,7 @@ namespace regina
 		f32 itemSpacing = 1.0f;
 
 		// TODO(Peter): This method of handling actions isn't great... It's starting to become spaghetti...
-		rex::TempString fullpath;
+		rex::temp_string fullpath;
 		for (ContentBrowserItem& item : m_current_items)
 		{
 			// Each item should look something like this

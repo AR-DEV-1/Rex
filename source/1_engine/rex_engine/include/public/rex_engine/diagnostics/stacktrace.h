@@ -49,7 +49,7 @@ namespace rsl
         {
           void* stack_pointer = callstack[i];
           const intptr address = *reinterpret_cast<intptr*>(&stack_pointer); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-          seed = internal::hash_combine(seed, address);
+          seed = hash_combine(seed, static_cast<hash_result>(address));
         }
 
         return static_cast<rsl::hash_result>(seed);

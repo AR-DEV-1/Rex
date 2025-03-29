@@ -58,16 +58,18 @@ namespace rex
 
 		bool is_item_hovered(float delayInSeconds, ImGuiHoveredFlags flags)
 		{
+			REX_UNUSED_PARAM(flags);
+
 			return ImGui::IsItemHovered() && GImGui->HoveredIdTimer > delayInSeconds; /*HoveredIdNotActiveTimer*/
 		}
 
-		void set_tooltip(std::string_view text, float delayInSeconds, bool allowWhenDisabled, ImVec2 padding)
+		void set_tooltip(std::string_view txt, float delayInSeconds, bool allowWhenDisabled, ImVec2 padding)
 		{
 			if (is_item_hovered(delayInSeconds, allowWhenDisabled ? ImGuiHoveredFlags_AllowWhenDisabled : 0))
 			{
 				ScopedStyle tooltipPadding(ImGuiStyleVar_WindowPadding, padding);
 				ScopedColour textCol(ImGuiCol_Text, textBrighter);
-				ImGui::SetTooltip(text.data());
+				ImGui::SetTooltip(txt.data());
 			}
 		}
 		ImRect rect_offset(const ImRect& rect, float x, float y)
@@ -87,8 +89,8 @@ namespace rex
 		void image(const rex::gfx::Texture2D* tex)
 		{
 			ImVec2 texSize{};
-			texSize.x = tex->width();
-			texSize.y = tex->height();
+			texSize.x = static_cast<f32>(tex->width());
+			texSize.y = static_cast<f32>(tex->height());
 			ImGui::Image((ImTextureID)tex, texSize);
 		}
 

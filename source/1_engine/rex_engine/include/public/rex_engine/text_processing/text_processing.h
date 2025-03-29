@@ -32,7 +32,17 @@ namespace rex
   // Removes all spaces from a string
   // we're taking a string by ref
   // to reuse the memory
-  rsl::string& remove_spaces(rsl::string& input);
+  template <typename Allocator>
+  rsl::basic_string<char8, rsl::char_traits<char8>, Allocator>& remove_spaces(rsl::basic_string<char8, rsl::char_traits<char8>, Allocator>& input)
+  {
+    input.replace(" ", "");
+    return input;
+  }
+
+  // Removes all spaces from a string
+  // we're taking a string by ref
+  // to reuse the memory
+  void remove_spaces(char8* begin, char8* end);
 
   // removes leading and trailing quotes from a path
   rsl::string_view remove_quotes(rsl::string_view path);

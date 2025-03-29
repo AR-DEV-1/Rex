@@ -12,6 +12,30 @@ namespace rex
 {
   namespace directory
   {
+    // --------------------------------
+    // CREATING
+    // --------------------------------
+
+    // --------------------------------
+    // DELETING
+    // --------------------------------
+
+    // --------------------------------
+    // READING
+    // --------------------------------
+
+    // --------------------------------
+    // WRITING
+    // --------------------------------
+
+    // --------------------------------
+    // CONVERTING
+    // --------------------------------
+
+    // --------------------------------
+    // QUERYING
+    // --------------------------------
+
     // Create a new directory
     Error create(rsl::string_view path);
     // Create a directory recursively, creating all sub directories until the leaf dir
@@ -54,5 +78,35 @@ namespace rex
     rsl::time_point access_time(rsl::string_view path);
     // Return the modification time of a directory
     rsl::time_point modification_time(rsl::string_view path);
+
+    // ------------------------------------------------------------------------------
+    //                          ABSOLUTE PATH IMPLEMENTATIONS
+    // ------------------------------------------------------------------------------
+
+    // Create a new directory
+    Error create_abspath(rsl::string_view path);
+    // Create a directory recursively, creating all sub directories until the leaf dir
+    Error create_recursive_abspath(rsl::string_view path);
+    // Delete a directory, it's expected to be empty
+    Error del_abspath(rsl::string_view path);
+    // Delete a directory recursively, including all files and sub folders
+    Error del_recursive_abspath(rsl::string_view path);
+    // Return if a directory exists
+    bool exists_abspath(rsl::string_view path);
+    // Copy a directory and its content
+    Error copy_abspath(rsl::string_view src, rsl::string_view dst);
+    // Move/Rename a directory
+    Error move_abspath(rsl::string_view src, rsl::string_view dst);
+
+    // Get the size of all the files in the directory
+    // possible going recursive over all the sub folders as well
+    rsl::memory_size size_abspath(rsl::string_view path, Recursive goRecursive = Recursive::no);
+
+    // Return the creation time of a directory
+    rsl::time_point creation_time_abspath(rsl::string_view path);
+    // Return the access time of a directory
+    rsl::time_point access_time_abspath(rsl::string_view path);
+    // Return the modification time of a directory
+    rsl::time_point modification_time_abspath(rsl::string_view path);
   } // namespace directory
 } // namespace rex

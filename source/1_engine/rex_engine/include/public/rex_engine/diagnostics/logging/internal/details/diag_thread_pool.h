@@ -6,7 +6,6 @@
 #include "rex_engine/diagnostics/logging/internal/details/log_msg_buffer.h"
 #include "rex_engine/diagnostics/logging/internal/details/mpmc_blocking_q.h"
 #include "rex_engine/diagnostics/logging/internal/details/os.h"
-#include "rex_engine/engine/debug_types.h"
 #include "rex_engine/engine/types.h"
 #include "rex_std/functional.h"
 #include "rex_std/memory.h"
@@ -111,7 +110,7 @@ namespace rex
       private:
         q_type m_q;
 
-        rex::DebugVector<rsl::thread> m_threads;
+        rex::debug_vector<rsl::thread> m_threads;
       };
 
     } // namespace details

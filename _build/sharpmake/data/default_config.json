@@ -20,7 +20,7 @@
   },
   "enable-unit-tests": {
     "Description": "Enable generation of unit test projects",
-    "Value": false
+    "Value": true
   },
   "enable-code-coverage": {
     "Description": "Enable code coverage when the code gets build. This is only supported for Clang compiler",
@@ -36,7 +36,7 @@
   },
   "enable-fuzzy-testing": {
     "Description": "Enable generation of fuzzy test projects",
-    "Value": false
+    "Value": true
   },
   "disable-default-generation": {
     "Description": "Disable default projects from being generation",

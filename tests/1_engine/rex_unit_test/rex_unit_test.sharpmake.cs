@@ -19,6 +19,12 @@ public class RexUnitTest : TestProject
 
     conf.AddPublicDependency<RexStd>(target, DependencySetting.Default);
     conf.AddPublicDependency<RexEngine>(target, DependencySetting.Default);
+
+    // We also need to add the private includes of rex engine 
+    // as we need to do a minimal engine initialization for a few things
+    // (eg. the global allocators)
+    string rexEngineSourceRoot = Path.Combine(Globals.Root, "source", "1_engine", "rex_engine");
+    conf.IncludePrivatePaths.Add($@"{rexEngineSourceRoot}\include\private");
   }
 
   protected override void SetupConfigSettings(RexConfiguration conf, RexTarget target)

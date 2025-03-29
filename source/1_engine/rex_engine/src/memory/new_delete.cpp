@@ -1,28 +1,28 @@
 #include "rex_engine/memory/new_delete.h"
 
-#include "rex_engine/memory/global_allocator.h"
+#include "rex_engine/memory/global_allocators/global_allocator.h"
 #include "rex_std/bonus/types.h"
 
 #include <vcruntime_new.h>
 
 void* operator new(u64 size) // NOLINT(readability-inconsistent-declaration-parameter-name)
 {
-  return rex::global_allocator().allocate(static_cast<card64>(size));
+  return rex::GlobalAllocator().allocate(static_cast<card64>(size));
 }
 void* operator new[](u64 size) // NOLINT(readability-inconsistent-declaration-parameter-name)
 {
-  return rex::global_allocator().allocate(static_cast<card64>(size));
+  return rex::GlobalAllocator().allocate(static_cast<card64>(size));
 }
 
 void operator delete(void* ptr) noexcept           // NOLINT(readability-inconsistent-declaration-parameter-name)
 {
-  rex::global_allocator().deallocate(ptr, -1);     // unknown size
+  rex::GlobalAllocator().deallocate(ptr, -1);     // unknown size
 }
 void operator delete[](void* ptr) noexcept           // NOLINT(readability-inconsistent-declaration-parameter-name)
 {
-  rex::global_allocator().deallocate(ptr, -1);     // unknown size
+  rex::GlobalAllocator().deallocate(ptr, -1);     // unknown size
 }
 void operator delete(void* ptr, u64 size) noexcept // NOLINT(readability-inconsistent-declaration-parameter-name)
 {
-  rex::global_allocator().deallocate(ptr, static_cast<card64>(size));
+  rex::GlobalAllocator().deallocate(ptr, static_cast<card64>(size));
 }

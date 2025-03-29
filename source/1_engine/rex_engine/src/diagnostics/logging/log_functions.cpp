@@ -9,11 +9,10 @@
 #include "rex_engine/diagnostics/logging/internal/sinks/basic_file_sink.h"
 #include "rex_engine/diagnostics/logging/internal/sinks/dist_sink.h"
 #include "rex_engine/diagnostics/logging/internal/sinks/stdout_color_sinks.h"
-#include "rex_engine/engine/debug_types.h"
 #include "rex_engine/engine/project.h"
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
-#include "rex_engine/memory/global_allocator.h"
+#include "rex_engine/memory/global_allocators/global_allocator.h"
 #include "rex_std/bonus/hashtable.h"
 #include "rex_std/bonus/utility.h"
 #include "rex_std/vector.h"
@@ -36,10 +35,10 @@ namespace rex
 namespace rex
 {
   using LogPattern  = rsl::string_view;
-  using LogLevelMap = DebugHashTable<log::LogVerbosity, rex::log::level::LevelEnum>;
+  using LogLevelMap = debug_hash_map<log::LogVerbosity, rex::log::level::LevelEnum>;
 
   using LoggerObjectPtr    = rsl::shared_ptr<rex::log::Logger>;
-  using LoggerObjectPtrMap = DebugHashTable<LogCategoryName, LoggerObjectPtr>;
+  using LoggerObjectPtrMap = debug_hash_map<LogCategoryName, LoggerObjectPtr>;
 
   bool g_enable_file_sinks = false; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
@@ -105,18 +104,18 @@ namespace rex
         return *logger;
 
       // If no logger is found with the above name, create a new one
-      rex::DebugVector<rsl::shared_ptr<rex::log::sinks::AbstractSink>> sinks;
+      rex::debug_vector<rsl::shared_ptr<rex::log::sinks::AbstractSink>> sinks;
 
       // By default we log to both the console window
 #ifdef REX_ENABLE_COLOR_SINK
       // Only push rexout color sink when we are in debug mode
-      sinks.push_back(rsl::allocate_shared<rex::log::sinks::StdoutColorSinkMt>(rex::global_debug_allocator()));
+      sinks.push_back(rsl::allocate_shared<rex::log::sinks::StdoutColorSinkMt>(rex::GlobalDebugAllocator()));
 #endif
 
       // If the logging system has been initialized, we log to files as well
       if(g_enable_file_sinks)
       {
-        sinks.push_back(rsl::make_shared<rex::log::sinks::basic_file_sink_mt>(rex::project_log_path(), true));
+        sinks.push_back(rsl::allocate_shared<rex::log::sinks::basic_file_sink_mt>(rex::GlobalDebugAllocator(), rex::project_log_path(), true));
       }
 
       rsl::shared_ptr<rex::log::Logger> new_logger = nullptr;

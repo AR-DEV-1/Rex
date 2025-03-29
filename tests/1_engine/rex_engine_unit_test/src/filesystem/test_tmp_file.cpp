@@ -7,7 +7,7 @@
 
 TEST_CASE("TEST - Temp File - Empty")
 {
-  rex::TempString filename;
+  rex::scratch_string filename;
   {
     rex::TempFile tmp_file;
     filename.assign(tmp_file.filepath());
@@ -17,7 +17,7 @@ TEST_CASE("TEST - Temp File - Empty")
   }
   REX_CHECK(rex::file::exists(filename) == false);
 
-  rex::TempString test_directory = rex::path::abs_path("test_directory");
+  rex::scratch_string test_directory = rex::path::abs_path("test_directory");
   rex::directory::create(test_directory);
   {
 
@@ -35,7 +35,7 @@ TEST_CASE("TEST - Temp File - Empty")
 
 TEST_CASE("TEST - Temp File - With Text")
 {
-  rex::TempString filename;
+  rex::scratch_string filename;
   {
     rex::TempFile tmp_file;
     filename.assign(tmp_file.filepath());
@@ -50,7 +50,7 @@ TEST_CASE("TEST - Temp File - With Text")
   }
   REX_CHECK(rex::file::exists(filename) == false);
 
-  rex::TempString test_directory = rex::path::abs_path("test_directory");
+  rex::scratch_string test_directory = rex::path::abs_path("test_directory");
   rex::directory::create(test_directory);
 
   {

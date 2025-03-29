@@ -3,7 +3,7 @@
 #include "rex_engine/diagnostics/logging/internal/common.h"
 #include "rex_engine/diagnostics/logging/internal/logger.h"
 #include "rex_engine/diagnostics/logging/internal/pattern_formatter.h"
-#include "rex_engine/memory/global_allocator.h"
+#include "rex_engine/memory/global_allocators/global_allocator.h"
 #include "rex_std/bonus/hashtable.h"
 #include "rex_std/bonus/utility.h"
 #include "rex_std/memory.h"
@@ -173,11 +173,11 @@ namespace rex
 
       void Registry::register_logger_impl(LoggerObjectPtr newLogger)
       {
-        auto logger_name = rex::DebugString(newLogger->name());
+        auto logger_name = rex::debug_string(newLogger->name());
 
         if(m_loggers.find(logger_name) != m_loggers.end())
         {
-          rex::DebugString err(rex::global_debug_allocator());
+          rex::debug_string err;
           err += "Logger with name '";
           err += logger_name;
           err += "' already exists";

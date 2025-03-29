@@ -20,9 +20,9 @@ TEST_CASE("TEST - Interval - Resetting")
   rex::Interval interval{};
 
   using namespace rsl::chrono_literals;
-  rsl::this_thread::sleep_for(1ms);
+  rsl::this_thread::sleep_for(1s);
 
   interval.reset();
-  REX_CHECK(interval.milliseconds() == 0);
-  REX_CHECK(interval.seconds() == 0);
+  REX_CHECK(interval.milliseconds() <= 1); // Because we're timing, it's possible the interval has increased by the time it gets here
+  REX_CHECK(interval.seconds() <= 0.001f); // The interval might've increased even more by the time it got here
 }

@@ -9,7 +9,6 @@
 
 #include "rex_engine/diagnostics/logging/internal/common.h"
 #include "rex_engine/diagnostics/logging/internal/pattern_formatter.h"
-#include "rex_engine/engine/debug_types.h"
 #include "rex_std/memory.h"
 #include "rex_std/mutex.h"
 #include "rex_std/string.h"
@@ -22,7 +21,7 @@ namespace rex
     class Logger;
 
     using LoggerObjectPtr    = rsl::shared_ptr<Logger>;
-    using LoggerObjectPtrMap = rex::DebugHashTable<rex::DebugString, LoggerObjectPtr>;
+    using LoggerObjectPtrMap = rex::debug_hash_map<rex::debug_string, LoggerObjectPtr>;
 
     namespace details
     {

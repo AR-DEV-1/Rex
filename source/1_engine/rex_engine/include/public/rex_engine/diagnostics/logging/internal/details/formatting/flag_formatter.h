@@ -5,7 +5,6 @@
 #include "rex_engine/diagnostics/logging/internal/details/formatting/padding_info.h"
 #include "rex_engine/diagnostics/logging/internal/details/log_msg.h"
 #include "rex_engine/diagnostics/logging/internal/details/os.h"
-#include "rex_engine/engine/debug_types.h"
 #include "rex_engine/engine/types.h"
 #include "rex_engine/filesystem/filesystem_constants.h"
 #include "rex_std/bonus/string.h"
@@ -914,7 +913,7 @@ namespace rex
         void format(const details::LogMsg& /*unused*/, const tm& /*unused*/, memory_buf_t& dest) override;
 
       private:
-        rex::DebugString m_string;
+        rex::debug_string m_string;
       };
 
       //-------------------------------------------------------------------------
@@ -948,7 +947,7 @@ namespace rex
 
       private:
         rsl::chrono::seconds m_cache_timestamp {0};
-        DebugString m_cached_datetime;
+        debug_string m_cached_datetime;
       };
 
       //-------------------------------------------------------------------------
@@ -963,7 +962,7 @@ namespace rex
 
       private:
         rsl::chrono::seconds m_cache_timestamp {0};
-        DebugString m_cached_datetime;
+        debug_string m_cached_datetime;
       };
 
     } // namespace details

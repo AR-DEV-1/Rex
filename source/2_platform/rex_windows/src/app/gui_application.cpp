@@ -7,7 +7,7 @@
 #include "rex_engine/event_system/event_system.h"
 #include "rex_engine/frameinfo/deltatime.h"
 #include "rex_engine/frameinfo/fps.h"
-#include "rex_engine/memory/global_allocator.h"
+#include "rex_engine/memory/global_allocators/global_allocator.h"
 #include "rex_engine/platform/win/win_com_library.h"
 #include "rex_engine/gfx/core/depth_info.h"
 #include "rex_engine/gfx/core/renderer_output_window_user_data.h"
@@ -36,7 +36,7 @@
 
 #include "rex_engine/gfx/graphics.h"
 #include "rex_engine/diagnostics/debug.h"
-#include "rex_engine/memory/tracked_allocator.h"
+#include "rex_engine/memory/allocators/tracked_allocator.h"
 
 #include "rex_directx/system/dx_gal.h"
 
@@ -292,7 +292,7 @@ namespace rex
       }
       void subscribe_window_events()
       {
-        event_system().subscribe<WindowClose>([this](const WindowClose& /*evt*/) { event_system().enqueue_event(QuitApp("Window closed")); });
+        event_system().subscribe<WindowClose>([this](const WindowClose& /*evt*/) { event_system().fire_event(QuitApp("Window closed")); });
         event_system().subscribe<WindowActivated>( [this](const WindowActivated& /*evt*/) { m_app_instance->resume(); });
         event_system().subscribe<WindowDeactivated>( [this](const WindowDeactivated& /*evt*/) { m_app_instance->pause(); });
         event_system().subscribe<WindowStartResize>( [this](const WindowStartResize& /*evt*/) { on_start_resize(); });

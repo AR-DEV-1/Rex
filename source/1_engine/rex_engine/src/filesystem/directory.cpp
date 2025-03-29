@@ -1,6 +1,7 @@
 #include "rex_engine/filesystem/directory.h"
 
 #include "rex_engine/filesystem/file.h"
+#include "rex_engine/filesystem/path.h"
 
 namespace rex
 {
@@ -10,7 +11,18 @@ namespace rex
     // possible going recursive over all the sub folders as well
     rsl::memory_size size(rsl::string_view path, Recursive goRecursive)
     {
-      if (!exists(path))
+      path = path::unsafe_abs_path(path);
+
+      return size_abspath(path, goRecursive);
+    }
+
+    // Get the size of all the files in the directory
+    // possible going recursive over all the sub folders as well
+    rsl::memory_size size_abspath(rsl::string_view path, Recursive goRecursive)
+    {
+      REX_ASSERT_X(path::is_absolute(path), "argument is expected to be absolute here: {}", path);
+
+      if (!exists_abspath(path))
       {
         return 0_bytes;
       }

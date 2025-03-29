@@ -7,7 +7,7 @@
 
 #include "rex_engine/diagnostics/logging/internal/details/diag_thread_pool.h"
 #include "rex_engine/diagnostics/logging/internal/sinks/sink.h"
-#include "rex_engine/memory/global_allocator.h"
+#include "rex_engine/memory/global_allocators/global_allocator.h"
 #include "rex_std/memory.h"
 
 // NOLINTBEGIN(misc-definitions-in-headers)
@@ -86,7 +86,7 @@ namespace rex
     //-------------------------------------------------------------------------
     rsl::shared_ptr<rex::log::Logger> rex::log::AsyncLogger::clone(rsl::string_view newName)
     {
-      auto cloned = rsl::allocate_shared<rex::log::AsyncLogger>(rex::global_debug_allocator(), *this);
+      auto cloned = rsl::allocate_shared<rex::log::AsyncLogger>(rex::GlobalDebugAllocator(), *this);
 
       cloned->set_name(newName);
 

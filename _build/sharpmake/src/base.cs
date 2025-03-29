@@ -3,6 +3,7 @@ using System.Linq;
 using Sharpmake;
 using System.Collections.Generic;
 using System.Text.Json;
+using System;
 
 // This file defines the base class for all different kind of projects supported for rex.
 // The BaseProject is cross-language and defines things like config name, intermediate directory, ...
@@ -51,7 +52,12 @@ public class BaseConfiguration
   {
     // General options
     conf.Options.Add(Options.Vc.General.CharacterSet.MultiByte);
-    conf.Options.Add(Options.Vc.General.PlatformToolset.v142);
+    Options.Vc.General.PlatformToolset platformToolSet = Options.Vc.General.PlatformToolset.v142;
+    if (Sharpmake.ExtensionMethods.IsVisualStudio(target.DevEnv))
+    {
+      Enum.TryParse(Sharpmake.ExtensionMethods.GetDefaultPlatformToolset(target.DevEnv), out platformToolSet);
+    }
+    conf.Options.Add(platformToolSet);
     conf.Options.Add(Options.Vc.General.WarningLevel.Level4);
 
     // Disable warning as errors in debug so that we can add debug code
@@ -95,7 +101,7 @@ public class RegenerateProjects : Project
   public RegenerateProjects() : base(typeof(RexTarget), typeof(RexConfiguration))
   {
     // We need to mimic the targets generated, but only for visual studio IDE
-    AddTargets(RexTarget.CreateTargetsForDevEnv(DevEnv.vs2019).ToArray());
+    AddTargets(RexTarget.CreateTargetsForDevEnv(ProjectGen.Settings.IDE.ToDevEnv()).ToArray());
   }
 
   [Configure]
@@ -1019,6 +1025,14 @@ public class TestProject : BasicCPPProject
   protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
   {
     conf.SolutionFolder = "5_tests";
+  }
+
+  protected override void SetupConfigSettings(RexConfiguration conf, RexTarget target)
+  {
+    base.SetupConfigSettings(conf, target);
+
+    conf.VcxprojUserFile = new Configuration.VcxprojUserFileSettings();
+    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Path.Combine(Globals.Root, "data");
   }
 
   protected override void SetupConfigRules(RexConfiguration conf, RexTarget target)

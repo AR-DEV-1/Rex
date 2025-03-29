@@ -19,20 +19,18 @@ namespace rex
     {
       // This maps holds all the settings
       // it gets filled up on boot but can always be changed at runtime
-      rsl::unordered_map<rsl::string, rsl::string>& all_settings()
+      rsl::unordered_map<rsl::string, rsl::string, rsl::hash_lower<rsl::string>, rsl::equal_to_case_insensitive<rsl::string>>& all_settings()
       {
-        static rsl::unordered_map<rsl::string, rsl::string> all_settings_map;
+        static rsl::unordered_map<rsl::string, rsl::string, rsl::hash_lower<rsl::string>, rsl::equal_to_case_insensitive<rsl::string>> all_settings_map;
         return all_settings_map;
       }
 
-      // add a new setting to the internal map
-      // setting headers and keys are not allows to have spaces
-      void add_new_settings(rsl::string_view header, rsl::string_view key, rsl::string_view val)
+      scratch_string to_hash_key(rsl::string_view header, rsl::string_view key)
       {
         // If a setting comes from a header, we add the header to the final name
         // and seperate it by a '.'
-        rsl::string full_setting_name;
-        if(!header.empty())
+        scratch_string full_setting_name;
+        if (!header.empty())
         {
           full_setting_name.assign(rsl::format("{}.{}", header, key));
         }
@@ -44,18 +42,22 @@ namespace rex
         // remove all the spaces from a setting's name before we add it to the list
         remove_spaces(full_setting_name);
 
-        rsl::to_lower(full_setting_name.data(), full_setting_name.data(), full_setting_name.length());
+        return full_setting_name;
+      }
+
+      // add a new setting to the internal map
+      // setting headers and keys are not allows to have spaces
+      void add_new_settings(rsl::string_view header, rsl::string_view key, rsl::string_view val)
+      {
+        scratch_string full_setting_name = to_hash_key(header, key);
         all_settings()[rsl::move(full_setting_name)] = rsl::string(val);
       }
 
       rsl::optional<rsl::string_view> get_setting(rsl::string_view name)
       {
-        TempString name_lower(name.length(), '\0');
-        rsl::to_lower(name.data(), name_lower.data(), name.length());
-        rsl::string_view name_lower_view = name_lower;
-        if (all_settings().contains(name_lower_view))
+        if (all_settings().contains(name))
         {
-          return all_settings().at(name_lower_view);
+          return all_settings().at(name);
         }
         return rsl::nullopt;
       }
@@ -106,27 +108,18 @@ namespace rex
     // set s asetting in the global map
     void set(rsl::string_view name, rsl::string_view val)
     {
-      rsl::string name_lower(name);
-      rsl::to_lower(name_lower.cbegin(), name_lower.begin(), name_lower.size());
-
-      internal::all_settings()[name_lower].assign(val);
+      internal::all_settings()[name].assign(val);
     }
 
     // Set a setting from an int. This supports adding new settings
     void set(rsl::string_view name, s32 val)
     {
-      rsl::string name_lower(name);
-      rsl::to_lower(name_lower.cbegin(), name_lower.begin(), name_lower.size());
-
-      internal::all_settings()[name_lower].assign(rsl::to_string(val));
+      internal::all_settings()[name].assign(rsl::to_string(val));
     }
     // Set a setting from a float. This supports adding new settings
     void set(rsl::string_view name, f32 val)
     {
-      rsl::string name_lower(name);
-      rsl::to_lower(name_lower.cbegin(), name_lower.begin(), name_lower.size());
-
-      internal::all_settings()[name_lower].assign(rsl::to_string(val));
+      internal::all_settings()[name].assign(rsl::to_string(val));
     }
 
     // Load a settings file and adds it settings to the settings
@@ -151,9 +144,9 @@ namespace rex
       }
 
       // Loop over the processed settings and add them to the global map
-      rsl::vector<ini::IniBlock> blocks = ini_content.all_blocks();
+      rsl::vector<ini::IniBlock<>> blocks = ini_content.all_blocks();
 
-      for(const ini::IniBlock& block : ini_content.all_blocks())
+      for(const ini::IniBlock<>& block : ini_content.all_blocks())
       {
         for (const auto[key, value] : block.all_items())
         {

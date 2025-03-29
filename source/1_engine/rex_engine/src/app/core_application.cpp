@@ -37,6 +37,8 @@ namespace rex
     vfs::shutdown();
 
     cmdline::shutdown();
+
+    end_profiling_session();
   }
 
   //--------------------------------------------------------------------------------------------
@@ -133,12 +135,14 @@ namespace rex
   {
     m_app_state.change_state(ApplicationState::Initializing);
 
-    init_globals();
-
     // Loads the mounts of the engine
     // this will make it easier to access files under these paths
     // in the future
     mount_engine_paths();
+
+    init_boot_settings();
+
+    init_globals();
 
     // load the settings of the engine as early as possible
     // however it does have a few dependencies that need to be set up first
@@ -165,7 +169,7 @@ namespace rex
   void CoreApplication::update()
   {
     rex::mut_globals().frame_info.update();
-    rex::mut_globals().single_frame_allocator->adv_frame();
+    rex::mut_globals().allocators.single_frame_allocator->reset();
 
     REX_INFO(LogCoreApp, "FPS: {}", rex::globals().frame_info.fps().get());
     REX_INFO(LogCoreApp, "Delta time: {}", rex::globals().frame_info.delta_time().to_seconds());
@@ -226,15 +230,53 @@ namespace rex
 
     for(const rsl::string_view file: files)
     {
+      REX_VERBOSE(LogCoreApp, "Loading settings file: {}", file);
       settings::load(file);
     }
   }
 
   //--------------------------------------------------------------------------------------------
+  void CoreApplication::init_boot_settings()
+  {
+    BootSettings default_boot_settings{};
+
+    scratch_string abs_boot_ini_path = vfs::abs_path("rex/settings/boot.ini");
+    if (vfs::exists(abs_boot_ini_path))
+    {
+      default_boot_settings = parse_boot_settings(abs_boot_ini_path);
+    }
+
+    init_allocators(default_boot_settings);
+  }
+
+  //--------------------------------------------------------------------------------------------
+  void CoreApplication::init_allocators(const BootSettings& bootSettings)
+  {
+    // Read the settings of the file
+    REX_ASSERT_X(bootSettings.single_frame_heap_size > 0, "Single frame heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"single_frame_heap_size\" in memory_settings.ini");
+    REX_ASSERT_X(bootSettings.scratch_heap_size > 0, "Scratch heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"scratch_heap_size\" in memory_settings.ini");
+
+    // Initialize the global heaps and its allocators using the settings loaded from disk
+    mut_globals().allocators.single_frame_allocator = rsl::make_unique<TStackAllocator<GlobalAllocator>>(bootSettings.single_frame_heap_size);
+    mut_globals().allocators.scratch_allocator = rsl::make_unique<TCircularAllocator<GlobalAllocator>>(bootSettings.scratch_heap_size);
+  }
+
+  //--------------------------------------------------------------------------------------------
   void CoreApplication::init_globals()
   {
-    s32 mem_size = static_cast<s32>(settings::get_int("SingleFrameAllocatorSize", static_cast<s32>(1_mib)));
-    mut_globals().single_frame_allocator = rsl::make_unique<FrameBasedAllocator>(mem_size, 1);
+  }
+
+  BootSettings CoreApplication::parse_boot_settings(rsl::string_view bootSettingsPath)
+  {
+    REX_ASSERT_X(vfs::exists(bootSettingsPath), "boot settings path for parsing doesn't exist. {}", bootSettingsPath);
+    ini::Ini boot_settings_ini = ini::read_from_file(bootSettingsPath);
+
+    BootSettings boot_settings{};
+
+    boot_settings.single_frame_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "single_frame_heap_size", "<invalid int>")).value_or(boot_settings.single_frame_heap_size);
+    boot_settings.scratch_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "scratch_heap_size", "<invalid int>")).value_or(boot_settings.scratch_heap_size);
+
+    return boot_settings;
   }
 
 } // namespace rex
