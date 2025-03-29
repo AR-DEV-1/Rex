@@ -115,6 +115,8 @@ namespace rex
 
 		void deallocate(pointer ptr, size_type size)
 		{
+			REX_UNUSED_PARAM(size);
+
 			rsl::byte* ptr_as_bytes = reinterpret_cast<rsl::byte*>(ptr);
 			ptr_as_bytes -= sizeof(internal::BuddyBlockHeader);
 			internal::BuddyBlockHeader* block = reinterpret_cast<internal::BuddyBlockHeader*>(ptr_as_bytes);
@@ -163,10 +165,10 @@ namespace rex
 			rsl::byte* block_as_bytes = reinterpret_cast<rsl::byte*>(block);
 			block_as_bytes += sizeof(internal::BuddyBlockHeader) + size;
 			internal::BuddyBlockHeader* new_block = reinterpret_cast<internal::BuddyBlockHeader*>(block_as_bytes);
-			new_block->size = block->size - sizeof(internal::BuddyBlockHeader) - size;
+			new_block->size = static_cast<s32>(block->size - sizeof(internal::BuddyBlockHeader) - size);
 			new_block->next = block->next;
 
-			block->size = size;
+			block->size = static_cast<s32>(size);
 			block->next = new_block;
 		}
 		void remove_free_block(internal::BuddyBlockHeader* prev, internal::BuddyBlockHeader* toRemove)
