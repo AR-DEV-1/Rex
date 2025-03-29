@@ -463,14 +463,12 @@ namespace rex
     {
       REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
-      const rsl::vector<rsl::string_view> splitted_paths = rsl::split(path, "/\\");
-
-      rsl::string to_create;
+      scratch_string to_create;
       to_create.reserve(path.size());
 
-      for (const rsl::string_view sub_path : splitted_paths)
+      for (rsl::string_view subpath : path::PathIterator(path))
       {
-        to_create += sub_path;
+        to_create += subpath;
         if (!exists_abspath(to_create))
         {
           const bool success = WIN_SUCCESS_IGNORE(CreateDirectoryA(to_create.data(), NULL), ERROR_ALREADY_EXISTS);

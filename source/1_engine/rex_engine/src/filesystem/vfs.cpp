@@ -388,13 +388,7 @@ namespace rex
     Error create_file(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return file::create_abspath(path);
     }
@@ -408,26 +402,14 @@ namespace rex
     Error create_dir(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::create_abspath(path);
     }
     Error create_dirs(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::create_recursive_abspath(path);
     }
@@ -445,13 +427,7 @@ namespace rex
     Error delete_file(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return file::del_abspath(path);
     }
@@ -465,13 +441,7 @@ namespace rex
     Error delete_dir(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::del_abspath(path);
     }
@@ -485,13 +455,7 @@ namespace rex
     Error delete_dir_recursive(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::del_recursive_abspath(path);
     }
@@ -509,13 +473,7 @@ namespace rex
     memory::Blob read_file(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return file::read_file_abspath(path);
     }
@@ -529,27 +487,16 @@ namespace rex
     s32 read_file(rsl::string_view path, rsl::byte* buffer, s32 size)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return file::read_file_abspath(path, buffer, size);
     }
-    ReadRequest read_file_async(rsl::string_view filepath)
+    ReadRequest read_file_async(rsl::string_view path)
     {
-      filepath = path::remove_quotes(filepath);
+      path = path::remove_quotes(path);
+      path = path::unsafe_abs_path(path);
 
-      scratch_string fullpath;
-      if (!path::is_absolute(filepath))
-      {
-        fullpath = path::abs_path(filepath);
-        filepath = fullpath;
-      }
-      return read_file_abspath_async(filepath);
+      return read_file_abspath_async(path);
     }
     ReadRequest read_file_async(MountingPoint root, rsl::string_view filepath)
     {
@@ -571,12 +518,7 @@ namespace rex
     }
     Error write_to_file(rsl::string_view path, const void* data, card64 size, AppendToFile shouldAppend)
     {
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       if (shouldAppend)
       {
@@ -650,13 +592,7 @@ namespace rex
     bool exists(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::exists_abspath(path) || file::exists_abspath(path);
     }
@@ -670,13 +606,7 @@ namespace rex
     bool is_file(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return file::exists_abspath(path);
     }
@@ -690,13 +620,7 @@ namespace rex
     bool is_dir(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::exists_abspath(path);
     }
@@ -729,39 +653,21 @@ namespace rex
     rsl::vector<rsl::string> list_entries(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::list_entries(path);
     }
     rsl::vector<rsl::string> list_dirs(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::list_dirs(path);
     }
     rsl::vector<rsl::string> list_files(rsl::string_view path)
     {
       path = path::remove_quotes(path);
-
-      scratch_string fullpath;
-      if (!path::is_absolute(path))
-      {
-        fullpath = path::abs_path(path);
-        path = fullpath;
-      }
+      path = path::unsafe_abs_path(path);
 
       return directory::list_files(path);
     }
