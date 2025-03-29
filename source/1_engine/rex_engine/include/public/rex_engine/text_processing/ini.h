@@ -20,7 +20,7 @@ namespace rex
 		class IniBlock
 		{
 		public:
-      using internal_string = rsl::basic_string<char8, rsl::ichar_traits<char8>, Allocator>;
+      using internal_string = rsl::basic_string<char8, rsl::char_traits<char8>, Allocator>;
       using internal_hash_map = rsl::unordered_map<
         internal_string,                 // key
         internal_string,                 // value
