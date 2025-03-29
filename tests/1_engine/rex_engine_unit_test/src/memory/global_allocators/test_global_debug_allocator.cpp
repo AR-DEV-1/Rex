@@ -41,6 +41,8 @@ TEST_CASE("TEST - Global Debug Allocator - Normal Allocation")
 	REX_CHECK(test_object::num_copy_assignment_calls() == 0);
 	REX_CHECK(test_object::num_move_assignment_calls() == 0);
 #else
+	alloc.construct(ptr2);
+
 	REX_CHECK(ptr2 != nullptr);
 	REX_CHECK(test_object::num_created() == 1);
 	REX_CHECK(test_object::num_ctor_calls() == 1);
@@ -49,6 +51,8 @@ TEST_CASE("TEST - Global Debug Allocator - Normal Allocation")
 	REX_CHECK(test_object::num_dtor_calls() == 0);
 	REX_CHECK(test_object::num_copy_assignment_calls() == 0);
 	REX_CHECK(test_object::num_move_assignment_calls() == 0);
+
+	alloc.destroy(ptr2);
 #endif
 
 	alloc.deallocate(ptr2);
