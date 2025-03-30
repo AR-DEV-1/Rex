@@ -950,7 +950,7 @@ public class GameProject : BasicCPPProject
   // This is the project name that'll be defined
   // The root project directory will have a folder name 
   // that matches this name
-  protected string ProjectName = "project_name";
+  private string ProjectName = "project_name";
 
   public GameProject() : base()
   { }
@@ -971,11 +971,35 @@ public class GameProject : BasicCPPProject
     {
       Directory.CreateDirectory(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory);
     }
+
+    if (ProjectName != "project_name")
+    {
+      string projectNamePath = Path.Combine(conf.IntermediatePath, "project_name.txt");
+      if (!Directory.Exists(conf.IntermediatePath))
+      {
+        Directory.CreateDirectory(conf.IntermediatePath);
+      }
+
+      string targetDir = Path.GetDirectoryName(conf.TargetPath);
+      if (!Directory.Exists(targetDir))
+      {
+        Directory.CreateDirectory(targetDir);
+      }
+
+      File.WriteAllText(projectNamePath, ProjectName);
+      string projectNameNextToTarget = Path.Combine(targetDir, "project_name.txt");
+      conf.EventPostBuild.Add($"copy {projectNamePath} {projectNameNextToTarget} /Y");
+    }
   }
 
   protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
   {
     conf.Output = Configuration.OutputType.Lib;
+  }
+
+  protected void SetProjectName(string projectName)
+  {
+    ProjectName = projectName;
   }
 }
 

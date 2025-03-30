@@ -264,6 +264,9 @@ namespace rex
   //--------------------------------------------------------------------------------------------
   void CoreApplication::init_globals()
   {
+    REX_DEBUG(LogCoreApp, "Initializing virtual filesystem");
+    vfs::init();
+
     REX_DEBUG(LogCoreApp, "Loading boot settings");
     BootSettings boot_settings = load_boot_settings();
 
@@ -273,8 +276,6 @@ namespace rex
     REX_DEBUG(LogCoreApp, "Initializing thread pool");
     init_thread_pool();
 
-    REX_DEBUG(LogCoreApp, "Initializing virtual filesystem");
-    vfs::init();
 
     // Loads the mounts of the engine
     // this will make it easier to access files under these paths

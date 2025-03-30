@@ -6,7 +6,7 @@
 #include "rex_engine/filesystem/directory.h"
 #include "rex_engine/filesystem/tmp_dir.h"
 
-#include "rex_engine/engine/project.h"
+
 #include "rex_engine/engine/casting.h"
 
 namespace rex::test

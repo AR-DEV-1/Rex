@@ -385,10 +385,9 @@ namespace rex
     // who's underlying memory is not deallocated after it goes out of scope
     rsl::string_view unsafe_abs_path(rsl::string_view path)
     {
-      scratch_string fullpath;
       if (!path::is_absolute(path) || (abs_needs_drive() && !has_drive(path)))
       {
-        fullpath = path::abs_path(path);
+        scratch_string fullpath = path::abs_path(path);
         path = fullpath;
       }
 
@@ -401,10 +400,9 @@ namespace rex
     // who's underlying memory is not deallocated after it goes out of scope
     rsl::string_view unsafe_norm_path(rsl::string_view path)
     {
-      scratch_string normpath;
       if (!path::is_normalized(path))
       {
-        normpath = path::norm_path(path);
+        scratch_string normpath = path::norm_path(path);
         path = normpath;
       }
 
@@ -952,7 +950,7 @@ namespace rex
     scratch_string find_in_parent_abspath(rsl::string_view toFind, rsl::string_view startDirAbs)
     {
       REX_ASSERT_X(is_absolute(startDirAbs) || is_drive(startDirAbs), "argument is expected to be absolute here: {}", startDirAbs);
-      
+
       if (!directory::exists_abspath(startDirAbs))
       {
         return scratch_string();
@@ -960,7 +958,7 @@ namespace rex
 
       path_stack_string fullpath;
       join_to(fullpath, startDirAbs, toFind);
-      
+
       while (!directory::exists_abspath(fullpath) && !file::exists_abspath(fullpath))
       {
         startDirAbs = path::parent_path(startDirAbs);

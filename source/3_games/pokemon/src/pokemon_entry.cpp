@@ -35,8 +35,6 @@ namespace pokemon
 
 namespace rex
 {
-  bool g_project_name_set = set_project_name("Pokemon");
-
   ApplicationCreationParams app_entry(PlatformCreationParams& platformParams)
   {
     rex::ApplicationCreationParams app_params(platformParams);

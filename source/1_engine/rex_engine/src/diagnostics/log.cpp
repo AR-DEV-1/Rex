@@ -2,7 +2,6 @@
 
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
-#include "rex_engine/engine/project.h"
 
 #include "rex_std/format.h"
 
@@ -12,6 +11,6 @@ namespace rex
 {
 	scratch_string project_log_path()
 	{
-		return path::join(engine::instance()->current_session_root(), "logs", rsl::format("{}.log", project_name()));
+		return path::join(engine::instance()->current_session_root(), "logs", rsl::format("{}.log", engine::instance()->project_name()));
 	}
 }

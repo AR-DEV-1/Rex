@@ -131,8 +131,7 @@ namespace rex
         }
 
         // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: HEAP AND ALLOCATORS
-        static rsl::string buf;
-        buf.clear();
+        scratch_string buf;
         rsl::vformat_to(rsl::back_inserter(buf), fmt, rsl::make_format_args(rsl::forward<Args>(args)...));
 
         const details::LogMsg log_msg(loc, m_name, lvl, rsl::string_view(buf.data(), buf.size()));

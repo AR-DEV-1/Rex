@@ -2,10 +2,43 @@
 
 #include "rex_engine/diagnostics/assert.h"
 #include "rex_engine/filesystem/path.h"
+#include "rex_engine/filesystem/file.h"
 #include "rex_engine/system/process.h"
+#include "rex_engine/cmdline/cmdline.h"
 
 namespace rex
 {
+	rsl::string init_project_name(rsl::string_view processPath)
+	{
+		// assign from commandline
+		REX_ASSERT_X(rex::cmdline::instance(), "Trying to get project name before commandline is initialized");
+
+		rsl::optional<rsl::string_view> project_name_arg = rex::cmdline::instance()->get_argument("project");
+
+		rsl::string project_name;
+		if (project_name_arg)
+		{
+			project_name.assign(project_name_arg.value());
+			return project_name;
+		}
+
+		// search for a project name txt file
+		// Need to check through the global accessor as it's possible this gets called from the ctor
+		scratch_string project_name_txt_path = path::find_in_parent("project_name.txt", path::parent_path(processPath));
+		if (!project_name_txt_path.empty())
+		{
+			memory::Blob blob = file::read_file_abspath(project_name_txt_path);
+			project_name.assign(memory::blob_to_string_view(blob));
+			return project_name;
+		}
+
+		// Get the project name from the exe
+		rsl::string_view potential_project_name = path::stem(processPath);
+		potential_project_name = potential_project_name.substr(0, potential_project_name.find('_')); // everything before the first underscore
+		project_name.assign(potential_project_name);
+		return project_name;
+	}
+
 	// The engine globals get initialized twice,
 	// once as a minimal setup, so we can boot up the engine
 	// next time it gets fully initialized
@@ -18,11 +51,12 @@ namespace rex
 		scratch_string process_path = current_process::path();
 		scratch_string data_root = path::find_in_parent("data", path::parent_path(process_path));
 
+		paths.project_name = init_project_name(process_path);
 		paths.root.assign(path::parent_path(data_root));
 		path::join_to(paths.engine_root, data_root, "rex");
-		path::join_to(paths.project_root, data_root, engine::instance()->project_name());
+		path::join_to(paths.project_root, data_root, paths.project_name);
 		path::join_to(paths.sessions_root, data_root, "_sessions");
-		path::join_to(paths.project_sessions_root, paths.sessions_root, engine::instance()->project_name());
+		path::join_to(paths.project_sessions_root, paths.sessions_root, paths.project_name);
 		path::join_to(paths.current_session_root, paths.project_sessions_root, path::timepoint_for_filename(rsl::current_timepoint()));
 
 		if (!directory::exists_abspath(paths.current_session_root))
@@ -43,7 +77,6 @@ namespace rex
 		, m_single_frame_allocator(rsl::move(tempAlloc))
 		, m_frame_info()
 	{
-		init_project_name();
 	}
 
 	void EngineGlobals::advance_frame()
@@ -86,7 +119,7 @@ namespace rex
 	// Returns the current project's name
 	rsl::string_view EngineGlobals::project_name() const
 	{
-		return m_project_name;
+		return engine_paths().project_name;
 	}
 
 	// Returns the root of all files
@@ -123,17 +156,6 @@ namespace rex
 	rsl::string_view EngineGlobals::current_session_root() const
 	{
 		return engine_paths().current_session_root;
-	}
-
-	void EngineGlobals::init_project_name()
-	{
-		// Get the project name from the exe
-		path_stack_string process_path;
-		current_process::path(process_path.data(), process_path.max_size());
-		process_path.reset_null_termination_offset();
-		rsl::string_view potential_project_name = path::stem(process_path);
-		potential_project_name = potential_project_name.substr(0, potential_project_name.find('_')); // everything before the first underscore
-		m_project_name = potential_project_name;
 	}
 
 	namespace engine

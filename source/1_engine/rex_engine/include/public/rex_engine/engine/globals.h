@@ -13,6 +13,7 @@ namespace rex
 	// For documentation, see: ~/_docs/src/documentation/rex/rex_globals.md
 	struct EnginePaths
 	{
+		rsl::string project_name;
 		rsl::string root;
 		rsl::string engine_root;
 		rsl::string project_root;
@@ -73,11 +74,6 @@ namespace rex
 		rsl::string_view current_session_root() const;
 
 	private:
-		void init_project_name();
-
-	private:
-		rsl::tiny_stack_string m_project_name;
-
 		// An allocator used for temp memory. deallocation isn't tracked. Memory may or may not last more than 1 frame
 		rsl::unique_ptr<ScratchAllocator> m_scratch_allocator;
 
