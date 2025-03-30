@@ -20,29 +20,40 @@ namespace rex
         return rsl::win::handle(CreateFileA(path.data(), FILE_READ_ATTRIBUTES, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr));
       }
 
-      void list_entries(rsl::string_view path, Recursive goRecursive, rsl::Out<rsl::vector<rsl::string>> outResult)
+      void list_entries(rsl::string_view root, rsl::string_view path, Recursive goRecursive, rsl::Out<rsl::vector<rsl::string>> outResult)
       {
-        WIN32_FIND_DATAA ffd;
-        scratch_string fullpath(path);
-        if (!path::is_absolute(fullpath))
-        {
-          fullpath = rex::path::abs_path(path);
-          path = fullpath;
-        }
-        
-        fullpath += "\\*";
-        HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
+        // Make sure enough memory is reserved to avoid an allocation later on
+        rsl::string fullpath;
+        const s32 num_search_tokens = 2;
+        fullpath.reserve(root.length() + path.length() + num_search_tokens + 1); // +1 for null terminator char
+        path::join_to(fullpath, root, path);
 
+        // Store the full path as a view so we can use it later on
+        fullpath += "\\*";
+        rsl::string_view full_root_path = fullpath.substr(0, fullpath.length() - num_search_tokens);
+
+        WIN32_FIND_DATAA ffd;
+        HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
         if (find_handle == INVALID_HANDLE_VALUE)
         {
           FindClose(find_handle);
           return;
         }
 
-        temp_vector<rsl::string_view> dirs;
+        // Unfortunately, we cannot use string views for the dirs
+        // As it's posssible the paths in outResults is small enough to hit the sso buffer
+        // in which case the string_view would point to stack memory
+        // when the return buffer would reallocate, the stack memory gets copied across
+        // and the original stack memory gets nulled
+        // The string view would hold a pointer to the now nulled sso buffer
+        // Making it invalid
+        rsl::vector<rsl::string> dirs;
+        const s32 filename_dummy_length = 10;
         scratch_string fullsubpath;
+        fullsubpath.reserve(path.length() + filename_dummy_length);
         do // NOLINT(cppcoreguidelines-avoid-do-while)
         {
+          fullsubpath.clear();
           s32 length = rsl::strlen(ffd.cFileName);
           const rsl::string_view name(ffd.cFileName, length);
           if (name == "." || name == "..")
@@ -50,11 +61,17 @@ namespace rex
             continue;
           }
 
-          fullsubpath = path::join(path, name);
-          outResult.get().push_back(rsl::string(fullsubpath));
-          if (goRecursive && directory::exists_abspath(fullsubpath))
+          path::join_to(fullsubpath, full_root_path, name);
+          bool is_dir = directory::exists_abspath(fullsubpath);
+          bool is_file = file::exists_abspath(fullsubpath);
+          if (is_dir || is_file)
           {
-            dirs.push_back(outResult.get().back());
+            // We want to store paths that are relative from the root
+            outResult.get().push_back(rsl::string(path::rel_path(fullsubpath, root)));
+            if (goRecursive && is_dir)
+            {
+              dirs.push_back(outResult.get().back());
+            }
           }
 
         } while (FindNextFileA(find_handle, &ffd) != 0);
@@ -66,10 +83,28 @@ namespace rex
 
         for (rsl::string_view dir : dirs)
         {
-          list_entries(dir, goRecursive, outResult);
+          list_entries(root, dir, goRecursive, outResult);
         }
 
         return;
+      }
+
+      void list_entries_from_root(rsl::string_view root, Recursive goRecursive, rsl::Out<rsl::vector<rsl::string>> outResult)
+      {
+        // We need to store paths as a string and not a scratch string
+        // as for recursive lookups, these can go quite deep
+        // and possibly overflow the scratch buffer
+        rsl::string abs_root(path::abs_path(root));
+        list_entries(abs_root, "", goRecursive, outResult);
+      }
+
+      Error del_no_checks(rsl::string_view path)
+      {
+        const bool success = RemoveDirectoryA(path.data());
+
+        return success
+          ? Error::no_error()
+          : Error::create_with_log(LogDirectory, "Failed to delete directory at \"{}\"", path);
       }
     } // namespace internal
 
@@ -104,6 +139,14 @@ namespace rex
     // Return if a directory exists
     bool exists(rsl::string_view path)
     {
+      // We need to validate the path first
+      // otherwise the abs_path conversion won't create an abspath
+      // and then we trigger an assert further below
+      if (!path::is_valid_path(path))
+      {
+        return false;
+      }
+
       path = path::unsafe_abs_path(path);
 
       return exists_abspath(path);
@@ -135,8 +178,12 @@ namespace rex
       // 1 for the search query in the other func
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
-      scratch_string fullpath(path::unsafe_abs_path(path));
+      const s32 num_search_tokens = 2;
       WIN32_FIND_DATAA ffd;
+      path = path::unsafe_abs_path(path);
+      scratch_string fullpath;
+      fullpath.reserve(path.length() + num_search_tokens + 1); // +1 for null terminator char
+      fullpath += (path);
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -176,8 +223,12 @@ namespace rex
       // 1 for the search query in the other func
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
+      const s32 num_search_tokens = 2;
       WIN32_FIND_DATAA ffd;
-      scratch_string fullpath(path::unsafe_abs_path(path));
+      path = path::unsafe_abs_path(path);
+      scratch_string fullpath;
+      fullpath.reserve(path.length() + num_search_tokens + 1); // +1 for null terminator char
+      fullpath += (path);
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -190,9 +241,12 @@ namespace rex
       s32 num_entries = 0;
 
       temp_vector<scratch_string> dirs;
+      const s32 filename_dummy_length = 10;
       scratch_string fullsubpath;
+      fullsubpath.reserve(path.length() + filename_dummy_length);
       do // NOLINT(cppcoreguidelines-avoid-do-while)
       {
+        fullsubpath.clear();
         s32 length = rsl::strlen(ffd.cFileName);
         const rsl::string_view name(ffd.cFileName, length);
         if (name == "." || name == "..")
@@ -200,7 +254,7 @@ namespace rex
           continue;
         }
 
-        fullsubpath = path::join(path, name);
+        path::join_to(fullsubpath, path, name);
         if (goRecursive && directory::exists_abspath(fullsubpath))
         {
           dirs.push_back(rsl::move(fullsubpath));
@@ -231,8 +285,12 @@ namespace rex
       // 1 for the search query in the other func
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
+      const s32 num_search_tokens = 2;
       WIN32_FIND_DATAA ffd;
-      scratch_string fullpath(path::unsafe_abs_path(path));
+      path = path::unsafe_abs_path(path);
+      scratch_string fullpath;
+      fullpath.reserve(path.length() + num_search_tokens + 1); // +1 for null terminator char
+      fullpath += (path);
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -243,8 +301,14 @@ namespace rex
       }
 
       s32 num_dirs = 0;
+      const s32 filename_dummy_length = 10;
+      scratch_string full_filename;
+      full_filename.reserve(path.length() + filename_dummy_length);
+
       do // NOLINT(cppcoreguidelines-avoid-do-while)
       {
+        full_filename.clear();
+
         s32 length = rsl::strlen(ffd.cFileName);
         const rsl::string_view name(ffd.cFileName, length);
         if (name == "." || name == "..")
@@ -252,8 +316,8 @@ namespace rex
           continue;
         }
 
-        const scratch_string full_filename = path::join(path, name);
-        if (exists(full_filename))
+        path::join_to(full_filename, path, name);
+        if (exists_abspath(full_filename))
         {
           ++num_dirs;
         }
@@ -275,8 +339,12 @@ namespace rex
       // 1 for the search query in the other func
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
-      WIN32_FIND_DATAA ffd{};
-      scratch_string fullpath(path::unsafe_abs_path(path));
+      const s32 num_search_tokens = 2;
+      WIN32_FIND_DATAA ffd;
+      path = path::unsafe_abs_path(path);
+      scratch_string fullpath;
+      fullpath.reserve(path.length() + num_search_tokens + 1); // +1 for null terminator char
+      fullpath += (path);
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -287,11 +355,15 @@ namespace rex
       }
 
       s32 num_files = 0;
+      const s32 filename_dummy_length = 10;
+      scratch_string full_filename;
+      full_filename.reserve(path.length() + filename_dummy_length);
       do // NOLINT(cppcoreguidelines-avoid-do-while)
       {
+        full_filename.clear();
         const s32 length = rsl::strlen(ffd.cFileName);
         const rsl::string_view name(ffd.cFileName, length);
-        scratch_string full_filename = path::join(path, name);
+        path::join_to(full_filename, path, name);
         if (file::exists(full_filename))
         {
           ++num_files;
@@ -314,7 +386,7 @@ namespace rex
       // We do this through a function taking in a output parameter
       // as it can massively improve performance due to less copying of strings
       // and less allocations as well
-      internal::list_entries(path, goRecursive, rsl::Out(result));
+      internal::list_entries_from_root(path, goRecursive, rsl::Out(result));
 
       return result;
     }
@@ -327,8 +399,12 @@ namespace rex
       // 1 for the search query in the other func
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
+      const s32 num_search_tokens = 2;
       WIN32_FIND_DATAA ffd;
-      scratch_string fullpath(path::unsafe_abs_path(path));
+      path = path::unsafe_abs_path(path);
+      scratch_string fullpath;
+      fullpath.reserve(path.length() + num_search_tokens + 1); // +1 for null terminator char
+      fullpath += (path);
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -339,12 +415,13 @@ namespace rex
       }
 
       rsl::vector<rsl::string> result;
-
-      s32 num_dirs = directory::num_dirs(fullpath);
-      result.reserve(num_dirs);
-
+      const s32 filename_dummy_length = 10;
+      scratch_string full_filename;
+      full_filename.reserve(path.length() + filename_dummy_length);
       do // NOLINT(cppcoreguidelines-avoid-do-while)
       {
+        full_filename.clear();
+
         s32 length = rsl::strlen(ffd.cFileName);
         const rsl::string_view name(ffd.cFileName, length);
         if (name == "." || name == "..")
@@ -352,10 +429,12 @@ namespace rex
           continue;
         }
 
-        const scratch_string full_filename = path::join(path, name);
-        if(exists(full_filename))
+        // We verify if it exists using the full filename
+        // but we add it using the relative path
+        path::join_to(full_filename, path, name);
+        if(exists_abspath(full_filename))
         {
-          result.push_back(rsl::string(full_filename));
+          result.push_back(rsl::string(name));
         }
       } while(FindNextFileA(find_handle, &ffd) != 0);
 
@@ -375,8 +454,12 @@ namespace rex
       // 1 for the search query in the other func
       // at least by keeping everything in 1 func, there's a chance we have an optimization
 
+      const s32 num_search_tokens = 2;
       WIN32_FIND_DATAA ffd {};
-      scratch_string fullpath(path::unsafe_abs_path(path));
+      path = path::unsafe_abs_path(path);
+      scratch_string fullpath;
+      fullpath.reserve(path.length() + num_search_tokens + 1); // +1 for null terminator char
+      fullpath += (path);
       fullpath += "\\*";
       HANDLE find_handle = FindFirstFileA(fullpath.data(), &ffd);
 
@@ -387,18 +470,23 @@ namespace rex
       }
 
       rsl::vector<rsl::string> result;
-
-      s32 num_files = directory::num_files(fullpath);
-      result.reserve(num_files);
-
+      const s32 filename_dummy_length = 10;
+      scratch_string full_filename;
+      full_filename.reserve(path.length() + filename_dummy_length);
       do // NOLINT(cppcoreguidelines-avoid-do-while)
       {
+        full_filename.clear();
         const s32 length = rsl::strlen(ffd.cFileName);
         const rsl::string_view name(ffd.cFileName, length);
-        scratch_string full_filename = path::join(path, name);
-        if(file::exists(full_filename))
+        if (name == "." || name == "..")
         {
-          result.push_back(rsl::string(full_filename));
+          continue;
+        }
+        
+        path::join_to(full_filename, path, name);
+        if(file::exists_abspath(full_filename))
+        {
+          result.push_back(rsl::string(name));
         }
       } while(FindNextFileA(find_handle, &ffd) != 0);
 
@@ -499,11 +587,7 @@ namespace rex
         return Error::create_with_log(LogDirectory, "Failed to delete directory as it wasn't empty. Directory: \"{}\"", path);
       }
 
-      const bool success = RemoveDirectoryA(path.data());
-
-      return success
-        ? Error::no_error()
-        : Error::create_with_log(LogDirectory, "Failed to delete directory at \"{}\"", path);
+      return internal::del_no_checks(path);
     }
     // Delete a directory recursively, including all files and sub folders
     Error del_recursive_abspath(rsl::string_view path)
@@ -512,10 +596,13 @@ namespace rex
 
       Error error = Error::no_error();
 
+      path_stack_string full_path;
       rsl::vector<rsl::string> dirs = list_dirs(path);
       for (rsl::string_view dir : dirs)
       {
-        error = del_recursive_abspath(dir);
+        full_path.clear();
+        path::join_to(full_path, path, dir);
+        error = del_recursive_abspath(full_path);
         if (error)
         {
           return Error::create_with_log(LogDirectory, "Failed to recursively delete \"{}\"", path);
@@ -525,14 +612,16 @@ namespace rex
       rsl::vector<rsl::string> files = list_files(path);
       for (rsl::string_view file : files)
       {
-        error = file::del_abspath(file);
+        full_path.clear();
+        path::join_to(full_path, path, file);
+        error = file::del_abspath(full_path);
         if (error)
         {
           return Error::create_with_log(LogDirectory, "Failed to recursively delete \"{}\"", path);
         }
       }
 
-      return directory::del_abspath(path);
+      return internal::del_no_checks(path);
     }
     // Return if a directory exists
     bool exists_abspath(rsl::string_view path)

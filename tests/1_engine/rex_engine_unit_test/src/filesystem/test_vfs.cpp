@@ -36,9 +36,6 @@ TEST_CASE("TEST - VFS - init & shutdown")
 	rex::vfs::init();
 
 	REX_CHECK(rex::path::is_same(rex::vfs::root(), rex::path::cwd()));
-	rex::scratch_string test_path1 = rex::path::join(rex::engine::instance()->current_session_root(), "test_path1");
-	rex::vfs::mount(rex::MountingPoint::TestPath1, test_path1);
-	REX_CHECK(rex::vfs::is_mounted(rex::MountingPoint::TestPath1));
 
 	rex::vfs::shutdown();
 
@@ -64,6 +61,7 @@ TEST_CASE("TEST - VFS - mount")
 	// Test if we can mount a path that already exists
 	rex::directory::create(test_path1);
 	rex::vfs::mount(rex::MountingPoint::TestPath1, test_path1);
+	REX_CHECK(rex::directory::exists(test_path1));	// A mounted directory should always exist after its mounted
 	REX_CHECK(rex::vfs::is_mounted(rex::MountingPoint::TestPath1));
 	REX_CHECK(rex::path::is_same(rex::vfs::mount_path(rex::MountingPoint::TestPath1), test_path1));
 
@@ -195,11 +193,11 @@ TEST_CASE("TEST - VFS - create dir")
 
 	rsl::string_view test_path1 = "vfs_tests";
 	rex::vfs::mount(rex::MountingPoint::TestPath1, test_path1);
-	rex::scratch_string dirname;
-	rex::scratch_string subdirname;
+	rsl::string dirname;
+	rsl::string subdirname;
 
 	// Create a single directory and delete it
-	dirname = rex::path::random_dir();
+	dirname.assign(rex::path::random_dir());
 	rex::vfs::create_dir(dirname);
 	REX_CHECK(rex::vfs::exists(dirname));
 	REX_CHECK(rex::vfs::is_dir(dirname));
@@ -208,7 +206,7 @@ TEST_CASE("TEST - VFS - create dir")
 	REX_CHECK(rex::vfs::is_dir(dirname) == false);
 
 	// Create a single directory and delete it
-	dirname = rex::path::random_dir();
+	dirname.assign(rex::path::random_dir());
 	rex::vfs::create_dir(dirname);
 	REX_CHECK(rex::vfs::exists(dirname));
 	REX_CHECK(rex::vfs::is_dir(dirname));
@@ -217,8 +215,8 @@ TEST_CASE("TEST - VFS - create dir")
 	REX_CHECK(rex::vfs::is_dir(dirname) == false);
 
 	// Create a single direcotry, then sub directory, then delete the root
-	dirname = rex::path::random_dir();
-	subdirname = rex::path::join(dirname, rex::path::random_dir());
+	dirname.assign(rex::path::random_dir());
+	subdirname.assign(rex::path::join(dirname, rex::path::random_dir()));
 	rex::vfs::create_dir(dirname);
 	rex::vfs::create_dir(subdirname);
 	REX_CHECK(rex::vfs::exists(dirname));
@@ -237,8 +235,8 @@ TEST_CASE("TEST - VFS - create dir")
 	REX_CHECK(rex::vfs::is_dir(subdirname) == false);
 
 	// Create multiple directories in 1 go, then delete the root
-	dirname = rex::path::random_dir();
-	subdirname = rex::path::join(dirname, rex::path::random_dir());
+	dirname.assign(rex::path::random_dir());
+	subdirname.assign(rex::path::join(dirname, rex::path::random_dir()));
 	rex::vfs::create_dirs(subdirname);
 	REX_CHECK(rex::vfs::exists(dirname));
 	REX_CHECK(rex::vfs::is_dir(dirname));
@@ -354,15 +352,15 @@ TEST_CASE("TEST - VFS - list files")
 
 	files = rex::vfs::list_files(rex::path::join(test_path1, "list_dir"));
 
-	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, rex::path::join(test_path1, "list_dir", "file1.txt")); }) != files.cend());
-	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, rex::path::join(test_path1, "list_dir", "file2.txt")); }) != files.cend());
-	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, rex::path::join(test_path1, "list_dir", "file3.txt")); }) != files.cend());
+	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, "file1.txt"); }) != files.cend());
+	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, "file2.txt"); }) != files.cend());
+	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, "file3.txt"); }) != files.cend());
 
 	files = rex::vfs::list_files(rex::MountingPoint::TestPath1 , "list_dir");
 
-	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, rex::path::join(test_path1, "list_dir", "file1.txt")); }) != files.cend());
-	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, rex::path::join(test_path1, "list_dir", "file2.txt")); }) != files.cend());
-	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, rex::path::join(test_path1, "list_dir", "file3.txt")); }) != files.cend());
+	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, "file1.txt"); }) != files.cend());
+	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, "file2.txt"); }) != files.cend());
+	REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [&test_path1](rsl::string_view file) {return rex::path::is_same(file, "file3.txt"); }) != files.cend());
 }
 TEST_CASE("TEST - VFS - list entries")
 {
@@ -373,21 +371,21 @@ TEST_CASE("TEST - VFS - list entries")
 
 	entries = rex::vfs::list_entries(rex::path::join(test_path1, "list_dir"));
 
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "folder1")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "folder2")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "folder3")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "file1.txt")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "file2.txt")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "file3.txt")); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "folder1"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "folder2"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "folder3"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "file1.txt"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "file2.txt"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "file3.txt"); }) != entries.cend());
 
 	entries = rex::vfs::list_entries(rex::MountingPoint::TestPath1, "list_dir");
 
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "folder1")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "folder2")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "folder3")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "file1.txt")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "file2.txt")); }) != entries.cend());
-	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join(test_path1, "list_dir", "file3.txt")); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "folder1"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "folder2"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "folder3"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "file1.txt"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "file2.txt"); }) != entries.cend());
+	REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [&test_path1](rsl::string_view entry) {return rex::path::is_same(entry, "file3.txt"); }) != entries.cend());
 }
 TEST_CASE("TEST - VFS - list dirs")
 {
@@ -398,13 +396,13 @@ TEST_CASE("TEST - VFS - list dirs")
 
 	dirs = rex::vfs::list_dirs(rex::path::join(test_path1, "list_dir"));
 
-	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join(test_path1, "list_dir", "folder1")); }) != dirs.cend());
-	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join(test_path1, "list_dir", "folder2")); }) != dirs.cend());
-	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join(test_path1, "list_dir", "folder3")); }) != dirs.cend());
+	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, "folder1"); }) != dirs.cend());
+	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, "folder2"); }) != dirs.cend());
+	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, "folder3"); }) != dirs.cend());
 
 	dirs = rex::vfs::list_dirs(rex::MountingPoint::TestPath1, "list_dir");
 
-	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join(test_path1, "list_dir", "folder1")); }) != dirs.cend());
-	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join(test_path1, "list_dir", "folder2")); }) != dirs.cend());
-	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join(test_path1, "list_dir", "folder3")); }) != dirs.cend());
+	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, "folder1"); }) != dirs.cend());
+	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, "folder2"); }) != dirs.cend());
+	REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [&test_path1](rsl::string_view dir) {return rex::path::is_same(dir, "folder3"); }) != dirs.cend());
 }

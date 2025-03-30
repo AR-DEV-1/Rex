@@ -1,12 +1,15 @@
 #include "rex_unit_test/rex_catch2.h"
 
 #include "rex_engine/task_system/task_system.h"
+#include "rex_engine/threading/thread_pool.h"
 
 #include "rex_engine/engine/types.h"
 #include "rex_std/atomic.h"
 
 TEST_CASE("TEST - Task System - Execution")
 {
+  rex::thread_pool::init(rsl::make_unique<rex::ThreadPool>());
+
   rsl::atomic<s32> x = 0;
   
   auto t1 = rex::run_async([&x]() { x += 1; }); // 1
@@ -22,4 +25,6 @@ TEST_CASE("TEST - Task System - Execution")
   t5.wait_for_me();
 
   REX_CHECK(x == 5);
+
+  rex::thread_pool::shutdown();
 }

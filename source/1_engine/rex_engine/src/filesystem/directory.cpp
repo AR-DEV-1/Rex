@@ -27,13 +27,18 @@ namespace rex
         return 0_bytes;
       }
 
-      rsl::vector<rsl::string> entries = list_entries(path, goRecursive);
+      // storing in a stack string as recursive lookups might overrun the scratch buffer
+      path_stack_string fullpath(path);
+      s32 fullpath_length = fullpath.length();
+      rsl::vector<rsl::string> entries = list_entries(fullpath, goRecursive);
       rsl::memory_size dir_size = 0_bytes;
       for (const rsl::string_view entry : entries)
       {
-        if (file::exists(entry))
+        fullpath.resize(fullpath_length);
+        path::join_to(fullpath, entry);
+        if (file::exists(fullpath))
         {
-          dir_size += file::size(entry);
+          dir_size += file::size(fullpath);
         }
       }
 

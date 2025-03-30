@@ -4,6 +4,8 @@
 
 namespace rex
 {
+	class ThreadPool;
+
 	// A handle that wraps a thread
 	// Users are not meant to have direct access to a thread
 	// Instead we return handles to threads that return the thread to the thread pool
@@ -11,7 +13,7 @@ namespace rex
 	{
 	public:
 		ThreadHandle();
-		explicit ThreadHandle(internal::Thread* thread);
+		explicit ThreadHandle(internal::Thread* thread, ThreadPool* owningPool = nullptr);
 		ThreadHandle(const ThreadHandle&) = delete;
 		ThreadHandle(ThreadHandle&& other);
 		~ThreadHandle();
@@ -28,5 +30,6 @@ namespace rex
 
 	private:
 		internal::Thread* m_thread;
+		ThreadPool* m_owning_thread_pool;
 	};
 } // namespace rex

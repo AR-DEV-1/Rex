@@ -165,6 +165,8 @@ namespace rex
     // when all previous jobs are processed
     rsl::shared_ptr<Job> add_job_to_queue(rsl::shared_ptr<Job> job)
     {
+      REX_ASSERT_X(thread_pool::instance(), "Thread pool is null. Cannot create async jobs");
+
       if(thread_pool::instance()->has_idle_threads())
       {
         ThreadHandle thread_handle = thread_pool::instance()->acquire_idle_thread();

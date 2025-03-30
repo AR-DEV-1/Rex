@@ -23,6 +23,11 @@ namespace rex
 		}
 	}
 
+	//ThreadPool::~ThreadPool()
+	//{
+
+	//}
+
 	// Query if we have any idle threads available
 	// An idle thread is a thread that's not executing a job at the moment.
 	bool ThreadPool::has_idle_threads()
@@ -40,7 +45,7 @@ namespace rex
 			const rsl::unique_lock lock(m_threads_access_mtx);
 			internal::Thread* thread = m_idle_threads.back();
 			m_idle_threads.pop_back();
-			return ThreadHandle(thread);
+			return ThreadHandle(thread, this);
 		}
 
 		return ThreadHandle();

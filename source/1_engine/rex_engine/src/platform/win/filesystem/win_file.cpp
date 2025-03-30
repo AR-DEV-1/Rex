@@ -198,6 +198,14 @@ namespace rex
     // Check if a file exists
     bool exists(rsl::string_view path)
     {
+      // We need to validate the path first
+      // otherwise the abs_path conversion won't create an abspath
+      // and then we trigger an assert further below
+      if (!path::is_valid_path(path))
+      {
+        return false;
+      }
+
       path = path::unsafe_abs_path(path);
 
       return exists_abspath(path);

@@ -1,20 +1,22 @@
 #include "rex_unit_test/rex_catch2.h"
 
 #include "rex_engine/threading/thread_handle.h"
+#include "rex_engine/threading/thread_pool.h"
 #include "rex_engine/engine/types.h"
 
 TEST_CASE("TEST - Thread Handle - Construction")
 {
-	// This should basically not crash nor hold the main thread
-	rex::internal::Thread thread;
-	rex::ThreadHandle handle(&thread);
+	{	// This should basically not crash nor hold the main thread
+		rex::internal::Thread thread;
+		rex::ThreadHandle handle(&thread);
 
-	REX_CHECK(handle.thread() == &thread);
+		REX_CHECK(handle.thread() == &thread);
 
-	rex::ThreadHandle handle2(rsl::move(handle));
+		rex::ThreadHandle handle2(rsl::move(handle));
 
-	REX_CHECK(handle.thread() == nullptr);
-	REX_CHECK(handle2.thread() == &thread);
+		REX_CHECK(handle.thread() == nullptr);
+		REX_CHECK(handle2.thread() == &thread);
+	}
 }
 
 TEST_CASE("TEST - Thread Handle - Run")

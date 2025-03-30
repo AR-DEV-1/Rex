@@ -12,6 +12,7 @@ namespace rex
 	{
 	public:
 		ThreadPool();
+		//~ThreadPool();
 
 		// Query if we have any idle threads available
 		// An idle thread is a thread that's not executing a job at the moment.

@@ -168,6 +168,9 @@ namespace rex
     {
       while(g_vfs_state_controller.has_state(VfsState::Running))
       {
+        using namespace rsl::chrono_literals; // NOLINT(google-build-using-namespace)
+        rsl::this_thread::sleep_for(1ms);
+
         rsl::unique_lock lock(g_read_request_mutex);
         if(!g_queued_requests.empty())
         {
@@ -197,22 +200,21 @@ namespace rex
           g_closed_requests.push_back(rsl::move(request));
         }
 
-        using namespace rsl::chrono_literals; // NOLINT(google-build-using-namespace)
-        rsl::this_thread::sleep_for(1ms);
       }
     }
     void wait_for_read_requests()
     {
       while(g_vfs_state_controller.has_state(VfsState::Running))
       {
+        using namespace rsl::chrono_literals; // NOLINT(google-build-using-namespace)
+        rsl::this_thread::sleep_for(20ms);
+
         const rsl::unique_lock lock(g_closed_request_mutex);
 				
         // Remove all requests that have finished
 				auto it = rsl::remove_if(g_closed_requests.begin(), g_closed_requests.end(), [](const rsl::unique_ptr<QueuedRequest>& request) { return request->all_requests_finished(); });
 				g_closed_requests.erase(it, g_closed_requests.end());
 
-        using namespace rsl::chrono_literals; // NOLINT(google-build-using-namespace)
-        rsl::this_thread::sleep_for(20ms);
       }
     }
     void start_threads()
@@ -273,7 +275,7 @@ namespace rex
       // make sure the mount exists
       if (!directory::exists(full_path))
       {
-        create_dir(full_path);
+        create_dirs(full_path);
       }
     }
     void shutdown()

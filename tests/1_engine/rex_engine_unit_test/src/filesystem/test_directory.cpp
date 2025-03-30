@@ -22,9 +22,9 @@ TEST_CASE("TEST - Directory - List Dirs")
 
   auto dirs = rex::directory::list_dirs("list_dir");
 
-  REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join("list_dir", "folder1")); }) != dirs.cend());
-  REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join("list_dir", "folder2")); }) != dirs.cend());
-  REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [](rsl::string_view dir) {return rex::path::is_same(dir, rex::path::join("list_dir", "folder3")); }) != dirs.cend());
+  REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [](rsl::string_view dir) {return rex::path::is_same(dir, "folder1"); }) != dirs.cend());
+  REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [](rsl::string_view dir) {return rex::path::is_same(dir, "folder2"); }) != dirs.cend());
+  REX_CHECK(rsl::find_if(dirs.cbegin(), dirs.cend(), [](rsl::string_view dir) {return rex::path::is_same(dir, "folder3"); }) != dirs.cend());
 }
 
 TEST_CASE("TEST - Directory - List Files")
@@ -33,9 +33,9 @@ TEST_CASE("TEST - Directory - List Files")
 
   auto files = rex::directory::list_files("list_dir");
 
-  REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [](rsl::string_view file) {return rex::path::is_same(file, rex::path::join("list_dir", "file1.txt")); }) != files.cend());
-  REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [](rsl::string_view file) {return rex::path::is_same(file, rex::path::join("list_dir", "file2.txt")); }) != files.cend());
-  REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [](rsl::string_view file) {return rex::path::is_same(file, rex::path::join("list_dir", "file3.txt")); }) != files.cend());
+  REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [](rsl::string_view file) {return rex::path::is_same(file, "file1.txt"); }) != files.cend());
+  REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [](rsl::string_view file) {return rex::path::is_same(file, "file2.txt"); }) != files.cend());
+  REX_CHECK(rsl::find_if(files.cbegin(), files.cend(), [](rsl::string_view file) {return rex::path::is_same(file, "file3.txt"); }) != files.cend());
 
 }
 
@@ -45,12 +45,12 @@ TEST_CASE("TEST - Directory - List Entries")
 
   auto entries = rex::directory::list_entries("list_dir");
 
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "folder1")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "folder2")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "folder3")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "file1.txt")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "file2.txt")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "file3.txt")); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "folder1"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "folder2"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "folder3"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "file1.txt"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "file2.txt"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "file3.txt"); }) != entries.cend());
 }
 
 TEST_CASE("TEST - Directory - List Entries Recursive")
@@ -59,13 +59,13 @@ TEST_CASE("TEST - Directory - List Entries Recursive")
 
   auto entries = rex::directory::list_entries("list_dir", rex::directory::Recursive::yes);
 
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "folder1")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "folder2")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "folder3")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "file1.txt")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "file2.txt")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "file3.txt")); }) != entries.cend());
-  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("list_dir", "folder1", "sub_file.txt")); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "folder1"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "folder2"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "folder3"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "file1.txt"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "file2.txt"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, "file3.txt"); }) != entries.cend());
+  REX_CHECK(rsl::find_if(entries.cbegin(), entries.cend(), [](rsl::string_view entry) {return rex::path::is_same(entry, rex::path::join("folder1", "sub_file.txt")); }) != entries.cend());
 }
 
 TEST_CASE("TEST - Directory - Recursive Deletion")
@@ -86,7 +86,7 @@ TEST_CASE("TEST - Directory - Create and Deletion")
 {
   rex::TempCwd tmp_cwd("directory_tests");
 
-  rex::scratch_string random_dirname = rex::path::random_dir();
+  rsl::string random_dirname(rex::path::random_dir());
   rex::Error error = rex::Error::no_error();
 
   // Create a random empty directory
@@ -101,14 +101,14 @@ TEST_CASE("TEST - Directory - Create and Deletion")
   REX_CHECK(error.has_error() == false);
 
   // Create a random non-empty directory
-  random_dirname = rex::path::random_dir();
+  random_dirname.assign(rex::path::random_dir());
   REX_CHECK(rex::directory::exists(random_dirname) == false);
 
   error = rex::directory::create(random_dirname);
   REX_CHECK(rex::directory::exists(random_dirname) == true);
   REX_CHECK(error.has_error() == false);
 
-  rex::scratch_string random_sub_directory = rex::path::join(random_dirname, rex::path::random_dir());
+  rsl::string random_sub_directory(rex::path::join(random_dirname, rex::path::random_dir()));
   error = rex::directory::create(random_sub_directory);
   REX_CHECK(rex::directory::exists(random_sub_directory) == true);
   REX_CHECK(error.has_error() == false);
