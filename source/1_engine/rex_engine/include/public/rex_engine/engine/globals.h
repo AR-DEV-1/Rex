@@ -10,7 +10,7 @@
 
 namespace rex
 {
-	// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: REX GLOBALS
+	// For documentation, see: ~/_docs/src/documentation/rex/rex_globals.md
 	struct EnginePaths
 	{
 		rsl::string root;

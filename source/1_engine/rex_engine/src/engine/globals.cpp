@@ -4,8 +4,6 @@
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/system/process.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: REX GLOBALS
-
 namespace rex
 {
 	// The engine globals get initialized twice,
