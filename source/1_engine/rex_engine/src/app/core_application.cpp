@@ -145,7 +145,7 @@ namespace rex
     // the max allowed memory usage is one of those examples
 
     // Settings are loaded now, we can initialize all the sub systems with settings loaded from them
-    const rsl::memory_size max_mem_budget = rsl::memory_size::from_mib(settings::get_int("max_memory_mib"));
+    const rsl::memory_size max_mem_budget = rsl::memory_size::from_mib(settings::instance()->get_int("max_memory_mib"));
     mem_tracker().initialize(max_mem_budget);
 
     return res;
@@ -217,13 +217,15 @@ namespace rex
     // They can always be overridden in a project
     // but the engine loads the default settings
 
+    settings::init(rsl::make_unique<SettingsManager>());
+
     // get the default settings of the engine and load them into memory
     const rsl::vector<rsl::string> files = directory::list_files(vfs::mount_path(MountingPoint::EngineSettings));
 
     for(const rsl::string_view file: files)
     {
       REX_DEBUG(LogCoreApp, "Loading settings file: {}", file);
-      settings::load(file);
+      settings::instance()->load(file);
     }
   }
 
@@ -275,7 +277,6 @@ namespace rex
 
     REX_DEBUG(LogCoreApp, "Initializing thread pool");
     init_thread_pool();
-
 
     // Loads the mounts of the engine
     // this will make it easier to access files under these paths

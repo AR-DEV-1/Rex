@@ -328,7 +328,7 @@ namespace rex
         user_data.window_width           = m_window->width();
         user_data.window_height          = m_window->height();
         user_data.windowed               = !m_app_creation_params.gui_params.fullscreen;
-        user_data.max_frames_in_flight   = settings::get_int("max_frames_in_flight", 3);
+        user_data.max_frames_in_flight   = settings::instance()->get_int("max_frames_in_flight", 3);
 
 #ifdef REX_USING_DIRECTX
         gfx::init(rsl::make_unique<gfx::DirectXInterface>(), user_data);

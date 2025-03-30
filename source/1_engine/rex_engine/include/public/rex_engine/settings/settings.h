@@ -1,32 +1,27 @@
 #pragma once
 
 #include "rex_engine/engine/types.h"
+#include "rex_engine/memory/memory_types.h"
 #include "rex_std/string_view.h"
+#include "rex_std/unordered_map.h"
+#include "rex_std/bonus/functional.h"
 
 namespace rex
 {
   class SettingsManager
   {
-
-  };
-
-  namespace settings
-  {
-    void init();
-    SettingsManager* instance();
-    void shutdown();
-
+  public:
     // Check if a certain setting exists
-    bool has_setting(rsl::string_view name);
+    bool has_setting(rsl::string_view name) const;
 
     // Get the value of a setting as a string
-    rsl::string_view get_string(rsl::string_view name, rsl::string_view defaultVal = "");
+    rsl::string_view get_string(rsl::string_view name, rsl::string_view defaultVal = "") const;
     // Get the value of a setting as an int
-    s32 get_int(rsl::string_view name, s32 defaultVal = 0);
+    s32 get_int(rsl::string_view name, s32 defaultVal = 0) const;
     // Get the value of a setting as a float
-    f32 get_float(rsl::string_view name, f32 defaultVal = 0.0f);
+    f32 get_float(rsl::string_view name, f32 defaultVal = 0.0f) const;
     // Get the value of a setting as a bool
-    bool get_bool(rsl::string_view name, bool defaultVal = false);
+    bool get_bool(rsl::string_view name, bool defaultVal = false) const;
 
     // Set a setting from a string. This supports adding new settings
     void set(rsl::string_view name, rsl::string_view val);
@@ -38,7 +33,7 @@ namespace rex
     // because it'd be used when using a string literal
     // without it, the string_view overload is used
     // and for bools the integer one is used
-    
+
     // Load a settings file and adds it settings to the settings
     // This behaves the same as if you can "set" multiple times
     // for each setting in the file
@@ -47,5 +42,26 @@ namespace rex
     // unload all settings
     void unload();
 
+  private:
+    scratch_string to_hash_key(rsl::string_view header, rsl::string_view key) const;
+    void add_new_settings(rsl::string_view header, rsl::string_view key, rsl::string_view val);
+    rsl::optional<rsl::string_view> get_setting(rsl::string_view name) const;
+
+  private:
+    using hash_map = rsl::unordered_map<
+      rsl::string,
+      rsl::string,
+      rsl::hash_lower<rsl::string>,
+      rsl::equal_to_case_insensitive<rsl::string>>;
+
+    hash_map m_all_settings;
+  };
+
+
+  namespace settings
+  {
+    void init(rsl::unique_ptr<SettingsManager> settingsManager);
+    SettingsManager* instance();
+    void shutdown();
   } // namespace settings
 } // namespace rex

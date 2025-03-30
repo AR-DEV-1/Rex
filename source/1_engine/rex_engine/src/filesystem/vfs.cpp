@@ -207,14 +207,15 @@ namespace rex
       while(g_vfs_state_controller.has_state(VfsState::Running))
       {
         using namespace rsl::chrono_literals; // NOLINT(google-build-using-namespace)
-        rsl::this_thread::sleep_for(20ms);
+        rsl::this_thread::sleep_for(1ms);
 
-        const rsl::unique_lock lock(g_closed_request_mutex);
-				
-        // Remove all requests that have finished
-				auto it = rsl::remove_if(g_closed_requests.begin(), g_closed_requests.end(), [](const rsl::unique_ptr<QueuedRequest>& request) { return request->all_requests_finished(); });
-				g_closed_requests.erase(it, g_closed_requests.end());
+        {
+          const rsl::unique_lock lock(g_closed_request_mutex);
 
+          // Remove all requests that have finished
+          auto it = rsl::remove_if(g_closed_requests.begin(), g_closed_requests.end(), [](const rsl::unique_ptr<QueuedRequest>& request) { return request->all_requests_finished(); });
+          g_closed_requests.erase(it, g_closed_requests.end());
+        }
       }
     }
     void start_threads()
