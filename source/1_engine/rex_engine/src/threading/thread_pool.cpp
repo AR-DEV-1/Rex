@@ -18,7 +18,7 @@ namespace rex
 
 		for (s32 idx = 0; idx < num_threads_to_spawn; ++idx)
 		{
-			m_threads.push_back(rsl::make_unique<threading::internal::Thread>());
+			m_threads.push_back(rsl::make_unique<internal::Thread>());
 			m_idle_threads.push_back(m_threads.back().get());
 		}
 	}
@@ -33,21 +33,21 @@ namespace rex
 
 	// Check if we have an idle thread
 	// if so return it.
-	threading::ThreadHandle ThreadPool::acquire_idle_thread()
+	ThreadHandle ThreadPool::acquire_idle_thread()
 	{
 		if (has_idle_threads())
 		{
 			const rsl::unique_lock lock(m_threads_access_mtx);
-			threading::internal::Thread* thread = m_idle_threads.back();
+			internal::Thread* thread = m_idle_threads.back();
 			m_idle_threads.pop_back();
-			return threading::ThreadHandle(thread);
+			return ThreadHandle(thread);
 		}
 
-		return threading::ThreadHandle();
+		return ThreadHandle();
 	}
 
 	// Return a thread back to the pool
-	void ThreadPool::return_thread(threading::internal::Thread* thread)
+	void ThreadPool::return_thread(internal::Thread* thread)
 	{
 		const rsl::unique_lock lock(m_threads_access_mtx);
 		m_idle_threads.push_back(thread);

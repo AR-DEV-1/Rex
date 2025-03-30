@@ -17,7 +17,7 @@ TEST_CASE("TEST - Thread Pool - Thread Draining")
 	rex::ThreadPool thread_pool;
 
 	s32 num_logical_processors = rex::sys_info::num_logical_processors();
-	rsl::vector<rex::threading::ThreadHandle> threads;
+	rsl::vector<rex::ThreadHandle> threads;
 	while (num_logical_processors--)
 	{
 		threads.push_back(thread_pool.acquire_idle_thread());
@@ -34,7 +34,7 @@ TEST_CASE("TEST - Thread Pool - Acquiring Idle Threads")
 {
 	rex::ThreadPool thread_pool;
 
-	rex::threading::ThreadHandle thread = thread_pool.acquire_idle_thread();
+	rex::ThreadHandle thread = thread_pool.acquire_idle_thread();
 
 	s32 x = 0;
 

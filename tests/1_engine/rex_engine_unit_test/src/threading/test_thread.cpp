@@ -9,7 +9,7 @@
 TEST_CASE("TEST - Thread - Construction")
 {
 	// This should basically not crash nor hold the main thread
-	rex::threading::internal::Thread thread;
+	rex::internal::Thread thread;
 }
 
 TEST_CASE("TEST - Thread - Run")
@@ -18,7 +18,7 @@ TEST_CASE("TEST - Thread - Run")
 
 	{
 		// A thread always joins on destruction
-		rex::threading::internal::Thread thread;
+		rex::internal::Thread thread;
 		thread.run([&x](void*)
 		{
 			++x;

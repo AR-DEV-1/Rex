@@ -19,17 +19,17 @@ namespace rex
 
 		// Check if we have an idle thread
 		// if so return it.
-		threading::ThreadHandle acquire_idle_thread();
+		ThreadHandle acquire_idle_thread();
 
 		// Return a thread back to the pool
-		void return_thread(threading::internal::Thread* thread);
+		void return_thread(internal::Thread* thread);
 
 		// Destroy all threads. Used at shutdown of the engine
 		void destroy_threads();
 
 	private:
-		rsl::vector<rsl::unique_ptr<threading::internal::Thread>> m_threads; // Holds and owns all the threads used by the thread pool
-		rsl::vector<threading::internal::Thread*> m_idle_threads;            // Holds but doesn't own all the idle threads
+		rsl::vector<rsl::unique_ptr<internal::Thread>> m_threads; // Holds and owns all the threads used by the thread pool
+		rsl::vector<internal::Thread*> m_idle_threads;            // Holds but doesn't own all the idle threads
 		rsl::mutex m_threads_access_mtx;                // Mutex that's used to access the thread pool
 	};
 

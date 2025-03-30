@@ -6,12 +6,12 @@
 TEST_CASE("TEST - Thread Handle - Construction")
 {
 	// This should basically not crash nor hold the main thread
-	rex::threading::internal::Thread thread;
-	rex::threading::ThreadHandle handle(&thread);
+	rex::internal::Thread thread;
+	rex::ThreadHandle handle(&thread);
 
 	REX_CHECK(handle.thread() == &thread);
 
-	rex::threading::ThreadHandle handle2(rsl::move(handle));
+	rex::ThreadHandle handle2(rsl::move(handle));
 
 	REX_CHECK(handle.thread() == nullptr);
 	REX_CHECK(handle2.thread() == &thread);
@@ -23,8 +23,8 @@ TEST_CASE("TEST - Thread Handle - Run")
 
 	{
 		// A thread always joins on destruction
-		rex::threading::internal::Thread thread;
-		rex::threading::ThreadHandle handle(&thread);
+		rex::internal::Thread thread;
+		rex::ThreadHandle handle(&thread);
 		handle.run([&x](void*)
 			{
 				++x;
