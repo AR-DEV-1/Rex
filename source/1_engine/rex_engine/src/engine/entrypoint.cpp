@@ -19,7 +19,7 @@ namespace rex
       REX_INFO(LogEngine, "Startup: {}", rsl::current_timepoint());
 
       // Now log the commandline we started the app with
-      cmdline::print();
+      cmdline::instance()->print();
 
       // Log early on if any sanitization is enabled
       // This is useful to have in the log file to make sure that correct sanitization is enabled when testing
@@ -33,13 +33,13 @@ namespace rex
     void pre_app_entry(REX_MAYBE_UNUSED const char8* cmdLine)
     {
       // Initialize the commandline first as this can influence everything else
-      cmdline::init(rsl::string_view(cmdLine));
+      cmdline::init(rsl::make_unique<CommandLine>(rsl::string_view(cmdLine)));
 
       // if a user wants to know the arguments for the executable, we want to perform as minimal setup as possible.
       // we just initialize the commandline, print what's possible and exit the program
-      if(cmdline::get_argument("help"))
+      if(cmdline::instance()->get_argument("help"))
       {
-        cmdline::print_args();
+        cmdline::instance()->help();
         rsl::exit(0);
       }
 
@@ -47,7 +47,7 @@ namespace rex
       // so we can attach a debugger and continue from then on
       // we'll have a timer in place to break for 2 minutes, if no debugger is attached
       // we close down the program
-      if(cmdline::get_argument("BreakOnBoot"))
+      if(cmdline::instance()->get_argument("BreakOnBoot"))
       {
         if(!wait_for_debugger())
         {
@@ -56,7 +56,7 @@ namespace rex
       }
 
       // If the program was spawned without a debugger and we want to automatically attach one
-      if(cmdline::get_argument("AttachOnBoot"))
+      if(cmdline::instance()->get_argument("AttachOnBoot"))
       {
         attach_debugger();
       }

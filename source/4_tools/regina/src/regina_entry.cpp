@@ -18,9 +18,9 @@ namespace regina
 
     // Load the project from disk if there's one specified
     rsl::unique_ptr<Project> project;
-    if (rex::cmdline::get_argument("project").has_value())
+    if (rex::cmdline::instance()->get_argument("project").has_value())
     {
-      project = project_manager::load_from_disk(rex::cmdline::get_argument("project").value());
+      project = project_manager::load_from_disk(rex::cmdline::instance()->get_argument("project").value());
       if (project == nullptr)
       {
         // Failed to load the project -> fail initialization

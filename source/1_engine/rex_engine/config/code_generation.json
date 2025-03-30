@@ -30,7 +30,7 @@
   "CommandLineArgs": {
     "Type": "Array",
     "Name": "g_command_line_args",
-    "ElementType": "cmdline::Argument",
+    "ElementType": "CommandLineArgument",
     "Includes": [
       "rex_engine/cmdline/cmdline.h"
     ],

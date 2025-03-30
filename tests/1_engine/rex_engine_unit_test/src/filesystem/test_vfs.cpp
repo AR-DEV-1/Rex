@@ -31,65 +31,19 @@ namespace rex::test
 TEST_CASE("TEST - VFS - init & shutdown")
 {
 	REX_CHECK(rex::path::is_same(rex::vfs::root(), ""));
-	REX_CHECK(rex::path::is_same(rex::vfs::sessions_root(), ""));
-	REX_CHECK(rex::path::is_same(rex::vfs::project_sessions_root(), ""));
-	REX_CHECK(rex::path::is_same(rex::vfs::current_session_root(), ""));
 	REX_CHECK(rex::vfs::is_mounted(rex::MountingPoint::TestPath1) == false);
 
 	rex::vfs::init();
 
 	REX_CHECK(rex::path::is_same(rex::vfs::root(), rex::path::cwd()));
-	rex::scratch_string test_path1 = rex::path::join(rex::vfs::current_session_root(), "test_path1");
+	rex::scratch_string test_path1 = rex::path::join(rex::engine::instance()->current_session_root(), "test_path1");
 	rex::vfs::mount(rex::MountingPoint::TestPath1, test_path1);
 	REX_CHECK(rex::vfs::is_mounted(rex::MountingPoint::TestPath1));
 
 	rex::vfs::shutdown();
 
 	REX_CHECK(rex::path::is_same(rex::vfs::root(), ""));
-	REX_CHECK(rex::path::is_same(rex::vfs::sessions_root(), ""));
-	REX_CHECK(rex::path::is_same(rex::vfs::project_sessions_root(), ""));
-	REX_CHECK(rex::path::is_same(rex::vfs::current_session_root(), ""));
 	REX_CHECK(rex::vfs::is_mounted(rex::MountingPoint::TestPath1) == false);
-}
-TEST_CASE("TEST - VFS - Root Paths")
-{
-	rsl::string_view project_name = "vfs dummy test project";
-	rex::set_project_name(project_name);
-
-	rex::test::ScopedVfsInitialization vfs_init;
-
-	REX_CHECK(rex::path::is_same(rex::vfs::root(), rex::path::cwd()));
-	REX_CHECK(rex::path::is_same(rex::vfs::engine_root(), rex::path::join(rex::path::cwd(), "rex")));
-	REX_CHECK(rex::path::is_same(rex::vfs::project_root(), rex::path::join(rex::path::cwd(), project_name)));
-	REX_CHECK(rex::path::is_same(rex::vfs::sessions_root(), rex::path::join(rex::path::cwd(), "_sessions")));
-
-	rex::scratch_string expected_session_root = rex::path::join(rex::path::cwd(), "_sessions", project_name);
-	REX_CHECK(rex::path::is_same(rex::vfs::project_sessions_root(), expected_session_root));
-
-	// We can't accurately test the current session path as this is time based
-	// However, we can test it sits under the right path and is not equal to that path
-	rsl::string_view current_session_root = rex::vfs::current_session_root();
-	REX_CHECK(rex::path::is_same(current_session_root, expected_session_root) == false);
-	REX_CHECK(rex::path::is_under_dir(current_session_root, expected_session_root));
-
-	rex::scratch_string new_root_name = rex::path::random_dir();
-	rex::directory::create(new_root_name);
-	rex::vfs::set_root(new_root_name);
-
-	REX_CHECK(rex::path::is_same(rex::vfs::root(), new_root_name));
-	REX_CHECK(rex::path::is_same(rex::vfs::engine_root(), rex::path::join(new_root_name, "rex")));
-	REX_CHECK(rex::path::is_same(rex::vfs::project_root(), rex::path::join(new_root_name, project_name)));
-	REX_CHECK(rex::path::is_same(rex::vfs::sessions_root(), rex::path::join(new_root_name, "_sessions")));
-
-	expected_session_root = rex::path::join(new_root_name, "_sessions", project_name);
-	REX_CHECK(rex::path::is_same(rex::vfs::project_sessions_root(), expected_session_root));
-
-	// We can't accurately test the current session path as this is time based
-	// However, we can test it sits under the right path and is not equal to that path
-	current_session_root = rex::vfs::current_session_root();
-	REX_CHECK(rex::path::is_same(current_session_root, expected_session_root) == false);
-	REX_CHECK(rex::path::is_under_dir(current_session_root, expected_session_root));
-	rex::directory::del_recursive(new_root_name);
 }
 TEST_CASE("TEST - VFS - mount")
 {
@@ -101,8 +55,8 @@ TEST_CASE("TEST - VFS - mount")
 	REX_CHECK(rex::vfs::is_mounted(rex::MountingPoint::TestPath2) == false);
 	REX_CHECK(rex::vfs::is_mounted(rex::MountingPoint::TestPath3) == false);
 
-	rex::scratch_string test_path1 = rex::path::join(rex::vfs::current_session_root(), "test_path1");
-	rex::scratch_string test_path2 = rex::path::join(rex::vfs::current_session_root(), "test_path2");
+	rex::scratch_string test_path1 = rex::path::join(rex::engine::instance()->current_session_root(), "test_path1");
+	rex::scratch_string test_path2 = rex::path::join(rex::engine::instance()->current_session_root(), "test_path2");
 
 	REX_CHECK(!rex::directory::exists(test_path1));
 	REX_CHECK(!rex::directory::exists(test_path2));

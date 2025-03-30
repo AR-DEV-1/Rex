@@ -54,7 +54,10 @@ namespace rex
       }
 
       // read the required log versboity from the commandline
-      rsl::optional<rsl::string_view> log_level = cmdline::get_argument("LogVerbosity");
+      rsl::optional<rsl::string_view> log_level = cmdline::instance() ?
+        cmdline::instance()->get_argument("LogVerbosity")
+        : rsl::nullopt;
+
       if(log_level)
       {
         verbosity = rsl::enum_refl::enum_cast<LogVerbosity>(log_level.value()).value_or(verbosity);

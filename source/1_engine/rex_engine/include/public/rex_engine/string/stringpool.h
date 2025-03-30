@@ -6,8 +6,18 @@ namespace rex
 {
   class StringID;
 
+  class StringPool
+  {
+
+  };
+
   namespace string_pool
   {
+    void init();
+    StringPool* instance();
+    void shutdown();
+
+
     StringID find_or_store(rsl::string_view string);
   } // namespace string_pool
 } // namespace rex

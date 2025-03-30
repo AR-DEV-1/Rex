@@ -5,8 +5,17 @@
 
 namespace rex
 {
+  class SettingsManager
+  {
+
+  };
+
   namespace settings
   {
+    void init();
+    SettingsManager* instance();
+    void shutdown();
+
     // Check if a certain setting exists
     bool has_setting(rsl::string_view name);
 

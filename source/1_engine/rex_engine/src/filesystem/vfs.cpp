@@ -236,7 +236,7 @@ namespace rex
 
       // Setting the root directory has the effect that all data will be read relative from this directory
       // This has the same effect as if you would put the working directory to this path
-      set_root(cmdline::get_argument("Root").value_or(rex::path::cwd()));
+      set_root(cmdline::instance()->get_argument("Root").value_or(rex::path::cwd()));
 
       g_vfs_state_controller.change_state(VfsState::Running);
 
