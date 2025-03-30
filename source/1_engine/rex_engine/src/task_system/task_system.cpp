@@ -165,9 +165,9 @@ namespace rex
     // when all previous jobs are processed
     rsl::shared_ptr<Job> add_job_to_queue(rsl::shared_ptr<Job> job)
     {
-      if(threading::has_any_idle_thread())
+      if(thread_pool::instance()->has_idle_threads())
       {
-        threading::ThreadHandle thread_handle = threading::acquire_idle_thread();
+        threading::ThreadHandle thread_handle = thread_pool::instance()->acquire_idle_thread();
         internal::kick_off_job(rsl::move(thread_handle), rsl::move(job));
       }
       else

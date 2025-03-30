@@ -6,26 +6,91 @@
 #include "rex_engine/memory/allocators/circular_allocator.h"
 #include "rex_engine/memory/allocators/stack_allocator.h"
 
+#include "rex_std/bonus/string.h"
+
 namespace rex
 {
 	// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: REX GLOBALS
-	struct Globals
+	struct EnginePaths
 	{
-		struct Allocators
-		{
-			rsl::unique_ptr<TCircularAllocator<GlobalAllocator>> scratch_allocator;		// An allocator used for temp memory. deallocation isn't tracked. Memory may or may not last more than 1 frame
-			rsl::unique_ptr<TStackAllocator<GlobalAllocator>> single_frame_allocator;	// An allocator used for memory that's used within a single frame. It gets reset at the beginning of the frame
-		};
-
-		Allocators allocators;
-		FrameInfo frame_info;
+		rsl::string root;
+		rsl::string engine_root;
+		rsl::string project_root;
+		rsl::string sessions_root;
+		rsl::string project_sessions_root;
+		rsl::string current_session_root;
 	};
 
-	// Globals are tied together so we have a strict initialization order
-	// Having this also avoids the discussion how globals are accessed
-	// - No singletons
-	// - No local statics
-	// - No pure global variables
-	// All engine globals are accessed through the below func
-	const Globals& globals();
+	class EngineGlobals
+	{
+	public:
+		using ScratchAllocator = TCircularAllocator<GlobalAllocator>;
+		using SingleFrameAllocator = TStackAllocator<GlobalAllocator>;
+
+		EngineGlobals(rsl::unique_ptr<ScratchAllocator> scratchAlloc, rsl::unique_ptr<SingleFrameAllocator> tempAlloc);
+
+		void advance_frame();
+
+		template <typename T>
+		T* scratch_alloc()
+		{
+			return m_scratch_allocator->allocate<T>();
+		}
+		void* scratch_alloc(s64 size);
+		void scratch_free(void* ptr);
+		bool is_scratch_alloc(void* ptr) const;
+
+		template <typename T>
+		T* temp_alloc()
+		{
+			return m_single_frame_allocator->allocate<T>();
+		}
+		void* temp_alloc(s64 size);
+		void temp_free(void* ptr);
+		bool is_temp_alloc(void* ptr) const;
+
+		const FrameInfo& frame_info() const;
+
+		// Returns the current project's name
+		rsl::string_view project_name() const;
+
+		// Returns the root of all files
+		rsl::string_view root() const;
+
+		// Returns the root directory of the engine files
+		rsl::string_view engine_root() const;
+
+		// Returns the root directory of the current project
+		rsl::string_view project_root() const;
+
+		// Returns the root for all sessions data
+		rsl::string_view sessions_root() const;
+
+		// Returns the root for all sessions data of this project
+		rsl::string_view project_sessions_root() const;
+
+		// Returns the root for all files outputed during this session run (eg. logs)
+		rsl::string_view current_session_root() const;
+
+	private:
+		void init_project_name();
+
+	private:
+		rsl::tiny_stack_string m_project_name;
+
+		// An allocator used for temp memory. deallocation isn't tracked. Memory may or may not last more than 1 frame
+		rsl::unique_ptr<ScratchAllocator> m_scratch_allocator;
+
+		// An allocator used for memory that's used within a single frame. It gets reset at the beginning of the frame
+		rsl::unique_ptr<SingleFrameAllocator> m_single_frame_allocator;
+
+		FrameInfo m_frame_info;
+	};
+
+	namespace engine
+	{
+		void init(rsl::unique_ptr<EngineGlobals> globals);
+		EngineGlobals* instance();
+		void shutdown();
+	}
 }

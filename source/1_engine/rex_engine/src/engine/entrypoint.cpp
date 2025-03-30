@@ -4,12 +4,11 @@
 #include "rex_engine/diagnostics/debug.h"
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/engine/types.h"
+#include "rex_engine/engine/globals.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/internal/exception/exit.h"
 #include "rex_std/thread.h"
-
-#include "rex_engine/engine/mutable_globals.h"
 
 namespace rex
 {
@@ -27,7 +26,7 @@ namespace rex
       log_sanitization();
 
       REX_INFO(LogEngine, "Vfs Root: {}", rex::vfs::root());
-      REX_INFO(LogEngine, "Session Directory: {}", rex::vfs::current_session_root());
+      REX_INFO(LogEngine, "Session Directory: {}", rex::engine::instance()->current_session_root());
       REX_INFO(LogEngine, "Log Path: {}", rex::project_log_path());
     }
 
@@ -62,12 +61,6 @@ namespace rex
         attach_debugger();
       }
 
-      // Initialize the filesystem as this can be needed by the entry point of the client
-      // However it is recommended that all initialziation code is moved into the client's init function.
-      // If we decide to limit this more aggresively, we can move this initialization to the initialize function
-      // of the engine.
-      vfs::init();
-
       // Now initialize all the logging diagnostics, including setting up file output
       // We need to do this here as we need the vfs to be initialized
       // We purposely don't initialize anything else here as this is meant to be a quick initialization phase
@@ -81,12 +74,6 @@ namespace rex
 
     void post_app_shutdown()
     {
-      // Release the global allocators and their heaps
-      // They won't be used anymore post this point
-      // they need to be manually release or otherwise memory tracking
-      // will crash as the globals get destructed after the memory tracker
-      mut_globals().allocators.scratch_allocator.reset();
-      mut_globals().allocators.single_frame_allocator.reset();
     }
   } // namespace internal
 } // namespace rex

@@ -52,13 +52,17 @@ namespace rex
     void loop();
 
     // Initialization
+    BootSettings load_boot_settings();
+    void init_globals();
+    void init_engine_globals(const BootSettings& bootSettings);
     void mount_engine_paths();
     void load_settings();
-    void init_boot_settings();
-    void init_allocators(const BootSettings& bootSettings);
-    void init_globals();
+    void init_thread_pool();
 
     BootSettings parse_boot_settings(rsl::string_view bootSettingsPath);
+
+    // Shutdown
+    void shutdown_globals();
 
   private:
     StateController<ApplicationState> m_app_state;

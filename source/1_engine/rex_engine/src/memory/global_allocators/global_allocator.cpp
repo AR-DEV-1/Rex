@@ -4,7 +4,7 @@
 #include "rex_engine/memory/memory_stats.h"
 #include "rex_engine/memory/alloc_unique.h"
 
-#include "rex_engine/engine/mutable_globals.h"
+#include "rex_engine/engine/globals.h"
 
 namespace rex
 {
@@ -36,7 +36,7 @@ namespace rex
       return true;
     }
 
-    bool create_minimal_global_allocators(GlobalAllocator& alloc)
+    bool create_minimal_global_allocators(GlobalAllocator& globalAlloc)
     {
       s32 minimal_global_alloc_size = static_cast<s32>(1_kib);
       output_debug_string(rsl::format("Creating a minimal scratch allocator of {} bytes for early startup", minimal_global_alloc_size));
@@ -44,11 +44,15 @@ namespace rex
       // Cannot use make_unique or alloc_unique here
       // make_unique would cause a circular dependency and we'd get a deadlock the second time the GlobalAllocator ctor is called
       // alloc_unique cannot be used here as that'd return a unique_ptr without a default_deleter argument
-      TCircularAllocator<GlobalAllocator>* ptr = alloc.allocate<TCircularAllocator<GlobalAllocator>>();
-      alloc.construct(ptr, minimal_global_alloc_size, alloc);
-      mut_globals().allocators.scratch_allocator = rsl::unique_ptr<TCircularAllocator<GlobalAllocator>>(ptr);
+      TCircularAllocator<GlobalAllocator>* ptr = globalAlloc.allocate<TCircularAllocator<GlobalAllocator>>();
+      globalAlloc.construct(ptr, minimal_global_alloc_size, globalAlloc);
+      
+      auto scratch_allocator = rsl::unique_ptr<TCircularAllocator<GlobalAllocator>>(ptr);
+      auto engine_globals = globalAlloc.allocate<EngineGlobals>();
+      globalAlloc.construct(engine_globals, rsl::move(scratch_allocator), nullptr);
+      engine::init(rsl::unique_ptr<EngineGlobals>(engine_globals));
 
-      return mut_globals().allocators.scratch_allocator != nullptr;
+      return true;
     }
   } // namespace internal
 

@@ -64,7 +64,7 @@ namespace rex
 
 		rsl::unique_ptr<Material> load_material(rsl::string_view filepath)
 		{
-			REX_VERBOSE(LogMaterialSystem, "Loading material {}", quoted(filepath));
+			REX_DEBUG(LogMaterialSystem, "Loading material {}", quoted(filepath));
 
 			// Try to load the material content from disk
 			if (!vfs::is_file(filepath))

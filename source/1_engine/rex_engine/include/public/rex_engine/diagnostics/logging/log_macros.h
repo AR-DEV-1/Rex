@@ -28,42 +28,42 @@ namespace rex
   #define REX_ERROR(...)       (0)
   #define REX_WARN(...)        (0)
   #define REX_INFO(...)        (0)
-  #define REX_VERBOSE(...)     (0)
-  #define REX_VERYVERBOSE(...) (0)
+  #define REX_DEBUG(...)       (0)
+  #define REX_DEBUG(...)       (0)
 
   #define REX_FATAL_X(...)       (0)
   #define REX_ERROR_X(...)       (0)
   #define REX_WARN_X(...)        (0)
   #define REX_INFO_X(...)        (0)
+  #define REX_DEBUG_X(...)       (0)
   #define REX_VERBOSE_X(...)     (0)
-  #define REX_VERYVERBOSE_X(...) (0)
 
   #define REX_FATAL_ONCE(CategoryName, ...)    
   #define REX_ERROR_ONCE(CategoryName, ...)   
   #define REX_WARN_ONCE(CategoryName, ...)    
   #define REX_INFO_ONCE(CategoryName, ...)    
-  #define REX_VERBOSE_ONCE(CategoryName, ...) 
-  #define REX_VERYVERBOSE_ONCE(CategoryName, ...)
+  #define REX_DEBUG_ONCE(CategoryName, ...) 
+  #define REX_VERBOSE_ONCE(CategoryName, ...)
   
   // Only log once during the duration of the program, on the first time the condition is true
   #define REX_FATAL_ONCE_X(CategoryName, cond, ...)       false
   #define REX_ERROR_ONCE_X(CategoryName, cond, ...)       false
   #define REX_WARN_ONCE_X(CategoryName, cond, ...)        false
   #define REX_INFO_ONCE_X(CategoryName, cond, ...)        false
-  #define REX_VERBOSE_ONCE_X(CategoryName, cond, ...)     false
-  #define REX_VERYVERBOSE_ONCE_X(CategoryName, cond, ...) false
+  #define REX_DEBUG_ONCE_X(CategoryName, cond, ...)     false
+  #define REX_VERBOSE_ONCE_X(CategoryName, cond, ...) false
 
 #else
 
   //-------------------------------------------------------------------------
 // Logging features
 
-  #define REX_FATAL(CategoryName, ...)       rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Critical, __VA_ARGS__)
-  #define REX_ERROR(CategoryName, ...)       rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Err, __VA_ARGS__)
-  #define REX_WARN(CategoryName, ...)        rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Warn, __VA_ARGS__)
-  #define REX_INFO(CategoryName, ...)        rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Info, __VA_ARGS__)
-  #define REX_VERBOSE(CategoryName, ...)     rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Debug, __VA_ARGS__)
-  #define REX_VERYVERBOSE(CategoryName, ...) rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Trace, __VA_ARGS__)
+  #define REX_FATAL(CategoryName, ...)        rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Critical, __VA_ARGS__)
+  #define REX_ERROR(CategoryName, ...)        rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Err, __VA_ARGS__)
+  #define REX_WARN(CategoryName, ...)         rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Warn, __VA_ARGS__)
+  #define REX_INFO(CategoryName, ...)         rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Info, __VA_ARGS__)
+  #define REX_DEBUG(CategoryName, ...)        rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Debug, __VA_ARGS__)
+  #define REX_VERBOSE(CategoryName, ...)      rex::log::trace_log(CategoryName, rex::log::LogVerbosity::Trace, __VA_ARGS__)
 
   #define REX_FATAL_X(CategoryName, cond, ...)                                                                                                                                                                                                           \
     [&]()                                                                                                                                                                                                                                                \
@@ -106,22 +106,22 @@ namespace rex
       }                                                                                                                                                                                                                                                  \
       return false;                                                                                                                                                                                                                                      \
     }()
-  #define REX_VERBOSE_X(CategoryName, cond, ...)                                                                                                                                                                                                         \
+  #define REX_DEBUG_X(CategoryName, cond, ...)                                                                                                                                                                                                         \
     [&]()                                                                                                                                                                                                                                                \
     {                                                                                                                                                                                                                                                    \
       if(!(cond))                                                                                                                                                                                                                                        \
       {                                                                                                                                                                                                                                                  \
-        REX_VERBOSE(CategoryName, __VA_ARGS__);                                                                                                                                                                                                          \
+        REX_DEBUG(CategoryName, __VA_ARGS__);                                                                                                                                                                                                          \
         return true;                                                                                                                                                                                                                                     \
       }                                                                                                                                                                                                                                                  \
       return false;                                                                                                                                                                                                                                      \
     }()
-  #define REX_VERYVERBOSE_X(CategoryName, cond, ...)                                                                                                                                                                                                     \
+  #define REX_VERBOSE_X(CategoryName, cond, ...)                                                                                                                                                                                                     \
     [&]()                                                                                                                                                                                                                                                \
     {                                                                                                                                                                                                                                                    \
       if(!(cond))                                                                                                                                                                                                                                        \
       {                                                                                                                                                                                                                                                  \
-        REX_VERYVERBOSE(CategoryName, __VA_ARGS__);                                                                                                                                                                                                      \
+        REX_DEBUG(CategoryName, __VA_ARGS__);                                                                                                                                                                                                      \
         return true;                                                                                                                                                                                                                                     \
       }                                                                                                                                                                                                                                                  \
       return false;                                                                                                                                                                                                                                      \
@@ -134,15 +134,15 @@ namespace rex
 #define REX_ERROR_ONCE(CategoryName, ...)       REX_EXECUTE_ONCE(REX_ERROR(CategoryName, __VA_ARGS__))
 #define REX_WARN_ONCE(CategoryName, ...)        REX_EXECUTE_ONCE(REX_WARN(CategoryName, __VA_ARGS__))
 #define REX_INFO_ONCE(CategoryName, ...)        REX_EXECUTE_ONCE(REX_INFO(CategoryName, __VA_ARGS__))
-#define REX_VERBOSE_ONCE(CategoryName, ...)     REX_EXECUTE_ONCE(REX_VERBOSE(CategoryName, __VA_ARGS__))
-#define REX_VERYVERBOSE_ONCE(CategoryName, ...) REX_EXECUTE_ONCE(REX_VERYVERBOSE(CategoryName, __VA_ARGS__))
+#define REX_DEBUG_ONCE(CategoryName, ...)     REX_EXECUTE_ONCE(REX_DEBUG(CategoryName, __VA_ARGS__))
+#define REX_VERBOSE_ONCE(CategoryName, ...) REX_EXECUTE_ONCE(REX_DEBUG(CategoryName, __VA_ARGS__))
 
 // Only log once during the duration of the program, on the first time the condition is true
 #define REX_FATAL_ONCE_X(CategoryName, cond, ...)       if (cond) { REX_EXECUTE_ONCE(REX_FATAL(CategoryName, __VA_ARGS__)); }
 #define REX_ERROR_ONCE_X(CategoryName, cond, ...)       if (cond) { REX_EXECUTE_ONCE(REX_ERROR(CategoryName, __VA_ARGS__)); }
 #define REX_WARN_ONCE_X(CategoryName, cond, ...)        if (cond) { REX_EXECUTE_ONCE(REX_WARN(CategoryName, __VA_ARGS__)); }
 #define REX_INFO_ONCE_X(CategoryName, cond, ...)        if (cond) { REX_EXECUTE_ONCE(REX_INFO(CategoryName, __VA_ARGS__)); }
-#define REX_VERBOSE_ONCE_X(CategoryName, cond, ...)     if (cond) { REX_EXECUTE_ONCE(REX_VERBOSE(CategoryName, __VA_ARGS__)); }
-#define REX_VERYVERBOSE_ONCE_X(CategoryName, cond, ...) if (cond) { REX_EXECUTE_ONCE(REX_VERYVERBOSE(CategoryName, __VA_ARGS__)); }
+#define REX_DEBUG_ONCE_X(CategoryName, cond, ...)     if (cond) { REX_EXECUTE_ONCE(REX_DEBUG(CategoryName, __VA_ARGS__)); }
+#define REX_VERBOSE_ONCE_X(CategoryName, cond, ...) if (cond) { REX_EXECUTE_ONCE(REX_DEBUG(CategoryName, __VA_ARGS__)); }
 
 #endif

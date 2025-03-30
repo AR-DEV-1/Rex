@@ -52,7 +52,7 @@ namespace regina
         return load_from_disk(projectName);
       }
 
-      rex::vfs::create_dirs(rex::path::dir_name(project_filepath));
+      rex::vfs::create_dirs(rex::path::parent_path(project_filepath));
       rex::vfs::create_file(project_filepath);
 
       rex::json::json new_project_content{};

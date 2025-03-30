@@ -6,6 +6,10 @@ namespace rex
 {
   namespace threading
   {
+    ThreadHandle::ThreadHandle()
+      : m_thread(nullptr)
+    {}
+
     ThreadHandle::ThreadHandle(internal::Thread* thread)
         : m_thread(thread)
     {
@@ -43,7 +47,7 @@ namespace rex
     {
       if(m_thread)
       {
-        threading::internal::global_thread_pool().return_thread(m_thread);
+        thread_pool::instance()->return_thread(m_thread);
       }
     }
   } // namespace threading

@@ -6,6 +6,7 @@
 #include "regina/widgets/create_project_widget.h"
 #include "regina/widgets/main_editor_widget.h"
 
+#include "rex_engine/engine/globals.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/event_system/events/app/quit_app.h"
 #include "rex_engine/event_system/event_system.h"
@@ -49,7 +50,7 @@ namespace regina
 
 		m_active_widget = rsl::make_unique<MainEditorWidget>();
 
-		m_content_manager->add_content(rex::vfs::project_root());
+		m_content_manager->add_content(rex::engine::instance()->project_root());
 	}
 
 	// Project management

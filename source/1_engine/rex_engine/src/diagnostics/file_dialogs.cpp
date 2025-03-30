@@ -380,7 +380,7 @@ namespace rex
       filter_patterns.replace("\n", "\0");
 
       defaultPath              = internal::path_without_final_slash(defaultPath);
-      const rsl::string_view dirname = rex::path::dir_name(defaultPath);
+      const rsl::string_view dirname = rex::path::parent_path(defaultPath);
       rsl::medium_stack_string result;
 
       OPENFILENAMEA ofn     = {0};

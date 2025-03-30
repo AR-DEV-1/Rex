@@ -124,26 +124,6 @@ namespace rex
 
     // Root paths used by the VFS
     rsl::medium_stack_string g_root; // This the root where all relative paths will start from
-    struct RootPaths
-    {
-			rsl::string engine_root;
-			rsl::string editor_root;
-			rsl::string project_root;
-			rsl::string sessions_root;     // This is the root for all sessions data
-			rsl::string project_sessions_root;  // This is the root for all the sessions data of the current project
-			rsl::string current_session_root;           // This is the root for all the data of the current session
-
-      void clear()
-      {
-        engine_root.clear();
-        editor_root.clear();
-        project_root.clear();
-        sessions_root.clear();
-        project_sessions_root.clear();
-        current_session_root.clear();
-      }
-    };
-    RootPaths g_root_paths;
 
     // This controls the state of the vfs
     StateController<VfsState> g_vfs_state_controller(VfsState::NotInitialized);
@@ -182,30 +162,6 @@ namespace rex
     rsl::string_view root()
     {
       return g_root;
-    }
-    rsl::string_view engine_root()
-    {
-      return g_root_paths.engine_root;
-    }
-    rsl::string_view editor_root()
-    {
-      return g_root_paths.editor_root;
-    }
-    rsl::string_view project_root()
-    {
-      return g_root_paths.project_root;
-    }
-    rsl::string_view sessions_root()
-    {
-      return g_root_paths.sessions_root;
-    }
-    rsl::string_view project_sessions_root()
-    {
-      return g_root_paths.project_sessions_root;
-    }
-    rsl::string_view current_session_root()
-    {
-      return g_root_paths.current_session_root;
     }
 
     void process_read_requests()
@@ -274,24 +230,6 @@ namespace rex
       g_closing_thread = rsl::thread(wait_for_read_requests);
     }
 
-    rsl::string current_timepoint_for_filename()
-    {
-      const rsl::time_point current_time = rsl::current_timepoint();
-      rsl::string timepoint_str(rsl::format("{}_{}", current_time.date().to_string_without_weekday(), current_time.time().to_string()));
-      timepoint_str.replace("/", "_");
-      timepoint_str.replace(":", "_");
-      return timepoint_str;
-    }
-
-    void set_root_paths()
-    {
-      g_root_paths.engine_root.assign(path::join(vfs::root(), "rex"));
-      g_root_paths.editor_root.assign(path::join(vfs::root(), "regina"));
-      g_root_paths.project_root.assign(path::join(vfs::root(), project_name()));
-      g_root_paths.sessions_root.assign(path::join(vfs::root(), "_sessions"));
-      g_root_paths.project_sessions_root.assign(path::join(sessions_root(), project_name()));
-      g_root_paths.current_session_root.assign(path::join(project_sessions_root(), current_timepoint_for_filename()));
-    }
     void init()
     {
       g_vfs_state_controller.change_state(VfsState::Initializing);
@@ -299,10 +237,6 @@ namespace rex
       // Setting the root directory has the effect that all data will be read relative from this directory
       // This has the same effect as if you would put the working directory to this path
       set_root(cmdline::get_argument("Root").value_or(rex::path::cwd()));
-
-      // Create the current session root so data generated during this session
-      // has somewhere to put itself
-      create_dirs(current_session_root());
 
       g_vfs_state_controller.change_state(VfsState::Running);
 
@@ -328,8 +262,6 @@ namespace rex
 
       REX_ASSERT_X(directory::exists(g_root), "root of vfs is not a directory");
       REX_INFO(LogVfs, "LogVfs root changed to: {}", g_root);
-
-      set_root_paths();
     }
     void mount(MountingPoint root, rsl::string_view path)
     {
@@ -369,7 +301,6 @@ namespace rex
 
       // clean up all data assets
       g_root.clear();
-      g_root_paths.clear();
       g_mounted_roots.clear();
 
       g_vfs_state_controller.change_state(VfsState::ShutDown);

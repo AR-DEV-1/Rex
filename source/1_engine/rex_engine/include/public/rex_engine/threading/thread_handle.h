@@ -12,6 +12,7 @@ namespace rex
     class ThreadHandle
     {
     public:
+      ThreadHandle();
       explicit ThreadHandle(internal::Thread* thread);
       ThreadHandle(const ThreadHandle&) = delete;
       ThreadHandle(ThreadHandle&& other);

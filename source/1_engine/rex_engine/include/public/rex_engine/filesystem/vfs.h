@@ -52,21 +52,6 @@ namespace rex
     // Returns the root of all files
     rsl::string_view root();
 
-    // Returns the root directory of the engine files
-    rsl::string_view engine_root();
-
-    // Returns the root directory of the current project
-    rsl::string_view project_root();
-
-    // Returns the root for all sessions data
-    rsl::string_view sessions_root();
-
-    // Returns the root for all sessions data of this project
-    rsl::string_view project_sessions_root();
-
-    // Returns the root for all files outputed during this session run (eg. logs)
-    rsl::string_view current_session_root();
-
     DEFINE_YES_NO_ENUM(AppendToFile);
 
     void init();

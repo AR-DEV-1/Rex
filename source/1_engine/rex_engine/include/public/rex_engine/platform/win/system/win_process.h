@@ -8,5 +8,8 @@
 
 namespace rex
 {
-  rsl::win::handle_t current_process();
+  namespace current_process
+  {
+    rsl::win::handle_t handle();
+  }
 } // namespace rex

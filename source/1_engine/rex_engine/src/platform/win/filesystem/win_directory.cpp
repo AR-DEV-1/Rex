@@ -463,6 +463,11 @@ namespace rex
     {
       REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
+      if (directory::exists(path))
+      {
+        return Error::no_error();
+      }
+
       scratch_string to_create;
       to_create.reserve(path.size());
 
@@ -534,10 +539,14 @@ namespace rex
     {
       REX_ASSERT_X(path::is_absolute(path) || path::is_drive(path), "argument is expected to be absolute here: {}", path);
 
+      // as the string view can point to a subpath where the last character is not null terminated
+      // we have to copy it over into a stack string so that have the null terminator at the end
+      path_stack_string fullpath(path);
+
       // It's possible the error returned here is ERROR_FILE_NOT_FOUND or ERROR_PATH_NOT_FOUND
       // because we can't ignore both, we just call it without wrapping it in WIN_CALL
       // and manually reset the windows error if an error has occurred
-      const DWORD attribs = GetFileAttributesA(path.data());
+      const DWORD attribs = GetFileAttributesA(fullpath.data());
 
       if (attribs == INVALID_FILE_ATTRIBUTES)
       {

@@ -1,6 +1,6 @@
 #include "rex_engine/memory/global_allocators/global_debug_allocator.h"
 
-#include "rex_engine/engine/mutable_globals.h"
+#include "rex_engine/engine/globals.h"
 
 namespace rex
 {

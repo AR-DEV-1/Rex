@@ -43,7 +43,7 @@ namespace rex
 
     app_params.gui_params.window_width = 720;
     app_params.gui_params.window_height = 720;
-    app_params.gui_params.window_title.assign(rsl::format("Pokemon: Rex | PID: {}", rex::current_process_id()));
+    app_params.gui_params.window_title.assign(rsl::format("Pokemon: Rex | PID: {}", rex::current_process::id()));
 
     app_params.is_gui_app = true;
 

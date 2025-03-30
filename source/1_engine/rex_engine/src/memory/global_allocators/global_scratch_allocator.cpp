@@ -1,18 +1,16 @@
 #include "rex_engine/memory/global_allocators/global_scratch_allocator.h"
 
-#include "rex_engine/engine/mutable_globals.h"
+#include "rex_engine/engine/globals.h"
 
 namespace rex
 {
   void* GlobalScratchAllocator::allocate(const s32 count)
   {
-    static s32 num_allocated = 0;
-    num_allocated += count;
-    return mut_globals().allocators.scratch_allocator->allocate(count);
+    return engine::instance()->scratch_alloc(count);
   }
   void GlobalScratchAllocator::deallocate(void* const ptr, s32 /*count*/)
   {
-    return mut_globals().allocators.scratch_allocator->deallocate(ptr);
+    engine::instance()->scratch_free(ptr);
   }
 
   s32 GlobalScratchAllocator::max_size() const
@@ -22,6 +20,6 @@ namespace rex
 
   bool GlobalScratchAllocator::has_allocated_ptr(void* ptr) const
   {
-    return globals().allocators.scratch_allocator->has_allocated_ptr(ptr);
+    return engine::instance()->is_scratch_alloc(ptr);
   }
 }

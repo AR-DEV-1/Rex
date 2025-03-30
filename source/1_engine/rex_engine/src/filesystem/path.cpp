@@ -303,7 +303,7 @@ namespace rex
       return res;
     }
     // Returns the directory path of the given path
-    rsl::string_view dir_name(rsl::string_view path)
+    rsl::string_view parent_path(rsl::string_view path)
     {
       const SplitResult split_res = split(path);
       return split_res.head;
@@ -848,6 +848,23 @@ namespace rex
 
       return true;
     }
+    // Finds a file or directory name startings from the current directory
+    // and keeps going to parent directory until it's found
+    // If it's not found, it returns an empty string
+    scratch_string find_in_parent(rsl::string_view toFind, rsl::string_view startDir)
+    {
+      startDir = unsafe_abs_path(startDir);
+      return find_in_parent_abspath(toFind, startDir);
+    }
+
+    scratch_string timepoint_for_filename(const rsl::time_point& timepoint)
+    {
+      scratch_string timepoint_str(rsl::format("{}_{}", timepoint.date().to_string_without_weekday(), timepoint.time().to_string()));
+      timepoint_str.replace("/", "_");
+      timepoint_str.replace(":", "_");
+      return timepoint_str;
+    }
+
     // --------------------------------
     // QUERYING
     // --------------------------------
@@ -929,6 +946,34 @@ namespace rex
 
       return internal::compare_paths(lhs_split.head, rhs_split.head);
     }
+    // Finds a file or directory name startings from the current directory
+    // and keeps going to parent directory until it's found
+    // If it's not found, it returns an empty string
+    scratch_string find_in_parent_abspath(rsl::string_view toFind, rsl::string_view startDirAbs)
+    {
+      REX_ASSERT_X(is_absolute(startDirAbs) || is_drive(startDirAbs), "argument is expected to be absolute here: {}", startDirAbs);
+      
+      if (!directory::exists_abspath(startDirAbs))
+      {
+        return scratch_string();
+      }
 
+      path_stack_string fullpath;
+      join_to(fullpath, startDirAbs, toFind);
+      
+      while (!directory::exists_abspath(fullpath) && !file::exists_abspath(fullpath))
+      {
+        startDirAbs = path::parent_path(startDirAbs);
+        fullpath.clear();
+        if (startDirAbs.empty())
+        {
+          break;
+        }
+
+        join_to(fullpath, startDirAbs, toFind);
+      }
+
+      return scratch_string(fullpath);
+    }
   } // namespace path
 } // namespace rex

@@ -1,6 +1,7 @@
 #include "rex_engine/platform/win/system/win_open_file.h"
 
 #include <Windows.h>
+#include <shellapi.h>
 
 namespace rex
 {

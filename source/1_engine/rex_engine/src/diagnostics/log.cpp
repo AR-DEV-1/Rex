@@ -12,6 +12,6 @@ namespace rex
 {
 	scratch_string project_log_path()
 	{
-		return rex::path::join(rex::vfs::mount_path(rex::MountingPoint::Logs), rsl::format("{}.log", project_name()));
+		return path::join(engine::instance()->current_session_root(), "logs", rsl::format("{}.log", project_name()));
 	}
 }

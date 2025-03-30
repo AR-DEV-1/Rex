@@ -120,7 +120,9 @@ namespace rex
     const rsl::thread::id thread_id = rsl::this_thread::get_id();
 
     rex::MemoryHeader* dbg_header_addr   = static_cast<rex::MemoryHeader*>(GlobalDebugAllocator().allocate(sizeof(MemoryHeader)));
-    const card32 frame_idx               = rex::globals().frame_info.index();
+    const card32 frame_idx               = rex::engine::instance() 
+      ? rex::engine::instance()->frame_info().index()
+      : 0;
     const CallStack callstack            = current_callstack();
 
     // track the callstack, if we this callstack allocated memory before

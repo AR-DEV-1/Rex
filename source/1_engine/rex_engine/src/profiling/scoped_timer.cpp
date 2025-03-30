@@ -22,7 +22,7 @@ namespace rex
 	public:
 		ProfilingSession()
 		{
-			m_filepath.assign(rex::path::join(rex::vfs::current_session_root(), "profile_result.json"));
+			m_filepath.assign(rex::path::join(rex::engine::instance()->current_session_root(), "profile_result.json"));
 			write_header();
 		}
 

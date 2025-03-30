@@ -1,6 +1,6 @@
 // NOLINTBEGIN
 
-#include "rex_engine/engine/mutable_globals.h"
+#include "rex_engine/engine/globals.h"
 
 #define CATCH_CONFIG_RUNNER
 #include "rex_unit_test/catch2/catch.hpp"
@@ -27,14 +27,15 @@ public:
   {
     s64 size = 1_kib;
 
-    rex::mut_globals().allocators.single_frame_allocator = rsl::make_unique<rex::TStackAllocator<rex::GlobalAllocator>>(size);
-    rex::mut_globals().allocators.scratch_allocator = rsl::make_unique<rex::TCircularAllocator<rex::GlobalAllocator>>(size);
+    auto single_frame_allocator = rsl::make_unique<rex::TStackAllocator<rex::GlobalAllocator>>(size);
+    auto scratch_allocator = rsl::make_unique<rex::TCircularAllocator<rex::GlobalAllocator>>(size);
+
+    rex::engine::init(rsl::make_unique<rex::EngineGlobals>(rsl::move(scratch_allocator), rsl::move(single_frame_allocator)));
   }
 
   void testRunEnded(const Catch::TestRunStats&) override
   {
-    rex::mut_globals().allocators.single_frame_allocator.reset();
-    rex::mut_globals().allocators.scratch_allocator.reset();
+    rex::engine::shutdown();
   }
 
 };

@@ -16,7 +16,7 @@
 #include "rex_engine/profiling/scoped_timer.h"
 #include "rex_engine/cmdline/cmdline.h"
 
-#include "rex_engine/engine/mutable_globals.h"
+#include "rex_engine/threading/thread_pool.h"
 
 #include <cstdlib>
 
@@ -34,11 +34,6 @@ namespace rex
   //-------------------------------------------------------------------------
   CoreApplication::~CoreApplication()
   {
-    vfs::shutdown();
-
-    cmdline::shutdown();
-
-    end_profiling_session();
   }
 
   //--------------------------------------------------------------------------------------------
@@ -57,7 +52,10 @@ namespace rex
     if(initialize() == false) // NOLINT(readability-simplify-boolean-expr)
     {
       REX_ERROR(LogEngine, "Application initialization failed");
-      return EXIT_FAILURE;
+
+      // Make sure to set the exit code as it gets logged in shutdown
+      m_exit_code = EXIT_FAILURE;
+      return m_exit_code;
     }
 
     // Log memory usage after initialization has finished
@@ -135,22 +133,9 @@ namespace rex
   {
     m_app_state.change_state(ApplicationState::Initializing);
 
-    // Loads the mounts of the engine
-    // this will make it easier to access files under these paths
-    // in the future
-    mount_engine_paths();
-
-    init_boot_settings();
-
     init_globals();
 
-    // load the settings of the engine as early as possible
-    // however it does have a few dependencies that need to be set up first
-    // - commandline needs to be initialized
-    // - vfs needs to be initialized
-    load_settings();
-
-    rex::mut_globals().frame_info.update();
+    engine::instance()->advance_frame();
 
     REX_INFO(LogCoreApp, "core engine systems initialized");
     const bool res = platform_init();
@@ -168,20 +153,25 @@ namespace rex
   //--------------------------------------------------------------------------------------------
   void CoreApplication::update()
   {
-    rex::mut_globals().frame_info.update();
-    rex::mut_globals().allocators.single_frame_allocator->reset();
+    engine::instance()->advance_frame();
 
-    REX_INFO(LogCoreApp, "FPS: {}", rex::globals().frame_info.fps().get());
-    REX_INFO(LogCoreApp, "Delta time: {}", rex::globals().frame_info.delta_time().to_seconds());
+    REX_INFO(LogCoreApp, "FPS: {}", engine::instance()->frame_info().fps().get());
+    REX_INFO(LogCoreApp, "Delta time: {}", engine::instance()->frame_info().delta_time().to_seconds());
 
     platform_update();
   }
   //--------------------------------------------------------------------------------------------
   void CoreApplication::shutdown()
   {
+    REX_INFO(LogCoreApp, "Shutting down application..");
+
     platform_shutdown();
 
     end_profiling_session();
+
+    REX_INFO(LogEngine, "Application shutdown with result: {0}", m_exit_code);
+
+    shutdown_globals();
   }
   //--------------------------------------------------------------------------------------------
   void CoreApplication::mark_for_destroy(s32 exitCode)
@@ -211,11 +201,13 @@ namespace rex
   //--------------------------------------------------------------------------------------------
   void CoreApplication::mount_engine_paths() // NOLINT(readability-convert-member-functions-to-static)
   {
-    vfs::mount(MountingPoint::EngineRoot, vfs::engine_root());
+    vfs::mount(MountingPoint::EngineRoot, engine::instance()->engine_root());
 
-    vfs::mount(MountingPoint::EngineSettings, path::join(vfs::engine_root(), "settings"));
-    vfs::mount(MountingPoint::EngineMaterials, path::join(vfs::engine_root(), "materials"));
-    vfs::mount(MountingPoint::EngineShaders, path::join(vfs::engine_root(), "shaders"));
+    vfs::mount(MountingPoint::EngineSettings, path::join(engine::instance()->engine_root(), "settings"));
+    vfs::mount(MountingPoint::EngineMaterials, path::join(engine::instance()->engine_root(), "materials"));
+    vfs::mount(MountingPoint::EngineShaders, path::join(engine::instance()->engine_root(), "shaders"));
+
+    vfs::mount(rex::MountingPoint::Logs, path::join(engine::instance()->current_session_root(), "logs"));
   }
 
   //--------------------------------------------------------------------------------------------
@@ -230,42 +222,75 @@ namespace rex
 
     for(const rsl::string_view file: files)
     {
-      REX_VERBOSE(LogCoreApp, "Loading settings file: {}", file);
+      REX_DEBUG(LogCoreApp, "Loading settings file: {}", file);
       settings::load(file);
     }
   }
 
   //--------------------------------------------------------------------------------------------
-  void CoreApplication::init_boot_settings()
+  BootSettings CoreApplication::load_boot_settings()
   {
-    BootSettings default_boot_settings{};
+    BootSettings boot_settings{};
 
     scratch_string abs_boot_ini_path = vfs::abs_path("rex/settings/boot.ini");
     if (vfs::exists(abs_boot_ini_path))
     {
-      default_boot_settings = parse_boot_settings(abs_boot_ini_path);
+      boot_settings = parse_boot_settings(abs_boot_ini_path);
     }
 
-    init_allocators(default_boot_settings);
+    return boot_settings;
   }
 
   //--------------------------------------------------------------------------------------------
-  void CoreApplication::init_allocators(const BootSettings& bootSettings)
+  void CoreApplication::init_engine_globals(const BootSettings& bootSettings)
   {
     // Read the settings of the file
     REX_ASSERT_X(bootSettings.single_frame_heap_size > 0, "Single frame heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"single_frame_heap_size\" in memory_settings.ini");
     REX_ASSERT_X(bootSettings.scratch_heap_size > 0, "Scratch heap setting indicates 0 size. The setting is either missing or 0. Please add a setting to \"heaps\" with name \"scratch_heap_size\" in memory_settings.ini");
 
     // Initialize the global heaps and its allocators using the settings loaded from disk
-    mut_globals().allocators.single_frame_allocator = rsl::make_unique<TStackAllocator<GlobalAllocator>>(bootSettings.single_frame_heap_size);
-    mut_globals().allocators.scratch_allocator = rsl::make_unique<TCircularAllocator<GlobalAllocator>>(bootSettings.scratch_heap_size);
+    auto scratch_alloc = rsl::make_unique<TCircularAllocator<GlobalAllocator>>(bootSettings.scratch_heap_size);
+    auto single_frame_alloc = rsl::make_unique<TStackAllocator<GlobalAllocator>>(bootSettings.single_frame_heap_size);
+
+    engine::init(rsl::make_unique<EngineGlobals>(rsl::move(scratch_alloc), rsl::move(single_frame_alloc)));
+  }
+
+  //--------------------------------------------------------------------------------------------
+  void CoreApplication::init_thread_pool()
+  {
+    thread_pool::init(rsl::make_unique<ThreadPool>());
   }
 
   //--------------------------------------------------------------------------------------------
   void CoreApplication::init_globals()
   {
+    REX_DEBUG(LogCoreApp, "Loading boot settings");
+    BootSettings boot_settings = load_boot_settings();
+
+    REX_DEBUG(LogCoreApp, "Initializing engine globals");
+    init_engine_globals(boot_settings);
+
+    REX_DEBUG(LogCoreApp, "Initializing thread pool");
+    init_thread_pool();
+
+    REX_DEBUG(LogCoreApp, "Initializing virtual filesystem");
+    vfs::init();
+
+    // Loads the mounts of the engine
+    // this will make it easier to access files under these paths
+    // in the future
+    REX_DEBUG(LogCoreApp, "Mounting engine paths");
+    mount_engine_paths();
+
+    // load the settings of the engine as early as possible
+    // however it does have a few dependencies that need to be set up first
+    // - commandline needs to be initialized
+    // - vfs needs to be initialized
+    REX_DEBUG(LogCoreApp, "Loading all settings");
+    load_settings();
   }
 
+  //--------------------------------------------------------------------------------------------
   BootSettings CoreApplication::parse_boot_settings(rsl::string_view bootSettingsPath)
   {
     REX_ASSERT_X(vfs::exists(bootSettingsPath), "boot settings path for parsing doesn't exist. {}", bootSettingsPath);
@@ -277,6 +302,15 @@ namespace rex
     boot_settings.scratch_heap_size = rsl::stoi(boot_settings_ini.get("heaps", "scratch_heap_size", "<invalid int>")).value_or(boot_settings.scratch_heap_size);
 
     return boot_settings;
+  }
+
+  //--------------------------------------------------------------------------------------------
+  void CoreApplication::shutdown_globals()
+  {
+    vfs::shutdown();
+    thread_pool::shutdown();
+    cmdline::shutdown();
+    engine::shutdown();
   }
 
 } // namespace rex

@@ -41,7 +41,7 @@ namespace regina
     m_primitive_material = rex::gfx::load_material(rex::vfs::abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
 
     s32 x, y, channels;
-    stbi_uc* data = stbi_load(rex::path::join(rex::vfs::project_root(), "dev", "maps", "kanto", "old", "celadon_city.png").data(), &x, &y, &channels, 4);
+    stbi_uc* data = stbi_load(rex::path::join(rex::engine::instance()->project_root(), "dev", "maps", "kanto", "old", "celadon_city.png").data(), &x, &y, &channels, 4);
     m_pokemon_texture = rex::gfx::gal()->create_texture2d(x, y, rex::gfx::TextureFormat::Unorm4, data);
 
     // Sampler is currently hardcoded

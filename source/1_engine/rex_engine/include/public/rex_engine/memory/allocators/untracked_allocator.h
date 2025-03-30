@@ -19,9 +19,9 @@ namespace rex
     REX_NO_DISCARD pointer allocate(rsl::memory_size size);
     REX_NO_DISCARD pointer allocate(size_type size);
     template <typename T>
-    REX_NO_DISCARD T* allocate(rsl::memory_size size)
+    REX_NO_DISCARD T* allocate()
     {
-      return static_cast<T*>(allocate(size));
+      return static_cast<T*>(allocate(sizeof(T)));
     }
 
     void deallocate(pointer ptr, rsl::memory_size size = 0);
