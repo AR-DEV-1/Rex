@@ -1,6 +1,7 @@
 // NOLINTBEGIN
 
 #include "rex_engine/engine/globals.h"
+#include "rex_engine/cmdline/cmdline.h"
 
 #define CATCH_CONFIG_RUNNER
 #include "rex_unit_test/catch2/catch.hpp"
@@ -25,12 +26,25 @@ public:
 
   void testRunStarting(Catch::TestRunInfo const&) override
   {
-    s64 size = 1_kib;
+  }
 
-    auto single_frame_allocator = rsl::make_unique<rex::TStackAllocator<rex::GlobalAllocator>>(size);
-    auto scratch_allocator = rsl::make_unique<rex::TCircularAllocator<rex::GlobalAllocator>>(size);
+  void testCaseStarting(const Catch::TestCaseInfo& _testInfo) override
+  {
+    // Some tests reset the commandlne
+    if (rex::cmdline::instance() == nullptr)
+    {
+      rex::cmdline::init(rsl::make_unique<rex::CommandLine>(""));
+    }
 
-    rex::engine::init(rsl::make_unique<rex::EngineGlobals>(rsl::move(scratch_allocator), rsl::move(single_frame_allocator)));
+    // Some tests reset the engine globals
+    if (rex::engine::instance() == nullptr)
+    {
+      s64 size = 1_kib;
+      auto single_frame_allocator = rsl::make_unique<rex::TStackAllocator<rex::GlobalAllocator>>(size);
+      auto scratch_allocator = rsl::make_unique<rex::TCircularAllocator<rex::GlobalAllocator>>(size);
+
+      rex::engine::init(rsl::make_unique<rex::EngineGlobals>(rsl::move(scratch_allocator), rsl::move(single_frame_allocator)));
+    }
   }
 
   void testRunEnded(const Catch::TestRunStats&) override
