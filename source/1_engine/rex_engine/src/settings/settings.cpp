@@ -150,8 +150,8 @@ namespace rex
 
   namespace settings
   {
-    rsl::unique_ptr<SettingsManager> g_settings_manager;
-    void init(rsl::unique_ptr<SettingsManager> settingsManager)
+    globals::GlobalUniquePtr<SettingsManager> g_settings_manager;
+    void init(globals::GlobalUniquePtr<SettingsManager> settingsManager)
     {
       g_settings_manager = rsl::move(settingsManager);
     }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "rex_engine/engine/types.h"
+#include "rex_engine/engine/globals.h"
+
 #include "rex_engine/memory/memory_types.h"
 #include "rex_std/string_view.h"
 #include "rex_std/unordered_map.h"
@@ -60,7 +62,7 @@ namespace rex
 
   namespace settings
   {
-    void init(rsl::unique_ptr<SettingsManager> settingsManager);
+    void init(globals::GlobalUniquePtr<SettingsManager> settingsManager);
     SettingsManager* instance();
     void shutdown();
   } // namespace settings

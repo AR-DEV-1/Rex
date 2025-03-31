@@ -55,6 +55,7 @@ namespace rex
     BootSettings load_boot_settings();
     void init_globals();
     void init_engine_globals(const BootSettings& bootSettings);
+    void init_cmdline();
     void mount_engine_paths();
     void load_settings();
     void init_thread_pool();

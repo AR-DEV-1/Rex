@@ -4,6 +4,7 @@
 #include "rex_engine/memory/memory_stats.h"
 #include "rex_engine/memory/alloc_unique.h"
 
+#include "rex_engine/engine/engine.h"
 #include "rex_engine/engine/globals.h"
 
 namespace rex
@@ -55,7 +56,7 @@ namespace rex
 			auto scratch_allocator = rsl::unique_ptr<TCircularAllocator<GlobalAllocator>>(scratch_allocator_ptr);
 			auto engine_globals = globalAlloc.allocate<EngineGlobals>();
 			globalAlloc.construct(engine_globals, rsl::move(scratch_allocator), nullptr);
-			engine::init(rsl::unique_ptr<EngineGlobals>(engine_globals));
+			engine::init(globals::GlobalUniquePtr<EngineGlobals>(engine_globals));
 
 			return true;
     }

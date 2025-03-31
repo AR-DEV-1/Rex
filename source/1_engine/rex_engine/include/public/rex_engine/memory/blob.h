@@ -49,6 +49,9 @@ namespace rex
       // Returns false if it doesn't
       explicit operator bool() const;
 
+      // Converts the blob to a string view
+      explicit operator rsl::string_view() const;
+
       // Access into the underlying buffer by byte offset.
       rsl::byte& operator[](int32 index);
       const rsl::byte& operator[](int32 index) const;

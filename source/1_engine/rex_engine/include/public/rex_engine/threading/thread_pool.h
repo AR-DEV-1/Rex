@@ -2,6 +2,8 @@
 
 #include "rex_engine/threading/thread.h"
 #include "rex_engine/threading/thread_handle.h"
+#include "rex_engine/engine/globals.h"
+
 #include "rex_std/functional.h"
 #include "rex_std/mutex.h"
 #include "rex_std/vector.h"
@@ -36,7 +38,7 @@ namespace rex
 
 	namespace thread_pool
 	{
-		void init(rsl::unique_ptr<ThreadPool> threadPool);
+		void init(globals::GlobalUniquePtr<ThreadPool> threadPool);
 		ThreadPool* instance();
 		void shutdown();
 	} // namespace threading

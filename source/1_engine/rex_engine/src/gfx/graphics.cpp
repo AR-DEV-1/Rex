@@ -74,7 +74,7 @@ namespace rex
       REX_INFO(LogGraphics, "Renderer Info - Driver Version: {}", gfx_info.driver_version);
     }
 
-    Error init(rsl::unique_ptr<GALInterface> galInterface, const OutputWindowUserData& userData)
+    Error init(globals::GlobalUniquePtr<GALInterface> galInterface, const OutputWindowUserData& userData)
     {
       // Initialize the gpu engine, it's responsible for the entire graphics pipeline.
       // The gpu engine gets created by the gal as some of the objects wrapped by the gpu engine

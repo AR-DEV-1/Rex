@@ -331,7 +331,7 @@ namespace rex
         user_data.max_frames_in_flight   = settings::instance()->get_int("max_frames_in_flight", 3);
 
 #ifdef REX_USING_DIRECTX
-        gfx::init(rsl::make_unique<gfx::DirectXInterface>(), user_data);
+        gfx::init(globals::make_unique<gfx::DirectXInterface>(), user_data);
 #else
 #error "No Graphics API defined"
 #endif

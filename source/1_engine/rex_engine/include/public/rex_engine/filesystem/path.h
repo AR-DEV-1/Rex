@@ -10,7 +10,7 @@
 #include "rex_engine/engine/types.h"
 
 #include "rex_engine/text_processing/text_iterator.h"
-#include "rex_engine/engine/globals.h"
+#include "rex_engine/engine/engine.h"
 
 namespace rex
 {

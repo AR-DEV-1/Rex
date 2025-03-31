@@ -55,6 +55,14 @@ namespace rex
     }
 
     //-------------------------------------------------------------------------
+    Blob::operator rsl::string_view() const
+    {
+      rsl::string_view view((const char*)data(), static_cast<s32>(size()));
+      return view;
+    }
+
+
+    //-------------------------------------------------------------------------
     rsl::byte& Blob::operator[](int32 index)
     {
       return m_data.get()[index];

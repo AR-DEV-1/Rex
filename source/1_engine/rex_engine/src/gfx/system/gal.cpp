@@ -6,7 +6,7 @@ namespace rex
 {
 	namespace gfx
 	{
-    rsl::unique_ptr<GALInterface> g_gal;
+		globals::GlobalUniquePtr<GALInterface> g_gal;
 
     GALInterface* gal()
     {
@@ -16,7 +16,7 @@ namespace rex
     // Initializes the render hardware infrastructure
 		// For DirectX, creates the dxgi factory, d3d device, command buffers, heaps and swapchain
 		// After this, the gal is setup to start creating resources (textures, shaders, vertex buffers, ..)
-		gfx::GpuEngine* init_gal(rsl::unique_ptr<GALInterface> galInterface, const OutputWindowUserData& userData)
+		gfx::GpuEngine* init_gal(globals::GlobalUniquePtr<GALInterface> galInterface, const OutputWindowUserData& userData)
 		{
 			REX_ASSERT_X(g_gal == nullptr, "The graphics abstraction layer has already been assigned, this is not allowed");
 			g_gal = rsl::move(galInterface);

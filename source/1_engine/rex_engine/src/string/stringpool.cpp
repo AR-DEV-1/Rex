@@ -12,40 +12,46 @@
 
 namespace rex
 {
+	//-------------------------------------------------------------------------
+	StringID StringPool::find_or_store(rsl::string_view string)
+	{
+		rsl::hash_result hash = rsl::hash<rsl::string_view>{}(string);
+		REX_MEM_TAG_SCOPE(MemoryTag::StringPool);
+
+		// Check if the string isn't already in the string pool
+		auto it = m_entries.find(hash);
+		if (it != rsl::cend(m_entries))
+		{
+			// If we have found an existing entry, return it
+			return StringID(hash, it->value);
+		}
+
+		// If we haven't found an existing entry, create a new entry
+		auto res = m_entries.emplace(hash, rsl::string(string));
+		if (res.emplace_successful)
+		{
+			return StringID(hash, res.inserted_element->value);
+		}
+
+		REX_ASSERT("This path should never be reached, insertion into the string pool failed somehow.");
+		return StringID::create_invalid();
+	}
+
   namespace string_pool
   {
-    using EntryMap = rsl::unordered_map<rsl::hash_result, rsl::string>;
-
-    //-------------------------------------------------------------------------
-    EntryMap& get_entries()
+		globals::GlobalUniquePtr<StringPool> g_string_pool;
+    void init(globals::GlobalUniquePtr<StringPool> stringPool)
     {
-      static EntryMap entries;
-      return entries;
+      g_string_pool = rsl::move(stringPool);
+    }
+    StringPool* instance()
+    {
+      return g_string_pool.get();
+    }
+    void shutdown()
+    {
+      g_string_pool.reset();
     }
 
-    //-------------------------------------------------------------------------
-    StringID find_or_store(rsl::string_view string)
-    {
-      rsl::hash_result hash = rsl::hash<rsl::string_view>{}(string);
-      REX_MEM_TAG_SCOPE(MemoryTag::StringPool);
-
-      // Check if the string isn't already in the string pool
-      auto it = get_entries().find(hash);
-      if (it != rsl::cend(get_entries()))
-      {
-        // If we have found an existing entry, return it
-        return StringID(hash, it->value);
-      }
-
-      // If we haven't found an existing entry, create a new entry
-      auto res = get_entries().emplace(hash, rsl::string(string));
-      if (res.emplace_successful)
-      {
-        return StringID(hash, res.inserted_element->value);
-      }
-
-      REX_ASSERT("This path should never be reached, insertion into the string pool failed somehow.");
-      return StringID::create_invalid();
-    }
   } // namespace string_pool
 } // namespace rex

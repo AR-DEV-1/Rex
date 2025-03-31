@@ -1,6 +1,6 @@
 #include "rex_engine/memory/global_allocators/global_single_frame_allocator.h"
 
-#include "rex_engine/engine/globals.h"
+#include "rex_engine/engine/engine.h"
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: HEAP AND ALLOCATORS
 

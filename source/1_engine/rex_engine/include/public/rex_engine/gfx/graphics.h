@@ -3,6 +3,8 @@
 #include "rex_engine/diagnostics/error.h"
 #include "rex_engine/diagnostics/assert.h"
 #include "rex_engine/engine/invalid_object.h"
+#include "rex_engine/engine/globals.h"
+
 #include "rex_engine/gfx/core/renderer_output_window_user_data.h"
 
 #include "rex_engine/gfx/core/graphics_engine_type.h"
@@ -52,7 +54,7 @@ namespace rex
     // Set the graphics abstraction layer object
 
     // Create and initialize the graphics engine, rendering is possible from here on out
-    Error init(rsl::unique_ptr<GALInterface> galInterface, const OutputWindowUserData& userData);
+    Error init(globals::GlobalUniquePtr<GALInterface> galInterface, const OutputWindowUserData& userData);
     // Shutdown the graphics engine, no rendering support from here on out
     void shutdown();
 

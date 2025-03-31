@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rex_engine/string/stringid.h"
+#include "rex_engine/engine/globals.h"
 #include "rex_std/bonus/string.h"
 
 namespace rex
@@ -8,12 +9,11 @@ namespace rex
 	struct CommandLineArgument
 	{
 	public:
-		CommandLineArgument(rsl::string_view name, rsl::string_view desc, rsl::string_view module);
+		CommandLineArgument(rsl::string_view name, rsl::string_view desc, rsl::string_view filename);
 
-		StringID name_id;
 		rsl::string_view name;
 		rsl::string_view desc;
-		rsl::string_view module; // the module (eg. RexEngine) this argument is defined for, very useful for debugging as well as for the help command
+		rsl::string_view filename; // the filename from where the commandline arg was loaded from
 	};
 
   class CommandLine
@@ -21,12 +21,18 @@ namespace rex
   public:
     struct ActiveArgument
     {
-      StringID argument_id;
+      //StringID argument_id;
       rsl::string_view argument;
       rsl::string_view value;
     };
 
     CommandLine(rsl::string_view cmdLine);
+
+    void load_arguments_from_file(rsl::string_view file, rsl::string_view moduleName);
+
+    // The post initialize step will reparse the commandline previously given
+    // and validate them against the allowed arguments
+    void post_init();
 
     // Print all possible commandline args a user can specify
     void help();
@@ -37,19 +43,22 @@ namespace rex
     rsl::optional<rsl::string_view> get_argument(rsl::string_view arg);
 
   private:
+    void load_hardcoded_arguments();
     void parse_cmd_line(rsl::string_view cmdLine);
     void add_argument(rsl::string_view arg);
     bool verify_args(const CommandLineArgument* args, count_t argCount);
     rsl::string_view find_next_full_argument(rsl::string_view cmdLine, count_t startPos);
 
   private:
-    rsl::vector<ActiveArgument> m_arguments;
+    rsl::vector<CommandLineArgument> m_allowed_arguments;
+
+    rsl::vector<ActiveArgument> m_active_arguments;
     rsl::string_view m_command_line;
   };
 
   namespace cmdline
   {
-    void init(rsl::unique_ptr<CommandLine> cmdLine);
+    void init(globals::GlobalUniquePtr<CommandLine> cmdLine);
     CommandLine* instance();
     void shutdown();
   } // namespace cmdline

@@ -68,8 +68,8 @@ namespace rex
 
 	namespace thread_pool
 	{
-		rsl::unique_ptr<ThreadPool> g_thread_pool;
-		void init(rsl::unique_ptr<ThreadPool> threadPool)
+		globals::GlobalUniquePtr<ThreadPool> g_thread_pool;
+		void init(globals::GlobalUniquePtr<ThreadPool> threadPool)
 		{
 			g_thread_pool = rsl::move(threadPool);
 		}

@@ -4,12 +4,14 @@
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/diagnostics/logging/log_macros.h"
 #include "rex_engine/engine/engine_params.h"
+#include "rex_engine/engine/module_manager.h"
 #include "rex_engine/filesystem/directory.h"
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/frameinfo/frameinfo.h"
 #include "rex_engine/memory/memory_tracking.h"
 #include "rex_engine/settings/settings.h"
+#include "rex_engine/system/process.h"
 #include "rex_std/bonus/utility.h"
 
 #include "rex_engine/diagnostics/log.h"
@@ -217,7 +219,7 @@ namespace rex
     // They can always be overridden in a project
     // but the engine loads the default settings
 
-    settings::init(rsl::make_unique<SettingsManager>());
+    settings::init(globals::make_unique<SettingsManager>());
 
     // get the default settings of the engine and load them into memory
     const rsl::vector<rsl::string> files = directory::list_files(vfs::mount_path(MountingPoint::EngineSettings));
@@ -254,13 +256,41 @@ namespace rex
     auto scratch_alloc = rsl::make_unique<TCircularAllocator<GlobalAllocator>>(bootSettings.scratch_heap_size);
     auto single_frame_alloc = rsl::make_unique<TStackAllocator<GlobalAllocator>>(bootSettings.single_frame_heap_size);
 
-    engine::init(rsl::make_unique<EngineGlobals>(rsl::move(scratch_alloc), rsl::move(single_frame_alloc)));
+    engine::init(globals::make_unique<EngineGlobals>(rsl::move(scratch_alloc), rsl::move(single_frame_alloc)));
+  }
+
+  //--------------------------------------------------------------------------------------------
+  void CoreApplication::init_cmdline()
+  {
+    scratch_string cmd_args_path;
+    
+    // Load the commandline arguments of this module
+    path::join_to(cmd_args_path, module_manager::instance()->current()->data_path(), "cmdline_args.json");
+    if (vfs::exists(cmd_args_path))
+    {
+      REX_DEBUG(LogCoreApp, "Loading commandline arguments file: {}", cmd_args_path);
+      cmdline::instance()->load_arguments_from_file(cmd_args_path, module_manager::instance()->current()->name());
+    }
+
+    // Load the commandline arguments of the dependencies
+    for (Module* dependency : module_manager::instance()->current()->dependencies())
+    {
+      cmd_args_path.clear();
+      path::join_to(cmd_args_path, dependency->data_path(), "cmdline_args.json");
+      if (vfs::exists(cmd_args_path))
+      {
+        REX_DEBUG(LogCoreApp, "Loading commandline arguments file: {}", cmd_args_path);
+        cmdline::instance()->load_arguments_from_file(cmd_args_path, dependency->name());
+      }
+    }
+
+    cmdline::instance()->post_init();
   }
 
   //--------------------------------------------------------------------------------------------
   void CoreApplication::init_thread_pool()
   {
-    thread_pool::init(rsl::make_unique<ThreadPool>());
+    thread_pool::init(globals::make_unique<ThreadPool>());
   }
 
   //--------------------------------------------------------------------------------------------
@@ -269,11 +299,17 @@ namespace rex
     REX_DEBUG(LogCoreApp, "Initializing virtual filesystem");
     vfs::init();
 
+    REX_DEBUG(LogCoreApp, "Initializing module manager");
+    module_manager::init(globals::make_unique<ModuleManager>());
+
     REX_DEBUG(LogCoreApp, "Loading boot settings");
     BootSettings boot_settings = load_boot_settings();
 
     REX_DEBUG(LogCoreApp, "Initializing engine globals");
     init_engine_globals(boot_settings);
+
+    REX_DEBUG(LogCoreApp, "Initializing commandline arguments");
+    init_cmdline();
 
     REX_DEBUG(LogCoreApp, "Initializing thread pool");
     init_thread_pool();

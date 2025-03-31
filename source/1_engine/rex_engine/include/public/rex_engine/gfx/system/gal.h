@@ -1,4 +1,5 @@
 #pragma once
+#include "rex_engine/engine/globals.h"
 
 #include "rex_engine/gfx/core/primitive_topology.h"
 #include "rex_engine/gfx/core/renderer_output_window_user_data.h"
@@ -104,7 +105,7 @@ namespace rex
 
     GALInterface* gal();
 
-		gfx::GpuEngine* init_gal(rsl::unique_ptr<GALInterface> galInterface, const OutputWindowUserData& userData);
+		gfx::GpuEngine* init_gal(globals::GlobalUniquePtr<GALInterface> galInterface, const OutputWindowUserData& userData);
 		void shutdown_gal();
   } // namespace gfx
 } // namespace rex

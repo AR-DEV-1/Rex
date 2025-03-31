@@ -4,7 +4,7 @@
 #include "rex_engine/diagnostics/debug.h"
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/engine/types.h"
-#include "rex_engine/engine/globals.h"
+#include "rex_engine/engine/engine.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/internal/exception/exit.h"
@@ -33,7 +33,7 @@ namespace rex
     void pre_app_entry(REX_MAYBE_UNUSED const char8* cmdLine)
     {
       // Initialize the commandline first as this can influence everything else
-      cmdline::init(rsl::make_unique<CommandLine>(rsl::string_view(cmdLine)));
+      cmdline::init(globals::make_unique<CommandLine>(rsl::string_view(cmdLine)));
 
       // if a user wants to know the arguments for the executable, we want to perform as minimal setup as possible.
       // we just initialize the commandline, print what's possible and exit the program

@@ -12,7 +12,7 @@
 #include "rex_engine/memory/memory_stats.h"
 #include "rex_std/bonus/time/timepoint.h"
 #include "rex_std/bonus/types.h"
-#include "rex_engine/engine/globals.h"
+#include "rex_engine/engine/engine.h"
 
 namespace rex
 {

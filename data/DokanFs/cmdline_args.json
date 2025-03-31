@@ -1,0 +1,82 @@
+[
+    {
+        "name": "MountPath",
+        "desc": "The mount point where the virtual file system gets mounted. can be a driver letter (M:\\\\) or an empty NTFS folder."
+    },
+    {
+        "name": "BlobStorePath",
+        "desc": "The path to the blob store."
+    },
+    {
+        "name": "SingleThreaded",
+        "desc": "Only use a single thread to process events. This is highly not recommended as can easily create a bottleneck."
+    },
+    {
+        "name": "DebugApp",
+        "desc": "Enable debug output to an attached debugger."
+    },
+    {
+        "name": "EnableStdErr",
+        "desc": "Enable debug output to stderr."
+    },
+    {
+        "name": "UseRemovableDrive",
+        "desc": "Show device as removable media."
+    },
+    {
+        "name": "ReadOnly",
+        "desc": "Read only filesystem."
+    },
+    {
+        "name": "EnableCaseSensitive",
+        "desc": "Supports case-sensitive file names."
+    },
+    {
+        "name": "UseMountManager",
+        "desc": "Register device to Windows mount manager. This enables advanced Windows features like recycle bin and more..."
+    },
+    {
+        "name": "EnableForCurrentSessionOnly",
+        "desc": "Device only visible for current user session."
+    },
+    {
+        "name": "ShowAsNetworkDevice",
+        "desc": "Show device as network device with a UNC name. (eg. \\\\myfs\\\\fs1)"
+    },
+    {
+        "name": "EnableCallerUser",
+        "desc": "Impersonate Caller User when getting the handle in CreateFileW for operations. This option requires administrator right to work properly."
+    },
+    {
+        "name": "AllocationUnitSize",
+        "desc": "Allocation Unit Size of the volume. This will behave on the disk file size."
+    },
+    {
+        "name": "SectorSize",
+        "desc": "Sector Size of the volume. This will behave on the disk file size."
+    },
+    {
+        "name": "EnableLockMode",
+        "desc": "Enable Lockfile/Unlockfile operations. Otherwise Dokan will take care of it."
+    },
+    {
+        "name": "Timeout",
+        "desc": "Timeout in Milliseconds. Timeout until a running operation is aborted and the device is unmounted."
+    },
+    {
+        "name": "HelpAntiVirus",
+        "desc": "Enabled FCB GCt. Might speed up on env with filter drivers (Anti-virus) slowing down the system. (Unsupported)"
+    },
+    {
+        "name": "AllowUnmount",
+        "desc": "Allows unmounting network drive from file explorer."
+    },
+    {
+        "name": "EnableDriverLogs",
+        "desc": "Forward Driver logs to userland."
+    },
+    {
+        "name": "VolumeName",
+        "desc": "Personalize the volume name."
+    }
+]
