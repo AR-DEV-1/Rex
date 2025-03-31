@@ -4,6 +4,17 @@ using Sharpmake;
 using System.Collections.Generic;
 using System.Text.Json;
 using System;
+using System.Diagnostics;
+using System.Text;
+using System.Reflection;
+
+// This class descibes a module of rex
+public class RexModule
+{
+  public string Name { get; set; }
+  public string DataPath { get; set; }
+  public List<string> Dependencies { get; set; }
+}
 
 // This file defines the base class for all different kind of projects supported for rex.
 // The BaseProject is cross-language and defines things like config name, intermediate directory, ...
@@ -145,9 +156,11 @@ public abstract class BasicCPPProject : Project
 
   // indicates if the project creates a compiler DB for itself
   protected bool ClangToolsEnabled = true;
+  // The filename of the module file that'll store module information
+  private string ModuleFileName = "module.json";
 
   // The path where you can find the text based data for this project, if there is any
-  protected string DataPath = null;
+  public string DataPath { get; protected set; }
 
   public BasicCPPProject() : base(typeof(RexTarget), typeof(RexConfiguration))
   {
@@ -651,7 +664,9 @@ public abstract class BasicCPPProject : Project
       RexTarget rexTarget = config.Target as RexTarget;
 
       GenerateClangToolProjectFile(rexConfig, rexTarget);
+      WriteModuleFile(rexConfig);
     }
+
   }
 
   // Creates the clang tools project file
@@ -797,6 +812,10 @@ public abstract class BasicCPPProject : Project
     conf.UseRelativePdbPath = false;
     conf.LinkerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{target.ProjectConfigurationName}_{target.Compiler}{conf.LinkerPdbSuffix}.pdb");
     conf.CompilerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{target.ProjectConfigurationName}_{target.Compiler}{conf.CompilerPdbSuffix}.pdb");
+    if (string.IsNullOrEmpty(DataPath))
+    {
+      DataPath = Path.Combine(Globals.DataRoot, Name);
+    }
   }
 
   // Add the include path to the configuration, if the path exists
@@ -817,6 +836,54 @@ public abstract class BasicCPPProject : Project
     {
       AdditionalSourceRootPaths.Add(DataPath);
     }
+  }
+
+  // Create the full filepath where the module info will be saved to
+  private string CreateTargetModuleFilepath(RexConfiguration conf)
+  {
+    string targetDir = Path.GetDirectoryName(conf.TargetPath);
+    return Path.Combine(targetDir, ModuleFileName);
+  }
+  // Write the module file of this project
+  private void WriteModuleFile(RexConfiguration conf)
+  {
+    string dependenciesPath = Path.Combine(conf.IntermediatePath, ModuleFileName);
+    if (!Directory.Exists(conf.IntermediatePath))
+    {
+      Directory.CreateDirectory(conf.IntermediatePath);
+    }
+
+    string targetModule = CreateTargetModuleFilepath(conf);
+    if (!Directory.Exists(Path.GetDirectoryName(targetModule)))
+    {
+      Directory.CreateDirectory(Path.GetDirectoryName(targetModule));
+    }
+
+    List<string> rexDependencies = new List<string>();
+    foreach (RexConfiguration dependency in conf.ConfigurationDependencies)
+    {
+      BasicCPPProject cppProject = dependency.Project as BasicCPPProject;
+      if (cppProject == null)
+      {
+        continue;
+      }
+
+      rexDependencies.Add(CreateTargetModuleFilepath(dependency));
+    }
+
+    RexModule module = new RexModule()
+    {
+      Name = Name,
+      DataPath = DataPath,
+      Dependencies = rexDependencies
+    };
+
+    string jsonString = JsonSerializer.Serialize(module, new JsonSerializerOptions()
+    {
+      WriteIndented = true
+    });
+    File.WriteAllText(dependenciesPath, jsonString);
+    conf.EventPostBuild.Add($"copy {dependenciesPath} {targetModule} /Y");
   }
 }
 
@@ -965,7 +1032,7 @@ public class GameProject : BasicCPPProject
     base.SetupConfigSettings(conf, target);
 
     conf.VcxprojUserFile = new Configuration.VcxprojUserFileSettings();
-    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Path.Combine(Globals.Root, "data");
+    conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Globals.DataRoot;
 
     if (!Directory.Exists(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory))
     {
@@ -974,21 +1041,7 @@ public class GameProject : BasicCPPProject
 
     if (ProjectName != "project_name")
     {
-      string projectNamePath = Path.Combine(conf.IntermediatePath, "project_name.txt");
-      if (!Directory.Exists(conf.IntermediatePath))
-      {
-        Directory.CreateDirectory(conf.IntermediatePath);
-      }
-
-      string targetDir = Path.GetDirectoryName(conf.TargetPath);
-      if (!Directory.Exists(targetDir))
-      {
-        Directory.CreateDirectory(targetDir);
-      }
-
-      File.WriteAllText(projectNamePath, ProjectName);
-      string projectNameNextToTarget = Path.Combine(targetDir, "project_name.txt");
-      conf.EventPostBuild.Add($"copy {projectNamePath} {projectNameNextToTarget} /Y");
+      WriteProjectNameFile(conf);
     }
   }
 
@@ -1000,6 +1053,25 @@ public class GameProject : BasicCPPProject
   protected void SetProjectName(string projectName)
   {
     ProjectName = projectName;
+  }
+
+  private void WriteProjectNameFile(RexConfiguration conf)
+  {
+    string projectNamePath = Path.Combine(conf.IntermediatePath, "project_name.txt");
+    if (!Directory.Exists(conf.IntermediatePath))
+    {
+      Directory.CreateDirectory(conf.IntermediatePath);
+    }
+
+    string targetDir = Path.GetDirectoryName(conf.TargetPath);
+    if (!Directory.Exists(targetDir))
+    {
+      Directory.CreateDirectory(targetDir);
+    }
+
+    File.WriteAllText(projectNamePath, ProjectName);
+    string projectNameNextToTarget = Path.Combine(targetDir, "project_name.txt");
+    conf.EventPostBuild.Add($"copy {projectNamePath} {projectNameNextToTarget} /Y");
   }
 }
 
