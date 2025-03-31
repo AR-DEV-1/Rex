@@ -345,10 +345,15 @@ namespace rex
   //--------------------------------------------------------------------------------------------
   void CoreApplication::shutdown_globals()
   {
+    REX_INFO(LogCoreApp, "Shutting down globals");
+
+    settings::shutdown();
     vfs::shutdown();
     thread_pool::shutdown();
     cmdline::shutdown();
     engine::shutdown();
+
+    globals::disable_global_destruction();
   }
 
 } // namespace rex
