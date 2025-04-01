@@ -312,6 +312,15 @@ namespace rex
     return stats;
   }
 
+  MemoryTagScope::MemoryTagScope(MemoryTag tag)
+  {
+    mem_tracker().push_tag(tag);
+  }
+  MemoryTagScope::~MemoryTagScope()
+  {
+    mem_tracker().pop_tag();
+  }
+
   MemoryTracker& mem_tracker()
   {
     static MemoryTracker tracker;

@@ -75,25 +75,21 @@ namespace rex
     s32 m_num_total_allocations;
   };
 
-  MemoryTracker& mem_tracker();
-
   class MemoryTagScope
   {
   public:
-    explicit MemoryTagScope(MemoryTag tag)
-    {
-      mem_tracker().push_tag(tag);
-    }
+    explicit MemoryTagScope(MemoryTag tag);
     MemoryTagScope(const MemoryTagScope&) = delete;
-    MemoryTagScope(MemoryTagScope&&)      = delete;
-    ~MemoryTagScope()
-    {
-      mem_tracker().pop_tag();
-    }
-
+    MemoryTagScope(MemoryTagScope&&) = delete;
+    ~MemoryTagScope();
     MemoryTagScope& operator=(const MemoryTagScope&) = delete;
-    MemoryTagScope& operator=(MemoryTagScope&&)      = delete;
+    MemoryTagScope& operator=(MemoryTagScope&&) = delete;
   };
+
+  // Memory tracker is the only thing that does not follow the global design pattern of Rex
+  // this is because it needs to be initialized before anything else
+  // as it's possible that a heap allocation happens before main
+  MemoryTracker& mem_tracker();
 
 } // namespace rex
 
