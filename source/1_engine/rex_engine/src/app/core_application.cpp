@@ -12,12 +12,13 @@
 #include "rex_engine/memory/memory_tracking.h"
 #include "rex_engine/settings/settings.h"
 #include "rex_engine/system/process.h"
+#include "rex_engine/event_system/event_system.h"
 #include "rex_std/bonus/utility.h"
 
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/profiling/scoped_timer.h"
 #include "rex_engine/cmdline/cmdline.h"
-
+#include "rex_engine/filesystem/native_filesystem.h"
 #include "rex_engine/threading/thread_pool.h"
 
 #include <cstdlib>
@@ -203,13 +204,13 @@ namespace rex
   //--------------------------------------------------------------------------------------------
   void CoreApplication::mount_engine_paths() // NOLINT(readability-convert-member-functions-to-static)
   {
-    vfs::mount(MountingPoint::EngineRoot, engine::instance()->engine_root());
+    vfs::instance()->mount(MountingPoint::EngineRoot, engine::instance()->engine_root());
 
-    vfs::mount(MountingPoint::EngineSettings, path::join(engine::instance()->engine_root(), "settings"));
-    vfs::mount(MountingPoint::EngineMaterials, path::join(engine::instance()->engine_root(), "materials"));
-    vfs::mount(MountingPoint::EngineShaders, path::join(engine::instance()->engine_root(), "shaders"));
+    vfs::instance()->mount(MountingPoint::EngineSettings, path::join(engine::instance()->engine_root(), "settings"));
+    vfs::instance()->mount(MountingPoint::EngineMaterials, path::join(engine::instance()->engine_root(), "materials"));
+    vfs::instance()->mount(MountingPoint::EngineShaders, path::join(engine::instance()->engine_root(), "shaders"));
 
-    vfs::mount(rex::MountingPoint::Logs, path::join(engine::instance()->current_session_root(), "logs"));
+    vfs::instance()->mount(rex::MountingPoint::Logs, path::join(engine::instance()->current_session_root(), "logs"));
   }
 
   //--------------------------------------------------------------------------------------------
@@ -222,7 +223,7 @@ namespace rex
     settings::init(globals::make_unique<SettingsManager>());
 
     // get the default settings of the engine and load them into memory
-    const rsl::vector<rsl::string> files = directory::list_files(vfs::mount_path(MountingPoint::EngineSettings));
+    const rsl::vector<rsl::string> files = directory::list_files(vfs::instance()->mount_path(MountingPoint::EngineSettings));
 
     for(const rsl::string_view file: files)
     {
@@ -236,8 +237,8 @@ namespace rex
   {
     BootSettings boot_settings{};
 
-    scratch_string abs_boot_ini_path = vfs::abs_path("rex/settings/boot.ini");
-    if (vfs::exists(abs_boot_ini_path))
+    scratch_string abs_boot_ini_path = vfs::instance()->abs_path("rex/settings/boot.ini");
+    if (vfs::instance()->exists(abs_boot_ini_path))
     {
       boot_settings = parse_boot_settings(abs_boot_ini_path);
     }
@@ -266,7 +267,7 @@ namespace rex
     
     // Load the commandline arguments of this module
     path::join_to(cmd_args_path, module_manager::instance()->current()->data_path(), "cmdline_args.json");
-    if (vfs::exists(cmd_args_path))
+    if (vfs::instance()->exists(cmd_args_path))
     {
       REX_DEBUG(LogCoreApp, "Loading commandline arguments file: {}", cmd_args_path);
       cmdline::instance()->load_arguments_from_file(cmd_args_path, module_manager::instance()->current()->name());
@@ -277,7 +278,7 @@ namespace rex
     {
       cmd_args_path.clear();
       path::join_to(cmd_args_path, dependency->data_path(), "cmdline_args.json");
-      if (vfs::exists(cmd_args_path))
+      if (vfs::instance()->exists(cmd_args_path))
       {
         REX_DEBUG(LogCoreApp, "Loading commandline arguments file: {}", cmd_args_path);
         cmdline::instance()->load_arguments_from_file(cmd_args_path, dependency->name());
@@ -297,7 +298,8 @@ namespace rex
   void CoreApplication::init_globals()
   {
     REX_DEBUG(LogCoreApp, "Initializing virtual filesystem");
-    vfs::init();
+    rsl::string_view root = cmdline::instance()->get_argument("root").value_or(path::cwd());
+    vfs::init(globals::make_unique<NativeFileSystem>(root));
 
     REX_DEBUG(LogCoreApp, "Initializing module manager");
     module_manager::init(globals::make_unique<ModuleManager>());
@@ -326,12 +328,15 @@ namespace rex
     // - vfs needs to be initialized
     REX_DEBUG(LogCoreApp, "Loading all settings");
     load_settings();
+
+    REX_DEBUG(LogCoreApp, "Initializing event system");
+    event_system::init(globals::make_unique<EventSystem>());
   }
 
   //--------------------------------------------------------------------------------------------
   BootSettings CoreApplication::parse_boot_settings(rsl::string_view bootSettingsPath)
   {
-    REX_ASSERT_X(vfs::exists(bootSettingsPath), "boot settings path for parsing doesn't exist. {}", bootSettingsPath);
+    REX_ASSERT_X(vfs::instance()->exists(bootSettingsPath), "boot settings path for parsing doesn't exist. {}", bootSettingsPath);
     ini::Ini boot_settings_ini = ini::read_from_file(bootSettingsPath);
 
     BootSettings boot_settings{};
@@ -347,7 +352,9 @@ namespace rex
   {
     REX_INFO(LogCoreApp, "Shutting down globals");
 
+    event_system::shutdown();
     settings::shutdown();
+    module_manager::shutdown();
     vfs::shutdown();
     thread_pool::shutdown();
     cmdline::shutdown();

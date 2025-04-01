@@ -209,7 +209,7 @@ namespace rex
 
   void MemoryTracker::dump_stats_to_file(rsl::string_view filepath)
   {
-    MemoryAllocationStats stats = current_allocation_stats();
+    MemoryTrackingStats stats = current_allocation_stats();
 
     debug_string_stream ss(rsl::io::openmode::in | rsl::io::openmode::out);
 
@@ -253,13 +253,13 @@ namespace rex
     rsl::replace(dated_filepath.begin(), dated_filepath.end(), ':', '_');
     rsl::replace(dated_filepath.begin(), dated_filepath.end(), '/', '_');
 
-    vfs::write_to_file(MountingPoint::Logs, dated_filepath, content.data(), content.length(), vfs::AppendToFile::no);
+    vfs::instance()->write_to_file(MountingPoint::Logs, dated_filepath, content.data(), content.length(), rex::AppendToFile::no);
   }
 
-  MemoryTrackingStats MemoryTracker::current_tracking_stats()
+  MemoryAllocationStats MemoryTracker::current_tracking_stats()
   {
     const rsl::unique_lock lock(m_mem_tracking_mutex);
-    MemoryTrackingStats stats{};
+    MemoryAllocationStats stats{};
     stats.usage_per_tag = m_usage_per_tag;
     stats.used_memory = m_mem_usage.value();
     stats.max_used_memory = m_mem_usage.max_value();
@@ -269,31 +269,31 @@ namespace rex
     return stats;
   }
 
-  MemoryAllocationStats MemoryTracker::current_allocation_stats()
+  MemoryTrackingStats MemoryTracker::current_allocation_stats()
   {
-    MemoryAllocationStats stats {};
+    MemoryTrackingStats stats {};
     stats.tracking_stats = current_tracking_stats();
     stats.allocation_headers = allocation_headers();
     return stats;
   }
 
-  MemoryAllocationStats MemoryTracker::get_pre_init_stats()
+  MemoryTrackingStats MemoryTracker::get_pre_init_stats()
   {
     return get_stats_for_frame(-1); // allocations that happen before initialization have -1 as frame index
   }
 
-  MemoryAllocationStats MemoryTracker::get_init_stats()
+  MemoryTrackingStats MemoryTracker::get_init_stats()
   {
     return get_stats_for_frame(0); // allocations that happen at initialization have 0 as frame index
   }
 
-  MemoryAllocationStats MemoryTracker::get_stats_for_frame(card32 idx)
+  MemoryTrackingStats MemoryTracker::get_stats_for_frame(card32 idx)
   {
     rsl::unique_lock lock(m_mem_tracking_mutex);
     const debug_vector<MemoryHeader*> alloc_headers = allocation_headers(); // copy here on purpose as we don't want any race conditions when looping over it
     lock.unlock();
 
-    MemoryAllocationStats stats {};
+    MemoryTrackingStats stats {};
     stats.allocation_headers.reserve(alloc_headers.size());
 
     for(MemoryHeader* header: alloc_headers)

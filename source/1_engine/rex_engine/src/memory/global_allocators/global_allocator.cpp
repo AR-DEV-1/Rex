@@ -22,6 +22,13 @@ namespace rex
 		{
 #ifdef REX_ENABLE_MEM_TRACKING
       static UntrackedAllocator untracked_alloc{};
+      
+      // Use the untracked allocator to create the memory tracker
+      // it's the only memory 
+      mem_tracker(); // simply touch it so that the local static gets initialized
+
+      //memory_tracker::init();
+
       static TrackedAllocator alloc(untracked_alloc);
 #else
       static UntrackedAllocator alloc{};
@@ -39,6 +46,8 @@ namespace rex
 
     bool create_minimal_global_allocators(GlobalAllocator& globalAlloc)
     {
+      // if the engine globals are already initialized
+      // we don't have to create a minimal global set
       if (engine::instance() != nullptr)
       {
         return false;

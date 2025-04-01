@@ -67,7 +67,7 @@ namespace rex
 			REX_DEBUG(LogMaterialSystem, "Loading material {}", quoted(filepath));
 
 			// Try to load the material content from disk
-			if (!vfs::is_file(filepath))
+			if (!vfs::instance()->exists(filepath))
 			{
 				REX_ERROR(LogMaterialSystem, "Cannot load material as it doesn't exists: {}", quoted(filepath));
 				return nullptr;
@@ -75,7 +75,7 @@ namespace rex
 
 			// Extract its content so that it's processable
 			// Materials are saved in json format, so we use a json parser
-			rex::memory::Blob file_content = vfs::read_file(filepath);
+			rex::memory::Blob file_content = vfs::instance()->read_file(filepath);
 			auto json_blob = rex::json::parse(file_content);
 			
 			// If the json blob is discarded, that means an error occurred during json parsing

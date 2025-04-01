@@ -158,7 +158,7 @@ namespace pokemon
 
 	void GameSession::init_input()
 	{
-		rex::event_system().subscribe<rex::KeyDown>(
+		rex::event_system::instance()->subscribe<rex::KeyDown>(
 			[this](const rex::KeyDown& ev)
 			{
 				switch (ev.key())

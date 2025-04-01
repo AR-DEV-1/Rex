@@ -6,7 +6,7 @@
 
 TEST_CASE("TEST - Memory Tracking - Single Memory Tag Allocation")
 {
-	rex::MemoryTrackingStats stats = rex::mem_tracker().current_tracking_stats();
+	rex::MemoryAllocationStats stats = rex::mem_tracker().current_tracking_stats();
 	s64 current_global_mem_usage = stats.usage_per_tag[rex::to_int(rex::MemoryTag::Global)].value();
 	s32 debug_allocation_overhead = 0;
 #ifdef REX_ENABLE_MEM_TRACKING
@@ -30,7 +30,7 @@ TEST_CASE("TEST - Memory Tracking - Single Memory Tag Allocation")
 
 TEST_CASE("TEST - Memory Tracking - Multiple Memory Tag Allocation")
 {
-	rex::MemoryTrackingStats stats = rex::mem_tracker().current_tracking_stats();
+	rex::MemoryAllocationStats stats = rex::mem_tracker().current_tracking_stats();
 	s64 current_global_mem_usage = stats.usage_per_tag[rex::to_int(rex::MemoryTag::Global)].value();
 	s64 current_engine_mem_usage = stats.usage_per_tag[rex::to_int(rex::MemoryTag::Engine)].value();
 	s32 debug_allocation_overhead = 0;

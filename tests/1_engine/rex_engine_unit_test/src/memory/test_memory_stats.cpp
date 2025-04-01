@@ -28,7 +28,7 @@ TEST_CASE("TEST - Memoy Stats - Process Stats")
 
 TEST_CASE("TEST - Memory Stats - Memory Tracking Stats")
 {
-	rex::MemoryTrackingStats stats1 = rex::query_mem_tracking_stats();
+	rex::MemoryAllocationStats stats1 = rex::query_mem_tracking_stats();
 
 	REX_CHECK(stats1.max_used_memory > 0);
 	REX_CHECK(stats1.max_used_memory >= stats1.used_memory);
@@ -42,7 +42,7 @@ TEST_CASE("TEST - Memory Stats - Memory Tracking Stats")
 	REX_CHECK(stats1.usage_per_tag[rsl::enum_refl::enum_index(rex::MemoryTag::FileIO).value()].value() == 0);
 
 	// Stack allocation of a single int, should not affect tracked memory allocation
-	rex::MemoryTrackingStats stats2 = rex::query_mem_tracking_stats();
+	rex::MemoryAllocationStats stats2 = rex::query_mem_tracking_stats();
 
 	REX_CHECK(stats2.max_used_memory == stats1.max_used_memory);
 	REX_CHECK(stats2.used_memory == stats1.used_memory);
@@ -59,7 +59,7 @@ TEST_CASE("TEST - Memory Stats - Memory Tracking Stats")
 #ifdef REX_ENABLE_MEM_TRACKING
 	debug_allocation_overhead += sizeof(rex::InlineMemoryHeader);
 #endif
-	rex::MemoryTrackingStats stats3 = rex::query_mem_tracking_stats();
+	rex::MemoryAllocationStats stats3 = rex::query_mem_tracking_stats();
 	REX_CHECK(stats3.max_used_memory >= stats1.max_used_memory);
 	// Tracking memory also costs memory, so we can't guarantee that a single allocation results in X memory added
 	// However, we can guarantee that it'll be bigger
@@ -73,7 +73,7 @@ TEST_CASE("TEST - Memory Stats - Memory Tracking Stats")
 	delete y;
 
 	// After the deallocation, the memory should come back
-	rex::MemoryTrackingStats stats4 = rex::query_mem_tracking_stats();
+	rex::MemoryAllocationStats stats4 = rex::query_mem_tracking_stats();
 	REX_CHECK(stats4.max_used_memory >= stats1.max_used_memory);
 	REX_CHECK(stats4.used_memory == stats1.used_memory);
 	REX_CHECK(stats4.num_alive_allocations == stats1.num_alive_allocations);

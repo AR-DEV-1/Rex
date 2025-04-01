@@ -29,7 +29,7 @@ namespace rex
 
 	Module* ModuleManager::init_module(rsl::string_view modulePath)
 	{
-		if (!vfs::exists(modulePath))
+		if (!vfs::instance()->exists(modulePath))
 		{
 			return nullptr;
 		}

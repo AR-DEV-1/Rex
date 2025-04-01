@@ -15,14 +15,14 @@ namespace pokemon
 		: m_entity(entity)
 		, m_pos(pos)
 	{
-		//rsl::string background_path = rex::path::join(rex::vfs::project_root(), background);
+		//rsl::string background_path = rex::path::join(rex::vfs::instance()->project_root(), background);
 		////asset_manager::load
 		////m_material = rsl::make_unique<ChunkMaterial>(background_path);
 
 		////auto quad = rex::gfx::mesh_factory::create_quad(width, height);
 		////m_entity.add_component<rex::gfx::StaticMeshComponent>(rsl::move(quad)).set_material(m_material.get());
 
-		//m_material = rex::gfx::load_material(rex::vfs::abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
+		//m_material = rex::gfx::load_material(rex::vfs::instance()->abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
 		//s32 x, y, channels;
 		//stbi_uc* data = stbi_load(background_path.data(), &x, &y, &channels, 0);
 		//rex::gfx::TextureFormat format = rex::gfx::TextureFormat::Unorm3;

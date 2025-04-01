@@ -29,7 +29,7 @@ namespace rex
 					// Check if the path exists first. Yes it's possible a shader with the same name exists
 					// but to be on the extra safe side, check if the path is correct. Naming of a shader will likely
 					// not be path based in the future
-					if (!vfs::is_file(path))
+					if (!vfs::instance()->exists(path))
 					{
 						REX_ERROR(LogShaderLib, "Failed to load shader at {} as the path does not exist", quoted(path));
 						return nullptr;
@@ -45,7 +45,7 @@ namespace rex
 					}
 
 					// If shader is not cached yet, load it and cache it
-					rex::memory::Blob content = vfs::read_file(path);
+					rex::memory::Blob content = vfs::instance()->read_file(path);
 					rsl::unique_ptr<Shader> new_shader;
 					switch (type)
 					{

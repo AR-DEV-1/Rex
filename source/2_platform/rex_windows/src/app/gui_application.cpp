@@ -292,13 +292,13 @@ namespace rex
       }
       void subscribe_window_events()
       {
-        event_system().subscribe<WindowClose>([this](const WindowClose& /*evt*/) { event_system().fire_event(QuitApp("Window closed")); });
-        event_system().subscribe<WindowActivated>( [this](const WindowActivated& /*evt*/) { m_app_instance->resume(); });
-        event_system().subscribe<WindowDeactivated>( [this](const WindowDeactivated& /*evt*/) { m_app_instance->pause(); });
-        event_system().subscribe<WindowStartResize>( [this](const WindowStartResize& /*evt*/) { on_start_resize(); });
-        event_system().subscribe<WindowEndResize>( [this](const WindowEndResize& /*evt*/) { on_stop_resize(); });
-        event_system().subscribe<QuitApp>( [this](const QuitApp& evt) { m_app_instance->quit(evt.reason(), evt.exit_code()); });
-        event_system().subscribe<WindowResize>( [this](const WindowResize& evt) 
+        event_system::instance()->subscribe<WindowClose>([this](const WindowClose& /*evt*/) { event_system::instance()->fire_event(QuitApp("Window closed")); });
+        event_system::instance()->subscribe<WindowActivated>( [this](const WindowActivated& /*evt*/) { m_app_instance->resume(); });
+        event_system::instance()->subscribe<WindowDeactivated>( [this](const WindowDeactivated& /*evt*/) { m_app_instance->pause(); });
+        event_system::instance()->subscribe<WindowStartResize>( [this](const WindowStartResize& /*evt*/) { on_start_resize(); });
+        event_system::instance()->subscribe<WindowEndResize>( [this](const WindowEndResize& /*evt*/) { on_stop_resize(); });
+        event_system::instance()->subscribe<QuitApp>( [this](const QuitApp& evt) { m_app_instance->quit(evt.reason(), evt.exit_code()); });
+        event_system::instance()->subscribe<WindowResize>( [this](const WindowResize& evt) 
           { 
             switch (evt.resize_type())
             {
@@ -352,7 +352,7 @@ namespace rex
         m_window->update();
 
         // Dispatch the events that got queued last frame
-        event_system().dispatch_queued_events();
+        event_system::instance()->dispatch_queued_events();
       }
       void post_user_update()
       {

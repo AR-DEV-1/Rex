@@ -9,7 +9,7 @@ TEST_CASE("TEST - Events - Window Resize Event")
   s32 width = 0;
   s32 height = 0;
   rex::WindowResizeType resize_type = rex::WindowResizeType::Invalid;
-  auto subscription = rex::event_system().subscribe<rex::WindowResize>([&num_quit_events_fired, &width, &height, &resize_type](const rex::WindowResize& evt)
+  auto subscription = rex::event_system::instance()->subscribe<rex::WindowResize>([&num_quit_events_fired, &width, &height, &resize_type](const rex::WindowResize& evt)
     {
       ++num_quit_events_fired;
       REX_CHECK(evt.width() == width);
@@ -21,16 +21,16 @@ TEST_CASE("TEST - Events - Window Resize Event")
   width = 10;
   height = 20;
   resize_type = rex::WindowResizeType::Maximized;
-  rex::event_system().fire_event(rex::WindowResize(width, height, resize_type));
+  rex::event_system::instance()->fire_event(rex::WindowResize(width, height, resize_type));
   REX_CHECK(num_quit_events_fired == 1);
 
   // Queued event fire
   width = 10;
   height = 20;
   resize_type = rex::WindowResizeType::Maximized;
-  rex::event_system().enqueue_event(rex::WindowResize(width, height, resize_type));
+  rex::event_system::instance()->enqueue_event(rex::WindowResize(width, height, resize_type));
   REX_CHECK(num_quit_events_fired == 1);
 
-  rex::event_system().dispatch_queued_events();
+  rex::event_system::instance()->dispatch_queued_events();
   REX_CHECK(num_quit_events_fired == 2);
 }

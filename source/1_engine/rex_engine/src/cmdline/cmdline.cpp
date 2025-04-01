@@ -63,7 +63,7 @@ namespace rex
 
   void CommandLine::load_arguments_from_file(rsl::string_view file, rsl::string_view moduleName)
   {
-    memory::Blob file_blob = vfs::read_file(file);
+    memory::Blob file_blob = vfs::instance()->read_file(file);
     rex::json::json cmdline_args = json::parse(file_blob);
 
     for (const auto& args : cmdline_args)

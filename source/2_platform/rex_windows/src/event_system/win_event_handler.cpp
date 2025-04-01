@@ -295,26 +295,26 @@ namespace rex
         case WM_CLOSE: REX_WARN(LogWindows, "Verify if the user really wants to close"); break;
         case WM_DESTROY:
           PostQuitMessage(0);
-          event_system().enqueue_event(rex::WindowClose());
+          event_system::instance()->enqueue_event(rex::WindowClose());
           return 0;
 
         case WM_ACTIVATE:
           if(LOWORD(wparam) == WA_INACTIVE)
           {
-            event_system().enqueue_event(rex::WindowDeactivated());
+            event_system::instance()->enqueue_event(rex::WindowDeactivated());
           }
           else
           {
-            event_system().enqueue_event(rex::WindowActivated());
+            event_system::instance()->enqueue_event(rex::WindowActivated());
           }
           return 0;
 
         case WM_ENTERSIZEMOVE:
-          event_system().enqueue_event(rex::WindowStartResize());
+          event_system::instance()->enqueue_event(rex::WindowStartResize());
           return 0;
 
         case WM_EXITSIZEMOVE:
-          event_system().enqueue_event(rex::WindowEndResize());
+          event_system::instance()->enqueue_event(rex::WindowEndResize());
           return 0;
 
         case WM_MENUCHAR:
@@ -348,18 +348,18 @@ namespace rex
           {
             resize_type = WindowResizeType::Restored;
           }
-          event_system().enqueue_event(WindowResize(width, height, resize_type));
+          event_system::instance()->enqueue_event(WindowResize(width, height, resize_type));
           return 0;
         }
         case WM_CHAR:
-          event_system().enqueue_event(CharDown((char8)wparam));
+          event_system::instance()->enqueue_event(CharDown((char8)wparam));
           break;
 
         case WM_KEYDOWN: 
-          event_system().enqueue_event(KeyDown(internal::keycode_from_vk(wparam, lparam)));
+          event_system::instance()->enqueue_event(KeyDown(internal::keycode_from_vk(wparam, lparam)));
           break;
         case WM_KEYUP:
-          event_system().enqueue_event(KeyUp(internal::keycode_from_vk(wparam, lparam)));
+          event_system::instance()->enqueue_event(KeyUp(internal::keycode_from_vk(wparam, lparam)));
           break;
         default:
           // Nothing to implement

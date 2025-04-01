@@ -677,21 +677,21 @@ namespace proj_fs
   {
     if (rex::directory::exists(m_root))
     {
-      rex::vfs::set_root(m_root);
+      rex::vfs::instance()->set_root(m_root);
       return true;
     }
 
-    if (!rex::vfs::create_dir(m_root))
+    if (!rex::vfs::instance()->create_dir(m_root))
     {
       return false;
     }
 
-    rex::vfs::set_root(m_root);
+    rex::vfs::instance()->set_root(m_root);
 
     GUID instance_id;
     CoCreateGuid(&instance_id);
 
-    if (!rex::vfs::write_to_file("virt_root.txt", &instance_id, sizeof(instance_id), rex::vfs::AppendToFile::no))
+    if (!rex::vfs::instance()->write_to_file("virt_root.txt", &instance_id, sizeof(instance_id), rex::vfs::instance()->AppendToFile::no))
     {
       return false;
     }

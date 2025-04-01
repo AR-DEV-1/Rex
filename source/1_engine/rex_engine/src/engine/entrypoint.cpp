@@ -25,7 +25,6 @@ namespace rex
       // This is useful to have in the log file to make sure that correct sanitization is enabled when testing
       log_sanitization();
 
-      REX_INFO(LogEngine, "Vfs Root: {}", rex::vfs::root());
       REX_INFO(LogEngine, "Session Directory: {}", rex::engine::instance()->current_session_root());
       REX_INFO(LogEngine, "Log Path: {}", rex::project_log_path());
     }

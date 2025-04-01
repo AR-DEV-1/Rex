@@ -28,7 +28,7 @@ namespace pokemon
 		{
 			if (!g_map_blocks.contains(mapHeader.map_blocks_filepath))
 			{
-				rex::memory::Blob file_content = rex::vfs::read_file(mapHeader.map_blocks_filepath);
+				rex::memory::Blob file_content = rex::vfs::instance()->read_file(mapHeader.map_blocks_filepath);
 				return g_map_blocks.emplace(mapHeader.map_blocks_filepath, rsl::unique_array<u8>(file_content.release_as_array<u8>())).inserted_element->value;
 			}
 
@@ -45,7 +45,7 @@ namespace pokemon
 				// We need to load it fully now
 				if (!map_data->fully_loaded)
 				{
-					rex::memory::Blob file_content = rex::vfs::read_file(mapPath);
+					rex::memory::Blob file_content = rex::vfs::instance()->read_file(mapPath);
 					rex::json::json json_blob = rex::json::parse(file_content);
 					load_map_data(map_data.get(), json_blob);
 				}
@@ -83,7 +83,7 @@ namespace pokemon
 		{
 			MapHeader map_header{};
 
-			rex::memory::Blob file_content = rex::vfs::read_file(mapPath);
+			rex::memory::Blob file_content = rex::vfs::instance()->read_file(mapPath);
 			rex::json::json json_blob = rex::json::parse(file_content);
 
 			return load_map_header(json_blob);
@@ -134,7 +134,7 @@ namespace pokemon
 		}
 		rsl::unique_ptr<MapData> load_map_header_only(rsl::string_view mapPath)
 		{
-			rex::memory::Blob file_content = rex::vfs::read_file(mapPath);
+			rex::memory::Blob file_content = rex::vfs::instance()->read_file(mapPath);
 			rex::json::json json_blob = rex::json::parse(file_content);
 
 			REX_ASSERT_X(!json_blob.is_discarded(), "Invalid map json file. {}", rex::quoted(mapPath))

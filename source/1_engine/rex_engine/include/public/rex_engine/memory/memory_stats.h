@@ -53,7 +53,7 @@ namespace rex
   };
 
   // Memory stats coming from the engine's internal tracking system
-  struct MemoryTrackingStats
+  struct MemoryAllocationStats
   {
     // The total used memory
     rsl::memory_size used_memory;
@@ -74,12 +74,12 @@ namespace rex
 
   struct MemoryStats
   {
-    MemoryTrackingStats mem_tracking_stats;
+    MemoryAllocationStats mem_tracking_stats;
     SystemMemoryStats system_mem_stats;
     ProcessMemoryStats process_mem_stats;
   };
 
-  MemoryTrackingStats query_mem_tracking_stats();
+  MemoryAllocationStats query_mem_tracking_stats();
   SystemMemoryStats   query_system_mem_stats();
   ProcessMemoryStats  query_process_mem_stats();
   MemoryStats         query_all_memory_stats();

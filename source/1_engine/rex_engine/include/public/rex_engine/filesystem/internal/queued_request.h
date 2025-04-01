@@ -9,31 +9,28 @@
 
 namespace rex
 {
-	namespace vfs
+	class ReadRequest;
+
+	class QueuedRequest
 	{
-    class ReadRequest;
+	public:
+		explicit QueuedRequest(rsl::string_view filepath);
 
-    class QueuedRequest
-    {
-    public:
-      explicit QueuedRequest(rsl::string_view filepath);
+		void add_request_to_signal(ReadRequest* request);
+		void remove_request_to_signal(ReadRequest* request);
+		void swap_request_to_signal(ReadRequest* original, ReadRequest* newRequest);
 
-      void add_request_to_signal(ReadRequest* request);
-      void remove_request_to_signal(ReadRequest* request);
-      void swap_request_to_signal(ReadRequest* original, ReadRequest* newRequest);
+		void signal_requests(const rsl::byte* buffer, rsl::memory_size size);
 
-      void signal_requests(const rsl::byte* buffer, rsl::memory_size size);
+		bool all_requests_finished() const;
 
-      bool all_requests_finished() const;
+		rsl::string_view filepath() const;
 
-      rsl::string_view filepath() const;
+	private:
+		rsl::medium_stack_string m_filepath;
+		rsl::vector<ReadRequest*> m_requests;
+		rsl::mutex m_requests_access_mtx;
+		rsl::atomic<bool> m_is_done;
+	};
 
-    private:
-      rsl::medium_stack_string m_filepath;
-      rsl::vector<ReadRequest*> m_requests;
-      rsl::mutex m_requests_access_mtx;
-      rsl::atomic<bool> m_is_done;
-    };
-
-	}
 }

@@ -23,7 +23,7 @@ namespace regina
 		//ImGuiIO& io = ImGui::GetIO();
 		//if (!rex::file::exists(rsl::string_view(io.IniFilename)))
 		//{
-			rex::scratch_string main_layout_settings = rex::path::join(rex::vfs::root(), "Regina", "main_editor_layout.ini");
+			rex::scratch_string main_layout_settings = rex::path::join(rex::vfs::instance()->root(), "Regina", "main_editor_layout.ini");
 			ImGui::LoadIniSettingsFromDisk(main_layout_settings.data());
 		//}
 
@@ -58,7 +58,7 @@ namespace regina
 			{
 				if (ImGui::MenuItem("Quit"))
 				{
-					rex::event_system().enqueue_event(rex::QuitApp("Quit Pressed In Menu"));
+					rex::event_system::instance()->enqueue_event(rex::QuitApp("Quit Pressed In Menu"));
 				}
 				if (ImGui::MenuItem("Show ImGui Demo", false, &m_show_imgui_demo))
 				{

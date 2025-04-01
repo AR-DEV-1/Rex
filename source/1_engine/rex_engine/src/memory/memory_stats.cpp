@@ -8,7 +8,7 @@ namespace rex
 {
   DEFINE_LOG_CATEGORY(LogMemoryStats);
 
-  MemoryTrackingStats query_mem_tracking_stats()
+  MemoryAllocationStats query_mem_tracking_stats()
   {
     return mem_tracker().current_tracking_stats();
   }

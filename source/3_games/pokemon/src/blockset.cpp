@@ -36,7 +36,7 @@ namespace pokemon
 
 	rsl::unique_ptr<BlockSet> load_blockset(rsl::string_view filepath)
 	{
-    if (!rex::vfs::is_file(filepath))
+    if (!rex::vfs::instance()->exists(filepath))
     {
       REX_ERROR(LogBlockSet, "Failed to load blockset. Filepath doesn't exist. filepath: {}", filepath);
       return nullptr;
@@ -44,7 +44,7 @@ namespace pokemon
 
     s64 file_size = rex::file::size(filepath);
     s64 num_blocks = file_size / Block::num_tiles();
-    rex::memory::Blob file_blob = rex::vfs::read_file(filepath);
+    rex::memory::Blob file_blob = rex::vfs::instance()->read_file(filepath);
     rex::memory::BlobReader reader(file_blob);
 		Block::indices_array blob_memory;
     rsl::unique_array<Block> blocks = rsl::make_unique<Block[]>(static_cast<s32>(num_blocks));

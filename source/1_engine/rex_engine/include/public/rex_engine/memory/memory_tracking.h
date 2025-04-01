@@ -20,14 +20,14 @@
 namespace rex
 {
   class MemoryHeader;
-  struct MemoryTrackingStats;
   struct MemoryAllocationStats;
+  struct MemoryTrackingStats;
 
   // Memory stats with information about each tracked allocation 
   // Useful for debugging individual allocations after the fact and track down leaks
-  struct MemoryAllocationStats
+  struct MemoryTrackingStats
   {
-    MemoryTrackingStats tracking_stats;
+    MemoryAllocationStats tracking_stats;
 
     // A list of all allocation headers. Good for memory allocation debugging
     debug_vector<MemoryHeader*> allocation_headers;
@@ -58,12 +58,12 @@ namespace rex
 
     void dump_stats_to_file(rsl::string_view filepath);
 
-    REX_NO_DISCARD MemoryTrackingStats current_tracking_stats();
-    REX_NO_DISCARD MemoryAllocationStats current_allocation_stats();      // deliberate copy as we don't want to have any race conditions when accessing
-    REX_NO_DISCARD MemoryAllocationStats get_pre_init_stats(); // deliberate copy as we don't want to have any race conditions when accessing
-    REX_NO_DISCARD MemoryAllocationStats get_init_stats();     // deliberate copy as we don't want to have any race conditions when accessing
+    REX_NO_DISCARD MemoryAllocationStats current_tracking_stats();
+    REX_NO_DISCARD MemoryTrackingStats current_allocation_stats();      // deliberate copy as we don't want to have any race conditions when accessing
+    REX_NO_DISCARD MemoryTrackingStats get_pre_init_stats(); // deliberate copy as we don't want to have any race conditions when accessing
+    REX_NO_DISCARD MemoryTrackingStats get_init_stats();     // deliberate copy as we don't want to have any race conditions when accessing
 
-    REX_NO_DISCARD MemoryAllocationStats get_stats_for_frame(card32 idx);
+    REX_NO_DISCARD MemoryTrackingStats get_stats_for_frame(card32 idx);
 
   private:
     rsl::high_water_mark<s64> m_mem_usage; // current memory usage

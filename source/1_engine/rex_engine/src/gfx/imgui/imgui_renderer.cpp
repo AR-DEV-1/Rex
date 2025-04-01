@@ -281,8 +281,8 @@ namespace rex
       // frame buffers
       imgui_pass_desc.framebuffer_desc.emplace_back(swapchain_frame_buffer_handle());
 
-      imgui_pass_desc.pso_desc.shader_pipeline.vs = shader_lib::load(path::join(vfs::mount_path(MountingPoint::EngineShaders), "imgui", "hlsl", "imgui_vertex.hlsl"), ShaderType::Vertex);
-      imgui_pass_desc.pso_desc.shader_pipeline.ps = shader_lib::load(path::join(vfs::mount_path(MountingPoint::EngineShaders), "imgui", "hlsl", "imgui_pixel.hlsl"), ShaderType::Pixel);
+      imgui_pass_desc.pso_desc.shader_pipeline.vs = shader_lib::load(path::join(vfs::instance()->mount_path(MountingPoint::EngineShaders), "imgui", "hlsl", "imgui_vertex.hlsl"), ShaderType::Vertex);
+      imgui_pass_desc.pso_desc.shader_pipeline.ps = shader_lib::load(path::join(vfs::instance()->mount_path(MountingPoint::EngineShaders), "imgui", "hlsl", "imgui_pixel.hlsl"), ShaderType::Pixel);
 
       imgui_pass_desc.pso_desc.input_layout = 
       {

@@ -9,8 +9,9 @@
 
 namespace rex
 {
-	scratch_string project_log_path()
+	rsl::stack_string<char8, 256> project_log_path()
 	{
-		return path::join(engine::instance()->current_session_root(), "logs", rsl::format("{}.log", engine::instance()->project_name()));
+		static rsl::stack_string<char8, 256> res = path::join(engine::instance()->current_session_root(), "logs", rsl::format("{}.log", engine::instance()->project_name()));
+		return res;
 	}
 }
