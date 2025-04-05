@@ -29,7 +29,6 @@ public class Globals
 {
   static readonly private string folder_in_root = "_build";
   static private string root;
-  static private string data_root;
   static private string source_root;
   static private string thirdparty_root;
   static private string sharpmake_root;
