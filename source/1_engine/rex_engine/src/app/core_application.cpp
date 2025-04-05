@@ -16,7 +16,8 @@
 #include "rex_std/bonus/utility.h"
 
 #include "rex_engine/diagnostics/log.h"
-#include "rex_engine/profiling/scoped_timer.h"
+#include "rex_engine/profiling/timer.h"
+#include "rex_engine/profiling/profiling_session.h"
 #include "rex_engine/cmdline/cmdline.h"
 #include "rex_engine/filesystem/native_filesystem.h"
 #include "rex_engine/threading/thread_pool.h"
@@ -169,8 +170,6 @@ namespace rex
     REX_INFO(LogCoreApp, "Shutting down application..");
 
     platform_shutdown();
-
-    end_profiling_session();
 
     REX_INFO(LogEngine, "Application shutdown with result: {0}", m_exit_code);
 
@@ -331,6 +330,9 @@ namespace rex
 
     REX_DEBUG(LogCoreApp, "Initializing event system");
     event_system::init(globals::make_unique<EventSystem>());
+
+    REX_DEBUG(LogCoreApp, "Initializing profiling system");
+    profiling_session::init(globals::make_unique<ProfilingSession>());
   }
 
   //--------------------------------------------------------------------------------------------
@@ -352,6 +354,7 @@ namespace rex
   {
     REX_INFO(LogCoreApp, "Shutting down globals");
 
+    profiling_session::shutdown();
     event_system::shutdown();
     settings::shutdown();
     module_manager::shutdown();

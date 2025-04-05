@@ -7,7 +7,7 @@
 #include "rex_engine/filesystem/file.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/system/open_file.h"
-#include "rex_engine/profiling/scoped_timer.h"
+#include "rex_engine/profiling/profiling_session.h"
 
 #include "rex_std/algorithm.h"
 #include "rex_std/functional.h"

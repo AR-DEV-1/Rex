@@ -2,6 +2,7 @@
 
 #include "rex_engine/diagnostics/logging/log_macros.h"
 #include "rex_engine/engine/types.h"
+#include "rex_engine/profiling/timer.h"
 #include "rex_engine/platform/win/crash_reporter/win_crash_handler.h"
 #include "rex_std/bonus/utility.h"
 #include "rex_std/iostream.h"
@@ -17,6 +18,11 @@
 //-------------------------------------------------------------------------
 int rex_win_entry(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPCSTR lpCmdLine, int nShowCmd)
 {
+  // This timer track how long early initialization takes
+  // Early initialization is all initialization that takes place
+  // before the app is spawned
+  rex::Timer early_init_timer("Early init timer");
+
   // some systems need to be set up even before we get into the app entry function
   // commandline, logging and the vfs need to get set up before hand so the user has 
   // access to these system when they're setting up their app
@@ -41,6 +47,7 @@ int rex_win_entry(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPCSTR lpCmdLine
   __try
   {
     rex::ApplicationCreationParams app_params = rex::app_entry(creation_params);
+    REX_INFO(LogWindows, "Early initializaion took {} ns", early_init_timer.elapsed_time().count());
 
     if(app_params.is_gui_app)
     {
