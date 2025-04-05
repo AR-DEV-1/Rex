@@ -159,9 +159,6 @@ namespace rex
   {
     engine::instance()->advance_frame();
 
-    REX_INFO(LogCoreApp, "FPS: {}", engine::instance()->frame_info().fps().get());
-    REX_INFO(LogCoreApp, "Delta time: {}", engine::instance()->frame_info().delta_time().to_seconds());
-
     platform_update();
   }
   //--------------------------------------------------------------------------------------------

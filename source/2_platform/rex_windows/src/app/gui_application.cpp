@@ -5,6 +5,8 @@
 #include "rex_engine/diagnostics/logging/log_macros.h"
 #include "rex_engine/event_system/event.h" // IWYU pragma: keep
 #include "rex_engine/event_system/event_system.h"
+#include "rex_engine/engine/engine.h"
+#include "rex_engine/system/process.h"
 #include "rex_engine/frameinfo/deltatime.h"
 #include "rex_engine/frameinfo/fps.h"
 #include "rex_engine/memory/global_allocators/global_allocator.h"
@@ -103,6 +105,10 @@ namespace rex
       void update()
       {
         REX_ASSERT_CONTEXT_SCOPE("Application update");
+
+        auto fps = engine::instance()->frame_info().fps().get();
+        auto dt = engine::instance()->frame_info().delta_time().to_seconds();
+        m_window->set_name(rsl::format("{} | PID: {} FPS: {} Delta Time: {:.4f}", create_window_title(), current_process::id(), fps, dt));
 
         pre_user_update();
 
@@ -275,14 +281,18 @@ namespace rex
 
         return true;
       }
+      rsl::small_stack_string create_window_title() const
+      {
+        return m_app_creation_params.gui_params.window_title.empty()
+          ? m_app_instance->app_name()
+          : m_app_creation_params.gui_params.window_title;
+      }
       rsl::unique_ptr<Window> create_window()
       {
         auto wnd = rsl::make_unique<Window>();
 
         WindowInfo window_info;
-        window_info.title    = m_app_creation_params.gui_params.window_title.empty() 
-          ? m_app_instance->app_name()
-          : m_app_creation_params.gui_params.window_title;
+        window_info.title = create_window_title();
         window_info.viewport = {0, 0, m_app_creation_params.gui_params.window_width, m_app_creation_params.gui_params.window_height};
 
         if(wnd->create(m_app_creation_params.platform_params->instance, m_app_creation_params.platform_params->show_cmd, window_info))
