@@ -24,7 +24,7 @@ public class RexUnitTest : TestProject
     // as we need to do a minimal engine initialization for a few things
     // (eg. the global allocators)
     string rexEngineSourceRoot = Path.Combine(Globals.Root, "source", "1_engine", "rex_engine");
-    conf.IncludePrivatePaths.Add($@"{rexEngineSourceRoot}\include\private");
+    AddPrivateIncludeIfExists(conf, ($@"{rexEngineSourceRoot}\include\private"));
   }
 
   protected override void SetupConfigSettings(RexConfiguration conf, RexTarget target)
