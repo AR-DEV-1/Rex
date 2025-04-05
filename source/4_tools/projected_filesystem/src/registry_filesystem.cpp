@@ -5,6 +5,7 @@
 #include "rex_engine/diagnostics/logging/log_macros.h"
 
 #include "rex_engine/filesystem/vfs.h"
+#include "rex_engine/filesystem/native_filesystem.h"
 #include "rex_engine/filesystem/file.h"
 #include "rex_engine/filesystem/directory.h"
 
@@ -137,6 +138,8 @@ namespace proj_fs
     , m_readonly_namespace(false)
     , m_callbacks()
   {
+    rex::vfs::init(rex::globals::make_unique<rex::NativeFileSystem>(m_root));
+
     // Verify if the root exists. If not try to create it
     if (!verify_root())
     {
@@ -675,23 +678,10 @@ namespace proj_fs
 
   bool RegistryFilesystem::verify_root()
   {
-    if (rex::directory::exists(m_root))
-    {
-      rex::vfs::instance()->set_root(m_root);
-      return true;
-    }
-
-    if (!rex::vfs::instance()->create_dir(m_root))
-    {
-      return false;
-    }
-
-    rex::vfs::instance()->set_root(m_root);
-
     GUID instance_id;
     CoCreateGuid(&instance_id);
 
-    if (!rex::vfs::instance()->write_to_file("virt_root.txt", &instance_id, sizeof(instance_id), rex::vfs::instance()->AppendToFile::no))
+    if (!rex::vfs::instance()->write_to_file("virt_root.txt", &instance_id, sizeof(instance_id), rex::AppendToFile::no))
     {
       return false;
     }

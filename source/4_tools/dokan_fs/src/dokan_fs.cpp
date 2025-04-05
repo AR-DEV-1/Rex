@@ -1539,86 +1539,86 @@ namespace dokan_fs
     dokan_options.Version = DOKAN_VERSION;
     dokan_options.Options |= DOKAN_OPTION_ALT_STREAM;
 
-    g_blob_store_path = rsl::to_wstring(rex::cmdline::get_argument("BlobStorePath").value_or(""));
-    g_mount_point = rsl::to_wstring(rex::cmdline::get_argument("MountPath").value_or(""));
+    g_blob_store_path = rsl::to_wstring(rex::cmdline::instance()->get_argument("BlobStorePath").value_or(""));
+    g_mount_point = rsl::to_wstring(rex::cmdline::instance()->get_argument("MountPath").value_or(""));
     dokan_options.MountPoint = g_mount_point;
 
-    if (rex::cmdline::get_argument("SingleThreaded"))
+    if (rex::cmdline::instance()->get_argument("SingleThreaded"))
     {
       dokan_options.SingleThread = TRUE;
     }
-    if (rex::cmdline::get_argument("DebugApp"))
+    if (rex::cmdline::instance()->get_argument("DebugApp"))
     {
       g_DebugMode = TRUE;
       dokan_options.Options |= DOKAN_OPTION_DEBUG;
     }
-    if (rex::cmdline::get_argument("EnableStdErr"))
+    if (rex::cmdline::instance()->get_argument("EnableStdErr"))
     {
       g_UseStdErr = TRUE;
       dokan_options.Options |= DOKAN_OPTION_STDERR;
     }
-    if (rex::cmdline::get_argument("UseRemovableDrive"))
+    if (rex::cmdline::instance()->get_argument("UseRemovableDrive"))
     {
       dokan_options.Options |= DOKAN_OPTION_REMOVABLE;
     }
-    if (rex::cmdline::get_argument("ReadOnly"))
+    if (rex::cmdline::instance()->get_argument("ReadOnly"))
     {
       dokan_options.Options |= DOKAN_OPTION_WRITE_PROTECT;
     }
-    if (rex::cmdline::get_argument("EnableCaseSensitive"))
+    if (rex::cmdline::instance()->get_argument("EnableCaseSensitive"))
     {
       dokan_options.Options |= DOKAN_OPTION_CASE_SENSITIVE;
       g_CaseSensitive = TRUE;
     }
-    if (rex::cmdline::get_argument("UseMountManager"))
+    if (rex::cmdline::instance()->get_argument("UseMountManager"))
     {
       dokan_options.Options |= DOKAN_OPTION_MOUNT_MANAGER;
     }
-    if (rex::cmdline::get_argument("EnableForCurrentSessionOnly"))
+    if (rex::cmdline::instance()->get_argument("EnableForCurrentSessionOnly"))
     {
       dokan_options.Options |= DOKAN_OPTION_CURRENT_SESSION;
     }
-    if (rex::cmdline::get_argument("ShowAsNetworkDevice"))
+    if (rex::cmdline::instance()->get_argument("ShowAsNetworkDevice"))
     {
-      g_unc_name = rsl::to_wstring(rex::cmdline::get_argument("ShowAsNetworkDevice").value());
+      g_unc_name = rsl::to_wstring(rex::cmdline::instance()->get_argument("ShowAsNetworkDevice").value());
       dokan_options.UNCName = g_unc_name;
-      REX_INFO(LogDokan, "UNC Name: {}", rex::cmdline::get_argument("ShowAsNetworkDevice").value());
+      REX_INFO(LogDokan, "UNC Name: {}", rex::cmdline::instance()->get_argument("ShowAsNetworkDevice").value());
     }
-    if (rex::cmdline::get_argument("EnableCallerUser"))
+    if (rex::cmdline::instance()->get_argument("EnableCallerUser"))
     {
       g_ImpersonateCallerUser = TRUE;
     }
-    if (rex::cmdline::get_argument("AllocationUnitSize"))
+    if (rex::cmdline::instance()->get_argument("AllocationUnitSize"))
     {
-      dokan_options.AllocationUnitSize = rsl::stoi(rex::cmdline::get_argument("AllocationUnitSize").value()).value();
+      dokan_options.AllocationUnitSize = rsl::stoi(rex::cmdline::instance()->get_argument("AllocationUnitSize").value()).value();
     }
-    if (rex::cmdline::get_argument("SectorSize"))
+    if (rex::cmdline::instance()->get_argument("SectorSize"))
     {
-      dokan_options.SectorSize = rsl::stoi(rex::cmdline::get_argument("SectorSize").value()).value();
+      dokan_options.SectorSize = rsl::stoi(rex::cmdline::instance()->get_argument("SectorSize").value()).value();
     }
-    if (rex::cmdline::get_argument("EnableLockMode"))
+    if (rex::cmdline::instance()->get_argument("EnableLockMode"))
     {
       dokan_options.Options |= DOKAN_OPTION_FILELOCK_USER_MODE;
     }
-    if (rex::cmdline::get_argument("Timeout"))
+    if (rex::cmdline::instance()->get_argument("Timeout"))
     {
-      dokan_options.Timeout = rsl::stoi(rex::cmdline::get_argument("Timeout").value()).value();
+      dokan_options.Timeout = rsl::stoi(rex::cmdline::instance()->get_argument("Timeout").value()).value();
     }
-    if (rex::cmdline::get_argument("HelpAntiVirus"))
+    if (rex::cmdline::instance()->get_argument("HelpAntiVirus"))
     {
       REX_WARN(LogDokan, "FCB GCt enabling is currently not supported");
     }
-    if (rex::cmdline::get_argument("AllowUnmount"))
+    if (rex::cmdline::instance()->get_argument("AllowUnmount"))
     {
       dokan_options.Options |= DOKAN_OPTION_ENABLE_UNMOUNT_NETWORK_DRIVE;
     }
-    if (rex::cmdline::get_argument("EnableDriveLogs"))
+    if (rex::cmdline::instance()->get_argument("EnableDriveLogs"))
     {
       dokan_options.Options |= DOKAN_OPTION_DISPATCH_DRIVER_LOGS;
     }
-    if (rex::cmdline::get_argument("VolumeName"))
+    if (rex::cmdline::instance()->get_argument("VolumeName"))
     {
-      g_volume_name = rsl::to_wstring(rex::cmdline::get_argument("VolumeName").value());
+      g_volume_name = rsl::to_wstring(rex::cmdline::instance()->get_argument("VolumeName").value());
     }
 
     return dokan_options;
