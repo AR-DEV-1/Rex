@@ -1,6 +1,7 @@
 // NOLINTBEGIN
 
 #include "rex_engine/engine/globals.h"
+#include "rex_engine/engine/engine.h"
 #include "rex_engine/cmdline/cmdline.h"
 
 #define CATCH_CONFIG_RUNNER
@@ -28,12 +29,12 @@ public:
   {
   }
 
-  void testCaseStarting(const Catch::TestCaseInfo& _testInfo) override
+  void testCaseStarting(const Catch::TestCaseInfo& /*testInfo*/) override
   {
     // Some tests reset the commandlne
     if (rex::cmdline::instance() == nullptr)
     {
-      rex::cmdline::init(rsl::make_unique<rex::CommandLine>(""));
+      rex::cmdline::init(rex::globals::make_unique<rex::CommandLine>(""));
     }
 
     // Some tests reset the engine globals
@@ -43,7 +44,7 @@ public:
       auto single_frame_allocator = rsl::make_unique<rex::TStackAllocator<rex::GlobalAllocator>>(size);
       auto scratch_allocator = rsl::make_unique<rex::TCircularAllocator<rex::GlobalAllocator>>(size);
 
-      rex::engine::init(rsl::make_unique<rex::EngineGlobals>(rsl::move(scratch_allocator), rsl::move(single_frame_allocator)));
+      rex::engine::init(rex::globals::make_unique<rex::EngineGlobals>(rsl::move(scratch_allocator), rsl::move(single_frame_allocator)));
     }
   }
 

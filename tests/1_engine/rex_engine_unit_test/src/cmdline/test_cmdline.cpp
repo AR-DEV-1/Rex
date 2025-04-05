@@ -4,14 +4,14 @@
 
 TEST_CASE("TEST - Commandline - empty commandline")
 {
-  rex::cmdline::init(rsl::make_unique<rex::CommandLine>(""));
+  rex::cmdline::init(rex::globals::make_unique<rex::CommandLine>(""));
 
   REX_CHECK(rex::cmdline::instance()->get_argument("something").has_value() == false);
 }
 
 TEST_CASE("TEST - Commandline - commandline with 1 argument")
 {
-  rex::cmdline::init(rsl::make_unique<rex::CommandLine>("-ExampleArgument"));
+  rex::cmdline::init(rex::globals::make_unique<rex::CommandLine>("-ExampleArgument"));
 
   REX_CHECK(rex::cmdline::instance()->get_argument("something").has_value() == false);
   REX_CHECK(rex::cmdline::instance()->get_argument("ExampleArgument").has_value() == true);
@@ -19,7 +19,7 @@ TEST_CASE("TEST - Commandline - commandline with 1 argument")
 
 TEST_CASE("TEST - Commandline - commandline with 2 arguments")
 {
-  rex::cmdline::init(rsl::make_unique<rex::CommandLine>("-ExampleArgument -ExampleArgument2"));
+  rex::cmdline::init(rex::globals::make_unique<rex::CommandLine>("-ExampleArgument -ExampleArgument2"));
 
   REX_CHECK(rex::cmdline::instance()->get_argument("something").has_value() == false);
   REX_CHECK(rex::cmdline::instance()->get_argument("ExampleArgument").has_value() == true);
@@ -28,7 +28,7 @@ TEST_CASE("TEST - Commandline - commandline with 2 arguments")
 
 TEST_CASE("TEST - Commandline - commandline with equal sign")
 {
-  rex::cmdline::init(rsl::make_unique<rex::CommandLine>("-ExampleArgumentWithEqual=10"));
+  rex::cmdline::init(rex::globals::make_unique<rex::CommandLine>("-ExampleArgumentWithEqual=10"));
 
   REX_CHECK(rex::cmdline::instance()->get_argument("something").has_value() == false);
   REX_CHECK(rex::cmdline::instance()->get_argument("ExampleArgumentWithEqual").has_value() == true);
@@ -37,7 +37,7 @@ TEST_CASE("TEST - Commandline - commandline with equal sign")
 
 TEST_CASE("TEST - Commandline - commandline with equal sign and example argument")
 {
-  rex::cmdline::init(rsl::make_unique<rex::CommandLine>("-ExampleArgumentWithEqual=10 -ExampleArgument"));
+  rex::cmdline::init(rex::globals::make_unique<rex::CommandLine>("-ExampleArgumentWithEqual=10 -ExampleArgument"));
 
   REX_CHECK(rex::cmdline::instance()->get_argument("something").has_value() == false);
   REX_CHECK(rex::cmdline::instance()->get_argument("ExampleArgument").has_value() == true);

@@ -1,6 +1,7 @@
 #include "rex_unit_test/rex_catch2.h"
 
 #include "rex_engine/filesystem/vfs.h"
+#include "rex_engine/filesystem/native_filesystem.h"
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/file.h"
 #include "rex_engine/filesystem/directory.h"
@@ -16,11 +17,11 @@ namespace rex::test
 	public:
 		ScopedVfsInitialization()
 		{
-			vfs::instance()->init();
+			vfs::init(globals::make_unique<NativeFileSystem>(path::cwd()));
 		}
 		~ScopedVfsInitialization()
 		{
-			vfs::instance()->shutdown();
+			vfs::shutdown();
 		}
 
 	private:
@@ -33,11 +34,11 @@ TEST_CASE("TEST - VFS - init & shutdown")
 	REX_CHECK(rex::path::is_same(rex::vfs::instance()->root(), ""));
 	REX_CHECK(rex::vfs::instance()->is_mounted(rex::MountingPoint::TestPath1) == false);
 
-	rex::vfs::instance()->init();
+	rex::vfs::init(rex::globals::make_unique<rex::NativeFileSystem>(rex::path::cwd()));
 
 	REX_CHECK(rex::path::is_same(rex::vfs::instance()->root(), rex::path::cwd()));
 
-	rex::vfs::instance()->shutdown();
+	rex::vfs::shutdown();
 
 	REX_CHECK(rex::path::is_same(rex::vfs::instance()->root(), ""));
 	REX_CHECK(rex::vfs::instance()->is_mounted(rex::MountingPoint::TestPath1) == false);
@@ -156,16 +157,16 @@ TEST_CASE("TEST - VFS - save to file")
 	rsl::string_view dummy_content = "this is some dummy content";
 
 	// Save a file using just the filepath, no appending
-	rex::vfs::instance()->write_to_file(filepath, dummy_content, rex::vfs::instance()->AppendToFile::no);
+	rex::vfs::instance()->write_to_file(filepath, dummy_content, rex::AppendToFile::no);
 
-	REX_CHECK(rex::vfs::instance()->is_file(filepath));
+	REX_CHECK(rex::vfs::instance()->exists(filepath));
 	rex::memory::Blob file_blob = rex::vfs::instance()->read_file(filepath);
 	REX_CHECK(rex::memory::blob_to_string_view(file_blob) == dummy_content);
 
 	// Save a file using just the filepath, with appending
 	rex::scratch_string dummy_content_appended(dummy_content);
 	dummy_content_appended += dummy_content;
-	rex::vfs::instance()->write_to_file(filepath, dummy_content, rex::vfs::instance()->AppendToFile::yes);
+	rex::vfs::instance()->write_to_file(filepath, dummy_content, rex::AppendToFile::yes);
 	file_blob = rex::vfs::instance()->read_file(filepath);
 	REX_CHECK(rex::memory::blob_to_string_view(file_blob) == dummy_content_appended);
 
@@ -175,13 +176,13 @@ TEST_CASE("TEST - VFS - save to file")
 	filepath = rex::path::join(test_path1, filename);
 
 	// Save a file using a mounting point, no appending
-	rex::vfs::instance()->write_to_file(rex::MountingPoint::TestPath1, filename, dummy_content, rex::vfs::instance()->AppendToFile::no);
-	rex::vfs::instance()->is_file(rex::MountingPoint::TestPath1, filename);
+	rex::vfs::instance()->write_to_file(rex::MountingPoint::TestPath1, filename, dummy_content, rex::AppendToFile::no);
+	rex::vfs::instance()->exists(rex::MountingPoint::TestPath1, filename);
 	file_blob = rex::vfs::instance()->read_file(rex::MountingPoint::TestPath1, filename);
 	REX_CHECK(rex::memory::blob_to_string_view(file_blob) == dummy_content);
 
 	// Save a file using a mounting point, with appending
-	rex::vfs::instance()->write_to_file(rex::MountingPoint::TestPath1, filename, dummy_content, rex::vfs::instance()->AppendToFile::yes);
+	rex::vfs::instance()->write_to_file(rex::MountingPoint::TestPath1, filename, dummy_content, rex::AppendToFile::yes);
 	file_blob = rex::vfs::instance()->read_file(rex::MountingPoint::TestPath1, filename);
 	REX_CHECK(rex::memory::blob_to_string_view(file_blob) == dummy_content_appended);
 
@@ -200,19 +201,19 @@ TEST_CASE("TEST - VFS - create dir")
 	dirname.assign(rex::path::random_dir());
 	rex::vfs::instance()->create_dir(dirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname));
+	REX_CHECK(rex::vfs::instance()->exists(dirname));
 	rex::vfs::instance()->delete_dir(dirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname) == false);
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname) == false);
+	REX_CHECK(rex::vfs::instance()->exists(dirname) == false);
 
 	// Create a single directory and delete it
 	dirname.assign(rex::path::random_dir());
 	rex::vfs::instance()->create_dir(dirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname));
+	REX_CHECK(rex::vfs::instance()->exists(dirname));
 	rex::vfs::instance()->delete_dir_recursive(dirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname) == false);
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname) == false);
+	REX_CHECK(rex::vfs::instance()->exists(dirname) == false);
 
 	// Create a single direcotry, then sub directory, then delete the root
 	dirname.assign(rex::path::random_dir());
@@ -220,38 +221,38 @@ TEST_CASE("TEST - VFS - create dir")
 	rex::vfs::instance()->create_dir(dirname);
 	rex::vfs::instance()->create_dir(subdirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname));
+	REX_CHECK(rex::vfs::instance()->exists(dirname));
 	REX_CHECK(rex::vfs::instance()->exists(subdirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(subdirname));
+	REX_CHECK(rex::vfs::instance()->exists(subdirname));
 	rex::vfs::instance()->delete_dir(dirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname));
+	REX_CHECK(rex::vfs::instance()->exists(dirname));
 	REX_CHECK(rex::vfs::instance()->exists(subdirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(subdirname));
+	REX_CHECK(rex::vfs::instance()->exists(subdirname));
 	rex::vfs::instance()->delete_dir_recursive(dirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname) == false);
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname) == false);
+	REX_CHECK(rex::vfs::instance()->exists(dirname) == false);
 	REX_CHECK(rex::vfs::instance()->exists(subdirname) == false);
-	REX_CHECK(rex::vfs::instance()->is_dir(subdirname) == false);
+	REX_CHECK(rex::vfs::instance()->exists(subdirname) == false);
 
 	// Create multiple directories in 1 go, then delete the root
 	dirname.assign(rex::path::random_dir());
 	subdirname.assign(rex::path::join(dirname, rex::path::random_dir()));
 	rex::vfs::instance()->create_dirs(subdirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname));
+	REX_CHECK(rex::vfs::instance()->exists(dirname));
 	REX_CHECK(rex::vfs::instance()->exists(subdirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(subdirname));
+	REX_CHECK(rex::vfs::instance()->exists(subdirname));
 	rex::vfs::instance()->delete_dir(dirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname));
+	REX_CHECK(rex::vfs::instance()->exists(dirname));
 	REX_CHECK(rex::vfs::instance()->exists(subdirname));
-	REX_CHECK(rex::vfs::instance()->is_dir(subdirname));
+	REX_CHECK(rex::vfs::instance()->exists(subdirname));
 	rex::vfs::instance()->delete_dir_recursive(dirname);
 	REX_CHECK(rex::vfs::instance()->exists(dirname) == false);
-	REX_CHECK(rex::vfs::instance()->is_dir(dirname) == false);
+	REX_CHECK(rex::vfs::instance()->exists(dirname) == false);
 	REX_CHECK(rex::vfs::instance()->exists(subdirname) == false);
-	REX_CHECK(rex::vfs::instance()->is_dir(subdirname) == false);
+	REX_CHECK(rex::vfs::instance()->exists(subdirname) == false);
 }
 TEST_CASE("TEST - VFS - create file")
 {
@@ -268,7 +269,7 @@ TEST_CASE("TEST - VFS - create file")
 	error = rex::vfs::instance()->create_file(filename);
 	
 	REX_CHECK(error.has_error() == false);
-	REX_CHECK(rex::vfs::instance()->is_file(filename));
+	REX_CHECK(rex::vfs::instance()->exists(filename));
 	REX_CHECK(rex::vfs::instance()->exists(filename));
 	rex::vfs::instance()->delete_file(filename);
 
@@ -279,14 +280,14 @@ TEST_CASE("TEST - VFS - create file")
 	error = rex::vfs::instance()->create_file(filepath);
 
 	REX_CHECK(error.has_error());
-	REX_CHECK(rex::vfs::instance()->is_file(filepath) == false);
+	REX_CHECK(rex::vfs::instance()->exists(filepath) == false);
 	REX_CHECK(rex::vfs::instance()->exists(filepath) == false);
 
 	// Create the dir, then the file
 	rex::vfs::instance()->create_dir(dirname);
 	error = rex::vfs::instance()->create_file(filepath);
 	REX_CHECK(error.has_error() == false);
-	REX_CHECK(rex::vfs::instance()->is_file(filepath));
+	REX_CHECK(rex::vfs::instance()->exists(filepath));
 	REX_CHECK(rex::vfs::instance()->exists(filepath));
 
 	rex::vfs::instance()->delete_dir_recursive(dirname);
@@ -312,8 +313,8 @@ TEST_CASE("TEST - VFS - is dir")
 	rsl::string_view test_path1 = "vfs_tests";
 	rex::vfs::instance()->mount(rex::MountingPoint::TestPath1, test_path1);
 
-	REX_CHECK(rex::vfs::instance()->is_dir(rex::path::join(test_path1, "dummy_dir")));
-	REX_CHECK(rex::vfs::instance()->is_dir(rex::MountingPoint::TestPath1, "dummy_dir"));
+	REX_CHECK(rex::vfs::instance()->exists(rex::path::join(test_path1, "dummy_dir")));
+	REX_CHECK(rex::vfs::instance()->exists(rex::MountingPoint::TestPath1, "dummy_dir"));
 }
 TEST_CASE("TEST - VFS - is file")
 {
@@ -322,8 +323,8 @@ TEST_CASE("TEST - VFS - is file")
 	rsl::string_view test_path1 = "vfs_tests";
 	rex::vfs::instance()->mount(rex::MountingPoint::TestPath1, test_path1);
 
-	REX_CHECK(rex::vfs::instance()->is_file(rex::path::join(test_path1, "dummy_dir", "dummy_file.txt")));
-	REX_CHECK(rex::vfs::instance()->is_file(rex::MountingPoint::TestPath1, rex::path::join("dummy_dir", "dummy_file.txt")));
+	REX_CHECK(rex::vfs::instance()->exists(rex::path::join(test_path1, "dummy_dir", "dummy_file.txt")));
+	REX_CHECK(rex::vfs::instance()->exists(rex::MountingPoint::TestPath1, rex::path::join("dummy_dir", "dummy_file.txt")));
 }
 TEST_CASE("TEST - VFS - abs path")
 {

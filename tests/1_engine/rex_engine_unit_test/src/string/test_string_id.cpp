@@ -23,7 +23,7 @@ TEST_CASE("TEST - StringID - Invalid String ID")
 
 TEST_CASE("TEST - StringID - Creating of string id")
 {
-	rex::string_pool::init(rsl::make_unique<rex::StringPool>());
+	rex::string_pool::init(rex::globals::make_unique<rex::StringPool>());
   {
 
     rsl::string_view string = "something";
@@ -50,7 +50,7 @@ TEST_CASE("TEST - StringID - Creating of string id")
 
 TEST_CASE("TEST - StringID - equal comparison")
 {
-  rex::string_pool::init(rsl::make_unique<rex::StringPool>());
+  rex::string_pool::init(rex::globals::make_unique<rex::StringPool>());
 
   rsl::string_view string = "something";
   rex::StringID sid = rex::StringID::create(string);
@@ -70,7 +70,7 @@ TEST_CASE("TEST - StringID - equal comparison")
 
 TEST_CASE("TEST - StringID - not equal comparison")
 {
-  rex::string_pool::init(rsl::make_unique<rex::StringPool>());
+  rex::string_pool::init(rex::globals::make_unique<rex::StringPool>());
 
   rsl::string_view string = "something";
   rsl::string_view string2 = "else";
@@ -91,7 +91,7 @@ TEST_CASE("TEST - StringID - not equal comparison")
 
 TEST_CASE("TEST - StringID - hash collision")
 {
-  rex::string_pool::init(rsl::make_unique<rex::StringPool>());
+  rex::string_pool::init(rex::globals::make_unique<rex::StringPool>());
 
   rsl::string_view string = "something";
   rex::StringID sid = rex::StringID::create(string);

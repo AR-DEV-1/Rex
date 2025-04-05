@@ -8,7 +8,7 @@
 
 TEST_CASE("TEST - Task System - Execution")
 {
-  rex::thread_pool::init(rsl::make_unique<rex::ThreadPool>());
+  rex::thread_pool::init(rex::globals::make_unique<rex::ThreadPool>());
 
   rsl::atomic<s32> x = 0;
   
