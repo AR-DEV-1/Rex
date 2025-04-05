@@ -253,9 +253,9 @@ namespace rex
     REX_ASSERT_X(m_vfs_state_controller.has_state(VfsState::Running), "Trying to use vfs before it's initialized");
     REX_ASSERT_X(!path::is_absolute(path), "Passed an absolute path into a function that doesn't allow absolute paths");
 
-    path = path::remove_quotes(path);
+    scratch_string mount_root = path::join(m_mounted_roots.at(root), path);
 
-    return abs_path(path);
+    return abs_path(mount_root);
   }
   rsl::string_view VfsBase::mount_path(MountingPoint mount)
   {
