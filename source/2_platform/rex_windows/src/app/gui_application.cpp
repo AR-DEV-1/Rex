@@ -240,7 +240,7 @@ namespace rex
         // initialize the com lib
         // Doing this very early on so other system can use the com lib
         // for their initialization if needed
-        m_win_com_lib_handle = win::com_lib::create_lib_handle();
+        win::com_lib::init(globals::make_unique<ComLibrary>());
 
         // window initialization
         m_window = create_window();
@@ -371,7 +371,6 @@ namespace rex
 
       ApplicationCreationParams m_app_creation_params;
       CoreApplication* m_app_instance;
-      win::com_lib::WinComLibHandle m_win_com_lib_handle;
     };
 
     //-------------------------------------------------------------------------
