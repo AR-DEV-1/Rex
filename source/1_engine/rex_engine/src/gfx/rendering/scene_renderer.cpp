@@ -107,8 +107,8 @@ namespace rex
 			};
 
 			// Define the shaders
-			geo_pass_desc.pso_desc.shader_pipeline.vs = shader_lib::load(vfs::instance()->abs_path(MountingPoint::EngineShaders, "basic_vertex.hlsl"), ShaderType::Vertex);
-			geo_pass_desc.pso_desc.shader_pipeline.ps = shader_lib::load(vfs::instance()->abs_path(MountingPoint::EngineShaders, "basic_pixel.hlsl"), ShaderType::Pixel);
+			geo_pass_desc.pso_desc.shader_pipeline.vs = shader_lib::instance()->load(vfs::instance()->abs_path(MountingPoint::EngineShaders, "basic_vertex.hlsl"), ShaderType::Vertex);
+			geo_pass_desc.pso_desc.shader_pipeline.ps = shader_lib::instance()->load(vfs::instance()->abs_path(MountingPoint::EngineShaders, "basic_pixel.hlsl"), ShaderType::Pixel);
 
 			// Define the primitive topology
 			geo_pass_desc.pso_desc.primitive_topology = PrimitiveTopologyType::Triangle;

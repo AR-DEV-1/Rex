@@ -94,8 +94,8 @@ namespace rex
 
 			// Process material content so we can create a material object out of it
 			MaterialDesc mat_desc{};
-			mat_desc.shader_pipeline.vs = shader_lib::load(vertex_shader, ShaderType::Vertex);
-			mat_desc.shader_pipeline.ps = shader_lib::load(pixel_shader, ShaderType::Pixel);
+			mat_desc.shader_pipeline.vs = shader_lib::instance()->load(vertex_shader, ShaderType::Vertex);
+			mat_desc.shader_pipeline.ps = shader_lib::instance()->load(pixel_shader, ShaderType::Pixel);
 
 			// Create the material object
 			rsl::unique_ptr<Material> material = gal()->create_material(mat_desc);

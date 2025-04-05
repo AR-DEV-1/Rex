@@ -12,6 +12,7 @@
 #include "rex_engine/gfx/core/depth_info.h"
 #include "rex_engine/gfx/core/renderer_output_window_user_data.h"
 #include "rex_engine/gfx/system/gal.h"
+#include "rex_engine/gfx/system/shader_library.h"
 #include "rex_engine/gfx/graphics.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/functional.h"
@@ -133,7 +134,9 @@ namespace rex
 
         m_on_shutdown();
 
+        gfx::shader_lib::shutdown();
         gfx::shutdown();
+        win::com_lib::shutdown();
       }
 
     private:
@@ -335,6 +338,8 @@ namespace rex
 #else
 #error "No Graphics API defined"
 #endif
+
+        gfx::shader_lib::init(globals::make_unique<gfx::ShaderLibrary>());
 
         // Add the imgui renderer, which is our main UI renderer for the moment
         gfx::add_renderer<gfx::ImGuiRenderer>(m_window->primary_display_handle());
