@@ -42,7 +42,7 @@ namespace rex
     class DxCopyEngine : public gfx::CopyEngine
     {
     public:
-      DxCopyEngine(GpuEngine* gpuEngine, ResourceStateTracker* globalResourceStateTracker);
+      DxCopyEngine(ResourceStateTracker* globalResourceStateTracker);
 
       // Initialize all the resources required for the compute engine
       void init() override;

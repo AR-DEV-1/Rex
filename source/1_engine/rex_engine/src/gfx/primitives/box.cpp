@@ -1,6 +1,7 @@
 #include "rex_engine/gfx/primitives/box.h"
 
 #include "rex_engine/gfx/system/gal.h"
+#include "rex_engine/gfx/graphics.h"
 
 namespace rex
 {
@@ -84,8 +85,8 @@ namespace rex
           22, 23, 20  // Second Triangle
         };
 
-        rsl::unique_ptr<VertexBuffer> vb = gal()->create_vertex_buffer(v.size(), sizeof(v[0]), v.data());
-        rsl::unique_ptr<IndexBuffer> ib = gal()->create_index_buffer(i.size(), IndexBufferFormat::Uint16, i.data());
+        rsl::unique_ptr<VertexBuffer> vb = gfx::instance()->create_vertex_buffer(v.size(), sizeof(v[0]), v.data());
+        rsl::unique_ptr<IndexBuffer> ib = gfx::instance()->create_index_buffer(i.size(), IndexBufferFormat::Uint16, i.data());
 
         return StaticMesh(rsl::move(vb), rsl::move(ib));
       }

@@ -150,7 +150,7 @@ namespace pokemon
     // In which case we don't need to allocate a new one, just update the existing one
     if (!m_tiles_vb_gpu)
     {
-      m_tiles_vb_gpu = rex::gfx::gal()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
+      m_tiles_vb_gpu = rex::gfx::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
     }
 
     auto copy_ctx = rex::gfx::new_copy_ctx();
@@ -164,7 +164,7 @@ namespace pokemon
   void TileRenderer::init_tile_indices_buffer()
   {
     // We don't have any data for this buffer yet, so we don't upload anything
-    m_tile_indices_buffer = rex::gfx::gal()->create_unordered_access_buffer(num_tiles());
+    m_tile_indices_buffer = rex::gfx::instance()->create_unordered_access_buffer(num_tiles());
     auto render_context = rex::gfx::new_render_ctx();
     render_context->transition_buffer(m_tile_indices_buffer.get(), rex::gfx::ResourceState::NonPixelShaderResource);
     render_context->execute_on_gpu(rex::gfx::WaitForFinish::yes);
@@ -184,7 +184,7 @@ namespace pokemon
     tiles_ib_cpu[4] = 3;
     tiles_ib_cpu[5] = 2;
 
-    m_tiles_ib_gpu = rex::gfx::gal()->create_index_buffer(num_indices_per_tile, rex::gfx::IndexBufferFormat::Uint16);
+    m_tiles_ib_gpu = rex::gfx::instance()->create_index_buffer(num_indices_per_tile, rex::gfx::IndexBufferFormat::Uint16);
 
     auto copy_ctx = rex::gfx::new_copy_ctx();
     copy_ctx->update_buffer(m_tiles_ib_gpu.get(), tiles_ib_cpu.get(), tiles_ib_cpu.byte_size());
@@ -208,7 +208,7 @@ namespace pokemon
     // In which case we don't need to allocate a new one, just update the existing one
     if (!m_tile_renderer_cb)
     {
-      m_tile_renderer_cb = rex::gfx::gal()->create_constant_buffer(sizeof(RenderingMetaData));
+      m_tile_renderer_cb = rex::gfx::instance()->create_constant_buffer(sizeof(RenderingMetaData));
     }
 
     auto copy_ctx = rex::gfx::new_copy_ctx();

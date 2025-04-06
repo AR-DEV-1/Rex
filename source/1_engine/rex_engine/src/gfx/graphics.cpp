@@ -17,7 +17,7 @@ namespace rex
     DEFINE_LOG_CATEGORY(LogGraphics);
 
     // We can access it in the high level graphics api, but the gpu engine is owned by the gal
-    GpuEngine* g_gpu_engine;
+    //GpuEngine* g_gal_interface;
     rsl::vector<rsl::unique_ptr<Renderer>> g_renderers;
 
     rsl::array<RasterStateDesc, rsl::enum_refl::enum_count<CommonRasterState>()> g_common_raster_states;
@@ -57,38 +57,29 @@ namespace rex
         sampler_desc.shader_register = 0;
         sampler_desc.register_space = 0;
         sampler_desc.shader_visibility = rex::gfx::ShaderVisibility::Pixel;
-        g_common_samplers[rsl::enum_refl::enum_index(CommonSampler::Default2D).value()] = gal()->create_sampler2d(sampler_desc);
+        g_common_samplers[rsl::enum_refl::enum_index(CommonSampler::Default2D).value()] = gfx::instance()->create_sampler2d(sampler_desc);
       }
     }
 
-    void log_info()
+    globals::GlobalUniquePtr<GALInterface> g_gal_interface;
+    Error init(globals::GlobalUniquePtr<GALInterface> galInterface)
     {
-      auto& gfx_info = gal()->info();
-      REX_UNUSED_PARAM(gfx_info);
+      g_gal_interface = rsl::move(galInterface);
+      g_gal_interface->init();
 
-      REX_INFO(LogGraphics, "Renderer Info - Adaptor: {}", gfx_info.adaptor);
-      REX_INFO(LogGraphics, "Renderer Info - Vendor: {}", gfx_info.vendor);
-      REX_INFO(LogGraphics, "Renderer Info - API: {}", gfx_info.api);
-      REX_INFO(LogGraphics, "Renderer Info - API Version: {}", gfx_info.api_version);
-      REX_INFO(LogGraphics, "Renderer Info - Shader Version: {}", gfx_info.shader_version);
-      REX_INFO(LogGraphics, "Renderer Info - Driver Version: {}", gfx_info.driver_version);
-    }
-
-    Error init(globals::GlobalUniquePtr<GALInterface> galInterface, const OutputWindowUserData& userData)
-    {
       // Initialize the gpu engine, it's responsible for the entire graphics pipeline.
       // The gpu engine gets created by the gal as some of the objects wrapped by the gpu engine
       // are also needed by the gal to create other objects.
-      g_gpu_engine = init_gal(rsl::move(galInterface), userData);
+      //g_gal_interface = init_gal(rsl::move(galInterface), userData);
       rsl::scopeguard shutdown_on_failure = []() { shutdown(); };
 
       // If we even fail to allocate the memory for the gpu engine, we exit immediately.
       // This is possible if we OOM or if any pre allocation checks fail in the gal
       // and it has returns before even getting to the gpu engine initialization step
-      if (!g_gpu_engine)
-      {
-        return Error("Failed to create GPU Engine");
-      }
+      //if (!g_gal_interface)
+      //{
+      //  return Error("Failed to create GPU Engine");
+      //}
 
       // Init the common resources so that we don't have to repeat creating the same resources
       internal::init_common_resources();
@@ -97,12 +88,17 @@ namespace rex
       shutdown_on_failure.release();
       return Error::no_error();
     }
+    GALInterface* instance()
+    {
+      return g_gal_interface.get();
+    }
     void shutdown()
     {
       g_renderers.clear();
       root_signature_cache::clear();
 
-      shutdown_gal();
+      g_gal_interface.reset();
+      //shutdown_gal();
     }
 
     void render()
@@ -114,7 +110,7 @@ namespace rex
       // - Present
 
       // Prepare all resources that are needed for a new frame
-      g_gpu_engine->new_frame();
+      g_gal_interface->new_frame();
       
       // Loop over all renderers and call into them
       // Performing all required gpu operations needed on resources those renderers need
@@ -126,39 +122,39 @@ namespace rex
       }
 
       // Finalize the frame and bringing it ready for presentation
-      g_gpu_engine->end_frame();
+      g_gal_interface->end_frame();
 
       // Present the last rendered frame to the screen
-      g_gpu_engine->present();
+      g_gal_interface->present();
     }
 
     // Create a new copy context that automatically gets added back to the pool when it goes out of scope
     ObjectWithDestructionCallback<CopyContext> new_copy_ctx(PipelineState* pso, rsl::string_view eventName)
     {
-      return g_gpu_engine->new_copy_ctx(pso, eventName);
+      return g_gal_interface->new_copy_ctx(pso, eventName);
     }
     // Create a new render context that automatically gets added back to the pool when it goes out of scope
     ObjectWithDestructionCallback<RenderContext> new_render_ctx(PipelineState* pso, rsl::string_view eventName)
     {
-      return g_gpu_engine->new_render_ctx(pso, eventName);
+      return g_gal_interface->new_render_ctx(pso, eventName);
     }
     // Create a new compute context that automatically gets added back to the pool when it goes out of scope
     ObjectWithDestructionCallback<ComputeContext> new_compute_ctx(PipelineState* pso, rsl::string_view eventName)
     {
-      return g_gpu_engine->new_compute_ctx(pso, eventName);
+      return g_gal_interface->new_compute_ctx(pso, eventName);
     }
 
     RenderTarget* swapchain_rt()
     {
-      return g_gpu_engine->current_backbuffer_rt();
+      return g_gal_interface->current_backbuffer_rt();
     }
     s32 swapchain_width()
     {
-      return g_gpu_engine->current_backbuffer_rt()->width();
+      return g_gal_interface->current_backbuffer_rt()->width();
     }
     s32 swapchain_height()
     {
-      return g_gpu_engine->current_backbuffer_rt()->height();
+      return g_gal_interface->current_backbuffer_rt()->height();
     }
 
     RasterStateDesc common_raster_state(CommonRasterState type)

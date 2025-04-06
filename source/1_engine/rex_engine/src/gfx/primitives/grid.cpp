@@ -1,6 +1,7 @@
 #include "rex_engine/gfx/primitives/grid.h"
 
 #include "rex_engine/gfx/system/gal.h"
+#include "rex_engine/gfx/graphics.h"
 
 #include "rex_engine/diagnostics/assert.h"
 #include "rex_engine/engine/casting.h"
@@ -63,8 +64,8 @@ namespace rex
           indices.push_back(start_vtx + 2);
         }
 
-        rsl::unique_ptr<VertexBuffer> vb = gal()->create_vertex_buffer(vertices.size(), sizeof(vertices.front()), vertices.data());
-        rsl::unique_ptr<IndexBuffer> ib = gal()->create_index_buffer(indices.size(), IndexBufferFormat::Uint16, indices.data());
+        rsl::unique_ptr<VertexBuffer> vb = gfx::instance()->create_vertex_buffer(vertices.size(), sizeof(vertices.front()), vertices.data());
+        rsl::unique_ptr<IndexBuffer> ib = gfx::instance()->create_index_buffer(indices.size(), IndexBufferFormat::Uint16, indices.data());
 
         return StaticMesh(rsl::move(vb), rsl::move(ib));
       }

@@ -61,7 +61,7 @@ namespace rex
       // Some backends will leave PlatformHandleRaw == 0, in which case we assume PlatformHandle will contain the HWND.
       void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
       IM_ASSERT(handle != nullptr);
-      m_swapchain = gal()->create_swapchain(creationInfo.command_queue, creationInfo.max_num_frames_in_flight, handle);
+      m_swapchain = gfx::instance()->create_swapchain(creationInfo.command_queue, creationInfo.max_num_frames_in_flight, handle);
 
       const s32 width = static_cast<s32>(viewport->Size.x);
       const s32 height = static_cast<s32>(viewport->Size.y);

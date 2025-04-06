@@ -3,6 +3,7 @@
 #include "rex_engine/gfx/core/vertex.h"
 
 #include "rex_engine/gfx/system/gal.h"
+#include "rex_engine/gfx/graphics.h"
 
 namespace rex
 {
@@ -44,8 +45,8 @@ namespace rex
         indices[4] = 2;
         indices[5] = 3;
 
-        rsl::unique_ptr<VertexBuffer> vb = gal()->create_vertex_buffer(vertices.size(), sizeof(vertices[0]), vertices.data());
-        rsl::unique_ptr<IndexBuffer> ib = gal()->create_index_buffer(indices.size(), IndexBufferFormat::Uint16, indices.data());
+        rsl::unique_ptr<VertexBuffer> vb = gfx::instance()->create_vertex_buffer(vertices.size(), sizeof(vertices[0]), vertices.data());
+        rsl::unique_ptr<IndexBuffer> ib = gfx::instance()->create_index_buffer(indices.size(), IndexBufferFormat::Uint16, indices.data());
 
         return StaticMesh(rsl::move(vb), rsl::move(ib));
       }

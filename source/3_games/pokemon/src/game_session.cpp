@@ -61,7 +61,7 @@ namespace pokemon
 			rgba.alpha = 255;
 		}
 
-		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::gal()->create_texture2d(tileset_img_load_res.width, tileset_img_load_res.height, rex::gfx::TextureFormat::Unorm4, tileset_rgba.get());
+		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::instance()->create_texture2d(tileset_img_load_res.width, tileset_img_load_res.height, rex::gfx::TextureFormat::Unorm4, tileset_rgba.get());
 		return tileset_texture;
 	}
 

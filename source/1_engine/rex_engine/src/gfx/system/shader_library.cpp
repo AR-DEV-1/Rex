@@ -4,6 +4,7 @@
 
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
+#include "rex_engine/gfx/graphics.h"
 #include "rex_engine/gfx/system/gal.h"
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/text_processing/text_processing.h"
@@ -39,8 +40,8 @@ namespace rex
 			rsl::unique_ptr<Shader> new_shader;
 			switch (type)
 			{
-			case rex::gfx::ShaderType::Vertex:	new_shader = gal()->create_vertex_shader(memory::blob_to_string_view(content)); break;
-			case rex::gfx::ShaderType::Pixel:		new_shader = gal()->create_pixel_shader(memory::blob_to_string_view(content));	break;
+			case rex::gfx::ShaderType::Vertex:	new_shader = gfx::instance()->create_vertex_shader(memory::blob_to_string_view(content)); break;
+			case rex::gfx::ShaderType::Pixel:		new_shader = gfx::instance()->create_pixel_shader(memory::blob_to_string_view(content));	break;
 			default: break;
 			}
 

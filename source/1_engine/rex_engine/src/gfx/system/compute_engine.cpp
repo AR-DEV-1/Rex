@@ -4,8 +4,8 @@ namespace rex
 {
   namespace gfx
   {
-    ComputeEngine::ComputeEngine(GpuEngine* gpuEngine, ResourceStateTracker* globalResourceStateTracker)
-      : GraphicsEngine(gpuEngine, GraphicsEngineType::Compute, globalResourceStateTracker)
+    ComputeEngine::ComputeEngine(ResourceStateTracker* globalResourceStateTracker)
+      : GraphicsEngine(GraphicsEngineType::Compute, globalResourceStateTracker)
     {}
   }
 }

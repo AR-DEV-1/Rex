@@ -6,8 +6,8 @@ namespace rex
 {
   namespace gfx
   {
-    DxComputeEngine::DxComputeEngine(GpuEngine* gpuEngine, ResourceStateTracker* globalResourceStateTracker)
-      : gfx::ComputeEngine(gpuEngine, globalResourceStateTracker)
+    DxComputeEngine::DxComputeEngine(ResourceStateTracker* globalResourceStateTracker)
+      : gfx::ComputeEngine(globalResourceStateTracker)
     {}
 
     // Initialize all the resources required for the compute engine
@@ -19,7 +19,7 @@ namespace rex
     // Allocate a copy context
     rsl::unique_ptr<GraphicsContext> DxComputeEngine::allocate_new_context(CommandAllocator* alloc)
     {
-      wrl::ComPtr<ID3D12GraphicsCommandList> cmdlist = dx_gal()->create_commandlist(alloc, GraphicsEngineType::Compute);
+      wrl::ComPtr<ID3D12GraphicsCommandList> cmdlist = static_cast<DirectXInterface*>(gfx::instance())->create_commandlist(alloc, GraphicsEngineType::Compute);
 
       return rsl::make_unique<DxComputeContext>(this, cmdlist);
     }

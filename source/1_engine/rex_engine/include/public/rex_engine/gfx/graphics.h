@@ -49,12 +49,13 @@ namespace rex
     }
 
     // Log the basic info about the graphics hardware of the current machine
-    void log_info();
+    //void log_info();
 
     // Set the graphics abstraction layer object
 
     // Create and initialize the graphics engine, rendering is possible from here on out
-    Error init(globals::GlobalUniquePtr<GALInterface> galInterface, const OutputWindowUserData& userData);
+    Error init(globals::GlobalUniquePtr<GALInterface> galInterface);
+    GALInterface* instance();
     // Shutdown the graphics engine, no rendering support from here on out
     void shutdown();
 

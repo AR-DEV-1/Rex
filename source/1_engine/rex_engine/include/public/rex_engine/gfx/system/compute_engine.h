@@ -13,7 +13,7 @@ namespace rex
     class ComputeEngine : public GraphicsEngine
     {
     public:
-      ComputeEngine(GpuEngine* gpuEngine, ResourceStateTracker* globalResourceStateTracker);
+      ComputeEngine(ResourceStateTracker* globalResourceStateTracker);
 
     private:
 

@@ -1,5 +1,6 @@
 #include "rex_engine/gfx/system/input_layout_cache.h"
 
+#include "rex_engine/gfx/graphics.h"
 #include "rex_engine/gfx/system/gal.h"
 
 #include "rex_std/functional.h"
@@ -21,7 +22,7 @@ namespace rex
 					return it->value.get();
 				}
 
-				auto layout = gal()->create_input_layout(desc);
+				auto layout = gfx::instance()->create_input_layout(desc);
 				return g_cached_layouts.emplace(desc, rsl::move(layout)).inserted_element->value.get();
 			}
 

@@ -5,6 +5,8 @@
 #include "rex_engine/gfx/system/view_heap.h"
 #include "rex_engine/gfx/system/gpu_engine.h"
 
+#include "rex_engine/gfx/graphics.h"
+
 namespace rex
 {
   namespace gfx
@@ -23,7 +25,7 @@ namespace rex
     }
     const ResourceView* CopyContext::copy_views(ViewHeapType heapType, const rsl::vector<const ResourceView*>& views)
     {
-      const ResourceView* gpuViews = gpu_engine()->try_get_gpu_views(views);
+      const ResourceView* gpuViews = gfx::instance()->try_get_gpu_views(views);
       if (gpuViews != nullptr)
       {
         return gpuViews;
@@ -48,7 +50,7 @@ namespace rex
     const ResourceView* CopyContext::copy_views(ViewHeap* dstHeap, const rsl::vector<const ResourceView*>& views)
     {
       rsl::unique_ptr<ResourceView> gpuView = dstHeap->copy_views(views);
-      return gpu_engine()->notify_views_on_gpu(views, rsl::move(gpuView));
+      return gfx::instance()->notify_views_on_gpu(views, rsl::move(gpuView));
     }
 
   }

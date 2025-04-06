@@ -18,7 +18,7 @@ namespace rex
       increase_vertex_buffer(5000);
       increase_index_buffer(5000);
 
-      m_constant_buffer = gal()->create_constant_buffer(sizeof(ImGuiVertexConstantBuffer));
+      m_constant_buffer = gfx::instance()->create_constant_buffer(sizeof(ImGuiVertexConstantBuffer));
     }
 
     // Update the frame context's data based on the draw data and upload this to the gpu.
@@ -67,7 +67,7 @@ namespace rex
     // Increase the vertex buffer to a new size
     void ImGuiFrameContext::increase_vertex_buffer(s32 newSize)
     {
-      m_vertex_buffer = gal()->create_vertex_buffer(newSize + s_buffer_increment_size, sizeof(ImDrawVert));
+      m_vertex_buffer = gfx::instance()->create_vertex_buffer(newSize + s_buffer_increment_size, sizeof(ImDrawVert));
     }
     // Incrase the index buffer to a new size
     void ImGuiFrameContext::increase_index_buffer(s32 newSize)
@@ -76,7 +76,7 @@ namespace rex
         ? IndexBufferFormat::Uint16
         : IndexBufferFormat::Uint32;
 
-      m_index_buffer = gal()->create_index_buffer(newSize + s_buffer_increment_size, format);
+      m_index_buffer = gfx::instance()->create_index_buffer(newSize + s_buffer_increment_size, format);
     }
     // Update the frame context's data to the gpu
     ObjectWithDestructionCallback<SyncInfo> ImGuiFrameContext::copy_buffer_data(ImDrawData* drawData)

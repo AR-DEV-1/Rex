@@ -5,6 +5,7 @@
 
 #include "rex_engine/gfx/system/command_allocator.h"
 #include "rex_engine/gfx/system/gal.h"
+#include "rex_engine/gfx/graphics.h"
 
 #include "rex_engine/containers/vector_utils.h"
 
@@ -50,7 +51,7 @@ namespace rex
 
     CommandAllocatorPool::CommandAllocatorPool(GraphicsEngineType type)
       : m_type(type)
-      , m_pool([this]() { return rsl::make_unique<PooledAllocator>(0, gal()->create_command_allocator(m_type)); })
+      , m_pool([this]() { return rsl::make_unique<PooledAllocator>(0, gfx::instance()->create_command_allocator(m_type)); })
     {}
 
     // Request a new allocator from the pool, create a new one if one isn't found

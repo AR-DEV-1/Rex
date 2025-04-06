@@ -62,12 +62,16 @@
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
 
+#include "rex_directx/system/dx_render_engine.h"
+#include "rex_directx/system/dx_compute_engine.h"
+#include "rex_directx/system/dx_copy_engine.h"
+
 namespace rex
 {
 	namespace gfx
 	{
 		DEFINE_LOG_CATEGORY(LogDxRhi);
-		DirectXInterface* g_dx_gal;
+		//DirectXInterface* g_dx_gal;
 
 		// Startup initialization
 		DEFINE_YES_NO_ENUM(EnableDebugFactory);
@@ -96,9 +100,11 @@ namespace rex
 			return device;
 		}
 
-		DirectXInterface::DirectXInterface()
+		DirectXInterface::DirectXInterface(const OutputWindowUserData& userData)
+			: GALInterface(userData)
 		{
-			g_dx_gal = this;
+			//g_dx_gal = this;
+			create_gpu_engine(userData);
 		}
 
 		// Return information about the graphics hardware and software
@@ -139,13 +145,14 @@ namespace rex
 			}
 
 			// Log the info in case anything goes wrong after this.
-			log_info();
+			log_info(info());
 
-			// Now create the gpu engine which the backend of all our graphics systems
-			m_gpu_engine = rsl::make_unique<gfx::DxGpuEngine>(userData, m_device.get(), m_adapter_manager.get());
-			m_gpu_engine->init();
+			return nullptr;
+			//// Now create the gpu engine which the backend of all our graphics systems
+			//m_gpu_engine = rsl::make_unique<gfx::DirectXInterface>(userData, m_device.get(), m_adapter_manager.get());
+			//init();
 
-			return m_gpu_engine.get();
+			//return m_gpu_engine.get();
 		}
 
 		// Return the shader platform used for this API.
@@ -154,10 +161,10 @@ namespace rex
 			return ShaderPlatform::Hlsl;
 		}
 
-		RenderTarget* DirectXInterface::current_backbuffer_rt()
-		{
-			return m_gpu_engine->current_backbuffer_rt();
-		}
+		//RenderTarget* DirectXInterface::current_backbuffer_rt()
+		//{
+		//	return current_backbuffer_rt();
+		//}
 
 		// Generic functions, coming from gal.h
 		// -------------------------------------------
@@ -254,7 +261,7 @@ namespace rex
 		rsl::unique_ptr<VertexBuffer>         DirectXInterface::create_vertex_buffer(s32 numVertices, s32 vertexSize, const void* data)
 		{
 			s32 total_size = numVertices * vertexSize;
-			wrl::ComPtr<ID3D12Resource> d3d_buffer = m_gpu_engine->allocate_buffer(total_size);
+			wrl::ComPtr<ID3D12Resource> d3d_buffer = allocate_buffer(total_size);
 			auto vb = rsl::make_unique<DxVertexBuffer>(d3d_buffer, numVertices, vertexSize);
 			d3d::set_debug_name_for(d3d_buffer.Get(), "Vertex Buffer");
 
@@ -275,7 +282,7 @@ namespace rex
 		{
 			s32 index_size = index_format_size(format);
 			s32 total_size = numIndices * index_size;
-			wrl::ComPtr<ID3D12Resource> buffer = m_gpu_engine->allocate_buffer(total_size);
+			wrl::ComPtr<ID3D12Resource> buffer = allocate_buffer(total_size);
 			d3d::set_debug_name_for(buffer.Get(), "Index Buffer");
 
 			auto ib = rsl::make_unique<DxIndexBuffer>(buffer, numIndices, format);
@@ -336,7 +343,7 @@ namespace rex
 
 		rsl::unique_ptr<RenderTarget>         DirectXInterface::create_render_target(s32 width, s32 height, TextureFormat format)
 		{
-			wrl::ComPtr<ID3D12Resource> d3d_texture = m_gpu_engine->allocate_texture2d(width, height, format);
+			wrl::ComPtr<ID3D12Resource> d3d_texture = allocate_texture2d(width, height, format);
 			return create_render_target(d3d_texture);
 		}
 		rsl::unique_ptr<PipelineState>        DirectXInterface::create_pso(const PipelineStateDesc& desc)
@@ -383,8 +390,8 @@ namespace rex
 			{
 				format_for_gpu = TextureFormat::Unorm4;
 			}
-			wrl::ComPtr<ID3D12Resource> d3d_texture = m_gpu_engine->allocate_texture2d(width, height, format_for_gpu);
-			DxResourceView desc_handle = m_gpu_engine->create_texture2d_srv(d3d_texture.Get());
+			wrl::ComPtr<ID3D12Resource> d3d_texture = allocate_texture2d(width, height, format_for_gpu);
+			DxResourceView desc_handle = create_texture2d_srv(d3d_texture.Get());
 
 			auto texture = rsl::make_unique<DxTexture2D>(d3d_texture, desc_handle, width, height, format_for_gpu);
 
@@ -406,8 +413,8 @@ namespace rex
 		{
 			REX_ASSERT_X(clearStateDesc.flags.has_state(ClearBits::ClearDepthBuffer) || clearStateDesc.flags.has_state(ClearBits::ClearStencilBuffer), "Using a clear state for a depth stencil buffer, but depth or stencil bits are not enabled");
 
-			wrl::ComPtr<ID3D12Resource> d3d_texture = m_gpu_engine->allocate_depth_stencil(width, height, format, clearStateDesc);
-			DxResourceView desc_handle = m_gpu_engine->create_dsv(d3d_texture.Get());
+			wrl::ComPtr<ID3D12Resource> d3d_texture = allocate_depth_stencil(width, height, format, clearStateDesc);
+			DxResourceView desc_handle = create_dsv(d3d_texture.Get());
 
 			auto ds_buffer = rsl::make_unique<DxDepthStencilBuffer>(d3d_texture, desc_handle, width, height, format, clearStateDesc);
 
@@ -418,8 +425,8 @@ namespace rex
 			// 1) Create the resource on the gpu that'll hold the data of the vertex buffer
 			rsl::memory_size aligned_size = align(size.size_in_bytes(), D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
 
-			wrl::ComPtr<ID3D12Resource> d3d_constant_buffer = m_gpu_engine->allocate_buffer(aligned_size);
-			DxResourceView desc_handle = m_gpu_engine->create_cbv(d3d_constant_buffer.Get(), aligned_size);
+			wrl::ComPtr<ID3D12Resource> d3d_constant_buffer = allocate_buffer(aligned_size);
+			DxResourceView desc_handle = create_cbv(d3d_constant_buffer.Get(), aligned_size);
 
 			d3d::set_debug_name_for(d3d_constant_buffer.Get(), debugName);
 
@@ -511,13 +518,13 @@ namespace rex
 		}
 		rsl::unique_ptr<Sampler2D> DirectXInterface::create_sampler2d(const SamplerDesc& desc)
 		{
-			return m_gpu_engine->create_sampler2d(desc);
+			return allocate_sampler2d(desc);
 		}
 		rsl::unique_ptr<UnorderedAccessBuffer> DirectXInterface::create_unordered_access_buffer(rsl::memory_size size, const void* data)
 		{
-			wrl::ComPtr<ID3D12Resource> d3d_buffer = m_gpu_engine->allocate_unordered_access_buffer(size);
+			wrl::ComPtr<ID3D12Resource> d3d_buffer = allocate_unordered_access_buffer(size);
 			d3d::set_debug_name_for(d3d_buffer.Get(), "Unordered Access Buffer");
-			DxResourceView desc_handle = m_gpu_engine->create_uav(d3d_buffer.Get(), size);
+			DxResourceView desc_handle = create_uav(d3d_buffer.Get(), size);
 
 			auto uab = rsl::make_unique<DxUnorderedAccessBuffer>(d3d_buffer, desc_handle, size);
 
@@ -543,12 +550,12 @@ namespace rex
 		// -------------------------------------------
 		rsl::unique_ptr<RenderTarget> DirectXInterface::create_render_target(wrl::ComPtr<ID3D12Resource>& resource)
 		{
-			DxResourceView rtv = m_gpu_engine->create_rtv(resource.Get());
+			DxResourceView rtv = create_rtv(resource.Get());
 			return rsl::make_unique<DxRenderTarget>(resource, rtv, default_rtv_clear_state());
 		}
 		wrl::ComPtr<ID3DBlob>                 DirectXInterface::compile_shader(const CompileShaderDesc& desc)
 		{
-			wrl::ComPtr<ID3DBlob> byte_code = m_gpu_engine->compile_shader(desc);
+			wrl::ComPtr<ID3DBlob> byte_code = m_shader_compiler.compile_shader(desc);
 
 			if (!byte_code)
 			{
@@ -626,9 +633,109 @@ namespace rex
 			m_debug_interface->report_live_objects();
 		}
 
-		DirectXInterface* dx_gal()
+		//DirectXInterface* dx_gal()
+		//{
+		//	return g_dx_gal;
+		//}
+
+
+
+
+
+
+
+
+
+		// Allocate a 1D buffer on the gpu, returning a DirectX resource
+		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_buffer(rsl::memory_size size)
 		{
-			return g_dx_gal;
+			return m_heap->create_buffer(size);
+		}
+		// Allocate a 1D buffer on the gpu that allows for unordered access, returning a DirectX resource
+		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_unordered_access_buffer(rsl::memory_size size)
+		{
+			return m_heap->create_unordered_access_buffer(size);
+		}
+		// Allocate a 2D buffer on the gpu, returning a DirectX resource
+		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_texture2d(s32 width, s32 height, TextureFormat format)
+		{
+			DXGI_FORMAT d3d_format = d3d::to_dx12(format);
+			return m_heap->create_texture2d(d3d_format, width, height);
+		}
+		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_depth_stencil(s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc)
+		{
+			DXGI_FORMAT d3d_format = d3d::to_dx12(format);
+			return m_heap->create_depth_stencil_buffer(d3d_format, width, height, clearStateDesc);
+		}
+
+		// Create a render target view for a given resource
+		DxResourceView DirectXInterface::create_rtv(const wrl::ComPtr<ID3D12Resource>& texture)
+		{
+			return d3d::to_dx12(cpu_desc_heap(ViewHeapType::RenderTarget))->create_rtv(texture.Get());
+		}
+		// Create a shader resource view pointing to a 2D texture
+		DxResourceView DirectXInterface::create_texture2d_srv(const wrl::ComPtr<ID3D12Resource>& texture)
+		{
+			return d3d::to_dx12(cpu_desc_heap(ViewHeapType::Texture2D))->create_texture2d_srv(texture.Get());
+		}
+		// Create a constant buffer view pointing for a given resource
+		DxResourceView DirectXInterface::create_cbv(const wrl::ComPtr<ID3D12Resource>& resource, rsl::memory_size size)
+		{
+			return d3d::to_dx12(cpu_desc_heap(ViewHeapType::ConstantBuffer))->create_cbv(resource.Get(), size);
+		}
+		DxResourceView DirectXInterface::create_dsv(const wrl::ComPtr<ID3D12Resource>& resource)
+		{
+			return d3d::to_dx12(cpu_desc_heap(ViewHeapType::DepthStencil))->create_dsv(resource.Get());
+		}
+		DxResourceView DirectXInterface::create_uav(const wrl::ComPtr<ID3D12Resource>& resource, rsl::memory_size size)
+		{
+			return d3d::to_dx12(cpu_desc_heap(ViewHeapType::UnorderedAccess))->create_uav(resource.Get(), size);
+		}
+
+		rsl::unique_ptr<DxSampler2D> DirectXInterface::allocate_sampler2d(const SamplerDesc& desc)
+		{
+			return d3d::to_dx12(cpu_desc_heap(ViewHeapType::Sampler))->create_sampler2d(desc);
+		}
+
+		// Compile a shader written in HLSL
+		//wrl::ComPtr<ID3DBlob> DirectXInterface::compile_shader(const CompileShaderDesc& desc)
+		//{
+		//	return m_shader_compiler.compile_shader(desc);
+		//}
+
+		// Initialize the various sub engines
+		rsl::unique_ptr<RenderEngine> DirectXInterface::init_render_engine(ResourceStateTracker* resourceStateTracker)
+		{
+			return rsl::make_unique<DxRenderEngine>(resourceStateTracker);
+		}
+		rsl::unique_ptr<CopyEngine> DirectXInterface::init_copy_engine(ResourceStateTracker* resourceStateTracker)
+		{
+			return rsl::make_unique<DxCopyEngine>(resourceStateTracker);
+		}
+		rsl::unique_ptr<ComputeEngine> DirectXInterface::init_compute_engine(ResourceStateTracker* resourceStateTracker)
+		{
+			return rsl::make_unique<DxComputeEngine>(resourceStateTracker);
+		}
+
+		// Initialize the resource heap which keeps track of all gpu resources
+		void DirectXInterface::init_resource_heap()
+		{
+			rsl::memory_size resource_heap_size = 100_mib; // hardcoded for now, will become a setting in the future
+			CD3DX12_HEAP_DESC desc(resource_heap_size, D3D12_HEAP_TYPE_DEFAULT);
+
+			wrl::ComPtr<ID3D12Heap> d3d_heap;
+			if (DX_FAILED(m_device->dx_object()->CreateHeap(&desc, IID_PPV_ARGS(&d3d_heap))))
+			{
+				REX_ERROR(LogDxRhi, "Failed to create global resource heap");
+			}
+
+			m_heap = rsl::make_unique<ResourceHeap>(d3d_heap, m_device->dx_object());
+		}
+
+		// Allocate a new view heap of a given type
+		rsl::unique_ptr<ViewHeap> DirectXInterface::allocate_view_heap(ViewHeapType viewHeapType, IsShaderVisible isShaderVisible)
+		{
+			return create_view_heap(d3d::to_dx12(viewHeapType), isShaderVisible);
 		}
 	}
 }
