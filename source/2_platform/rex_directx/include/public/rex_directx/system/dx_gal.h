@@ -11,7 +11,7 @@
 #include "rex_directx/system/dx_debug_interface.h"
 #include "rex_directx/system/dx_resource_heap.h"
 #include "rex_directx/system/dx_view_heap.h"
-#include "rex_directx/system/dx_gpu_engine.h"
+
 
 #include "rex_directx/system/dx_command_queue.h"
 #include "rex_directx/system/dx_swapchain.h"

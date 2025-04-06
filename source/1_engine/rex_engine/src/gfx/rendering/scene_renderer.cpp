@@ -14,7 +14,7 @@
 #include "rex_engine/gfx/scenegraph/scene.h"
 
 #include "rex_engine/diagnostics/log.h"
-#include "rex_engine/gfx/system/gpu_engine.h"
+
 
 namespace rex
 {

@@ -4,6 +4,7 @@
 #include "rex_directx/system/dx_resource_view.h"
 #include "rex_std/bonus/memory.h"
 #include "rex_directx/utility/dx_util.h"
+#include "rex_engine/gfx/system/gal.h"
 
 namespace rex
 {

@@ -9,7 +9,7 @@
 #include "rex_engine/gfx/system/shader_library.h"
 #include "rex_engine/gfx/rendering/renderer.h"
 
-#include "rex_engine/gfx/system/gpu_engine.h"
+
 #include "rex_std/algorithm.h"
 
 namespace rex
