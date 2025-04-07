@@ -222,7 +222,7 @@ namespace rex
 
       rsl::vector<const ResourceView*> views;
       views.push_back(texture->resource_view());
-      auto copy_ctx = new_copy_ctx();
+      auto copy_ctx = gfx::gal::instance()->new_copy_ctx();
       auto start_handle = copy_ctx->copy_views(ViewHeapType::Texture2D, views);
 
 			// Textures need to be bind using a view table and cannot be bound directly

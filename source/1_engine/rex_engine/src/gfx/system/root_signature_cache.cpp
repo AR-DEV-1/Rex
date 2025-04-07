@@ -1,6 +1,6 @@
 #include "rex_engine/gfx/system/root_signature_cache.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/graphics.h"
 
 #include "rex_std/functional.h"
@@ -25,7 +25,7 @@ namespace rex
 				}
 
 				const ShaderPipelineReflection& reflection = shader_reflection_cache::load(pipeline);
-				rsl::unique_ptr<RootSignature> root_sig = gfx::instance()->create_root_signature(reflection.parameters);
+				rsl::unique_ptr<RootSignature> root_sig = gfx::gal::instance()->create_root_signature(reflection.parameters);
 				return g_root_sig_cache.emplace(pipeline, rsl::move(root_sig)).inserted_element->value.get();
 			}
 

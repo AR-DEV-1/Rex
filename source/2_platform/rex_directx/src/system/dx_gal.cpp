@@ -66,26 +66,29 @@
 #include "rex_directx/system/dx_compute_engine.h"
 #include "rex_directx/system/dx_copy_engine.h"
 
+#include "rex_engine/gfx/system/compile_shader.h"
+
 namespace rex
 {
 	namespace gfx
 	{
 		DEFINE_LOG_CATEGORY(LogDxRhi);
-		//DirectXInterface* g_dx_gal;
 
 		// Startup initialization
-		DEFINE_YES_NO_ENUM(EnableDebugFactory);
-		rsl::unique_ptr<dxgi::Factory> create_dxgi_factory(EnableDebugFactory enableDebugFactory)
+		namespace internal
 		{
-			s32 dxgi_factory_flags = 0;
-			if (enableDebugFactory)
+			DEFINE_YES_NO_ENUM(EnableDebugFactory);
+			rsl::unique_ptr<dxgi::Factory> create_dxgi_factory(EnableDebugFactory enableDebugFactory)
 			{
-				dxgi_factory_flags |= DXGI_CREATE_FACTORY_DEBUG;
-			}
+				s32 dxgi_factory_flags = 0;
+				if (enableDebugFactory)
+				{
+					dxgi_factory_flags |= DXGI_CREATE_FACTORY_DEBUG;
+				}
 
-			return dxgi::Factory::create(dxgi_factory_flags);
-		}
-		rsl::unique_ptr<DxDevice> create_d3d_device(dxgi::AdapterManager* adapterManager)
+				return dxgi::Factory::create(dxgi_factory_flags);
+			}
+			rsl::unique_ptr<DxDevice> create_d3d_device(dxgi::AdapterManager* adapterManager)
 		{
 			// Select highest scoring gpu
 			const dxgi::Adapter* selected_gpu = adapterManager->selected();
@@ -99,12 +102,11 @@ namespace rex
 
 			return device;
 		}
+		}
 
 		DirectXInterface::DirectXInterface(const OutputWindowUserData& userData)
-			: GALInterface(userData)
+			: GALBase(userData)
 		{
-			//g_dx_gal = this;
-			create_gpu_engine(userData);
 		}
 
 		// Return information about the graphics hardware and software
@@ -113,61 +115,12 @@ namespace rex
 			return m_device->info();
 		}
 
-		// Initialize graphics systems and create a gpu engine
-		gfx::GpuEngine* DirectXInterface::create_gpu_engine(const OutputWindowUserData& userData)
-		{
-			// The debug interface needs to get created first (and destroyed last)
-			// to make sure all resources are tracked and it won't warn about resources
-			// not yet destroyed if they'd get destroyed at a later point in time.
-#ifdef REX_ENABLE_DX12_DEBUG_LAYER
-			m_debug_interface = rsl::make_unique<DebugInterface>();
-#endif
-
-			// 1) we need to init the dxgi factory.
-			// This is the system we use to create most other systems.
-			bool enable_debug_factory = m_debug_interface != nullptr;
-			m_factory = create_dxgi_factory(enable_debug_factory);
-
-			// 2) Create the adapter manager
-			// It'll go over all found GPUs in the system and score them
-			m_adapter_manager = rsl::make_unique<dxgi::AdapterManager>(m_factory.get(), [](const GpuDescription& gpu) { return calc_gpu_score(gpu); });
-
-			// 3) we need to init the device.
-			// A DirectX Device is used for creation of other resources
-			// You can think of it as an abstraction of the GPU,
-			// but just an abstraction over resource creation,
-			// not an abstraction of the gpu itself, that's what an IDXGIAdapter is for.
-			m_device = create_d3d_device(m_adapter_manager.get());
-			if (!m_device)
-			{
-				REX_ERROR(LogDxRhi, "Failed to create D3D Device");
-				return nullptr;
-			}
-
-			// Log the info in case anything goes wrong after this.
-			log_info(info());
-
-			return nullptr;
-			//// Now create the gpu engine which the backend of all our graphics systems
-			//m_gpu_engine = rsl::make_unique<gfx::DirectXInterface>(userData, m_device.get(), m_adapter_manager.get());
-			//init();
-
-			//return m_gpu_engine.get();
-		}
-
 		// Return the shader platform used for this API.
 		ShaderPlatform DirectXInterface::shader_platform() const
 		{
 			return ShaderPlatform::Hlsl;
 		}
 
-		//RenderTarget* DirectXInterface::current_backbuffer_rt()
-		//{
-		//	return current_backbuffer_rt();
-		//}
-
-		// Generic functions, coming from gal.h
-		// -------------------------------------------
 		rsl::unique_ptr<DxFence>          DirectXInterface::create_fence()
 		{
 			wrl::ComPtr<ID3D12Fence> fence;
@@ -267,11 +220,11 @@ namespace rex
 
 			if (data)
 			{
-				auto copy_context = gfx::new_copy_ctx();
+				auto copy_context = gfx::gal::instance()->new_copy_ctx();
 				copy_context->update_buffer(vb.get(), data, total_size, 0);
 				auto sync_info = copy_context->execute_on_gpu();
 
-				auto render_context = gfx::new_render_ctx();
+				auto render_context = gfx::gal::instance()->new_render_ctx();
 				render_context->stall(*sync_info.get());
 				render_context->transition_buffer(vb.get(), ResourceState::VertexAndConstantBuffer);
 			}
@@ -288,11 +241,11 @@ namespace rex
 			auto ib = rsl::make_unique<DxIndexBuffer>(buffer, numIndices, format);
 			if (data)
 			{
-				auto copy_context = gfx::new_copy_ctx();
+				auto copy_context = gfx::gal::instance()->new_copy_ctx();
 				copy_context->update_buffer(ib.get(), data, total_size, 0);
 				auto sync_info = copy_context->execute_on_gpu();
 
-				auto render_context = gfx::new_render_ctx();
+				auto render_context = gfx::gal::instance()->new_render_ctx();
 				render_context->stall(*sync_info.get());
 				render_context->transition_buffer(ib.get(), ResourceState::IndexBuffer);
 			}
@@ -398,11 +351,11 @@ namespace rex
 			// Upload data to gpu and transition to pixel shader resource
 			if (data)
 			{
-				auto copy_context = gfx::new_copy_ctx();
+				auto copy_context = gfx::gal::instance()->new_copy_ctx();
 				copy_context->update_texture2d(texture.get(), data);
 				auto sync_info = copy_context->execute_on_gpu();
 
-				auto render_context = gfx::new_render_ctx();
+				auto render_context = gfx::gal::instance()->new_render_ctx();
 				render_context->stall(*sync_info.get());
 				render_context->transition_buffer(texture.get(), ResourceState::PixelShaderResource);
 			}
@@ -530,11 +483,11 @@ namespace rex
 
 			if (data)
 			{
-				auto copy_context = gfx::new_copy_ctx();
+				auto copy_context = gfx::gal::instance()->new_copy_ctx();
 				copy_context->update_buffer(uab.get(), data, size, 0);
 				auto sync_info = copy_context->execute_on_gpu();
 
-				auto render_context = gfx::new_render_ctx();
+				auto render_context = gfx::gal::instance()->new_render_ctx();
 				render_context->stall(*sync_info.get());
 			}
 
@@ -633,10 +586,37 @@ namespace rex
 			m_debug_interface->report_live_objects();
 		}
 
-		//DirectXInterface* dx_gal()
-		//{
-		//	return g_dx_gal;
-		//}
+		void DirectXInterface::api_init()
+		{
+			// The debug interface needs to get created first (and destroyed last)
+			// to make sure all resources are tracked and it won't warn about resources
+			// not yet destroyed if they'd get destroyed at a later point in time.
+			#ifdef REX_ENABLE_DX12_DEBUG_LAYER
+				m_debug_interface = rsl::make_unique<DebugInterface>();
+			#endif
+
+			// 1) we need to init the dxgi factory.
+			// This is the system we use to create most other systems.
+			bool enable_debug_factory = m_debug_interface != nullptr;
+			m_factory = internal::create_dxgi_factory(enable_debug_factory);
+
+			// 2) Create the adapter manager
+			// It'll go over all found GPUs in the system and score them
+			m_adapter_manager = rsl::make_unique<dxgi::AdapterManager>(m_factory.get(), [](const GpuDescription& gpu) { return calc_gpu_score(gpu); });
+
+			// 3) we need to init the device.
+			// A DirectX Device is used for creation of other resources
+			// You can think of it as an abstraction of the GPU,
+			// but just an abstraction over resource creation,
+			// not an abstraction of the gpu itself, that's what an IDXGIAdapter is for.
+			m_device = internal::create_d3d_device(m_adapter_manager.get());
+			if (!m_device)
+			{
+				REX_ERROR(LogDxRhi, "Failed to create D3D Device");
+				return;
+			}
+		}
+
 
 
 

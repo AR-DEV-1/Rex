@@ -34,7 +34,7 @@ namespace rex
     // Initialize all the resources required for the compute engine
     void DxCopyEngine::init()
     {
-      m_upload_buffer = static_cast<DirectXInterface*>(gfx::instance())->create_upload_buffer(5_mib);
+      m_upload_buffer = static_cast<DirectXInterface*>(gfx::gal::instance())->create_upload_buffer(5_mib);
     }
 
     // Prepare a new frame
@@ -65,7 +65,7 @@ namespace rex
     // Allocate a copy context
     rsl::unique_ptr<GraphicsContext> DxCopyEngine::allocate_new_context(CommandAllocator* alloc)
     {
-      wrl::ComPtr<ID3D12GraphicsCommandList> cmdlist = static_cast<DirectXInterface*>(gfx::instance())->create_commandlist(alloc, GraphicsEngineType::Copy);
+      wrl::ComPtr<ID3D12GraphicsCommandList> cmdlist = static_cast<DirectXInterface*>(gfx::gal::instance())->create_commandlist(alloc, GraphicsEngineType::Copy);
       cmdlist->Close();
       return rsl::make_unique<DxCopyContext>(this, cmdlist);
     }

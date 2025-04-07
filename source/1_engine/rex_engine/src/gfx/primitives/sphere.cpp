@@ -2,7 +2,7 @@
 
 #include "rex_std/numbers.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/graphics.h"
 
 namespace rex
@@ -119,8 +119,8 @@ namespace rex
         mesh_data.add_index(base_index + i + 1);
       }
 
-      rsl::unique_ptr<VertexBuffer> vb = gfx::instance()->create_vertex_buffer(mesh_data.vertices().size(), mesh_data.vertex_size(), mesh_data.vertices().data());
-      rsl::unique_ptr<IndexBuffer> ib = gfx::instance()->create_index_buffer(mesh_data.indices().size(), IndexBufferFormat::Uint16, mesh_data.indices().data());
+      rsl::unique_ptr<VertexBuffer> vb = gfx::gal::instance()->create_vertex_buffer(mesh_data.vertices().size(), mesh_data.vertex_size(), mesh_data.vertices().data());
+      rsl::unique_ptr<IndexBuffer> ib = gfx::gal::instance()->create_index_buffer(mesh_data.indices().size(), IndexBufferFormat::Uint16, mesh_data.indices().data());
 
       return StaticMesh(rsl::move(vb), rsl::move(ib));
     }
@@ -200,8 +200,8 @@ namespace rex
         //mesh_data.vertices()[i].tangent = glm::normalize(u16);
       }
 
-      rsl::unique_ptr<VertexBuffer> vb = gfx::instance()->create_vertex_buffer(mesh_data.vertices().size(), mesh_data.vertex_size(), mesh_data.vertices().data());
-      rsl::unique_ptr<IndexBuffer> ib = gfx::instance()->create_index_buffer(mesh_data.indices().size(), IndexBufferFormat::Uint16, mesh_data.indices().data());
+      rsl::unique_ptr<VertexBuffer> vb = gfx::gal::instance()->create_vertex_buffer(mesh_data.vertices().size(), mesh_data.vertex_size(), mesh_data.vertices().data());
+      rsl::unique_ptr<IndexBuffer> ib = gfx::gal::instance()->create_index_buffer(mesh_data.indices().size(), IndexBufferFormat::Uint16, mesh_data.indices().data());
 
       return StaticMesh(rsl::move(vb), rsl::move(ib));
     }

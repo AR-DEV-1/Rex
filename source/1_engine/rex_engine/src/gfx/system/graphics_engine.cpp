@@ -2,7 +2,7 @@
 
 #include "rex_engine/containers/vector_utils.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/graphics.h"
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
@@ -13,7 +13,7 @@ namespace rex
   namespace gfx
   {
     GraphicsEngine::GraphicsEngine(GraphicsEngineType type, ResourceStateTracker* globalResourceStateTracker)
-      : m_command_queue(gfx::instance()->create_command_queue(type))
+      : m_command_queue(gfx::gal::instance()->create_command_queue(type))
       , m_command_allocator_pool(type)
       , m_context_pool([this](CommandAllocator* alloc) { return allocate_new_context(alloc); })
       , m_resource_state_tracker(globalResourceStateTracker)

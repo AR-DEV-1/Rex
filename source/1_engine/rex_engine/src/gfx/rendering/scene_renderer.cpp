@@ -1,7 +1,7 @@
 #include "rex_engine/gfx/rendering/scene_renderer.h"
 
 #include "rex_engine/gfx/resources/constant_buffer.h"
-#include "rex_engine/gfx/system/gal.h"
+
 
 #include "rex_engine/gfx/rendering/camera.h"
 
@@ -51,7 +51,7 @@ namespace rex
 		// flush the drawlist to the gpu
 		void SceneRenderer::flush_draw_lists()
 		{
-			auto current_ctx = new_render_ctx();
+			auto current_ctx = gfx::gal::instance()->new_render_ctx();
 			f32 viewport_width = static_cast<f32>(m_scene_data.viewport_width);
 			f32 viewport_height = static_cast<f32>(m_scene_data.viewport_height);
 			Viewport viewport = { 0.0f, 0.0f, viewport_width, viewport_height, 0.0f, 1.0f };
@@ -65,8 +65,8 @@ namespace rex
 
 		void SceneRenderer::init_gpu_resources()
 		{
-			m_cb_view_data = gfx::instance()->create_constant_buffer(sizeof(PerViewData), "Per View Data");
-			m_cb_scene_data = gfx::instance()->create_constant_buffer(sizeof(PerSceneData), "Per Scene Data");
+			m_cb_view_data = gfx::gal::instance()->create_constant_buffer(sizeof(PerViewData), "Per View Data");
+			m_cb_scene_data = gfx::gal::instance()->create_constant_buffer(sizeof(PerSceneData), "Per Scene Data");
 
 			// The number of objects per scene currently has a hard limit
 			// If we hit this limit we can upscale it or come up with a different strategy
@@ -77,7 +77,7 @@ namespace rex
 			for (s32 i = 0; i < s_max_number_of_objects_per_scene; ++i)
 			{
 				debugName = rsl::format("Per Instance Data {}", i);
-				m_per_instance_cbs.push_back(gfx::instance()->create_constant_buffer(sizeof(PerInstanceData), debugName));
+				m_per_instance_cbs.push_back(gfx::gal::instance()->create_constant_buffer(sizeof(PerInstanceData), debugName));
 			}
 		}
 
@@ -115,7 +115,7 @@ namespace rex
 
 			// Define the framebuffer attachments
 			geo_pass_desc.framebuffer_desc.emplace_back(swapchain_frame_buffer_handle());
-			geo_pass_desc.framebuffer_desc.emplace_back(gfx::swapchain_width(), gfx::swapchain_height(), TextureFormat::Depth32, default_depth_clear_state());
+			geo_pass_desc.framebuffer_desc.emplace_back(gfx::gal::instance()->back_buffer_width(), gfx::gal::instance()->back_buffer_height(), TextureFormat::Depth32, default_depth_clear_state());
 
 			geo_pass_desc.pso_desc.dsv_format = TextureFormat::Depth32;
 
@@ -137,7 +137,7 @@ namespace rex
 			per_instance_data.world = transform.world_mat();
 			per_instance_data.worldviewproj = per_instance_data.world * m_per_view_data.view_proj;
 
-			auto copy_ctx = new_copy_ctx();
+			auto copy_ctx = gfx::gal::instance()->new_copy_ctx();
 			copy_ctx->update_buffer(m_per_instance_cbs[constant_buffer_idx].get(), &per_instance_data, sizeof(per_instance_data));
 
 			DrawList draw_list{};
@@ -156,7 +156,7 @@ namespace rex
 
 			m_per_scene_data.light_direction = m_scene_data.light_direction;
 
-			auto copy_ctx = new_copy_ctx();
+			auto copy_ctx = gfx::gal::instance()->new_copy_ctx();
 			copy_ctx->update_buffer(m_cb_view_data.get(), &m_per_view_data, sizeof(m_per_view_data));
 			copy_ctx->update_buffer(m_cb_scene_data.get(), &m_per_scene_data, sizeof(m_per_scene_data));
 		}

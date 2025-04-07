@@ -9,7 +9,7 @@
 //#include "rex_engine/memory/blob.h"
 //#include "rex_engine/memory/blob_reader.h"
 //
-//#include "rex_engine/gfx/system/gal.h"
+//
 //#include "rex_engine/gfx/resources/texture_2d.h"
 //
 //#include "glm/glm.hpp"

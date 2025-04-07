@@ -25,7 +25,7 @@
 
 #include "rex_std/unordered_map.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/images/image_loader.h"
 
 #include "rex_engine/gfx/resources/vertex_buffer.h"
@@ -61,7 +61,7 @@ namespace pokemon
 			rgba.alpha = 255;
 		}
 
-		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::instance()->create_texture2d(tileset_img_load_res.width, tileset_img_load_res.height, rex::gfx::TextureFormat::Unorm4, tileset_rgba.get());
+		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::gal::instance()->create_texture2d(tileset_img_load_res.width, tileset_img_load_res.height, rex::gfx::TextureFormat::Unorm4, tileset_rgba.get());
 		return tileset_texture;
 	}
 
@@ -153,7 +153,7 @@ namespace pokemon
 		tile_renderer_desc.tileset_texture = mapRenderData.tileset.get();
 		tile_renderer_desc.blockset = mapRenderData.blockset.get();
 
-		return rex::gfx::add_renderer<TileRenderer>(tile_renderer_desc);
+		return rex::gfx::gal::instance()->add_renderer<TileRenderer>(tile_renderer_desc);
 	}
 
 	void GameSession::init_input()

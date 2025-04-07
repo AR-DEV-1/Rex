@@ -33,7 +33,7 @@ namespace pokemon
     // Update the vertex buffer with the latest data
     upload_tile_indices_buffer();
 
-    auto render_ctx = rex::gfx::new_render_ctx();
+    auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
 
     m_render_pass->bind_to(render_ctx.get());
 
@@ -150,22 +150,22 @@ namespace pokemon
     // In which case we don't need to allocate a new one, just update the existing one
     if (!m_tiles_vb_gpu)
     {
-      m_tiles_vb_gpu = rex::gfx::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
+      m_tiles_vb_gpu = rex::gfx::gal::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
     }
 
-    auto copy_ctx = rex::gfx::new_copy_ctx();
+    auto copy_ctx = rex::gfx::gal::instance()->new_copy_ctx();
     copy_ctx->update_buffer(m_tiles_vb_gpu.get(), tile_vertices.data(), tile_vertices.size() * sizeof(TileVertex));
     copy_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
 
-    auto render_ctx = rex::gfx::new_render_ctx();
+    auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
     render_ctx->transition_buffer(m_tiles_vb_gpu.get(), rex::gfx::ResourceState::VertexAndConstantBuffer);
     render_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
   }
   void TileRenderer::init_tile_indices_buffer()
   {
     // We don't have any data for this buffer yet, so we don't upload anything
-    m_tile_indices_buffer = rex::gfx::instance()->create_unordered_access_buffer(num_tiles());
-    auto render_context = rex::gfx::new_render_ctx();
+    m_tile_indices_buffer = rex::gfx::gal::instance()->create_unordered_access_buffer(num_tiles());
+    auto render_context = rex::gfx::gal::instance()->new_render_ctx();
     render_context->transition_buffer(m_tile_indices_buffer.get(), rex::gfx::ResourceState::NonPixelShaderResource);
     render_context->execute_on_gpu(rex::gfx::WaitForFinish::yes);
   }
@@ -184,13 +184,13 @@ namespace pokemon
     tiles_ib_cpu[4] = 3;
     tiles_ib_cpu[5] = 2;
 
-    m_tiles_ib_gpu = rex::gfx::instance()->create_index_buffer(num_indices_per_tile, rex::gfx::IndexBufferFormat::Uint16);
+    m_tiles_ib_gpu = rex::gfx::gal::instance()->create_index_buffer(num_indices_per_tile, rex::gfx::IndexBufferFormat::Uint16);
 
-    auto copy_ctx = rex::gfx::new_copy_ctx();
+    auto copy_ctx = rex::gfx::gal::instance()->new_copy_ctx();
     copy_ctx->update_buffer(m_tiles_ib_gpu.get(), tiles_ib_cpu.get(), tiles_ib_cpu.byte_size());
     copy_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
 
-    auto render_ctx = rex::gfx::new_render_ctx();
+    auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
     render_ctx->transition_buffer(m_tiles_ib_gpu.get(), rex::gfx::ResourceState::IndexBuffer);
   }
   void TileRenderer::init_cb()
@@ -208,16 +208,16 @@ namespace pokemon
     // In which case we don't need to allocate a new one, just update the existing one
     if (!m_tile_renderer_cb)
     {
-      m_tile_renderer_cb = rex::gfx::instance()->create_constant_buffer(sizeof(RenderingMetaData));
+      m_tile_renderer_cb = rex::gfx::gal::instance()->create_constant_buffer(sizeof(RenderingMetaData));
     }
 
-    auto copy_ctx = rex::gfx::new_copy_ctx();
+    auto copy_ctx = rex::gfx::gal::instance()->new_copy_ctx();
     copy_ctx->update_buffer(m_tile_renderer_cb.get(), &texture_data, sizeof(texture_data));
     copy_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
   }
   void TileRenderer::init_sampler()
   {
-    m_default_sampler = rex::gfx::common_sampler(rex::gfx::CommonSampler::Default2D);
+    m_default_sampler = rex::gfx::gal::instance()->common_sampler(rex::gfx::CommonSampler::Default2D);
   }
 
   void TileRenderer::init_renderpass()
@@ -226,7 +226,7 @@ namespace pokemon
 
     render_pass_desc.name = "Tile Renderer";
 
-    render_pass_desc.pso_desc.output_merger.raster_state = rex::gfx::common_raster_state(rex::gfx::CommonRasterState::DefaultDepth);
+    render_pass_desc.pso_desc.output_merger.raster_state = rex::gfx::gal::instance()->common_raster_state(rex::gfx::CommonRasterState::DefaultDepth);
 
     // We're rendering directly to the back buffer
     render_pass_desc.framebuffer_desc.emplace_back(rex::gfx::swapchain_frame_buffer_handle());
@@ -251,11 +251,11 @@ namespace pokemon
 
   void TileRenderer::upload_tile_indices_buffer()
   {
-    auto copy_ctx = rex::gfx::new_copy_ctx();
+    auto copy_ctx = rex::gfx::gal::instance()->new_copy_ctx();
     copy_ctx->update_buffer(m_tile_indices_buffer.get(), m_tile_cache.get(), m_tile_cache.byte_size());
     copy_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
 
-    auto render_context = rex::gfx::new_render_ctx();
+    auto render_context = rex::gfx::gal::instance()->new_render_ctx();
     render_context->transition_buffer(m_tile_indices_buffer.get(), rex::gfx::ResourceState::NonPixelShaderResource);
     render_context->execute_on_gpu(rex::gfx::WaitForFinish::yes);
   }

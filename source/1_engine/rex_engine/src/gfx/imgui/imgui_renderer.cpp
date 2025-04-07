@@ -6,7 +6,7 @@
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/filesystem/path.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/resources/texture_2d.h"
 #include "rex_engine/gfx/core/texture_format.h"
 
@@ -55,7 +55,7 @@ namespace rex
     {
       ImGui::Render();
 
-      auto render_ctx = gfx::new_render_ctx();
+      auto render_ctx = gfx::gal::instance()->new_render_ctx();
 
       // As the imgui renderer main viewport is the main window of the application
       // we use the main window as render target, which is the default render target
@@ -208,7 +208,7 @@ namespace rex
       io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
       TextureFormat format = TextureFormat::Unorm4;
 
-      m_fonts_texture = gfx::instance()->create_texture2d(width, height, format, pixels);
+      m_fonts_texture = gfx::gal::instance()->create_texture2d(width, height, format, pixels);
 
       io.Fonts->SetTexID((ImTextureID)m_fonts_texture.get());
     }
@@ -231,7 +231,7 @@ namespace rex
       desc.register_space = 0;
       desc.shader_visibility = ShaderVisibility::Pixel;
 
-      m_default_sampler = gfx::instance()->create_sampler2d(desc);
+      m_default_sampler = gfx::gal::instance()->create_sampler2d(desc);
     }
     // Initialize the material that'll be used by all ImGui rendering
     void ImGuiRenderer::init_renderpass()

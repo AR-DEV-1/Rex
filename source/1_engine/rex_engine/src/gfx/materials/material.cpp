@@ -4,7 +4,7 @@
 #include "rex_engine/diagnostics/assert.h"
 
 #include "rex_engine/gfx/graphics.h"
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/materials/material_system.h"
 
 #include "rex_engine/gfx/shader_reflection/shader_reflection_cache.h"
@@ -65,7 +65,7 @@ namespace rex
         {
           PipelineStateDesc pso_desc = psoDesc;
           pso_desc.shader_pipeline = m_shader_pipeline;
-          m_pso = gfx::instance()->create_pso(pso_desc);
+          m_pso = gfx::gal::instance()->create_pso(pso_desc);
         }
 
         result.is_overwritten = true;

@@ -1,7 +1,7 @@
 #include "rex_engine/gfx/primitives/cylinder.h"
 #include <glm/gtc/constants.hpp>
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/graphics.h"
 
 namespace rex
@@ -174,8 +174,8 @@ namespace rex
           }
         }
 
-        rsl::unique_ptr<VertexBuffer> vb = gfx::instance()->create_vertex_buffer(mesh_data.vertices().size(), mesh_data.vertex_size(), mesh_data.vertices().data());
-        rsl::unique_ptr<IndexBuffer> ib = gfx::instance()->create_index_buffer(mesh_data.indices().size(), IndexBufferFormat::Uint16, mesh_data.indices().data());
+        rsl::unique_ptr<VertexBuffer> vb = gfx::gal::instance()->create_vertex_buffer(mesh_data.vertices().size(), mesh_data.vertex_size(), mesh_data.vertices().data());
+        rsl::unique_ptr<IndexBuffer> ib = gfx::gal::instance()->create_index_buffer(mesh_data.indices().size(), IndexBufferFormat::Uint16, mesh_data.indices().data());
 
         return StaticMesh(rsl::move(vb), rsl::move(ib));
       }

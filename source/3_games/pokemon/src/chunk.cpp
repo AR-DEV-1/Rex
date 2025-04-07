@@ -3,7 +3,7 @@
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/gfx/materials/material_system.h"
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/components/mesh_component.h"
 #include "rex_engine/components/transform_component.h"
 #include "rex_engine/gfx/primitives/mesh_factory.h"

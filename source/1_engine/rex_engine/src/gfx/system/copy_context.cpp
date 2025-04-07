@@ -25,7 +25,7 @@ namespace rex
     }
     const ResourceView* CopyContext::copy_views(ViewHeapType heapType, const rsl::vector<const ResourceView*>& views)
     {
-      const ResourceView* gpuViews = gfx::instance()->try_get_gpu_views(views);
+      const ResourceView* gpuViews = gfx::gal::instance()->try_get_gpu_views(views);
       if (gpuViews != nullptr)
       {
         return gpuViews;
@@ -50,7 +50,7 @@ namespace rex
     const ResourceView* CopyContext::copy_views(ViewHeap* dstHeap, const rsl::vector<const ResourceView*>& views)
     {
       rsl::unique_ptr<ResourceView> gpuView = dstHeap->copy_views(views);
-      return gfx::instance()->notify_views_on_gpu(views, rsl::move(gpuView));
+      return gfx::gal::instance()->notify_views_on_gpu(views, rsl::move(gpuView));
     }
 
   }
