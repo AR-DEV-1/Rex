@@ -7,6 +7,7 @@
 #include "rex_engine/memory/memory_tags.h"
 #include "rex_engine/memory/memory_types.h"
 #include "rex_engine/memory/allocators/untracked_allocator.h"
+#include "rex_engine/diagnostics/stacktrace.h"
 #include "rex_std/array.h"
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/bonus/defines.h"
@@ -32,6 +33,50 @@ namespace rex
     // A list of all allocation headers. Good for memory allocation debugging
     debug_vector<MemoryHeader*> allocation_headers;
   };
+
+  class AllocationCallStack
+  {
+  public:
+    AllocationCallStack(CallStack callstack, card64 size)
+      : m_callstack(rsl::move(callstack))
+      , m_size(size)
+      , m_ref_count(1)
+    {
+    }
+
+    void add_size(card64 size)
+    {
+      m_size += size;
+      ++m_ref_count;
+    }
+    void sub_size(card64 size)
+    {
+      m_size -= size;
+      --m_ref_count;
+    }
+
+    rsl::memory_size size() const
+    {
+      return m_size;
+    }
+
+    card32 ref_count() const
+    {
+      return m_ref_count;
+    }
+
+  private:
+    CallStack m_callstack;
+    rsl::memory_size m_size;
+    card32 m_ref_count;
+  };
+
+  struct AllocationInfo
+  {
+    AllocationCallStack allocation_callstack;
+    debug_vector<CallStack> deleter_callstacks;
+  };
+
 
   class MemoryTracker
   {
@@ -66,6 +111,8 @@ namespace rex
     REX_NO_DISCARD MemoryTrackingStats get_stats_for_frame(card32 idx);
 
   private:
+    debug_vector<MemoryHeader*> m_allocation_headers;
+    debug_hash_map<CallStack, AllocationInfo> m_allocation_info_table;
     rsl::high_water_mark<s64> m_mem_usage; // current memory usage
     s64 m_max_mem_budget;                  // maximum allowed memory usage
     MemoryStats m_mem_stats_on_startup;    // stats queried from the OS at init time

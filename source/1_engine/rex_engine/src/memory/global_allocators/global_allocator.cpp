@@ -27,8 +27,6 @@ namespace rex
       // it's the only memory 
       mem_tracker(); // simply touch it so that the local static gets initialized
 
-      //memory_tracker::init();
-
       static TrackedAllocator alloc(untracked_alloc);
 #else
       static UntrackedAllocator alloc{};

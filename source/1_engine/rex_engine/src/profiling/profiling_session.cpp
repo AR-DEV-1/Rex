@@ -3,6 +3,8 @@
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/file.h"
 
+#include "rex_engine/memory/memory_types.h"
+
 namespace rex
 {
 	ProfilingSession::ProfilingSession()
@@ -18,12 +20,9 @@ namespace rex
 
 	void ProfilingSession::write_result(const ProfilingResult& result)
 	{
-		static rsl::stringstream ss;
-		static rsl::string source_loc;
-		static rsl::string result_str;
-
-		ss.str(rsl::string(""));
-		result_str.clear();
+		rsl::basic_stringstream<char8, rsl::char_traits<char8>, GlobalScratchAllocator> ss;
+		scratch_string source_loc;
+		scratch_string result_str;
 
 		source_loc.assign(result.source_location.file_name());
 		source_loc.replace("\\", "/");
