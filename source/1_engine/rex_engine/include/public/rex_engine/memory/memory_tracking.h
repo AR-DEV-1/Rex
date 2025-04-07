@@ -111,6 +111,7 @@ namespace rex
     REX_NO_DISCARD MemoryTrackingStats get_stats_for_frame(card32 idx);
 
   private:
+    // stores the headers for all allocations
     debug_vector<MemoryHeader*> m_allocation_headers;
     debug_hash_map<CallStack, AllocationInfo> m_allocation_info_table;
     rsl::high_water_mark<s64> m_mem_usage; // current memory usage
