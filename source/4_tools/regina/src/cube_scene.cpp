@@ -11,7 +11,7 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/entities/entity.h"
 #include "rex_engine/gfx/components/mesh_component.h"
 
@@ -41,7 +41,7 @@ namespace regina
       rex::gfx::StaticMeshComponent& smc = cube_entity.add_component<rex::gfx::StaticMeshComponent>(rsl::move(box));
 
       // 3. Initialize the static mesh with a material
-      m_cube_material = rex::gfx::load_material(rex::vfs::abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
+      m_cube_material = rex::gfx::load_material(rex::vfs::instance()->abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
       smc.set_material(m_cube_material.get());
     }
 

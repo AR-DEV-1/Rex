@@ -1,0 +1,14 @@
+[
+    {
+        "name": "ExampleArgument",
+        "desc": "Example argument, not used for anything other than testing if it works."
+    },
+    {
+        "name": "ExampleArgument2",
+        "desc": "Example argument, not used for anything other than testing if it works."
+    },
+    {
+        "name": "ExampleArgumentWithEqual",
+        "desc": "Example argument with equal sign. not used for anything other than testing if it works"
+    }
+]

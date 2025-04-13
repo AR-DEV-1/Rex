@@ -5,13 +5,16 @@
 #include "rex_engine/diagnostics/logging/log_macros.h"
 #include "rex_engine/event_system/event.h" // IWYU pragma: keep
 #include "rex_engine/event_system/event_system.h"
+#include "rex_engine/engine/engine.h"
+#include "rex_engine/system/process.h"
 #include "rex_engine/frameinfo/deltatime.h"
 #include "rex_engine/frameinfo/fps.h"
 #include "rex_engine/memory/global_allocators/global_allocator.h"
 #include "rex_engine/platform/win/win_com_library.h"
 #include "rex_engine/gfx/core/depth_info.h"
 #include "rex_engine/gfx/core/renderer_output_window_user_data.h"
-#include "rex_engine/gfx/system/gal.h"
+
+#include "rex_engine/gfx/system/shader_library.h"
 #include "rex_engine/gfx/graphics.h"
 #include "rex_std/bonus/types.h"
 #include "rex_std/functional.h"
@@ -103,6 +106,10 @@ namespace rex
       {
         REX_ASSERT_CONTEXT_SCOPE("Application update");
 
+        auto fps = engine::instance()->frame_info().fps().get();
+        auto dt = engine::instance()->frame_info().delta_time().to_seconds();
+        m_window->set_title(rsl::format("{} | PID: {} FPS: {} Delta Time: {:.4f}", create_window_title(), current_process::id(), fps, dt));
+
         pre_user_update();
 
         m_on_update();
@@ -125,7 +132,7 @@ namespace rex
         }
 
         // Call into our graphics API to render everything
-        gfx::render();
+        gfx::gal::instance()->render();
       }
       void shutdown() // NOLINT (readability-make-member-function-const,-warnings-as-errors)
       {
@@ -133,7 +140,9 @@ namespace rex
 
         m_on_shutdown();
 
-        gfx::shutdown();
+        gfx::shader_lib::shutdown();
+        gfx::gal::shutdown();
+        win::com_lib::shutdown();
       }
 
     private:
@@ -240,7 +249,7 @@ namespace rex
         // initialize the com lib
         // Doing this very early on so other system can use the com lib
         // for their initialization if needed
-        m_win_com_lib_handle = win::com_lib::create_lib_handle();
+        win::com_lib::init(globals::make_unique<ComLibrary>());
 
         // window initialization
         m_window = create_window();
@@ -272,14 +281,18 @@ namespace rex
 
         return true;
       }
+      rsl::small_stack_string create_window_title() const
+      {
+        return m_app_creation_params.gui_params.window_title.empty()
+          ? m_app_instance->app_name()
+          : m_app_creation_params.gui_params.window_title;
+      }
       rsl::unique_ptr<Window> create_window()
       {
         auto wnd = rsl::make_unique<Window>();
 
         WindowInfo window_info;
-        window_info.title    = m_app_creation_params.gui_params.window_title.empty() 
-          ? m_app_instance->app_name()
-          : m_app_creation_params.gui_params.window_title;
+        window_info.title = create_window_title();
         window_info.viewport = {0, 0, m_app_creation_params.gui_params.window_width, m_app_creation_params.gui_params.window_height};
 
         if(wnd->create(m_app_creation_params.platform_params->instance, m_app_creation_params.platform_params->show_cmd, window_info))
@@ -292,13 +305,13 @@ namespace rex
       }
       void subscribe_window_events()
       {
-        event_system().subscribe<WindowClose>([this](const WindowClose& /*evt*/) { event_system().fire_event(QuitApp("Window closed")); });
-        event_system().subscribe<WindowActivated>( [this](const WindowActivated& /*evt*/) { m_app_instance->resume(); });
-        event_system().subscribe<WindowDeactivated>( [this](const WindowDeactivated& /*evt*/) { m_app_instance->pause(); });
-        event_system().subscribe<WindowStartResize>( [this](const WindowStartResize& /*evt*/) { on_start_resize(); });
-        event_system().subscribe<WindowEndResize>( [this](const WindowEndResize& /*evt*/) { on_stop_resize(); });
-        event_system().subscribe<QuitApp>( [this](const QuitApp& evt) { m_app_instance->quit(evt.reason(), evt.exit_code()); });
-        event_system().subscribe<WindowResize>( [this](const WindowResize& evt) 
+        event_system::instance()->subscribe<WindowClose>([this](const WindowClose& /*evt*/) { event_system::instance()->fire_event(QuitApp("Window closed")); });
+        event_system::instance()->subscribe<WindowActivated>( [this](const WindowActivated& /*evt*/) { m_app_instance->resume(); });
+        event_system::instance()->subscribe<WindowDeactivated>( [this](const WindowDeactivated& /*evt*/) { m_app_instance->pause(); });
+        event_system::instance()->subscribe<WindowStartResize>( [this](const WindowStartResize& /*evt*/) { on_start_resize(); });
+        event_system::instance()->subscribe<WindowEndResize>( [this](const WindowEndResize& /*evt*/) { on_stop_resize(); });
+        event_system::instance()->subscribe<QuitApp>( [this](const QuitApp& evt) { m_app_instance->quit(evt.reason(), evt.exit_code()); });
+        event_system::instance()->subscribe<WindowResize>( [this](const WindowResize& evt) 
           { 
             switch (evt.resize_type())
             {
@@ -328,16 +341,18 @@ namespace rex
         user_data.window_width           = m_window->width();
         user_data.window_height          = m_window->height();
         user_data.windowed               = !m_app_creation_params.gui_params.fullscreen;
-        user_data.max_frames_in_flight   = settings::get_int("max_frames_in_flight", 3);
+        user_data.max_frames_in_flight   = settings::instance()->get_int("max_frames_in_flight", 3);
 
 #ifdef REX_USING_DIRECTX
-        gfx::init(rsl::make_unique<gfx::DirectXInterface>(), user_data);
+        gfx::gal::init(globals::make_unique<gfx::DirectXInterface>(user_data));
 #else
 #error "No Graphics API defined"
 #endif
 
+        gfx::shader_lib::init(globals::make_unique<gfx::ShaderLibrary>());
+
         // Add the imgui renderer, which is our main UI renderer for the moment
-        gfx::add_renderer<gfx::ImGuiRenderer>(m_window->primary_display_handle());
+        gfx::gal::instance()->add_renderer<gfx::ImGuiRenderer>(m_window->primary_display_handle());
 
         return true;
       }
@@ -352,7 +367,7 @@ namespace rex
         m_window->update();
 
         // Dispatch the events that got queued last frame
-        event_system().dispatch_queued_events();
+        event_system::instance()->dispatch_queued_events();
       }
       void post_user_update()
       {
@@ -371,7 +386,6 @@ namespace rex
 
       ApplicationCreationParams m_app_creation_params;
       CoreApplication* m_app_instance;
-      win::com_lib::WinComLibHandle m_win_com_lib_handle;
     };
 
     //-------------------------------------------------------------------------

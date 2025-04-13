@@ -5,7 +5,7 @@
 #include "rex_engine/diagnostics/logging/log_macros.h"
 #include "rex_engine/diagnostics/logging/log_verbosity.h"
 #include "rex_engine/engine/state_controller.h"
-#include "rex_engine/engine/project.h"
+
 #include "rex_engine/engine/casting.h"
 #include "rex_engine/filesystem/directory.h"
 #include "rex_engine/filesystem/file.h"
@@ -28,10 +28,10 @@
 // Rex Engine - Virtual File System
 // Users can make simple request to read or write to a file
 // that run on the same thread
-// eg: vfs::read_file and vfs::write_to_file
+// eg: vfs::instance()->read_file and vfs::instance()->write_to_file
 //
 // the vfs also supports async read requests
-// this is done by calling vfs::read_file_async
+// this is done by calling vfs::instance()->read_file_async
 // This will return a read request immediately
 // the user is meant to keep this read request
 // alive as it'll be signaled when reading has finished
@@ -39,7 +39,7 @@
 // to process the data it just read
 // It works as follows:
 //
-// rex::vfs::ReadRequest request = rex::vfs::read_file_async("path/to/file");
+// rex::vfs::instance()->ReadRequest request = rex::vfs::instance()->read_file_async("path/to/file");
 //
 // Do some other code here
 // ..
@@ -107,603 +107,226 @@
 
 namespace rex
 {
-  namespace vfs
+  VfsBase::VfsBase(rsl::string_view root)
+    : m_vfs_state_controller(VfsState::NotInitialized)
+    , m_root(root)
+  {}
+
+  VfsBase::~VfsBase() = default;
+
+  rsl::string_view VfsBase::root() const
   {
-    DEFINE_LOG_CATEGORY(LogVfs);
+    return m_root;
+  }
+  void VfsBase::mount(MountingPoint root, rsl::string_view path)
+  {
+    rsl::string_view full_path = vfs::instance()->abs_path(path);
 
-    enum class VfsState
+    REX_ASSERT_X(!m_mounted_roots.contains(root), "root {} is already mapped. currently mapped to '{}'", rsl::enum_refl::enum_name(root), m_mounted_roots.at(root));
+    m_mounted_roots[root].assign(full_path);
+
+    // make sure the mount exists
+    if (!directory::exists(full_path))
     {
-      NotInitialized = BIT(0),
-      Initializing   = BIT(1),
-      Running        = BIT(2),
-      ShuttingDown   = BIT(3),
-      ShutDown       = BIT(4)
-    };
-
-    // NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-
-    // Root paths used by the VFS
-    rsl::medium_stack_string g_root; // This the root where all relative paths will start from
-    struct RootPaths
-    {
-			rsl::string engine_root;
-			rsl::string editor_root;
-			rsl::string project_root;
-			rsl::string sessions_root;     // This is the root for all sessions data
-			rsl::string project_sessions_root;  // This is the root for all the sessions data of the current project
-			rsl::string current_session_root;           // This is the root for all the data of the current session
-
-      void clear()
-      {
-        engine_root.clear();
-        editor_root.clear();
-        project_root.clear();
-        sessions_root.clear();
-        project_sessions_root.clear();
-        current_session_root.clear();
-      }
-    };
-    RootPaths g_root_paths;
-
-    // This controls the state of the vfs
-    StateController<VfsState> g_vfs_state_controller(VfsState::NotInitialized);
-
-    // mutices for the asyncronous operation of the vfs
-    rsl::mutex g_read_request_mutex;
-    rsl::mutex g_closed_request_mutex;
-
-    // queues the vfs uses for its async operations
-    rsl::vector<rsl::string_view> g_read_requests_in_order;
-    rsl::unordered_map<rsl::string, rsl::unique_ptr<QueuedRequest>> g_queued_requests;
-    rsl::vector<rsl::unique_ptr<QueuedRequest>> g_closed_requests;
-
-    // mounted roots
-    rsl::unordered_map<MountingPoint, rsl::string> g_mounted_roots;
-
-    // threads used by the vfs to perform the async operations
-    rsl::thread g_reading_thread;
-    rsl::thread g_closing_thread;
-
-    // NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables, fuchsia-statically-constructed-objects)
-
-    // Forward declare internal function
-    namespace internal
-    {
-      rsl::string_view no_mount_path()
-      {
-        // explicitely stating "no mount found" here
-        // as an empty path would indicate it's at the root
-        // instead of it not existing
-
-        return rsl::string_view("no mount found");
-      }
+      create_dirs(full_path);
     }
+  }
 
-    rsl::string_view root()
+  // --------------------------------
+  // CREATING
+  // --------------------------------
+  Error VfsBase::create_file(MountingPoint root, rsl::string_view filepath)
+  {
+    filepath = path::remove_quotes(filepath);
+
+    scratch_string fullpath = path::join(m_mounted_roots.at(root), filepath);
+    return create_file(fullpath);
+  }
+  Error VfsBase::create_dir(MountingPoint root, rsl::string_view path)
+  {
+    path = path::remove_quotes(path);
+
+    scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
+    return create_dir(fullpath);
+  }
+
+  // --------------------------------
+  // DELETING
+  // --------------------------------
+  Error VfsBase::delete_file(MountingPoint root, rsl::string_view path)
+  {
+    path = path::remove_quotes(path);
+
+    scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
+    return delete_file(fullpath);
+  }
+  Error VfsBase::delete_dir(MountingPoint root, rsl::string_view path)
+  {
+    path = path::remove_quotes(path);
+
+    const scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
+    return delete_dir(fullpath);
+  }
+  Error VfsBase::delete_dir_recursive(MountingPoint root, rsl::string_view path)
+  {
+    path = path::remove_quotes(path);
+
+    const scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
+    return delete_dir_recursive(fullpath);
+  }
+
+  // --------------------------------
+  // READING
+  // --------------------------------
+  REX_NO_DISCARD memory::Blob VfsBase::read_file(MountingPoint root, rsl::string_view filepath)
+  {
+    filepath = path::remove_quotes(filepath);
+
+    const scratch_string fullpath = path::join(m_mounted_roots.at(root), filepath);
+    return read_file(fullpath);
+  }
+  s32 VfsBase::read_file(MountingPoint root, rsl::string_view filepath, rsl::byte* buffer, s32 size)
+  {
+    filepath = path::remove_quotes(filepath);
+
+    const scratch_string fullpath = path::join(m_mounted_roots.at(root), filepath);
+    return read_file(fullpath, buffer, size);
+  }
+  REX_NO_DISCARD ReadRequest VfsBase::read_file_async(MountingPoint root, rsl::string_view filepath)
+  {
+    filepath = path::remove_quotes(filepath);
+
+    const scratch_string fullpath = path::join(m_mounted_roots.at(root), filepath);
+    return read_file_async(fullpath);
+  }
+  ReadRequest VfsBase::read_file_async(rsl::string_view path)
+  {
+    path = path::remove_quotes(path);
+    path = path::unsafe_abs_path(path);
+
+    // If we already have a request for this file, add a new request to signal to the queued request
+    auto it = m_queued_requests.find(path);
+    if (it != m_queued_requests.end())
     {
-      return g_root;
-    }
-    rsl::string_view engine_root()
-    {
-      return g_root_paths.engine_root;
-    }
-    rsl::string_view editor_root()
-    {
-      return g_root_paths.editor_root;
-    }
-    rsl::string_view project_root()
-    {
-      return g_root_paths.project_root;
-    }
-    rsl::string_view sessions_root()
-    {
-      return g_root_paths.sessions_root;
-    }
-    rsl::string_view project_sessions_root()
-    {
-      return g_root_paths.project_sessions_root;
-    }
-    rsl::string_view current_session_root()
-    {
-      return g_root_paths.current_session_root;
-    }
-
-    void process_read_requests()
-    {
-      while(g_vfs_state_controller.has_state(VfsState::Running))
-      {
-        rsl::unique_lock lock(g_read_request_mutex);
-        if(!g_queued_requests.empty())
-        {
-          // get the queued request and remvoe it from the queue,
-          // but remove in the reverse order that they got added
-          rsl::string_view filepath = g_read_requests_in_order.front();
-          g_read_requests_in_order.erase(g_read_requests_in_order.cbegin());
-          rsl::unique_ptr<QueuedRequest> request = rsl::move(g_queued_requests[filepath]);
-          g_queued_requests.erase(filepath);
-
-          // we don't need access to the queue anymore, we can unlock its access mutex
-          lock.unlock();
-
-          // read the actual file we requested
-          memory::Blob buffer = read_file(request->filepath());
-
-          // signal all read requests that this file has now been read
-          // it's possible multiple read requests want to access the same file
-          // if such requests come in while there's already a request for this file
-          // they get added to the original queued request and they now all get notified
-          request->signal_requests(buffer.data(), buffer.size());
-
-          // add the closed task to the queue, making sure it stays alive until all requests have finished processing the data
-          // This moves ownership of the buffer to the new request in the new queue
-          // We do this so that we don't have lock any thread while waiting for the requests to complete
-          const rsl::unique_lock closed_req_lock(g_closed_request_mutex);
-          g_closed_requests.push_back(rsl::move(request));
-        }
-
-        using namespace rsl::chrono_literals; // NOLINT(google-build-using-namespace)
-        rsl::this_thread::sleep_for(1ms);
-      }
-    }
-    void wait_for_read_requests()
-    {
-      while(g_vfs_state_controller.has_state(VfsState::Running))
-      {
-        const rsl::unique_lock lock(g_closed_request_mutex);
-				
-        // Remove all requests that have finished
-				auto it = rsl::remove_if(g_closed_requests.begin(), g_closed_requests.end(), [](const rsl::unique_ptr<QueuedRequest>& request) { return request->all_requests_finished(); });
-				g_closed_requests.erase(it, g_closed_requests.end());
-
-        using namespace rsl::chrono_literals; // NOLINT(google-build-using-namespace)
-        rsl::this_thread::sleep_for(20ms);
-      }
-    }
-    void start_threads()
-    {
-      // This thread processes the read requests
-      // A queued request is popped from the queue and reads the file specified.
-      // after the requested file is read, all read requests for this file receive a signal.
-      // and store a pointer to the buffer with its size
-      // The request is then passed over to the closing thread queue
-      // and stays there until all read requests have finished their processing
-      g_reading_thread = rsl::thread(process_read_requests);
-
-      // this thread goes over all the requests that are currently in flight
-      // If they've closed, it'll close these requests and remove them from the queue
-      g_closing_thread = rsl::thread(wait_for_read_requests);
-    }
-
-    rsl::string current_timepoint_for_filename()
-    {
-      const rsl::time_point current_time = rsl::current_timepoint();
-      rsl::string timepoint_str(rsl::format("{}_{}", current_time.date().to_string_without_weekday(), current_time.time().to_string()));
-      timepoint_str.replace("/", "_");
-      timepoint_str.replace(":", "_");
-      return timepoint_str;
-    }
-
-    void set_root_paths()
-    {
-      g_root_paths.engine_root.assign(path::join(vfs::root(), "rex"));
-      g_root_paths.editor_root.assign(path::join(vfs::root(), "regina"));
-      g_root_paths.project_root.assign(path::join(vfs::root(), project_name()));
-      g_root_paths.sessions_root.assign(path::join(vfs::root(), "_sessions"));
-      g_root_paths.project_sessions_root.assign(path::join(sessions_root(), project_name()));
-      g_root_paths.current_session_root.assign(path::join(project_sessions_root(), current_timepoint_for_filename()));
-    }
-    void init()
-    {
-      g_vfs_state_controller.change_state(VfsState::Initializing);
-
-      // Setting the root directory has the effect that all data will be read relative from this directory
-      // This has the same effect as if you would put the working directory to this path
-      set_root(cmdline::get_argument("Root").value_or(rex::path::cwd()));
-
-      // Create the current session root so data generated during this session
-      // has somewhere to put itself
-      create_dirs(current_session_root());
-
-      g_vfs_state_controller.change_state(VfsState::Running);
-
-      // Start the worker threads, listening to file IO requests and processing them
-      start_threads();
-
-      REX_INFO(LogVfs, "LogVfs initialized");
-    }
-    void set_root(rsl::string_view root)
-    {
-      if(root.empty())
-      {
-        g_root = rex::path::cwd();
-      }
-      else if(path::is_absolute(root))
-      {
-        g_root = root;
-      }
-      else
-      {
-        g_root = path::join(path::cwd(), root);
-      }
-
-      REX_ASSERT_X(directory::exists(g_root), "root of vfs is not a directory");
-      REX_INFO(LogVfs, "LogVfs root changed to: {}", g_root);
-
-      set_root_paths();
-    }
-    void mount(MountingPoint root, rsl::string_view path)
-    {
-      rsl::string_view full_path = vfs::abs_path(path);
-
-      REX_ASSERT_X(!g_mounted_roots.contains(root), "root {} is already mapped. currently mapped to '{}'", rsl::enum_refl::enum_name(root), g_mounted_roots.at(root));
-      g_mounted_roots[root].assign(full_path);
-
-      // make sure the mount exists
-      if (!directory::exists(full_path))
-      {
-        create_dir(full_path);
-      }
-    }
-    void shutdown()
-    {
-      g_vfs_state_controller.change_state(VfsState::ShuttingDown);
-
-      if (g_reading_thread.joinable())
-      {
-        g_reading_thread.join();
-      }
-      if (g_closing_thread.joinable())
-      {
-        g_closing_thread.join();
-      }
-
-      for (const auto& [mount, path] : g_mounted_roots)
-      {
-        if (rex::directory::is_empty(path))
-        {
-          // As soon as we have a path that can be mounted and is expected to be empty on shutdown
-          // we have to extend the mount functionality to give a flag to a mount that it can be empty on shutdown
-          REX_WARN(LogVfs, "\"{}\" was mounted to \"{}\" but no files were present on shutdown, is this intended?", path, rsl::enum_refl::enum_name(mount));
-        }
-      }
-
-      // clean up all data assets
-      g_root.clear();
-      g_root_paths.clear();
-      g_mounted_roots.clear();
-
-      g_vfs_state_controller.change_state(VfsState::ShutDown);
-    }
-
-    // --------------------------------
-    // CREATING
-    // --------------------------------
-    Error create_file(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
-      return file::create_abspath(fullpath);
-    }
-    Error create_file(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return file::create_abspath(path);
-    }
-    Error create_dir(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
-      return directory::create_abspath(fullpath);
-    }
-    Error create_dir(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::create_abspath(path);
-    }
-    Error create_dirs(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::create_recursive_abspath(path);
-    }
-
-    // --------------------------------
-    // DELETING
-    // --------------------------------
-    Error delete_file(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
-      return file::del_abspath(fullpath);
-    }
-    Error delete_file(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return file::del_abspath(path);
-    }
-    Error delete_dir(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
-      return directory::del_abspath(fullpath);
-    }
-    Error delete_dir(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::del_abspath(path);
-    }
-    Error delete_dir_recursive(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const scratch_string fullpath = path::join(g_mounted_roots.at(root), path);
-      return directory::del_recursive_abspath(fullpath);
-    }
-    Error delete_dir_recursive(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::del_recursive_abspath(path);
-    }
-
-    // --------------------------------
-    // READING
-    // --------------------------------
-    memory::Blob read_file(MountingPoint root, rsl::string_view filepath)
-    {
-      filepath = path::remove_quotes(filepath);
-
-      const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
-      return file::read_file_abspath(fullpath);
-    }
-    memory::Blob read_file(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return file::read_file_abspath(path);
-    }
-    s32 read_file(MountingPoint root, rsl::string_view filepath, rsl::byte* buffer, s32 size)
-    {
-      filepath = path::remove_quotes(filepath);
-
-      const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
-      return file::read_file_abspath(fullpath, buffer, size);
-    }
-    s32 read_file(rsl::string_view path, rsl::byte* buffer, s32 size)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return file::read_file_abspath(path, buffer, size);
-    }
-    ReadRequest read_file_async(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return read_file_abspath_async(path);
-    }
-    ReadRequest read_file_async(MountingPoint root, rsl::string_view filepath)
-    {
-      filepath = path::remove_quotes(filepath);
-
-      const scratch_string fullpath = path::join(g_mounted_roots.at(root), filepath);
-      return read_file_abspath_async(fullpath);
-    }
-
-    // --------------------------------
-    // WRITING
-    // --------------------------------
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend)
-    {
-      filepath = path::remove_quotes(filepath);
-
-      const rsl::string_view path = path::join(g_mounted_roots.at(root), filepath);
-      return write_to_file(path, data, size, shouldAppend);
-    }
-    Error write_to_file(rsl::string_view path, const void* data, card64 size, AppendToFile shouldAppend)
-    {
-      path = path::unsafe_abs_path(path);
-
-      if (shouldAppend)
-      {
-        return rex::file::append_text_abspath(path, rsl::string_view((const char8*)data, narrow_cast<s32>(size)));
-      }
-      else
-      {
-        return rex::file::write_to_file_abspath(path, data, size);
-      }
-    }
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend)
-    {
-      return write_to_file(root, filepath, text.data(), text.length(), shouldAppend);
-    }
-    Error write_to_file(rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend)
-    {
-      return write_to_file(filepath, text.data(), text.length(), shouldAppend);
-    }
-    Error write_to_file(MountingPoint root, rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend)
-    {
-      return write_to_file(root, filepath, blob.data(), blob.size(), shouldAppend);
-    }
-    Error write_to_file(rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend)
-    {
-      return write_to_file(filepath, blob.data(), blob.size(), shouldAppend);
-    }
-
-    // --------------------------------
-    // CONVERTING
-    // --------------------------------
-    scratch_string abs_path(MountingPoint root, rsl::string_view path)
-    {
-      REX_ASSERT_X(g_vfs_state_controller.has_state(VfsState::Running), "Trying to use vfs before it's initialized");
-      REX_ASSERT_X(!path::is_absolute(path), "Passed an absolute path into a function that doesn't allow absolute paths");
-
-      path = path::remove_quotes(path);
-
-      return path::join(g_mounted_roots.at(root), path);
-    }
-    scratch_string abs_path(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      if (path::is_absolute(path))
-      {
-        return scratch_string(path);
-      }
-
-      return path::join(g_root, path);
-    }
-    rsl::string_view mount_path(MountingPoint mount)
-    {
-      if (g_mounted_roots.contains(mount))
-      {
-        return g_mounted_roots.at(mount);
-      }
-
-      return internal::no_mount_path();
-    }
-
-    // --------------------------------
-    // QUERYING
-    // --------------------------------
-    bool exists(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return directory::exists_abspath(fullpath) || file::exists_abspath(fullpath);
-    }
-    bool exists(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::exists_abspath(path) || file::exists_abspath(path);
-    }
-    bool is_file(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return file::exists_abspath(fullpath);
-    }
-    bool is_file(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return file::exists_abspath(path);
-    }
-    bool is_dir(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return directory::exists_abspath(fullpath);
-    }
-    bool is_dir(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::exists_abspath(path);
-    }
-    bool is_mounted(MountingPoint mount)
-    {
-      return g_mounted_roots.contains(mount);
-    }
-
-    rsl::vector<rsl::string> list_entries(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return list_entries(fullpath);
-    }
-    rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return list_dirs(fullpath);
-    }
-    rsl::vector<rsl::string> list_files(MountingPoint root, rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-
-      const rsl::string_view fullpath = path::join(g_mounted_roots.at(root), path);
-      return list_files(fullpath);
-    }
-    rsl::vector<rsl::string> list_entries(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::list_entries(path);
-    }
-    rsl::vector<rsl::string> list_dirs(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::list_dirs(path);
-    }
-    rsl::vector<rsl::string> list_files(rsl::string_view path)
-    {
-      path = path::remove_quotes(path);
-      path = path::unsafe_abs_path(path);
-
-      return directory::list_files(path);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------------
-    //                                                  ABSOLUTE PATH IMPLEMENTATIONS
-    // --------------------------------------------------------------------------------------------------------------------------------
-
-    // --------------------------------
-    // READING
-    // --------------------------------
-    ReadRequest read_file_abspath_async(rsl::string_view filepath)
-    {
-      const rsl::unique_lock lock(g_read_request_mutex);
-
-      // If we already have a request for this file, add a new request to signal to the queued request
-      auto it = g_queued_requests.find(filepath);
-      if (it != g_queued_requests.end())
-      {
-        ReadRequest request(filepath, it->value.get());
-        it->value->add_request_to_signal(&request);
-        return request;
-      }
-
-      // If we don't have a request for this file yet, create a new one and add it to the hash table
-      rsl::unique_ptr<QueuedRequest> queued_request = rsl::make_unique<QueuedRequest>(filepath);
-      ReadRequest request(filepath, queued_request.get());
-
-      // create the read request, which holds a link to the queued request
-      queued_request->add_request_to_signal(&request);
-
-      auto emplace_res = g_queued_requests.emplace(rsl::string(filepath), rsl::move(queued_request));
-      g_read_requests_in_order.push_back(emplace_res.inserted_element->key);
-
+      ReadRequest request(path, it->value.get());
+      it->value->add_request_to_signal(&request);
       return request;
     }
 
+    // If we don't have a request for this file yet, create a new one and add it to the hash table
+    rsl::unique_ptr<QueuedRequest> queued_request = rsl::make_unique<QueuedRequest>(path);
+    ReadRequest request(path, queued_request.get());
+
+    // create the read request, which holds a link to the queued request
+    queued_request->add_request_to_signal(&request);
+
+    auto emplace_res = m_queued_requests.emplace(rsl::string(path), rsl::move(queued_request));
+    m_read_requests_in_order.push_back(emplace_res.inserted_element->key);
+
+    return request;
+  }
+
+  // --------------------------------
+  // WRITING
+  // --------------------------------
+  Error VfsBase::write_to_file(MountingPoint root, rsl::string_view filepath, const void* data, card64 size, AppendToFile shouldAppend)
+  {
+    filepath = path::remove_quotes(filepath);
+
+    const rsl::string_view path = path::join(m_mounted_roots.at(root), filepath);
+    return write_to_file(path, data, size, shouldAppend);
+  }
+  Error VfsBase::write_to_file(MountingPoint root, rsl::string_view filepath, rsl::string_view text, AppendToFile shouldAppend)
+  {
+    return write_to_file(root, filepath, text.data(), text.length(), shouldAppend);
+  }
+  Error VfsBase::write_to_file(MountingPoint root, rsl::string_view filepath, const memory::Blob& blob, AppendToFile shouldAppend)
+  {
+    return write_to_file(root, filepath, blob.data(), blob.size(), shouldAppend);
+  }
+
+  // --------------------------------
+  // CONVERTING
+  // --------------------------------
+  scratch_string VfsBase::abs_path(MountingPoint root, rsl::string_view path)
+  {
+    REX_ASSERT_X(m_vfs_state_controller.has_state(VfsState::Running), "Trying to use vfs before it's initialized");
+    REX_ASSERT_X(!path::is_absolute(path), "Passed an absolute path into a function that doesn't allow absolute paths");
+
+    scratch_string mount_root = path::join(m_mounted_roots.at(root), path);
+
+    return abs_path(mount_root);
+  }
+  rsl::string_view VfsBase::mount_path(MountingPoint mount)
+  {
+    if (m_mounted_roots.contains(mount))
+    {
+      return m_mounted_roots.at(mount);
+    }
+
+    return no_mount_path();
+  }
+
+  // --------------------------------
+  // QUERYING
+  // --------------------------------
+  bool VfsBase::exists(MountingPoint root, rsl::string_view path)
+  {
+    path = path::remove_quotes(path);
+
+    scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
+    return exists(fullpath);
+  }
+  bool VfsBase::is_mounted(MountingPoint mount)
+  {
+    return m_mounted_roots.contains(mount);
+  }
+
+  REX_NO_DISCARD rsl::vector<rsl::string> VfsBase::list_entries(MountingPoint root, rsl::string_view path)
+  {
+    path = path::remove_quotes(path);
+
+    const rsl::string_view fullpath = path::join(m_mounted_roots.at(root), path);
+    return list_entries(fullpath);
+  }
+	REX_NO_DISCARD rsl::vector<rsl::string> VfsBase::list_dirs(MountingPoint root, rsl::string_view path)
+	{
+    path = path::remove_quotes(path);
+
+    const rsl::string_view fullpath = path::join(m_mounted_roots.at(root), path);
+    return list_dirs(fullpath);
+  }
+	REX_NO_DISCARD rsl::vector<rsl::string> VfsBase::list_files(MountingPoint root, rsl::string_view path)
+	{
+    path = path::remove_quotes(path);
+
+    const rsl::string_view fullpath = path::join(m_mounted_roots.at(root), path);
+    return list_files(fullpath);
+  }
+
+  rsl::string_view VfsBase::no_mount_path() const
+  {
+    // explicitely stating "no mount found" here
+    // as an empty path would indicate it's at the root
+    // instead of it not existing
+
+    return rsl::string_view("no mount found");
+  }
+
+  namespace vfs
+  {
+    globals::GlobalUniquePtr<VfsBase> g_vfs;
+    void init(globals::GlobalUniquePtr<VfsBase> vfs)
+    {
+      g_vfs = rsl::move(vfs);
+    }
+    VfsBase* instance()
+    {
+      return g_vfs.get();
+    }
+    void shutdown()
+    {
+      g_vfs.reset();
+    }
   } // namespace vfs
 } // namespace rex

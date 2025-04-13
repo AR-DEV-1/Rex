@@ -4,31 +4,32 @@
 
 namespace rex
 {
-  namespace threading
-  {
-    // A handle that wraps a thread
-    // Users are not meant to have direct access to a thread
-    // Instead we return handles to threads that return the thread to the thread pool
-    class ThreadHandle
-    {
-    public:
-      explicit ThreadHandle(internal::Thread* thread);
-      ThreadHandle(const ThreadHandle&) = delete;
-      ThreadHandle(ThreadHandle&& other);
-      ~ThreadHandle();
+	class ThreadPool;
 
-      ThreadHandle& operator=(const ThreadHandle&) = delete;
-      ThreadHandle& operator=(ThreadHandle&& other);
+	// A handle that wraps a thread
+	// Users are not meant to have direct access to a thread
+	// Instead we return handles to threads that return the thread to the thread pool
+	class ThreadHandle
+	{
+	public:
+		ThreadHandle();
+		explicit ThreadHandle(internal::Thread* thread, ThreadPool* owningPool = nullptr);
+		ThreadHandle(const ThreadHandle&) = delete;
+		ThreadHandle(ThreadHandle&& other);
+		~ThreadHandle();
 
-      void run(internal::thread_work_func&& func, void* arg = nullptr);
+		ThreadHandle& operator=(const ThreadHandle&) = delete;
+		ThreadHandle& operator=(ThreadHandle&& other);
 
-      const internal::Thread* thread() const;
+		void run(internal::thread_work_func&& func, void* arg = nullptr);
 
-    private:
-      void return_me_to_thread_pool();
+		const internal::Thread* thread() const;
 
-    private:
-      internal::Thread* m_thread;
-    };
-  } // namespace threading
+	private:
+		void return_me_to_thread_pool();
+
+	private:
+		internal::Thread* m_thread;
+		ThreadPool* m_owning_thread_pool;
+	};
 } // namespace rex

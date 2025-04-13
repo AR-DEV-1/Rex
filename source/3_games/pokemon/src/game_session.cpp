@@ -25,7 +25,7 @@
 
 #include "rex_std/unordered_map.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/images/image_loader.h"
 
 #include "rex_engine/gfx/resources/vertex_buffer.h"
@@ -36,7 +36,7 @@
 #include "pokemon/tileset.h"
 #include "pokemon/poke_map.h"
 
-#include "rex_engine/profiling/scoped_timer.h"
+#include "rex_engine/profiling/timer.h"
 
 #include "rex_engine/event_system/event_system.h"
 #include "rex_engine/event_system/events/input/key_down.h"
@@ -61,7 +61,7 @@ namespace pokemon
 			rgba.alpha = 255;
 		}
 
-		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::gal()->create_texture2d(tileset_img_load_res.width, tileset_img_load_res.height, rex::gfx::TextureFormat::Unorm4, tileset_rgba.get());
+		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::gal::instance()->create_texture2d(tileset_img_load_res.width, tileset_img_load_res.height, rex::gfx::TextureFormat::Unorm4, tileset_rgba.get());
 		return tileset_texture;
 	}
 
@@ -102,7 +102,7 @@ namespace pokemon
 	SaveFile GameSession::load_startup_savefile() const
 	{
 		// The startup save file is located at the root directory of the project
-		rsl::string startup_save_filepath(rex::cmdline::get_argument("StartupSaveFile").value_or(rex::path::join(rex::vfs::project_root(), "startup_save_file.json")));
+		rsl::string startup_save_filepath(rex::cmdline::instance()->get_argument("StartupSaveFile").value_or(rex::path::join(rex::engine::instance()->project_root(), "startup_save_file.json")));
 		REX_ASSERT_X(rex::file::exists(startup_save_filepath), "startup save filepath does not exist.");
 		return SaveFile(startup_save_filepath);
 	}
@@ -153,12 +153,12 @@ namespace pokemon
 		tile_renderer_desc.tileset_texture = mapRenderData.tileset.get();
 		tile_renderer_desc.blockset = mapRenderData.blockset.get();
 
-		return rex::gfx::add_renderer<TileRenderer>(tile_renderer_desc);
+		return rex::gfx::gal::instance()->add_renderer<TileRenderer>(tile_renderer_desc);
 	}
 
 	void GameSession::init_input()
 	{
-		rex::event_system().subscribe<rex::KeyDown>(
+		rex::event_system::instance()->subscribe<rex::KeyDown>(
 			[this](const rex::KeyDown& ev)
 			{
 				switch (ev.key())

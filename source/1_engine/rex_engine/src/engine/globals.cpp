@@ -1,22 +1,21 @@
 #include "rex_engine/engine/globals.h"
-#include "rex_engine/engine/mutable_globals.h"
-
-#include "rex_engine/diagnostics/assert.h"
-
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: REX GLOBALS
 
 namespace rex
 {
-	Globals& mut_globals()
+	namespace globals
 	{
-		static Globals globals{};
-		return globals;
+		bool s_enable_global_destruction = true;
+		void enable_global_destruction()
+		{
+			s_enable_global_destruction = true;
+		}
+		void disable_global_destruction()
+		{
+			s_enable_global_destruction = false;
+		}
+		bool is_global_destruction_enabled()
+		{
+			return s_enable_global_destruction;
+		}
 	}
-
-	const Globals& globals()
-	{
-		return mut_globals();
-	}
-
-
 }

@@ -8,7 +8,7 @@ namespace rex
 {
   StringID StringID::create(rsl::string_view string)
   {
-    return string_pool::find_or_store(string);
+    return string_pool::instance()->find_or_store(string);
   }
 } // namespace rex
 

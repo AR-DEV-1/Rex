@@ -9,7 +9,6 @@
 #include "rex_engine/diagnostics/logging/internal/sinks/basic_file_sink.h"
 #include "rex_engine/diagnostics/logging/internal/sinks/dist_sink.h"
 #include "rex_engine/diagnostics/logging/internal/sinks/stdout_color_sinks.h"
-#include "rex_engine/engine/project.h"
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/memory/global_allocators/global_allocator.h"
@@ -54,7 +53,10 @@ namespace rex
       }
 
       // read the required log versboity from the commandline
-      rsl::optional<rsl::string_view> log_level = cmdline::get_argument("LogVerbosity");
+      rsl::optional<rsl::string_view> log_level = cmdline::instance() ?
+        cmdline::instance()->get_argument("LogVerbosity")
+        : rsl::nullopt;
+
       if(log_level)
       {
         verbosity = rsl::enum_refl::enum_cast<LogVerbosity>(log_level.value()).value_or(verbosity);
@@ -81,7 +83,10 @@ namespace rex
       // Setup the path where logs will go using a mounting point
       // With mounting points, we abstract away the hardcoded paths
       // so we can always set them elsewhere at runtime if we want to
-      rex::vfs::mount(rex::MountingPoint::Logs, path::join(vfs::current_session_root(), "logs"));
+      if (!directory::exists(project_log_path()))
+      {
+        directory::create_recursive(path::parent_path(project_log_path()));
+      }
 
       // Enable file sinks. The vfs is initialized by now, and the path for logs as well
       // we can start using file sinks

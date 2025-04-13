@@ -13,7 +13,7 @@ namespace rex
     class DxRenderEngine : public gfx::RenderEngine
     {
     public:
-      DxRenderEngine(GpuEngine* gpuEngine, ResourceStateTracker* globalResourceStateTracker);
+      DxRenderEngine(ResourceStateTracker* globalResourceStateTracker);
 
       // Initialize all the resources required for the compute engine
       void init() override;

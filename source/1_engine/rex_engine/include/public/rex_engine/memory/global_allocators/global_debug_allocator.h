@@ -14,6 +14,8 @@ namespace rex
   class GlobalDebugAllocator
   {
   public:
+    GlobalDebugAllocator();
+
     void* allocate(const s64 count);    // deallocates the storage reference by the pointer p.
     void deallocate(void* const ptr, s64 count = 0);
     template <typename T>
@@ -36,7 +38,8 @@ namespace rex
     }
 
   private:
-    DebugAllocator<UntrackedAllocator> m_alloc;
+    UntrackedAllocator m_alloc;
+    DebugAllocator<UntrackedAllocator> m_debug_alloc;
   };
 
   constexpr bool operator==(const GlobalDebugAllocator& /*unused*/, const GlobalDebugAllocator& /*unused*/)

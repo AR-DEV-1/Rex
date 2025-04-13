@@ -4,5 +4,5 @@
 
 TEST_CASE("TEST - Process - Process ID")
 {
-	REX_CHECK(rex::current_process_id() != 0);
+	REX_CHECK(rex::current_process::id() != 0);
 }

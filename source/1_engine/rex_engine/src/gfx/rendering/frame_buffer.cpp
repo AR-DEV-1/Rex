@@ -1,7 +1,7 @@
 #include "rex_engine/gfx/rendering/frame_buffer.h"
 
 #include "rex_engine/diagnostics/assert.h"
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/system/render_context.h"
 #include "rex_engine/gfx/graphics.h"
 
@@ -88,7 +88,7 @@ namespace rex
 					if (is_depth_format(attachment_desc.format()))
 					{
 						REX_ASSERT_X(m_depth_stencil_buffer == nullptr, "You can only create 1 depth stencil buffer per framebuffer");
-						m_depth_stencil_buffer = gal()->create_depth_stencil_buffer(attachment_desc.width(), attachment_desc.height(), attachment_desc.format(), attachment_desc.clear_state());
+						m_depth_stencil_buffer = gfx::gal::instance()->create_depth_stencil_buffer(attachment_desc.width(), attachment_desc.height(), attachment_desc.format(), attachment_desc.clear_state());
 					}
 					else
 					{
@@ -105,7 +105,7 @@ namespace rex
 			if (m_attachments.front().use_swapchain())
 			{
 				// As the swapchain's back buffer gets cleared on a new frame, we don't have to clear it here
-				ctx->set_render_target(swapchain_rt(), m_depth_stencil_buffer.get());
+				ctx->set_render_target(gfx::gal::instance()->swapchain_rt(), m_depth_stencil_buffer.get());
 				if (m_depth_stencil_buffer.get())
 				{
 					ctx->clear_depth_stencil_target(m_depth_stencil_buffer.get());

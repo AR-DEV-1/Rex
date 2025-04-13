@@ -4,12 +4,11 @@
 #include "rex_engine/diagnostics/debug.h"
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/engine/types.h"
+#include "rex_engine/engine/engine.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_std/bonus/attributes.h"
 #include "rex_std/internal/exception/exit.h"
 #include "rex_std/thread.h"
-
-#include "rex_engine/engine/mutable_globals.h"
 
 namespace rex
 {
@@ -20,35 +19,28 @@ namespace rex
       REX_INFO(LogEngine, "Startup: {}", rsl::current_timepoint());
 
       // Now log the commandline we started the app with
-      cmdline::print();
+      cmdline::instance()->print();
 
       // Log early on if any sanitization is enabled
       // This is useful to have in the log file to make sure that correct sanitization is enabled when testing
       log_sanitization();
 
-      REX_INFO(LogEngine, "Vfs Root: {}", rex::vfs::root());
-      REX_INFO(LogEngine, "Session Directory: {}", rex::vfs::current_session_root());
+      REX_INFO(LogEngine, "Project Name: {}", rex::engine::instance()->project_name());
+      REX_INFO(LogEngine, "Data Root: {}", rex::engine::instance()->data_root());
+      REX_INFO(LogEngine, "Session Directory: {}", rex::engine::instance()->current_session_root());
       REX_INFO(LogEngine, "Log Path: {}", rex::project_log_path());
     }
 
     void pre_app_entry(REX_MAYBE_UNUSED const char8* cmdLine)
     {
       // Initialize the commandline first as this can influence everything else
-      cmdline::init(rsl::string_view(cmdLine));
-
-      // if a user wants to know the arguments for the executable, we want to perform as minimal setup as possible.
-      // we just initialize the commandline, print what's possible and exit the program
-      if(cmdline::get_argument("help"))
-      {
-        cmdline::print_args();
-        rsl::exit(0);
-      }
+      cmdline::init(globals::make_unique<CommandLine>(rsl::string_view(cmdLine)));
 
       // if we want to debug executables without a debugger, we need to break early
       // so we can attach a debugger and continue from then on
       // we'll have a timer in place to break for 2 minutes, if no debugger is attached
       // we close down the program
-      if(cmdline::get_argument("BreakOnBoot"))
+      if(cmdline::instance()->get_argument("BreakOnBoot"))
       {
         if(!wait_for_debugger())
         {
@@ -57,16 +49,10 @@ namespace rex
       }
 
       // If the program was spawned without a debugger and we want to automatically attach one
-      if(cmdline::get_argument("AttachOnBoot"))
+      if(cmdline::instance()->get_argument("AttachOnBoot"))
       {
         attach_debugger();
       }
-
-      // Initialize the filesystem as this can be needed by the entry point of the client
-      // However it is recommended that all initialziation code is moved into the client's init function.
-      // If we decide to limit this more aggresively, we can move this initialization to the initialize function
-      // of the engine.
-      vfs::init();
 
       // Now initialize all the logging diagnostics, including setting up file output
       // We need to do this here as we need the vfs to be initialized
@@ -81,12 +67,6 @@ namespace rex
 
     void post_app_shutdown()
     {
-      // Release the global allocators and their heaps
-      // They won't be used anymore post this point
-      // they need to be manually release or otherwise memory tracking
-      // will crash as the globals get destructed after the memory tracker
-      mut_globals().allocators.scratch_allocator.reset();
-      mut_globals().allocators.single_frame_allocator.reset();
     }
   } // namespace internal
 } // namespace rex

@@ -17,6 +17,8 @@ namespace rex
       Window();
 
       bool create(HInstance hInstance, s32 cmdShow, const WindowInfo& info);
+      void set_title(rsl::string_view name);
+      rsl::small_stack_string title() const;
 
     public:
       void update() override;
@@ -42,6 +44,7 @@ namespace rex
       bool is_resizing() const override;
       bool is_minimized() const override;
       bool is_maximized() const override;
+
 
     private:
       bool destroy();

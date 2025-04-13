@@ -8,5 +8,5 @@ DEFINE_LOG_CATEGORY(LogEngine);
 
 namespace rex
 {
-	scratch_string project_log_path();
+	rsl::stack_string<char8, 256> project_log_path();
 }

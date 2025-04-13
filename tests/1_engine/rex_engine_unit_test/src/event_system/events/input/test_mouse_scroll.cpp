@@ -8,7 +8,7 @@ TEST_CASE("TEST - Events - Mouse Scroll Event")
   s32 num_quit_events_fired = 0;
   s32 wheel_delta = 0;
   rex::MousePosition mouse_pos;
-  auto subscription = rex::event_system().subscribe<rex::MouseScroll>([&num_quit_events_fired, &wheel_delta, &mouse_pos](const rex::MouseScroll& evt)
+  auto subscription = rex::event_system::instance()->subscribe<rex::MouseScroll>([&num_quit_events_fired, &wheel_delta, &mouse_pos](const rex::MouseScroll& evt)
     {
       ++num_quit_events_fired;
       REX_CHECK(evt.wheel_delta() == wheel_delta);
@@ -20,16 +20,16 @@ TEST_CASE("TEST - Events - Mouse Scroll Event")
   wheel_delta = 10;
   mouse_pos.local_pos = { 10,10 };
   mouse_pos.screen_pos = { 20,20 };
-  rex::event_system().fire_event(rex::MouseScroll(wheel_delta, mouse_pos));
+  rex::event_system::instance()->fire_event(rex::MouseScroll(wheel_delta, mouse_pos));
   REX_CHECK(num_quit_events_fired == 1);
 
   // Queued event fire
   wheel_delta = 10;
   mouse_pos.local_pos = { 10,10 };
   mouse_pos.screen_pos = { 20,20 };
-  rex::event_system().enqueue_event(rex::MouseScroll(wheel_delta, mouse_pos));
+  rex::event_system::instance()->enqueue_event(rex::MouseScroll(wheel_delta, mouse_pos));
   REX_CHECK(num_quit_events_fired == 1);
 
-  rex::event_system().dispatch_queued_events();
+  rex::event_system::instance()->dispatch_queued_events();
   REX_CHECK(num_quit_events_fired == 2);
 }

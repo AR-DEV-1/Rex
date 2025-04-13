@@ -52,7 +52,7 @@ namespace pokemon
 
   //void Level::load_map_names(rsl::string_view iniFilePath)
   //{
-  //  rex::memory::Blob ini_data = rex::vfs::read_file(iniFilePath);
+  //  rex::memory::Blob ini_data = rex::vfs::instance()->read_file(iniFilePath);
   //  rex::IniProcessor ini_processor = rex::IniProcessor(ini_data);
   //  rex::Error err = ini_processor.process();
 

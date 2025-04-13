@@ -4,7 +4,7 @@
 #include "rex_engine/gfx/imgui/imgui_device.h"
 #include "rex_engine/gfx/imgui/imgui_window_render_params.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/graphics.h"
 #include "rex_engine/gfx/rendering/render_pass.h"
 
@@ -61,7 +61,7 @@ namespace rex
       // Some backends will leave PlatformHandleRaw == 0, in which case we assume PlatformHandle will contain the HWND.
       void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
       IM_ASSERT(handle != nullptr);
-      m_swapchain = gal()->create_swapchain(creationInfo.command_queue, creationInfo.max_num_frames_in_flight, handle);
+      m_swapchain = gfx::gal::instance()->create_swapchain(creationInfo.command_queue, creationInfo.max_num_frames_in_flight, handle);
 
       const s32 width = static_cast<s32>(viewport->Size.x);
       const s32 height = static_cast<s32>(viewport->Size.y);
@@ -69,7 +69,7 @@ namespace rex
 
     void ImGuiWindow::render(ClearRenderTarget clearRenderTarget, ImGuiWindowRenderParams* renderParams)
     {
-      auto render_ctx = gfx::new_render_ctx();
+      auto render_ctx = gfx::gal::instance()->new_render_ctx();
 
       // Render the imgui viewport directly on the back buffer
       RenderTarget* render_target = m_swapchain->current_buffer();

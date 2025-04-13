@@ -1,31 +1,56 @@
 #pragma once
 
-#include "rex_engine/frameinfo/frameinfo.h"
-
-#include "rex_engine/memory/global_allocators/global_allocator.h"
-#include "rex_engine/memory/allocators/circular_allocator.h"
-#include "rex_engine/memory/allocators/stack_allocator.h"
+#include "rex_std/type_traits.h"
+#include "rex_std/bonus/utility.h"
+#include "rex_engine/diagnostics/assert.h"
 
 namespace rex
 {
-	// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: REX GLOBALS
-	struct Globals
+	namespace globals
 	{
-		struct Allocators
+		// When global destruction is disabled, an assert is raised
+		// if you try to destroy a global object
+		void enable_global_destruction();
+		void disable_global_destruction();
+		bool is_global_destruction_enabled();
+
+		// The global deleter is equivalent to the normal default deleter
+		// however, it does a check before calling delete if we're allowed to destroy globals
+		// This is to make sure that we're cleaning up all our globals when we're expected to do so (at app shutdown)
+		// and we don't accidentally forget to destroy a global
+		// It can also be used to disallow globals being shutdown at runtime
+		template <typename T>
+		struct GlobalObjectDeleter
 		{
-			rsl::unique_ptr<TCircularAllocator<GlobalAllocator>> scratch_allocator;		// An allocator used for temp memory. deallocation isn't tracked. Memory may or may not last more than 1 frame
-			rsl::unique_ptr<TStackAllocator<GlobalAllocator>> single_frame_allocator;	// An allocator used for memory that's used within a single frame. It gets reset at the beginning of the frame
+		public:
+			constexpr GlobalObjectDeleter() = default;
+
+			template <typename T2, rsl::enable_if_t<rsl::is_convertible_v<T2*, T*>, bool> = true>
+			constexpr GlobalObjectDeleter(const GlobalObjectDeleter<T2>& /*unused*/) // NOLINT(google-explicit-constructor)
+			{
+			}
+
+			constexpr void operator()(T* ptr) const
+			{
+				static_assert(sizeof(T) > 0, "can't delete an incomplete type"); // NOLINT(bugprone-sizeof-expression)
+				REX_ASSERT_X(globals::is_global_destruction_enabled() == true || ptr == nullptr, "Deleting global object when not allowed to do so. {}", rsl::type_id<T>().name());
+
+				delete ptr;
+			}
+
+		private:
 		};
 
-		Allocators allocators;
-		FrameInfo frame_info;
-	};
+		// the global unique ptr and its make_unique function are just aliases
+		// they make it easier to create a unique ptr for global objects
+		// who should be using the GlobalObjectDeleter instead of the default one
+		template <typename T>
+		using GlobalUniquePtr = rsl::unique_ptr<T, GlobalObjectDeleter<T>>;
 
-	// Globals are tied together so we have a strict initialization order
-	// Having this also avoids the discussion how globals are accessed
-	// - No singletons
-	// - No local statics
-	// - No pure global variables
-	// All engine globals are accessed through the below func
-	const Globals& globals();
+		template <typename T, typename ... Args>
+		GlobalUniquePtr<T> make_unique(Args&& ... args)
+		{
+			return GlobalUniquePtr<T>(new T(rsl::forward<Args>(args)...));
+		}
+	}
 }

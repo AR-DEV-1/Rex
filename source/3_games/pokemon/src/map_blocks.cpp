@@ -18,19 +18,19 @@ namespace pokemon
 
 	rsl::shared_ptr<MapBlocks> load_blocks(rsl::string_view filepath)
 	{
-    if (!rex::vfs::is_file(filepath))
+    if (!rex::vfs::instance()->exists(filepath))
     {
       REX_ERROR(LogMapBlocks, "Failed to load map blocks. Filepath doesn't exist. filepath: {}", filepath);
       return nullptr;
     }
 
-    auto blob = rex::vfs::read_file(filepath);
+    auto blob = rex::vfs::instance()->read_file(filepath);
 
     //s32 file_size = rex::file::size(filepath);
     //s32 num_blocks = file_size;
     //rsl::vector<s8> content;
     //content.resize(num_blocks);
-    //rex::vfs::read_file(content.data(), content.size());
+    //rex::vfs::instance()->read_file(content.data(), content.size());
 
     //return rex::load_object<MapBlocks>(rsl::move(content));
 

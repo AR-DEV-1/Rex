@@ -6,10 +6,11 @@
 #include "rex_std/type_traits.h"
 #include "rex_std/bonus/utility.h"
 #include "rex_std/bonus/string.h"
+#include "rex_std/bonus/time/timepoint.h"
 #include "rex_engine/engine/types.h"
 
 #include "rex_engine/text_processing/text_iterator.h"
-#include "rex_engine/engine/globals.h"
+#include "rex_engine/engine/engine.h"
 
 namespace rex
 {
@@ -222,7 +223,7 @@ namespace rex
     bool is_valid_filename(rsl::string_view filename);
 
     // Returns the directory path of the given path
-    rsl::string_view dir_name(rsl::string_view path);
+    rsl::string_view parent_path(rsl::string_view path);
     // Returns the extension of the given path
     rsl::string_view extension(rsl::string_view path);
     // Returns the filename of the given path
@@ -276,6 +277,10 @@ namespace rex
     // A path is normalized if it doesn't have any extra slashes
     // and it doesn't have any "current_dir" and "parent_dir" tokens
     bool is_normalized(rsl::string_view path);
+    // Finds a file or directory name startings from the current directory
+    // and keeps going to parent directory until it's found
+    // If it's not found, it returns an empty string
+    scratch_string find_in_parent(rsl::string_view toFind, rsl::string_view startDir = cwd());
 
     // --------------------------------
     // UTILITY
@@ -338,6 +343,9 @@ namespace rex
     // removes leading and trailing quotes from a path
     rsl::string_view remove_quotes(rsl::string_view path);
 
+    // Returns a timepoint converted to a string, to be used for filenames
+    scratch_string timepoint_for_filename(const rsl::time_point& timepoint);
+
     // ------------------------------------------------------------------------------
     //                          ABSOLUTE PATH IMPLEMENTATIONS
     // ------------------------------------------------------------------------------
@@ -358,7 +366,10 @@ namespace rex
     s32 abs_depth_abspath(rsl::string_view path);
     // Returns true if both paths are on the same mount
     bool has_same_root_abspath(rsl::string_view lhs, rsl::string_view rhs);
-
+    // Finds a file or directory name startings from the current directory
+    // and keeps going to parent directory until it's found
+    // If it's not found, it returns an empty string
+    scratch_string find_in_parent_abspath(rsl::string_view toFind, rsl::string_view startDirAbs);
   } // namespace path
 
   using path_stack_string = rsl::stack_string<char8, path::max_path_length()>;

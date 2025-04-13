@@ -103,6 +103,9 @@ namespace rex
         const rsl::unique_lock<mutex_t> lock(*m_mutex);
         msg.m_color_range_start = 0;
         msg.m_color_range_end   = 0;
+
+        // If there's a crash with deallocation of this memory after main
+        // that happens because the backend ptr has already been freed
         static memory_buf_t formatted;
         formatted.clear();
         m_formatter.format(msg, formatted);

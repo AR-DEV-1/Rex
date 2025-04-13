@@ -8,7 +8,7 @@ namespace pokemon
 {
   SaveFile::SaveFile(rsl::string_view filepath)
   {
-    rex::memory::Blob file_content = rex::vfs::read_file(filepath);
+    rex::memory::Blob file_content = rex::vfs::instance()->read_file(filepath);
     rex::json::json json_blob = rex::json::parse(file_content);
 
     current_map_filepath.assign(json_blob["map"].get<rsl::string_view>());

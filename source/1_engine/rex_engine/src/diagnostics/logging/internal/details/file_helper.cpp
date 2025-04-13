@@ -49,7 +49,7 @@ namespace rex
         for(int tries = 0; tries < s_open_tries; ++tries)
         {
           // create containing folder if not exists already.
-          rex::directory::create(path::dir_name(fname));
+          rex::directory::create(path::parent_path(fname));
           if(truncate && file::exists(fname))
           {
             // Truncate by opening-and-closing a tmp file in "wb" mode, always
@@ -135,7 +135,7 @@ namespace rex
         const s32 msg_size = buf.size();
         const auto* data   = buf.data();
 
-        vfs::write_to_file(m_filename, data, msg_size, vfs::AppendToFile::yes);
+        file::append_text(m_filename, rsl::string_view(data, msg_size));
 
         // if(fwrite(data, 1, msg_size, m_fd) != msg_size)
         //{

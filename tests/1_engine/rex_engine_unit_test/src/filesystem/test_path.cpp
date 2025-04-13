@@ -121,8 +121,8 @@ TEST_CASE("TEST - Path - Dir Name")
 {
 	rex::TempCwd tmp_cwd("path_tests");
 
-	REX_CHECK(rex::path::dir_name("foo.txt") == "");
-	REX_CHECK(rex::path::dir_name("bar/foo.txt") == "bar");
+	REX_CHECK(rex::path::parent_path("foo.txt") == "");
+	REX_CHECK(rex::path::parent_path("bar/foo.txt") == "bar");
 }
 
 TEST_CASE("TEST - Path - Get Extension")

@@ -84,7 +84,7 @@ namespace rex
       wrl::ComPtr<ID3DBlob> errors    = nullptr;
 
       RexIncluder includer({
-        vfs::mount_path(MountingPoint::EngineShaders)
+        vfs::instance()->mount_path(MountingPoint::EngineShaders)
       });
 
       // clang-format off

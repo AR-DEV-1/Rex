@@ -6,10 +6,22 @@
 #include "rex_engine/memory/memory_types.h"
 #include "rex_engine/engine/defines.h"
 #include "rex_std/bonus/types.h"
+#include "rex_engine/diagnostics/debug.h"
 
 namespace rex
 {
   DEFINE_LOG_CATEGORY(LogAssert);
+
+  namespace internal
+  {
+    // We make sure we write to debug output as well as it's possible an assert is raised before init or after shutdown
+    // If this happens we still want to get some kind of debug information, so we make sure we log to the debug output window
+    void debug_log_and_error(rsl::string_view err)
+    {
+      rex::output_debug_string(err);
+      REX_ERROR(LogAssert, err);
+    }
+  }
 
   debug_vector<AssertContext>& contexts()
   {
@@ -25,28 +37,29 @@ namespace rex
     thread_local static bool is_processing_assert = false;
     if(!is_processing_assert)
     {
+
       is_processing_assert = true;
-      REX_ERROR(LogAssert, "Assert Raised: {}", msg);
+      internal::debug_log_and_error(rsl::format("Assert Raised: {}", msg));
 
       if (contexts().size() > 0)
       {
-        REX_ERROR(LogAssert, "Assert contexts:");
-        REX_ERROR(LogAssert, "----------------");
+        internal::debug_log_and_error(rsl::format("Assert contexts:"));
+        internal::debug_log_and_error(rsl::format("----------------"));
 
         for (const AssertContext& context : contexts())
         {
-          REX_ERROR(LogAssert, "{}", context.msg());
-          REX_ERROR(LogAssert, "[traceback] {}", rsl::to_string(context.source_location()));
+          internal::debug_log_and_error(rsl::format("{}", context.msg()));
+          internal::debug_log_and_error(rsl::format("[traceback] {}", rsl::to_string(context.source_location())));
         }
 
-        REX_ERROR(LogAssert, "----------------");
+        internal::debug_log_and_error(rsl::format("----------------"));
       }
 
       const ResolvedCallstack callstack(current_callstack());
 
       for(count_t i = 0; i < callstack.size(); ++i)
       {
-        REX_ERROR(LogAssert, "{}", callstack[i]);
+        internal::debug_log_and_error(rsl::format("{}", callstack[i]));
       }
     }
     else

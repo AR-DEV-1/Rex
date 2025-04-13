@@ -1,6 +1,6 @@
 #include "pokemon/tileset.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/engine/object_pool.h"
 
 namespace pokemon

@@ -125,6 +125,22 @@ namespace rex
     }
 
     //-------------------------------------------------------------------------
+    void Window::set_title(rsl::string_view name)
+    {
+      rsl::small_stack_string title(name);
+      SetWindowTextA(static_cast<HWND>(m_hwnd), title.c_str());
+    }
+
+    //-------------------------------------------------------------------------
+    rsl::small_stack_string Window::title() const
+    {
+      rsl::small_stack_string title;
+      GetWindowTextA(static_cast<HWND>(m_hwnd), title.data(), title.max_size());
+      title.reset_null_termination_offset();
+      return title;
+    }
+
+    //-------------------------------------------------------------------------
     void Window::update()
     {
       MSG message = {};

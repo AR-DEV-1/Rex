@@ -7,7 +7,7 @@
 
 TEST_CASE("TEST - Temp Dir - Empty Temp Dir")
 {
-  rex::scratch_string dirname;
+  rsl::string dirname;
   {
     rex::TempDirectory tmp_dir{};
     dirname.assign(tmp_dir.dirname());
@@ -32,9 +32,9 @@ TEST_CASE("TEST - Temp Dir - Empty Temp Dir")
 
 TEST_CASE("TEST - Temp Dir - With Files")
 {
-  rex::scratch_string random_file1 = rex::path::random_filename();
-  rex::scratch_string random_file2 = rex::path::random_filename();
-  rex::scratch_string dirname;
+  rsl::string random_file1(rex::path::random_filename());
+  rsl::string random_file2(rex::path::random_filename());
+  rsl::string dirname;
   {
     rex::TempDirectory tmp_dir{};
     dirname.assign(tmp_dir.dirname());
@@ -49,7 +49,7 @@ TEST_CASE("TEST - Temp Dir - With Files")
   REX_CHECK(rex::file::exists(rex::path::join(dirname, random_file1)) == false);
   REX_CHECK(rex::file::exists(rex::path::join(dirname, random_file2)) == false);
 
-  rex::scratch_string test_directory = rex::path::abs_path("test_directory");
+  rsl::string test_directory(rex::path::abs_path("test_directory"));
   rex::directory::create(test_directory);
   {
 

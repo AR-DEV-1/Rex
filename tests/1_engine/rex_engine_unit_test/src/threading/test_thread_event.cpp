@@ -15,7 +15,7 @@ TEST_CASE("TEST - Thread Event - Singaling")
 		rex::ThreadEvent main_thread_event;
 
 		// A thread always joins on destruction
-		rex::threading::internal::Thread thread;
+		rex::internal::Thread thread;
 		thread.run([&x, &worker_thread_event, &main_thread_event](void*)
 			{
 				worker_thread_event.wait_for_me();

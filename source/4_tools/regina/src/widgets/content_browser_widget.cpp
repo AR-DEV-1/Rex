@@ -7,7 +7,7 @@
 #include "rex_engine/filesystem/file.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/system/open_file.h"
-#include "rex_engine/profiling/scoped_timer.h"
+#include "rex_engine/profiling/profiling_session.h"
 
 #include "rex_std/algorithm.h"
 #include "rex_std/functional.h"
@@ -69,7 +69,7 @@ namespace regina
 	ContentBrowserWidget::ContentBrowserWidget()
 		: m_thumbnail_manager(rsl::make_unique<ThumbnailManager>())
 	{
-		change_directory(rex::vfs::root());
+		change_directory(rex::vfs::instance()->root());
 
 		for (rsl::string_view dir : m_directories_in_current_directory)
 		{

@@ -47,7 +47,7 @@ namespace console_app_example
     (void)p.release();
   }
 
-  void display_mem_usage_stats(const rex::MemoryAllocationStats& stats)
+  void display_mem_usage_stats(const rex::MemoryTrackingStats& stats)
   {
     for(count_t i = 0; i < stats.tracking_stats.usage_per_tag.size(); ++i)
     {
@@ -88,7 +88,7 @@ namespace console_app_example
 
     if(rex::input::is_key_pressed('Q'))
     {
-      rex::event_system().enqueue_event(rex::QuitApp("Q pressed"));
+      rex::event_system::instance()->enqueue_event(rex::QuitApp("Q pressed"));
     }
   }
   void shutdown() {}

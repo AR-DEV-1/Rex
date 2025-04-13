@@ -4,7 +4,8 @@
 
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
-#include "rex_engine/gfx/system/gal.h"
+
+#include "rex_engine/gfx/graphics.h"
 
 #include "rex_std/bonus/math/color.h"
 
@@ -43,7 +44,7 @@ namespace regina
 	{
 		rex::ImageLoadResult img = rex::load_image(path);
 		rsl::Rgba* img_data = reinterpret_cast<rsl::Rgba*>(img.data.get());
-		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::gal()->create_texture2d(img.width, img.height, rex::gfx::TextureFormat::Unorm4, img_data);
+		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::gal::instance()->create_texture2d(img.width, img.height, rex::gfx::TextureFormat::Unorm4, img_data);
 
 		return rsl::make_unique<Thumbnail>(rsl::move(tileset_texture));
 	}

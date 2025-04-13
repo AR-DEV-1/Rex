@@ -24,13 +24,6 @@ namespace rex
 
     DEFINE_YES_NO_ENUM(CreateFullDump);
 
-    // The assertion mutex used by the crash handler
-    AssertMtx& crash_assert_mtx()
-    {
-      static AssertMtx mtx;
-      return mtx;
-    }
-
     // Create a mini dump using Windows API
     void create_dump(rsl::string_view filepath, LPEXCEPTION_POINTERS exceptionInfo, CreateFullDump createFullDump = CreateFullDump::no)
     {
@@ -83,7 +76,8 @@ namespace rex
 
     s32 report_crash(void* exceptionInfo, s32 numFramesToSkip)
     {
-      const rsl::unique_lock lock(crash_assert_mtx());
+      static AssertMtx assert_mtx;
+      const rsl::unique_lock lock(assert_mtx);
 
       LPEXCEPTION_POINTERS exception_info = static_cast<LPEXCEPTION_POINTERS>(exceptionInfo);
 
@@ -110,7 +104,7 @@ namespace rex
       }
       else
       {
-        scratch_string crash_dump_path = path::join(vfs::current_session_root(), "crash.dmp");
+        scratch_string crash_dump_path = path::join(engine::instance()->current_session_root(), "crash.dmp");
         create_dump(crash_dump_path, exception_info);
         REX_ERROR(CrashHandlingLog, "Created crash dump at: {}", crash_dump_path);
       }

@@ -26,6 +26,7 @@ TEST_CASE("TEST - Global Allocator - Normal Allocation")
 	REX_CHECK(test_object::num_move_assignment_calls() == 0);
 
 	test_object* ptr2 = alloc.allocate<test_object>();
+	alloc.construct(ptr2);
 
 	REX_CHECK(ptr2 != nullptr);
 	REX_CHECK(test_object::num_created() == 1);
@@ -36,6 +37,7 @@ TEST_CASE("TEST - Global Allocator - Normal Allocation")
 	REX_CHECK(test_object::num_copy_assignment_calls() == 0);
 	REX_CHECK(test_object::num_move_assignment_calls() == 0);
 
+	alloc.destroy(ptr2);
 	alloc.deallocate(ptr2);
 
 	REX_CHECK(test_object::num_created() == 1);

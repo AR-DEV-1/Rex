@@ -9,7 +9,7 @@
 //#include "rex_engine/memory/blob.h"
 //#include "rex_engine/memory/blob_reader.h"
 //
-//#include "rex_engine/gfx/system/gal.h"
+//
 //#include "rex_engine/gfx/resources/texture_2d.h"
 //
 //#include "glm/glm.hpp"
@@ -746,7 +746,7 @@
 //	void Map::load_all_tilesets(rsl::string_view tilesetsPath)
 //	{
 //		rsl::vector<rsl::string> files;
-//		rex::memory::Blob file_blob = rex::vfs::read_file(tilesetsPath);
+//		rex::memory::Blob file_blob = rex::vfs::instance()->read_file(tilesetsPath);
 //		rsl::string_view file_content = rex::memory::blob_to_string_view(file_blob);
 //		rsl::vector<rsl::string_view> lines = rsl::split(file_content, "\n");
 //		for (rsl::string_view line : lines)
@@ -754,7 +754,7 @@
 //			if (!line.empty())
 //			{
 //				line = rex::strip(line);
-//				rsl::string tileset_path = rex::path::join(rex::vfs::mount_path(rex::MountingPoint::Tilesets), line);
+//				rsl::string tileset_path = rex::path::join(rex::vfs::instance()->mount_path(rex::MountingPoint::Tilesets), line);
 //				m_tilesets.push_back(load_tileset(tileset_path));
 //			}
 //		}

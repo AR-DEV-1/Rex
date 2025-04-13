@@ -20,7 +20,7 @@ namespace rex
 
 		json::json read_from_file(rsl::string_view filepath)
 		{
-			rex::memory::Blob file_content = rex::vfs::read_file(filepath);
+			rex::memory::Blob file_content = rex::vfs::instance()->read_file(filepath);
 			return rex::json::parse(file_content);
 		}
 	}

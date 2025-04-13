@@ -1,0 +1,10 @@
+[
+    {
+        "name": "drive",
+        "desc": "The drive who's journal you want to scan. D drive is default selected"
+    },
+    {
+        "name": "output",
+        "desc": "The input file to load the start USN from. The new last USN read will also be saved to this path."
+    }
+]

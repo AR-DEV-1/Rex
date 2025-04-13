@@ -8,6 +8,7 @@
 #include "rex_engine/event_system/event_dispatcher.h"
 
 #include "rex_engine/diagnostics/log.h"
+#include "rex_engine/engine/globals.h"
 
 #include "rex_engine/memory/global_allocators/global_allocator.h"
 #include "rex_engine/memory/allocators/stack_allocator.h"
@@ -111,5 +112,11 @@ namespace rex
     rsl::vector<EventBase*> m_enqueued_events;
     static constexpr rsl::memory_size s_event_queue_byte_size = 256_kib;
   };
-  EventSystem& event_system();
+
+  namespace event_system
+  {
+    void init(globals::GlobalUniquePtr<EventSystem> eventSystem);
+    EventSystem* instance();
+    void shutdown();
+  }
 } // namespace rex

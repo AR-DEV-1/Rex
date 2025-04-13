@@ -1,50 +1,56 @@
 #include "rex_engine/threading/thread_handle.h"
 
 #include "rex_engine/threading/thread_pool.h"
+#include "rex_engine/diagnostics/assert.h"
 
 namespace rex
 {
-  namespace threading
-  {
-    ThreadHandle::ThreadHandle(internal::Thread* thread)
-        : m_thread(thread)
-    {
-    }
+	ThreadHandle::ThreadHandle()
+		: m_thread(nullptr)
+		, m_owning_thread_pool(nullptr)
+	{}
 
-    ThreadHandle::ThreadHandle(ThreadHandle&& other)
-        : m_thread(rsl::exchange(other.m_thread, nullptr))
-    {
-    }
+	ThreadHandle::ThreadHandle(internal::Thread* thread, ThreadPool* owningPool)
+		: m_thread(thread)
+		, m_owning_thread_pool(owningPool)
+	{
+	}
 
-    ThreadHandle::~ThreadHandle()
-    {
-      return_me_to_thread_pool();
-    }
+	ThreadHandle::ThreadHandle(ThreadHandle&& other)
+		: m_thread(rsl::exchange(other.m_thread, nullptr))
+		, m_owning_thread_pool(rsl::exchange(other.m_owning_thread_pool, nullptr))
+	{
+	}
 
-    ThreadHandle& ThreadHandle::operator=(ThreadHandle&& other)
-    {
-      return_me_to_thread_pool();
-      m_thread = rsl::exchange(other.m_thread, nullptr);
+	ThreadHandle::~ThreadHandle()
+	{
+		return_me_to_thread_pool();
+	}
 
-      return *this;
-    }
+	ThreadHandle& ThreadHandle::operator=(ThreadHandle&& other)
+	{
+		return_me_to_thread_pool();
+		m_thread = rsl::exchange(other.m_thread, nullptr);
+		m_owning_thread_pool = rsl::exchange(other.m_owning_thread_pool, nullptr);
 
-    void ThreadHandle::run(internal::thread_work_func&& func, void* arg)
-    {
-      m_thread->run(rsl::move(func), arg);
-    }
+		return *this;
+	}
 
-    const internal::Thread* ThreadHandle::thread() const
-    {
-      return m_thread;
-    }
+	void ThreadHandle::run(internal::thread_work_func&& func, void* arg)
+	{
+		m_thread->run(rsl::move(func), arg);
+	}
 
-    void ThreadHandle::return_me_to_thread_pool()
-    {
-      if(m_thread)
-      {
-        threading::internal::global_thread_pool().return_thread(m_thread);
-      }
-    }
-  } // namespace threading
+	const internal::Thread* ThreadHandle::thread() const
+	{
+		return m_thread;
+	}
+
+	void ThreadHandle::return_me_to_thread_pool()
+	{
+		if (m_thread && m_owning_thread_pool)
+		{
+			m_owning_thread_pool->return_thread(m_thread);
+		}
+	}
 } // namespace rex

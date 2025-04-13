@@ -13,12 +13,6 @@
 
 namespace rex
 {
-  EventSystem& event_system()
-  {
-    static EventSystem event_system{};
-    return event_system;
-  }
-
   EventSystem::EventSystem()
     : m_event_allocator(s_event_queue_byte_size)
   {
@@ -52,6 +46,24 @@ namespace rex
     m_event_allocator.reset();
     m_enqueued_events.clear();
   }
+
+  namespace event_system
+  {
+    globals::GlobalUniquePtr<EventSystem> g_event_system;
+    void init(globals::GlobalUniquePtr<EventSystem> eventSystem)
+    {
+      g_event_system = rsl::move(eventSystem);
+    }
+    EventSystem* instance()
+    {
+      return g_event_system.get();
+    }
+    void shutdown()
+    {
+      g_event_system.reset();
+    }
+	}
+
 } // namespace rex
 
   // NOLINTEND(cppcoreguidelines-pro-type-union-access)

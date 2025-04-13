@@ -1,6 +1,5 @@
 #include "rex_directx/system/dx_resource_view.h"
 
-#include "rex_engine/gfx/system/gpu_engine.h"
 
 namespace rex
 {

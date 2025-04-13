@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using Sharpmake;
+using static Sharpmake.Options.CSharp;
 
 public class Utils
 {
@@ -65,5 +66,17 @@ public class Utils
     string relativeFromShaders = Util.PathGetRelative(projectShaderPath, absPath, true);
 
     return Path.GetDirectoryName(Path.Combine("data", relativeFromShaders));
+  }
+
+  // Always creates the file and writes the provided content to it
+  // If the directory where the file is located doesn't exist, this directory is created first
+  public static void SafeWriteFile(string filepath, string text)
+  {
+    if (!Directory.Exists(filepath))
+    {
+      Directory.CreateDirectory(Path.GetDirectoryName(filepath));
+    }
+
+    File.WriteAllText(filepath, text);
   }
 }

@@ -1,6 +1,6 @@
 #include "rex_engine/gfx/rendering/render_pass.h"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/gfx/shader_reflection/shader_reflection_cache.h"
 
 #include "rex_engine/filesystem/vfs.h"
@@ -9,7 +9,7 @@
 #include "rex_engine/gfx/system/shader_library.h"
 #include "rex_engine/gfx/rendering/renderer.h"
 
-#include "rex_engine/gfx/system/gpu_engine.h"
+
 #include "rex_std/algorithm.h"
 
 namespace rex
@@ -22,7 +22,7 @@ namespace rex
 			: m_name(desc.name)
 		{
 			m_pso_desc = desc.pso_desc;
-			m_pso = gal()->create_pso(desc.pso_desc);
+			m_pso = gfx::gal::instance()->create_pso(desc.pso_desc);
 			const ShaderPipelineReflection& reflection = shader_reflection_cache::load(desc.pso_desc.shader_pipeline);
 			m_parameters_store = rsl::make_unique<ShaderParametersStore>(reflection.renderpass_param_store_desc);
 			m_framebuffer = rsl::make_unique<FrameBuffer>(desc.framebuffer_desc);

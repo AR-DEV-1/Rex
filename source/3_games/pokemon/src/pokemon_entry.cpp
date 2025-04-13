@@ -35,15 +35,13 @@ namespace pokemon
 
 namespace rex
 {
-  bool g_project_name_set = set_project_name("Pokemon");
-
   ApplicationCreationParams app_entry(PlatformCreationParams& platformParams)
   {
     rex::ApplicationCreationParams app_params(platformParams);
 
     app_params.gui_params.window_width = 720;
     app_params.gui_params.window_height = 720;
-    app_params.gui_params.window_title.assign(rsl::format("Pokemon: Rex | PID: {}", rex::current_process_id()));
+    app_params.gui_params.window_title.assign("Pokemon: Rex");
 
     app_params.is_gui_app = true;
 

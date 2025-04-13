@@ -7,44 +7,41 @@
 
 namespace rex
 {
-  namespace threading
-  {
-    namespace internal
-    {
-      class Thread
-      {
-      public:
-        Thread();
+	namespace internal
+	{
+		class Thread
+		{
+		public:
+			Thread();
 
-        Thread(const Thread&) = delete;
-        Thread(Thread&&)      = delete;
+			Thread(const Thread&) = delete;
+			Thread(Thread&&) = delete;
 
-        ~Thread();
+			~Thread();
 
-        Thread& operator=(const Thread&) = delete;
-        Thread& operator=(Thread&&) = delete;
+			Thread& operator=(const Thread&) = delete;
+			Thread& operator=(Thread&&) = delete;
 
-        // Run the callable on another thread
-        void run(rsl::function<int(void*)>&& callable, void* arg = nullptr);
+			// Run the callable on another thread
+			void run(rsl::function<int(void*)>&& callable, void* arg = nullptr);
 
-      private:
-        ThreadEvent m_event;
-        rsl::atomic<bool> m_should_join;
-        rsl::function<int(void*)> m_callable;
-        void* m_arg;
-        rsl::thread m_thread;
-      };
+		private:
+			ThreadEvent m_event;
+			rsl::atomic<bool> m_should_join;
+			rsl::function<int(void*)> m_callable;
+			void* m_arg;
+			rsl::thread m_thread;
+		};
 
-      using thread_work_func = rsl::function<int(void*)>;
+		using thread_work_func = rsl::function<int(void*)>;
 
-      // Function implemented by the platform
-      // It wraps a thread entry so that any crash gets captured
-      // and crash analysis can be performed on a worker thread
-      rsl::function<void()> crash_guard_thread_entry(rsl::function<void()>&& func);
-    } // namespace internal
-  }   // namespace threading
+		// Function implemented by the platform
+		// It wraps a thread entry so that any crash gets captured
+		// and crash analysis can be performed on a worker thread
+		rsl::function<void()> crash_guard_thread_entry(rsl::function<void()>&& func);
+	} // namespace internal
 } // namespace rex
 
 #ifdef REX_PLATFORM_WINDOWS
-  #include "rex_engine/platform/win/threading/win_thread.h"
+#include "rex_engine/platform/win/threading/win_thread.h"
 #endif

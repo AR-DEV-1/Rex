@@ -8,7 +8,8 @@
 #include "rex_engine/diagnostics/log.h"
 
 #include "rex_engine/gfx/system/shader_pipeline.h"
-#include "rex_engine/gfx/system/gal.h"
+#include "rex_engine/gfx/graphics.h"
+
 #include "rex_engine/gfx/shader_reflection/shader_signature.h"
 #include "rex_engine/gfx/system/shader_library.h"
 
@@ -55,8 +56,8 @@ namespace rex
 				// However, to get around the compiler errors, we implement it as this for now
 				switch (param_type)
 				{
-				case rex::gfx::ShaderParameterType::Texture: break; // material->set_texture(name, gal()->create_texture2d(path).get());
-				case rex::gfx::ShaderParameterType::Sampler: break; // material->set_sampler(name, gal()->create_sampler2d(path).get());
+				case rex::gfx::ShaderParameterType::Texture: break; // material->set_texture(name, gfx::gal::instance()->create_texture2d(path).get());
+				case rex::gfx::ShaderParameterType::Sampler: break; // material->set_sampler(name, gfx::gal::instance()->create_sampler2d(path).get());
 				default: break;
 				}
 			}
@@ -64,10 +65,10 @@ namespace rex
 
 		rsl::unique_ptr<Material> load_material(rsl::string_view filepath)
 		{
-			REX_VERBOSE(LogMaterialSystem, "Loading material {}", quoted(filepath));
+			REX_DEBUG(LogMaterialSystem, "Loading material {}", quoted(filepath));
 
 			// Try to load the material content from disk
-			if (!vfs::is_file(filepath))
+			if (!vfs::instance()->exists(filepath))
 			{
 				REX_ERROR(LogMaterialSystem, "Cannot load material as it doesn't exists: {}", quoted(filepath));
 				return nullptr;
@@ -75,7 +76,7 @@ namespace rex
 
 			// Extract its content so that it's processable
 			// Materials are saved in json format, so we use a json parser
-			rex::memory::Blob file_content = vfs::read_file(filepath);
+			rex::memory::Blob file_content = vfs::instance()->read_file(filepath);
 			auto json_blob = rex::json::parse(file_content);
 			
 			// If the json blob is discarded, that means an error occurred during json parsing
@@ -94,11 +95,11 @@ namespace rex
 
 			// Process material content so we can create a material object out of it
 			MaterialDesc mat_desc{};
-			mat_desc.shader_pipeline.vs = shader_lib::load(vertex_shader, ShaderType::Vertex);
-			mat_desc.shader_pipeline.ps = shader_lib::load(pixel_shader, ShaderType::Pixel);
+			mat_desc.shader_pipeline.vs = shader_lib::instance()->load(vertex_shader, ShaderType::Vertex);
+			mat_desc.shader_pipeline.ps = shader_lib::instance()->load(pixel_shader, ShaderType::Pixel);
 
 			// Create the material object
-			rsl::unique_ptr<Material> material = gal()->create_material(mat_desc);
+			rsl::unique_ptr<Material> material = gfx::gal::instance()->create_material(mat_desc);
 
 			// Load in the parameters values from the material
 			init_material_parameters(material.get(), json_blob); // infinite loop here when inserting into json

@@ -23,7 +23,9 @@ TEST_CASE("TEST - StringID - Invalid String ID")
 
 TEST_CASE("TEST - StringID - Creating of string id")
 {
+	rex::string_pool::init(rex::globals::make_unique<rex::StringPool>());
   {
+
     rsl::string_view string = "something";
     rex::StringID sid = rex::StringID::create(string);
 
@@ -31,6 +33,7 @@ TEST_CASE("TEST - StringID - Creating of string id")
     REX_CHECK(sid.operator bool() == true);
     REX_CHECK(sid.string() == string);
     REX_CHECK(sid.length() == string.length());
+
   }
 
   {
@@ -42,10 +45,13 @@ TEST_CASE("TEST - StringID - Creating of string id")
     REX_CHECK(sid.string() == string);
     REX_CHECK(sid.length() == string.length());
   }
+	rex::string_pool::shutdown();
 }
 
 TEST_CASE("TEST - StringID - equal comparison")
 {
+  rex::string_pool::init(rex::globals::make_unique<rex::StringPool>());
+
   rsl::string_view string = "something";
   rex::StringID sid = rex::StringID::create(string);
   rex::StringID sid2 = sid;
@@ -58,10 +64,14 @@ TEST_CASE("TEST - StringID - equal comparison")
   REX_CHECK(sid2.length() == string.length());
   REX_CHECK(sid.value() == sid2.value());
   REX_CHECK(sid.operator u32() == sid2.operator u32());
+
+  rex::string_pool::shutdown();
 }
 
 TEST_CASE("TEST - StringID - not equal comparison")
 {
+  rex::string_pool::init(rex::globals::make_unique<rex::StringPool>());
+
   rsl::string_view string = "something";
   rsl::string_view string2 = "else";
   rex::StringID sid = rex::StringID::create(string);
@@ -75,10 +85,14 @@ TEST_CASE("TEST - StringID - not equal comparison")
   REX_CHECK(sid2.length() == string2.length());
   REX_CHECK(sid.value() != sid2.value());
   REX_CHECK(sid.operator u32() != sid2.operator u32());
+
+  rex::string_pool::shutdown();
 }
 
 TEST_CASE("TEST - StringID - hash collision")
 {
+  rex::string_pool::init(rex::globals::make_unique<rex::StringPool>());
+
   rsl::string_view string = "something";
   rex::StringID sid = rex::StringID::create(string);
   rsl::string string2;
@@ -98,4 +112,6 @@ TEST_CASE("TEST - StringID - hash collision")
     REX_CHECK(sid.value() != sid2.value());
     REX_CHECK(sid.operator u32() != sid2.operator u32());
   }
+
+  rex::string_pool::shutdown();
 }

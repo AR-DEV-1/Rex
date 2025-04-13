@@ -1,6 +1,7 @@
 #pragma once
 
-#include "rex_engine/gfx/system/gal.h"
+
+#include "rex_engine/gfx/graphics.h"
 
 #include "rex_directx/dxgi/includes.h"
 #include "rex_directx/dxgi/factory.h"
@@ -11,8 +12,6 @@
 #include "rex_directx/system/dx_debug_interface.h"
 #include "rex_directx/system/dx_resource_heap.h"
 #include "rex_directx/system/dx_view_heap.h"
-#include "rex_directx/system/dx_gpu_engine.h"
-
 #include "rex_directx/system/dx_command_queue.h"
 #include "rex_directx/system/dx_swapchain.h"
 
@@ -26,6 +25,13 @@
 #include "rex_engine/engine/defines.h"
 #include "rex_engine/engine/types.h"
 
+#include "rex_directx/utility/dx_util.h"
+
+#include "rex_engine/platform/win/win_com_ptr.h"
+
+#include "rex_directx/system/dx_view_heap.h"
+#include "rex_directx/system/dx_shader_compiler.h"
+
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
 
 struct ID3D12GraphicsCommandList;
@@ -34,15 +40,25 @@ namespace rex
 {
   namespace gfx
   {
+		class DxDevice;
+		class DxCommandQueue;
+		class ResourceHeap;
+		class ViewHeap;
+		struct CompileShaderDesc;
+		class DxSampler2D;
+
+		namespace dxgi
+		{
+			class Factory;
+			class AdapterManager;
+		}
+
     class IsShaderVisible;
 
-    class DirectXInterface : public GALInterface
+    class DirectXInterface : public GALBase
     {
     public:
-      DirectXInterface();
-
-      // Initialize the graphics systesm and create a gpu engine
-      gfx::GpuEngine* create_gpu_engine(const OutputWindowUserData& userData) override;
+      DirectXInterface(const OutputWindowUserData& userData);
 
       // Return basic info about the graphics hardware of the current machine
       const Info& info() const override;
@@ -51,62 +67,102 @@ namespace rex
       ShaderPlatform shader_platform() const override;
 
       // Backend Systems
-      rsl::unique_ptr<CommandQueue> create_command_queue(GraphicsEngineType type) override;
-      rsl::unique_ptr<Swapchain> create_swapchain(void* apiDevice, s32 bufferCount, void* primaryDisplayHandle) override;
-      rsl::unique_ptr<CommandAllocator> create_command_allocator(GraphicsEngineType type) override;
+      rsl::unique_ptr<CommandQueue>           create_command_queue(GraphicsEngineType type) override;
+      rsl::unique_ptr<Swapchain>              create_swapchain(void* apiDevice, s32 bufferCount, void* primaryDisplayHandle) override;
+      rsl::unique_ptr<CommandAllocator>       create_command_allocator(GraphicsEngineType type) override;
+
+      // Create a DirectX commandlist
+      wrl::ComPtr<ID3D12GraphicsCommandList>  create_commandlist(CommandAllocator* alloc, GraphicsEngineType type);
+      // Create a DirectX descriptor heap
+      rsl::unique_ptr<ViewHeap>               create_view_heap(D3D12_DESCRIPTOR_HEAP_TYPE type, IsShaderVisible isShaderVisible);
+      // Create a DirectX resource heap
+      rsl::unique_ptr<ResourceHeap>           create_resource_heap();
+      // Create a DirectX fence object
+      rsl::unique_ptr<DxFence>                create_fence();
 
       // Resource creation
-      rsl::unique_ptr<RenderTarget> create_render_target(s32 width, s32 height, TextureFormat format) override;
-      rsl::unique_ptr<VertexBuffer> create_vertex_buffer(s32 numVertices, s32 vertexSize, const void* data = nullptr) override;
-      rsl::unique_ptr<IndexBuffer> create_index_buffer(s32 numIndices, IndexBufferFormat format, const void* data = nullptr) override;
-      rsl::unique_ptr<RootSignature> create_root_signature(const rsl::vector<ShaderParameterDeclaration>& parameters) override;
-      rsl::unique_ptr<PipelineState> create_pso(const PipelineStateDesc& desc) override;
-      rsl::unique_ptr<Texture2D> create_texture2d(s32 width, s32 height, TextureFormat format, const void* data = nullptr) override;
-      rsl::unique_ptr<DepthStencilBuffer> create_depth_stencil_buffer(s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc) override;
-      rsl::unique_ptr<ConstantBuffer> create_constant_buffer(rsl::memory_size size, rsl::string_view debugName = "Constant Buffer") override;
-      rsl::unique_ptr<InputLayout> create_input_layout(const InputLayoutDesc& desc) override;
-      rsl::unique_ptr<Shader> create_vertex_shader(rsl::string_view sourceCode, rsl::string_view shaderName = "") override;
-      rsl::unique_ptr<Shader> create_vertex_shader(const memory::Blob& byteBlob) override;
-      rsl::unique_ptr<Shader> create_pixel_shader(rsl::string_view sourceCode, rsl::string_view shaderName = "") override;
-      rsl::unique_ptr<Shader> create_pixel_shader(const memory::Blob& byteBlob) override;
-      rsl::unique_ptr<UploadBuffer> create_upload_buffer(rsl::memory_size size) override;
-      rsl::unique_ptr<Material> create_material(const MaterialDesc& matDesc) override;
-      rsl::unique_ptr<Sampler2D> create_sampler2d(const SamplerDesc& desc) override;
-      rsl::unique_ptr<UnorderedAccessBuffer> create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr) override;
+      rsl::unique_ptr<RenderTarget>           create_render_target(s32 width, s32 height, TextureFormat format)                                               override;
+      rsl::unique_ptr<VertexBuffer>           create_vertex_buffer(s32 numVertices, s32 vertexSize, const void* data = nullptr)                               override;
+      rsl::unique_ptr<IndexBuffer>            create_index_buffer(s32 numIndices, IndexBufferFormat format, const void* data = nullptr)                       override;
+      rsl::unique_ptr<RootSignature>          create_root_signature(const rsl::vector<ShaderParameterDeclaration>& parameters)                                override;
+      rsl::unique_ptr<PipelineState>          create_pso(const PipelineStateDesc& desc)                                                                       override;
+      rsl::unique_ptr<Texture2D>              create_texture2d(s32 width, s32 height, TextureFormat format, const void* data = nullptr)                       override;
+      rsl::unique_ptr<DepthStencilBuffer>     create_depth_stencil_buffer(s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc)  override;
+      rsl::unique_ptr<ConstantBuffer>         create_constant_buffer(rsl::memory_size size, rsl::string_view debugName = "Constant Buffer")                   override;
+      rsl::unique_ptr<InputLayout>            create_input_layout(const InputLayoutDesc& desc)                                                                override;
+      rsl::unique_ptr<Shader>                 create_vertex_shader(rsl::string_view sourceCode, rsl::string_view shaderName = "")                             override;
+      rsl::unique_ptr<Shader>                 create_vertex_shader(const memory::Blob& byteBlob)                                                              override;
+      rsl::unique_ptr<Shader>                 create_pixel_shader(rsl::string_view sourceCode, rsl::string_view shaderName = "")                              override;
+      rsl::unique_ptr<Shader>                 create_pixel_shader(const memory::Blob& byteBlob)                                                               override;
+      rsl::unique_ptr<UploadBuffer>           create_upload_buffer(rsl::memory_size size)                                                                     override;
+      rsl::unique_ptr<Material>               create_material(const MaterialDesc& matDesc)                                                                    override;
+      rsl::unique_ptr<Sampler2D>              create_sampler2d(const SamplerDesc& desc)                                                                       override;
+      rsl::unique_ptr<UnorderedAccessBuffer>  create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr)                               override;
 
-      ShaderSignature reflect_shader(const gfx::Shader* shader) override;
+      // -------------------------
+      // Shader stuff
+      // -------------------------
+      // Compile a shader and return its binary blob
+      wrl::ComPtr<ID3DBlob> compile_shader(const CompileShaderDesc& desc);
+      ShaderSignature reflect_shader(const gfx::Shader* shader)                                                                                               override;
+
+      // -------------------------
+      // Resource creation from Direct X
+      // -------------------------
 
       // Return a new render target constructed from a given gpu resource (usefull for swapchains)
       rsl::unique_ptr<RenderTarget> create_render_target(wrl::ComPtr<ID3D12Resource>& resource);
 
-      // Compile a shader and return its binary blob
-      wrl::ComPtr<ID3DBlob> compile_shader(const CompileShaderDesc& desc);
-      // Create a DirectX commandlist
-      wrl::ComPtr<ID3D12GraphicsCommandList> create_commandlist(CommandAllocator* alloc, GraphicsEngineType type);
-      // Create a DirectX descriptor heap
-      rsl::unique_ptr<ViewHeap> create_view_heap(D3D12_DESCRIPTOR_HEAP_TYPE type, IsShaderVisible isShaderVisible);
-      // Create a DirectX resource heap
-      rsl::unique_ptr<ResourceHeap> create_resource_heap();
-      // Create a DirectX fence object
-      rsl::unique_ptr<DxFence>          create_fence();
-
       // Log live gpu objects using DirectX api
       void report_live_objects();
 
-      RenderTarget* current_backbuffer_rt();
+    protected:
+      void api_init() override;
+
+      // Initialize the various sub engines
+      rsl::unique_ptr<RenderEngine>   init_render_engine(ResourceStateTracker* resourceStateTracker) override;
+      rsl::unique_ptr<CopyEngine>     init_copy_engine(ResourceStateTracker* resourceStateTracker) override;
+      rsl::unique_ptr<ComputeEngine>  init_compute_engine(ResourceStateTracker* resourceStateTracker) override;
+
+      // Initialize the resource heap which keeps track of all gpu resources
+      void init_resource_heap() override;
+      // Allocate a new view heap of a given type
+      rsl::unique_ptr<ViewHeap> allocate_view_heap(ViewHeapType viewHeapType, IsShaderVisible isShaderVisible) override;
+
+    private:
+      // Allocate a 1D buffer on the gpu, returning a DirectX resource
+      wrl::ComPtr<ID3D12Resource> allocate_buffer(rsl::memory_size size);
+      // Allocate a 1D buffer on the gpu that allows for unordered access, returning a DirectX resource
+      wrl::ComPtr<ID3D12Resource> allocate_unordered_access_buffer(rsl::memory_size size);
+      // Allocate a 2D buffer on the gpu, returning a DirectX resource
+      wrl::ComPtr<ID3D12Resource> allocate_texture2d(s32 width, s32 height, TextureFormat format);
+      // Allocate a 2D buffer on the gpu, used for depth stencil testing
+      wrl::ComPtr<ID3D12Resource> allocate_depth_stencil(s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc);
+
+      // Create a render target view for a given resource
+      DxResourceView create_rtv(const wrl::ComPtr<ID3D12Resource>& texture);
+      // Create a shader resource view pointing to a 2D texture
+      DxResourceView create_texture2d_srv(const wrl::ComPtr<ID3D12Resource>& texture);
+      // Create a constant buffer view pointing for a given resource
+      DxResourceView create_cbv(const wrl::ComPtr<ID3D12Resource>& resource, rsl::memory_size size);
+      // Create a depth stencil view for a given resource
+      DxResourceView create_dsv(const wrl::ComPtr<ID3D12Resource>& texture);
+      // Create a unordered access view for a given resource
+      DxResourceView create_uav(const wrl::ComPtr<ID3D12Resource>& resource, rsl::memory_size size);
+
+      // Create a sampler2D and store it on the gpu
+      rsl::unique_ptr<DxSampler2D> allocate_sampler2d(const SamplerDesc& desc);
 
     private:
       // Resources needed to create objects
-			rsl::unique_ptr<DebugInterface> m_debug_interface;        // Used to determine if we have any leaking resource on shutdown
-			rsl::unique_ptr<DxDevice> m_device = nullptr;             // Used as the factory object to create gpu resources
-			DxCommandQueue* m_render_command_queue = nullptr;         // Used as the object the swapchain speaks to queue a present command
-			rsl::unique_ptr<dxgi::Factory> m_factory;
-			rsl::unique_ptr<dxgi::AdapterManager> m_adapter_manager;  // The manager holding all the adapters on this machine
+      rsl::unique_ptr<DebugInterface> m_debug_interface;        // Used to determine if we have any leaking resource on shutdown
+      rsl::unique_ptr<DxDevice> m_device = nullptr;             // Used as the factory object to create gpu resources
+      DxCommandQueue* m_render_command_queue = nullptr;         // Used as the object the swapchain speaks to queue a present command
+      rsl::unique_ptr<dxgi::Factory> m_factory;
+      rsl::unique_ptr<dxgi::AdapterManager> m_adapter_manager;  // The manager holding all the adapters on this machine
 
-      // The gpu engine which owns all graphic resources
-      rsl::unique_ptr<gfx::DxGpuEngine> m_gpu_engine;
+      rsl::unique_ptr<ResourceHeap> m_heap;  // The heap we use to allocate gpu resources
+      ShaderCompiler m_shader_compiler;      // A shader compiler with internal caching
     };
-
-    DirectXInterface* dx_gal();
   }
 }

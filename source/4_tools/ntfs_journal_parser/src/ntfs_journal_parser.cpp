@@ -17,8 +17,8 @@ namespace ntfs_journal
   }
   void update()
   {
-    rex::win32::DriveHandle drive(rex::cmdline::get_argument("Drive").value_or("P")[0]);
-    rex::win32::UsnJournal journal(rsl::move(drive), rex::cmdline::get_argument("Output").value_or("last_usn.txt"));
+    rex::win32::DriveHandle drive(rex::cmdline::instance()->get_argument("Drive").value_or("P")[0]);
+    rex::win32::UsnJournal journal(rsl::move(drive), rex::cmdline::instance()->get_argument("Output").value_or("last_usn.txt"));
     rsl::vector<rsl::string> files = journal.read();
 
     // we print using cout directly to minimize the extra messages logged to screen

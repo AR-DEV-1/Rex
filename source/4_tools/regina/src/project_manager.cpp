@@ -31,7 +31,7 @@ namespace regina
     rsl::string create_project_filepath(rsl::string_view projectName)
     {
       rsl::string project_filename = create_project_filename(projectName);
-      rsl::string project_filepath(rex::vfs::abs_path(rex::path::join(projectName, project_filename)));
+      rsl::string project_filepath(rex::vfs::instance()->abs_path(rex::path::join(projectName, project_filename)));
 
       return project_filepath;
     }
@@ -46,14 +46,14 @@ namespace regina
 
       rsl::string project_filepath = create_project_filepath(projectName);
 
-      if (rex::vfs::exists(project_filepath))
+      if (rex::vfs::instance()->exists(project_filepath))
       {
         REX_WARN(ProjectLoader, "{} already exists at {}, cannot create as new project", projectName, project_filepath);
         return load_from_disk(projectName);
       }
 
-      rex::vfs::create_dirs(rex::path::dir_name(project_filepath));
-      rex::vfs::create_file(project_filepath);
+      rex::vfs::instance()->create_dirs(rex::path::parent_path(project_filepath));
+      rex::vfs::instance()->create_file(project_filepath);
 
       rex::json::json new_project_content{};
       new_project_content["name"] = projectName;
@@ -61,7 +61,7 @@ namespace regina
 
       s32 indent = 4;
       rsl::string json_dump = new_project_content.dump(indent);
-      rex::vfs::write_to_file(project_filepath, json_dump, rex::vfs::AppendToFile::no);
+      rex::vfs::instance()->write_to_file(project_filepath, json_dump, rex::AppendToFile::no);
 
       return rsl::make_unique<Project>(projectName);
     }
@@ -76,7 +76,7 @@ namespace regina
       rsl::string project_filepath = create_project_filepath(projectName);
 
       // verify that the project path actually exist
-      if (!rex::vfs::is_file(project_filepath))
+      if (!rex::vfs::instance()->exists(project_filepath))
       {
         REX_ERROR(ProjectLoader, "Project \"{}\" does not exist", project_filepath);
         return nullptr;

@@ -20,8 +20,6 @@ namespace rex
     using duration   = rsl::chrono::duration<rep, period>;
     using time_point = rsl::chrono::time_point<TickCountClock>;
 
-    static const bool s_is_steady = true;
-
     //-------------------------------------------------------------------------
     static time_point now() noexcept
     {

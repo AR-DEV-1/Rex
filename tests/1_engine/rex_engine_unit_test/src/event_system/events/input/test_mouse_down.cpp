@@ -10,7 +10,7 @@ TEST_CASE("TEST - Events - Mouse Down Event")
   rex::MousePosition mouse_pos{};
   rex::IsDoubleClick is_double_click = rex::IsDoubleClick::no;
 
-  auto subscription = rex::event_system().subscribe<rex::MouseDown>([&num_quit_events_fired, &mouse_button, &mouse_pos, &is_double_click](const rex::MouseDown& evt)
+  auto subscription = rex::event_system::instance()->subscribe<rex::MouseDown>([&num_quit_events_fired, &mouse_button, &mouse_pos, &is_double_click](const rex::MouseDown& evt)
     {
       ++num_quit_events_fired;
       REX_CHECK(evt.mouse_button() == mouse_button);
@@ -24,7 +24,7 @@ TEST_CASE("TEST - Events - Mouse Down Event")
   mouse_pos.local_pos = rsl::pointi32{ 10, 10 };
   mouse_pos.screen_pos = rsl::pointi32{ 20, 20 };
   is_double_click = rex::IsDoubleClick::yes;
-  rex::event_system().fire_event(rex::MouseDown(mouse_button, mouse_pos, is_double_click));
+  rex::event_system::instance()->fire_event(rex::MouseDown(mouse_button, mouse_pos, is_double_click));
   REX_CHECK(num_quit_events_fired == 1);
 
   // Queued event fire
@@ -32,9 +32,9 @@ TEST_CASE("TEST - Events - Mouse Down Event")
   mouse_pos.local_pos = rsl::pointi32{ 40, 40 };
   mouse_pos.screen_pos = rsl::pointi32{ 50, 50 };
   is_double_click = rex::IsDoubleClick::no;
-  rex::event_system().enqueue_event(rex::MouseDown(mouse_button, mouse_pos, is_double_click));
+  rex::event_system::instance()->enqueue_event(rex::MouseDown(mouse_button, mouse_pos, is_double_click));
   REX_CHECK(num_quit_events_fired == 1);
 
-  rex::event_system().dispatch_queued_events();
+  rex::event_system::instance()->dispatch_queued_events();
   REX_CHECK(num_quit_events_fired == 2);
 }

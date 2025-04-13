@@ -2,6 +2,8 @@
 #include "regina/regina.h"
 #include "regina/project_manager.h"
 
+#include "rex_engine/engine/globals.h"
+
 #include "rex_engine/cmdline/cmdline.h"
 #include "rex_engine/diagnostics/log.h"
 
@@ -18,9 +20,9 @@ namespace regina
 
     // Load the project from disk if there's one specified
     rsl::unique_ptr<Project> project;
-    if (rex::cmdline::get_argument("project").has_value())
+    if (rex::cmdline::instance()->get_argument("project").has_value())
     {
-      project = project_manager::load_from_disk(rex::cmdline::get_argument("project").value());
+      project = project_manager::load_from_disk(rex::cmdline::instance()->get_argument("project").value());
       if (project == nullptr)
       {
         // Failed to load the project -> fail initialization
@@ -58,7 +60,7 @@ namespace regina
 
     app_params.gui_params.window_width = 1280;
     app_params.gui_params.window_height = 720;
-    app_params.gui_params.window_title.assign(rsl::format("Regina: {}", rex::project_name()));
+    app_params.gui_params.window_title.assign(rsl::format("Regina: {}", rex::engine::instance()->project_name()));
 
     app_params.engine_params.app_init_func = create_editor;
     app_params.engine_params.app_update_func = update_editor;
@@ -72,8 +74,6 @@ namespace regina
 
 namespace rex
 {
-  bool g_project_name_set = set_project_name("Pokemon");
-
 #ifndef REX_ENABLE_AUTO_TESTS
   //-------------------------------------------------------------------------
   ApplicationCreationParams app_entry(PlatformCreationParams& platformParams)

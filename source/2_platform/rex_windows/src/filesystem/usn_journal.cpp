@@ -118,13 +118,13 @@ namespace rex
         return 0;
       }
 
-      rex::memory::Blob blob = rex::vfs::read_file(m_last_usn_filepath);
+      rex::memory::Blob blob = rex::vfs::instance()->read_file(m_last_usn_filepath);
       return blob.read<uint64>();
     }
 
     void UsnJournal::save_last_usn()
     {
-      rex::vfs::write_to_file(m_last_usn_filepath, &m_last_usn, sizeof(m_last_usn), rex::vfs::AppendToFile::no);
+      rex::vfs::instance()->write_to_file(m_last_usn_filepath, &m_last_usn, sizeof(m_last_usn), rex::AppendToFile::no);
     }
   } // namespace win32
 } // namespace rex

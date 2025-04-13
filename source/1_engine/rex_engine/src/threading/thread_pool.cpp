@@ -8,79 +8,78 @@
 
 namespace rex
 {
-  namespace threading
-  {
-    namespace internal
-    {
-      ThreadPool::ThreadPool()
-      {
-        // To maximize core usage, we query the amount of local processors
-        // and create a thread for each one of them.
-        const s32 num_threads_to_spawn = rex::sys_info::num_logical_processors();
-        m_threads.reserve(num_threads_to_spawn);
-        m_idle_threads.reserve(num_threads_to_spawn);
+	ThreadPool::ThreadPool()
+	{
+		// To maximize core usage, we query the amount of local processors
+		// and create a thread for each one of them.
+		const s32 num_threads_to_spawn = rex::sys_info::num_logical_processors();
+		m_threads.reserve(num_threads_to_spawn);
+		m_idle_threads.reserve(num_threads_to_spawn);
 
-        for(s32 idx = 0; idx < num_threads_to_spawn; ++idx)
-        {
-          m_threads.push_back(rsl::make_unique<Thread>());
-          m_idle_threads.push_back(m_threads.back().get());
-        }
-      }
+		for (s32 idx = 0; idx < num_threads_to_spawn; ++idx)
+		{
+			m_threads.push_back(rsl::make_unique<internal::Thread>());
+			m_idle_threads.push_back(m_threads.back().get());
+		}
+	}
 
-      // Query if we have any idle threads available
-      // An idle thread is a thread that's not executing a job at the moment.
-      bool ThreadPool::has_idle_threads()
-      {
-        const rsl::unique_lock lock(m_threads_access_mtx);
-        return !m_idle_threads.empty();
-      }
+	//ThreadPool::~ThreadPool()
+	//{
 
-      // Check if we have an idle thread
-      // if so return it.
-      Thread* ThreadPool::acquire_idle_thread()
-      {
-        if(has_idle_threads())
-        {
-          const rsl::unique_lock lock(m_threads_access_mtx);
-          Thread* thread = m_idle_threads.back();
-          m_idle_threads.pop_back();
-          return thread;
-        }
+	//}
 
-        return nullptr;
-      }
+	// Query if we have any idle threads available
+	// An idle thread is a thread that's not executing a job at the moment.
+	bool ThreadPool::has_idle_threads()
+	{
+		const rsl::unique_lock lock(m_threads_access_mtx);
+		return !m_idle_threads.empty();
+	}
 
-      // Return a thread back to the pool
-      void ThreadPool::return_thread(Thread* thread)
-      {
-        const rsl::unique_lock lock(m_threads_access_mtx);
-        m_idle_threads.push_back(thread);
-      }
+	// Check if we have an idle thread
+	// if so return it.
+	ThreadHandle ThreadPool::acquire_idle_thread()
+	{
+		if (has_idle_threads())
+		{
+			const rsl::unique_lock lock(m_threads_access_mtx);
+			internal::Thread* thread = m_idle_threads.back();
+			m_idle_threads.pop_back();
+			return ThreadHandle(thread, this);
+		}
 
-      // Destroy all threads. Used at shutdown of the engine
-      void ThreadPool::destroy_threads()
-      {
-        const rsl::unique_lock lock(m_threads_access_mtx);
-        m_idle_threads.clear();
-        m_threads.clear();
-      }
+		return ThreadHandle();
+	}
 
-      ThreadPool& global_thread_pool()
-      {
-        static ThreadPool thread_pool;
-        return thread_pool;
-      }
-    } // namespace internal
+	// Return a thread back to the pool
+	void ThreadPool::return_thread(internal::Thread* thread)
+	{
+		const rsl::unique_lock lock(m_threads_access_mtx);
+		m_idle_threads.push_back(thread);
+	}
 
-    bool has_any_idle_thread()
-    {
-      return internal::global_thread_pool().has_idle_threads();
-    }
+	// Destroy all threads. Used at shutdown of the engine
+	void ThreadPool::destroy_threads()
+	{
+		const rsl::unique_lock lock(m_threads_access_mtx);
+		m_idle_threads.clear();
+		m_threads.clear();
+	}
 
-    ThreadHandle acquire_idle_thread()
-    {
-      return ThreadHandle(internal::global_thread_pool().acquire_idle_thread());
-    }
-
-  } // namespace threading
+	namespace thread_pool
+	{
+		globals::GlobalUniquePtr<ThreadPool> g_thread_pool;
+		void init(globals::GlobalUniquePtr<ThreadPool> threadPool)
+		{
+			g_thread_pool = rsl::move(threadPool);
+		}
+		ThreadPool* instance()
+		{
+			return g_thread_pool.get();
+		}
+		void shutdown()
+		{
+			g_thread_pool.reset();
+		}
+	} // namespace threading
 } // namespace rex

@@ -15,7 +15,7 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "rex_engine/gfx/system/gal.h"
+
 #include "rex_engine/entities/entity.h"
 #include "rex_engine/gfx/components/mesh_component.h"
 
@@ -35,7 +35,7 @@ namespace regina
     // The sample scene is hardcoded, only holding a few primitives
 
     // A default material, used by all objects
-    m_primitive_material = rex::gfx::load_material(rex::vfs::abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
+    m_primitive_material = rex::gfx::load_material(rex::vfs::instance()->abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
 
     create_cube(    glm::vec3(+0.0f, 0.0f, 0.0f));
     create_sphere(  glm::vec3(+2.0f, 0.0f, 0.0f));
