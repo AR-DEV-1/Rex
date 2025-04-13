@@ -36,14 +36,6 @@ namespace rex
       // Initialize the commandline first as this can influence everything else
       cmdline::init(globals::make_unique<CommandLine>(rsl::string_view(cmdLine)));
 
-      // if a user wants to know the arguments for the executable, we want to perform as minimal setup as possible.
-      // we just initialize the commandline, print what's possible and exit the program
-      if(cmdline::instance()->get_argument("help"))
-      {
-        cmdline::instance()->help();
-        rsl::exit(0);
-      }
-
       // if we want to debug executables without a debugger, we need to break early
       // so we can attach a debugger and continue from then on
       // we'll have a timer in place to break for 2 minutes, if no debugger is attached

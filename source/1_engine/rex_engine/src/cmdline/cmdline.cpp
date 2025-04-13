@@ -67,7 +67,7 @@ namespace rex
     for (const auto& args : cmdline_args)
     {
       rsl::string_view arg_name = args["name"];
-      if (verify_arg(arg_name, file))
+      if (!verify_arg(arg_name, file))
       {
 				continue;
       }

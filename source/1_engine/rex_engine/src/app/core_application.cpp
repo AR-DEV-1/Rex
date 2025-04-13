@@ -22,6 +22,8 @@
 #include "rex_engine/filesystem/native_filesystem.h"
 #include "rex_engine/threading/thread_pool.h"
 
+#include "rex_std/internal/exception/exit.h"
+
 #include <cstdlib>
 
 namespace rex
@@ -289,6 +291,14 @@ namespace rex
     }
 
     cmdline::instance()->post_init();
+
+    // if a user wants to know the arguments for the executable, we want to perform as minimal setup as possible.
+    // we just initialize the commandline, print what's possible and exit the program
+    if (cmdline::instance()->get_argument("help"))
+    {
+      cmdline::instance()->help();
+      rsl::exit(0);
+    }
   }
 
   //--------------------------------------------------------------------------------------------
