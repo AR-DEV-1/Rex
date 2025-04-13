@@ -617,15 +617,6 @@ namespace rex
 			}
 		}
 
-
-
-
-
-
-
-
-
-
 		// Allocate a 1D buffer on the gpu, returning a DirectX resource
 		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_buffer(rsl::memory_size size)
 		{
@@ -676,12 +667,6 @@ namespace rex
 		{
 			return d3d::to_dx12(cpu_desc_heap(ViewHeapType::Sampler))->create_sampler2d(desc);
 		}
-
-		// Compile a shader written in HLSL
-		//wrl::ComPtr<ID3DBlob> DirectXInterface::compile_shader(const CompileShaderDesc& desc)
-		//{
-		//	return m_shader_compiler.compile_shader(desc);
-		//}
 
 		// Initialize the various sub engines
 		rsl::unique_ptr<RenderEngine> DirectXInterface::init_render_engine(ResourceStateTracker* resourceStateTracker)

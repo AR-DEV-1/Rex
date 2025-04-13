@@ -12,6 +12,7 @@
 #include "rex_std/bonus/time/timepoint.h"
 #include "rex_std/bonus/types.h"
 #include "rex_engine/engine/engine.h"
+#include "rex_engine/containers/fixed_stack.h"
 
 namespace rex
 {
@@ -21,16 +22,34 @@ namespace rex
   inline constexpr card32 g_max_allowed_mem_tags = 100;
 #endif
 
-  rsl::array<MemoryTag, g_max_allowed_mem_tags>& thread_local_memory_tag_stack()
+  thread_local FixedStack<MemoryTag, g_max_allowed_mem_tags> g_thread_local_mem_tags;
+
+  AllocationCallStack::AllocationCallStack(CallStack callstack, card64 size)
+    : m_callstack(rsl::move(callstack))
+    , m_size(size)
+    , m_alloc_count(1)
   {
-    thread_local static rsl::array<MemoryTag, g_max_allowed_mem_tags> stack = {MemoryTag::Global};
-    return stack;
   }
 
-  card32& thread_local_mem_tag_index()
+  void AllocationCallStack::add_size(card64 size)
   {
-    thread_local static card32 tag = 0;
-    return tag;
+    m_size += size;
+    ++m_alloc_count;
+  }
+  void AllocationCallStack::sub_size(card64 size)
+  {
+    m_size -= size;
+    --m_alloc_count;
+  }
+
+  rsl::memory_size AllocationCallStack::size() const
+  {
+    return m_size;
+  }
+
+  card32 AllocationCallStack::alloc_count() const
+  {
+    return m_alloc_count;
   }
 
   MemoryTracker::MemoryTracker()
@@ -135,17 +154,16 @@ namespace rex
 
   void MemoryTracker::push_tag(MemoryTag tag) // NOLINT(readability-convert-member-functions-to-static)
   {
-    ++thread_local_mem_tag_index();
-    thread_local_memory_tag_stack()[thread_local_mem_tag_index()] = tag;
+    g_thread_local_mem_tags.push(tag);
   }
   void MemoryTracker::pop_tag() // NOLINT(readability-convert-member-functions-to-static)
   {
-    --thread_local_mem_tag_index();
+    g_thread_local_mem_tags.pop();
   }
 
   MemoryTag MemoryTracker::current_tag() const // NOLINT(readability-convert-member-functions-to-static)
   {
-    return thread_local_memory_tag_stack()[thread_local_mem_tag_index()];
+    return g_thread_local_mem_tags.current();
   }
 
   void MemoryTracker::dump_stats_to_file(rsl::string_view filepath)
@@ -169,7 +187,7 @@ namespace rex
     // copy the alloc callstacks as it's possible allocations occur while formatting or logging to file
     for(const auto& [callstack, alloc_info]: m_allocation_info_table)
     {
-      ss << rsl::format("Count: {}\n", alloc_info.allocation_callstack.ref_count());
+      ss << rsl::format("Count: {}\n", alloc_info.allocation_callstack.alloc_count());
       ss << rsl::format("Size: {}\n", alloc_info.allocation_callstack.size());
       ss << rsl::format("Known Deleters: {}\n", alloc_info.deleter_callstacks.size());
 

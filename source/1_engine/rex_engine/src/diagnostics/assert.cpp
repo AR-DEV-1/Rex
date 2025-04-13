@@ -14,6 +14,8 @@ namespace rex
 
   namespace internal
   {
+    // We make sure we write to debug output as well as it's possible an assert is raised before init or after shutdown
+    // If this happens we still want to get some kind of debug information, so we make sure we log to the debug output window
     void debug_log_and_error(rsl::string_view err)
     {
       rex::output_debug_string(err);

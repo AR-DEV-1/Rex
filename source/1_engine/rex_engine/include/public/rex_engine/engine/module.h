@@ -9,6 +9,9 @@
 
 namespace rex
 {
+	// A module represent a single Visual Studio project or its equivalent
+	// Having this detected at runtime allows us to find what the main module is we're running
+	// which is used to determine the log file and other session data
 	class Module
 	{
 	public:

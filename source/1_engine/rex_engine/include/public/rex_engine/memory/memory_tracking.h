@@ -34,49 +34,33 @@ namespace rex
     debug_vector<MemoryHeader*> allocation_headers;
   };
 
+  // An allocation callstack is a structure holding debug information of an allocation
+  // This includes the callstack as well as the accumulation of the size of all allocations
+  // that came from this callstack and then number of allocations
   class AllocationCallStack
   {
   public:
-    AllocationCallStack(CallStack callstack, card64 size)
-      : m_callstack(rsl::move(callstack))
-      , m_size(size)
-      , m_ref_count(1)
-    {
-    }
+    AllocationCallStack(CallStack callstack, card64 size);
 
-    void add_size(card64 size)
-    {
-      m_size += size;
-      ++m_ref_count;
-    }
-    void sub_size(card64 size)
-    {
-      m_size -= size;
-      --m_ref_count;
-    }
+    void add_size(card64 size);
+    void sub_size(card64 size);
 
-    rsl::memory_size size() const
-    {
-      return m_size;
-    }
-
-    card32 ref_count() const
-    {
-      return m_ref_count;
-    }
+    rsl::memory_size size() const;
+    card32 alloc_count() const;
 
   private:
     CallStack m_callstack;
     rsl::memory_size m_size;
-    card32 m_ref_count;
+    card32 m_alloc_count;
   };
 
+  // Holds information where the allocation came from
+  // as well as where it could possibly get deleted from
   struct AllocationInfo
   {
     AllocationCallStack allocation_callstack;
     debug_vector<CallStack> deleter_callstacks;
   };
-
 
   class MemoryTracker
   {
@@ -123,6 +107,8 @@ namespace rex
     s32 m_num_total_allocations;
   };
 
+  // an object that pushes a memory tag on construction
+  // and pop it on destruction
   class MemoryTagScope
   {
   public:

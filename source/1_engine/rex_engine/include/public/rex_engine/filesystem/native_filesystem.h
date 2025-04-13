@@ -18,6 +18,8 @@
 
 namespace rex
 {
+  // The native filesystem is a thin wrapper around the OS filesystem
+  // There's no virtualization of any kind and every call goes directly to the operating system
 	class NativeFileSystem : public VfsBase
 	{
   public:

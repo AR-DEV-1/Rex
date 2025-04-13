@@ -241,7 +241,7 @@ namespace rex
       s32 num_entries = 0;
 
       temp_vector<scratch_string> dirs;
-      const s32 filename_dummy_length = 10;
+      const s32 filename_dummy_length = 10; // Adding a dummy size to avoid reallocation in the loop
       scratch_string fullsubpath;
       fullsubpath.reserve(path.length() + filename_dummy_length);
       do // NOLINT(cppcoreguidelines-avoid-do-while)
@@ -301,7 +301,7 @@ namespace rex
       }
 
       s32 num_dirs = 0;
-      const s32 filename_dummy_length = 10;
+      const s32 filename_dummy_length = 10; // Adding a dummy size to avoid reallocation in the loop
       scratch_string full_filename;
       full_filename.reserve(path.length() + filename_dummy_length);
 
@@ -355,7 +355,7 @@ namespace rex
       }
 
       s32 num_files = 0;
-      const s32 filename_dummy_length = 10;
+      const s32 filename_dummy_length = 10; // Adding a dummy size to avoid reallocation in the loop
       scratch_string full_filename;
       full_filename.reserve(path.length() + filename_dummy_length);
       do // NOLINT(cppcoreguidelines-avoid-do-while)
@@ -415,7 +415,7 @@ namespace rex
       }
 
       rsl::vector<rsl::string> result;
-      const s32 filename_dummy_length = 10;
+      const s32 filename_dummy_length = 10; // Adding a dummy size to avoid reallocation in the loop
       scratch_string full_filename;
       full_filename.reserve(path.length() + filename_dummy_length);
       do // NOLINT(cppcoreguidelines-avoid-do-while)
@@ -470,7 +470,7 @@ namespace rex
       }
 
       rsl::vector<rsl::string> result;
-      const s32 filename_dummy_length = 10;
+      const s32 filename_dummy_length = 10; // Adding a dummy size to avoid reallocation in the loop
       scratch_string full_filename;
       full_filename.reserve(path.length() + filename_dummy_length);
       do // NOLINT(cppcoreguidelines-avoid-do-while)

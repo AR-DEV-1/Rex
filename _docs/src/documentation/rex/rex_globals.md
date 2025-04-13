@@ -7,6 +7,8 @@ Everyone knows that globals should get avoided in software development, however 
 The setup for a new global is fairly straightforward. The public API looks like this
 
 ```
+#include "rex_engine/engine/globals.h"
+
 // The class of which an instance will be a global
 // The class's public interface will be the interface of the global as well
 class MyGlobalClass
@@ -19,7 +21,7 @@ namespace my_global
     // Initialize the global from a unique ptr.
     // Because we pass in the global, the user has control of its creation
     // making it easier when dealing with initialization order of globals
-    void init(rsl::unique_ptr<MyGlobalClass> myGlobal);
+    void init(rex::globals::GlobalUniquePtr<MyGlobalClass> myGlobal);
 
     // This func returns the pointer of the unique pointer passed in above
     // Returning a pointer to an instance of the class allows us

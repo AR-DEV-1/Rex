@@ -182,7 +182,6 @@ namespace rex
       // --------------------------------
       // Render Pipeline
       // --------------------------------
-      // Return the render target pointing to the current backbuffer of the swapchain
 
 		  // Return the current render target of the swapchain
 			RenderTarget* swapchain_rt();

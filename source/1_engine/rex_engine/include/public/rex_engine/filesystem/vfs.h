@@ -28,7 +28,7 @@
 // rex::memory::Blob content = rex::vfs::instance()->read_file("path/to/file");
 ///
 /// File Writing:
-// int x                                 = 0;
+// int x = 0;
 // rex::vfs::instance()->write_to_file("path/to/file.txt", &x, sizeof(x);
 ///
 /// ASYNC FILE IO
@@ -131,13 +131,9 @@ namespace rex
     // QUERYING
     // --------------------------------
     bool exists(MountingPoint root, rsl::string_view path)       ;
-    //bool is_file(MountingPoint root, rsl::string_view path)      ;
-    //bool is_dir(MountingPoint root, rsl::string_view path)       ;
     bool is_mounted(MountingPoint mount)                         ;
     
     virtual bool exists(rsl::string_view path)                           = 0;
-    //virtual bool is_file(rsl::string_view path)                          = 0;
-    //virtual bool is_dir(rsl::string_view path)                           = 0;
 
     REX_NO_DISCARD rsl::vector<rsl::string> list_entries(MountingPoint root, rsl::string_view path)      ;
     REX_NO_DISCARD rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path)         ;
@@ -176,18 +172,9 @@ namespace rex
 
   namespace vfs
   {
-    // Returns the root of all files
-    rsl::string_view root();
-
-    DEFINE_YES_NO_ENUM(AppendToFile);
-
     void init(globals::GlobalUniquePtr<VfsBase> vfs);
     VfsBase* instance();
     void shutdown();
 
   } // namespace vfs
 } // namespace rex
-
-#ifdef REX_PLATFORM_WINDOWS
-  #include "rex_engine/platform/win/filesystem/win_vfs.h"
-#endif

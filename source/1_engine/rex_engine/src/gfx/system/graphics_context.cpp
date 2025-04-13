@@ -95,9 +95,5 @@ namespace rex
       // Nothing to implement
     }
 
-    //GpuEngine* GraphicsContext::gpu_engine()
-    //{
-    //  return m_owning_engine->gpu_engine();
-    //}
   }
 }

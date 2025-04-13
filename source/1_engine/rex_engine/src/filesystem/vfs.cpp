@@ -277,15 +277,6 @@ namespace rex
     scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
     return exists(fullpath);
   }
-  //bool VfsBase::is_file(MountingPoint root, rsl::string_view path)
-  //{
-  //  path = path::remove_quotes(path);
-
-  //  scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
-  //  return file::exists_abspath(fullpath);
-  //}
-  //bool VfsBase::is_dir(MountingPoint root, rsl::string_view path)
-  //{}
   bool VfsBase::is_mounted(MountingPoint mount)
   {
     return m_mounted_roots.contains(mount);

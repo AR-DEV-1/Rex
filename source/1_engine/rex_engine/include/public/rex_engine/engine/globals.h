@@ -8,10 +8,17 @@ namespace rex
 {
 	namespace globals
 	{
+		// When global destruction is disabled, an assert is raised
+		// if you try to destroy a global object
 		void enable_global_destruction();
 		void disable_global_destruction();
 		bool is_global_destruction_enabled();
 
+		// The global deleter is equivalent to the normal default deleter
+		// however, it does a check before calling delete if we're allowed to destroy globals
+		// This is to make sure that we're cleaning up all our globals when we're expected to do so (at app shutdown)
+		// and we don't accidentally forget to destroy a global
+		// It can also be used to disallow globals being shutdown at runtime
 		template <typename T>
 		struct GlobalObjectDeleter
 		{
@@ -33,6 +40,10 @@ namespace rex
 
 		private:
 		};
+
+		// the global unique ptr and its make_unique function are just aliases
+		// they make it easier to create a unique ptr for global objects
+		// who should be using the GlobalObjectDeleter instead of the default one
 		template <typename T>
 		using GlobalUniquePtr = rsl::unique_ptr<T, GlobalObjectDeleter<T>>;
 

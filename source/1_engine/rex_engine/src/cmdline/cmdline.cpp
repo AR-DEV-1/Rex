@@ -31,7 +31,6 @@ namespace rex
       CommandLineArgument{ "BreakOnBoot", "Break on boot so you can attach a debugger", "<hardcoded>" },
       CommandLineArgument{ "AttachOnBoot", "Attach the debugger on boot", "<hardcoded>" },
 
-      // CommandLineArgument values for Regina - using code generation key: 'CommandLineArgs'
       CommandLineArgument{ "project", "The project to load by the editor", "Regina" },
     };
 

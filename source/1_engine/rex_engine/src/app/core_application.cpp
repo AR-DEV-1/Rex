@@ -50,6 +50,11 @@ namespace rex
     output_debug_string("Memory usage before initialization");
     debug_log_mem_usage();
 
+    // Make sure to set the exit code as it gets logged in shutdown
+    // if any of the below fails without setting the exit code
+    // we at least have set it here
+    m_exit_code = EXIT_FAILURE;
+
     // this calls our internal init code, to initialize the gui application
     // afterwards it calls into client code and initializes the code there
     // calling the initialize function provided earlier in the EngineParams
@@ -57,8 +62,6 @@ namespace rex
     {
       REX_ERROR(LogEngine, "Application initialization failed");
 
-      // Make sure to set the exit code as it gets logged in shutdown
-      m_exit_code = EXIT_FAILURE;
       return m_exit_code;
     }
 
@@ -68,6 +71,7 @@ namespace rex
 
     // calls into gui application update code
     // then calls into the client update code provided by the EngineParams before
+    m_exit_code = EXIT_SUCCESS;
     loop();
 
     // shutdown is automatically called from the scopeguard

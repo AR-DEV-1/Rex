@@ -951,6 +951,12 @@ namespace rex
     {
       REX_ASSERT_X(is_absolute(startDirAbs) || is_drive(startDirAbs), "argument is expected to be absolute here: {}", startDirAbs);
 
+      // If the input is a file, just take the parent dir of the file
+      if (path::has_extension(startDirAbs))
+      {
+        startDirAbs = path::parent_path(startDirAbs);
+      }
+
       if (!directory::exists_abspath(startDirAbs))
       {
         return scratch_string();

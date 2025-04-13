@@ -6,6 +6,7 @@
 #include "rex_std/string_view.h"
 
 #include "rex_engine/diagnostics/assert.h"
+#include "rex_engine/engine/casting.h"
 
 namespace rex
 {
@@ -85,7 +86,7 @@ namespace rex
       {
         REX_ASSERT_X(m_data.count() % sizeof(T) == 0, "You can't release a blob if you can't fit all the data in the resulting array");
 
-        s32 count = static_cast<s32>(m_data.count());
+        s32 count = narrow_cast<s32>(m_data.count());
         T* data_ptr = reinterpret_cast<T*>(m_data.release());
         return rsl::unique_array<T>(data_ptr, count / sizeof(T));
       }

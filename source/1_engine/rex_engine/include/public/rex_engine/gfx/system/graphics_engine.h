@@ -70,8 +70,6 @@ namespace rex
       // Return the resource tracker of this engine
       ResourceStateTracker* resource_state_tracker();
 
-      //GpuEngine* gpu_engine();
-
       // Fully initialize the engine, allocating all required resources etc
       virtual void init() = 0;
       // Prepare the engine for executing a new frame

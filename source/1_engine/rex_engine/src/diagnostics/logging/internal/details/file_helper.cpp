@@ -135,7 +135,7 @@ namespace rex
         const s32 msg_size = buf.size();
         const auto* data   = buf.data();
 
-        vfs::instance()->write_to_file(m_filename, data, msg_size, rex::AppendToFile::yes);
+        file::append_text(m_filename, rsl::string_view(data, msg_size));
 
         // if(fwrite(data, 1, msg_size, m_fd) != msg_size)
         //{

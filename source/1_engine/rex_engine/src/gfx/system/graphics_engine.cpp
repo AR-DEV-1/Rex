@@ -67,11 +67,6 @@ namespace rex
       return &m_resource_state_tracker;
     }
 
-    //GpuEngine* GraphicsEngine::gpu_engine()
-    //{
-    //  return m_gpu_engine;
-    //}
-
     // Flush all commands on the gpu and halt the current thread untill all commands are executed
     void GraphicsEngine::flush()
     {

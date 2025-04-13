@@ -108,7 +108,7 @@ namespace rex
 
         auto fps = engine::instance()->frame_info().fps().get();
         auto dt = engine::instance()->frame_info().delta_time().to_seconds();
-        m_window->set_name(rsl::format("{} | PID: {} FPS: {} Delta Time: {:.4f}", create_window_title(), current_process::id(), fps, dt));
+        m_window->set_title(rsl::format("{} | PID: {} FPS: {} Delta Time: {:.4f}", create_window_title(), current_process::id(), fps, dt));
 
         pre_user_update();
 

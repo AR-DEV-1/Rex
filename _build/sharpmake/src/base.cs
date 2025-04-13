@@ -8,14 +8,6 @@ using System.Diagnostics;
 using System.Text;
 using System.Reflection;
 
-// This class descibes a module of rex
-public class RexModule
-{
-  public string Name { get; set; }
-  public string DataPath { get; set; }
-  public List<string> Dependencies { get; set; }
-}
-
 // This file defines the base class for all different kind of projects supported for rex.
 // The BaseProject is cross-language and defines things like config name, intermediate directory, ...
 // There are also base classes for each project based on language (eg. BasicCPPProject).
@@ -159,7 +151,7 @@ public abstract class BasicCPPProject : Project
   // The filename of the module file that'll store module information
   private string ModuleFileName = "module.json";
 
-  // The path where you can find the text based data for this project, if there is any
+  // The path where you can find the data for this project, if there is any
   public string DataPath { get; protected set; }
 
   public BasicCPPProject() : base(typeof(RexTarget), typeof(RexConfiguration))
@@ -839,7 +831,7 @@ public abstract class BasicCPPProject : Project
   }
 
   // Create the full filepath where the module info will be saved to
-  private string CreateTargetModuleFilepath(RexConfiguration conf)
+  private string CreateFilepathForModuleFile(RexConfiguration conf)
   {
     string targetDir = Path.GetDirectoryName(conf.TargetPath);
     return Path.Combine(targetDir, ModuleFileName);
@@ -847,18 +839,7 @@ public abstract class BasicCPPProject : Project
   // Write the module file of this project
   private void WriteModuleFile(RexConfiguration conf)
   {
-    string dependenciesPath = Path.Combine(conf.IntermediatePath, ModuleFileName);
-    if (!Directory.Exists(conf.IntermediatePath))
-    {
-      Directory.CreateDirectory(conf.IntermediatePath);
-    }
-
-    string targetModule = CreateTargetModuleFilepath(conf);
-    if (!Directory.Exists(Path.GetDirectoryName(targetModule)))
-    {
-      Directory.CreateDirectory(Path.GetDirectoryName(targetModule));
-    }
-
+    // Add every module filepath of every dependency to the module file we're currently writing
     List<string> rexDependencies = new List<string>();
     foreach (RexConfiguration dependency in conf.ConfigurationDependencies)
     {
@@ -868,10 +849,10 @@ public abstract class BasicCPPProject : Project
         continue;
       }
 
-      rexDependencies.Add(CreateTargetModuleFilepath(dependency));
+      rexDependencies.Add(CreateFilepathForModuleFile(dependency));
     }
 
-    RexModule module = new RexModule()
+    rex.RexModule module = new rex.RexModule()
     {
       Name = Name,
       DataPath = DataPath,
@@ -882,8 +863,21 @@ public abstract class BasicCPPProject : Project
     {
       WriteIndented = true
     });
-    File.WriteAllText(dependenciesPath, jsonString);
-    conf.EventPostBuild.Add($"copy {dependenciesPath} {targetModule} /Y");
+
+    // Write the module file at the intermediate location
+    string intermediateModuleFilePath = Path.Combine(conf.IntermediatePath, ModuleFileName);
+    Utils.SafeWriteFile(intermediateModuleFilePath, jsonString);
+
+    string moduleFilePath = CreateFilepathForModuleFile(conf);
+    // Make sure the directory where the module file would be created exists
+    // otherwise we can't create the file
+    if (!Directory.Exists(Path.GetDirectoryName(moduleFilePath)))
+    {
+      Directory.CreateDirectory(Path.GetDirectoryName(moduleFilePath));
+    }
+
+    // Copy the module file to the final location after having having build it
+    conf.EventPostBuild.Add($"copy {intermediateModuleFilePath} {moduleFilePath} /Y");
   }
 }
 
@@ -1039,6 +1033,7 @@ public class GameProject : BasicCPPProject
       Directory.CreateDirectory(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory);
     }
 
+    // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: Merge all module data into a single file
     if (ProjectName != "project_name")
     {
       WriteProjectNameFile(conf);
@@ -1058,10 +1053,7 @@ public class GameProject : BasicCPPProject
   private void WriteProjectNameFile(RexConfiguration conf)
   {
     string projectNamePath = Path.Combine(conf.IntermediatePath, "project_name.txt");
-    if (!Directory.Exists(conf.IntermediatePath))
-    {
-      Directory.CreateDirectory(conf.IntermediatePath);
-    }
+    Utils.SafeWriteFile(projectNamePath, ProjectName);
 
     string targetDir = Path.GetDirectoryName(conf.TargetPath);
     if (!Directory.Exists(targetDir))
@@ -1069,7 +1061,6 @@ public class GameProject : BasicCPPProject
       Directory.CreateDirectory(targetDir);
     }
 
-    File.WriteAllText(projectNamePath, ProjectName);
     string projectNameNextToTarget = Path.Combine(targetDir, "project_name.txt");
     conf.EventPostBuild.Add($"copy {projectNamePath} {projectNameNextToTarget} /Y");
   }

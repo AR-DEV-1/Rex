@@ -12,8 +12,6 @@
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/profiling/profiling_session.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: SCOPED TIMER
-
 namespace rex
 {
 	DEFINE_LOG_CATEGORY(LogProfiler);

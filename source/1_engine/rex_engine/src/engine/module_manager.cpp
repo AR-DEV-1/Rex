@@ -34,6 +34,17 @@ namespace rex
 			return nullptr;
 		}
 
+		// Example module content
+		// {
+		//   "Name": "Bob",
+		//   "DataPath": "D:\MyData",
+		//   "Dependencies": [
+		//	   "D:\module_a\module.json",
+		//	   "D:\module_b\module.json",
+		//	  ]
+		// }
+		//
+
 		rex::json::json json_content = rex::json::read_from_file(modulePath);
 		rsl::string_view name = json_content["Name"];
 		auto it = rsl::find_if(m_all_modules.begin(), m_all_modules.end(),
