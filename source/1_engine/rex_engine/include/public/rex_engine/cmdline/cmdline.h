@@ -3,6 +3,7 @@
 #include "rex_engine/string/stringid.h"
 #include "rex_engine/engine/globals.h"
 #include "rex_std/bonus/string.h"
+#include "rex_std/bonus/utility.h"
 
 namespace rex
 {
@@ -21,7 +22,6 @@ namespace rex
   public:
     struct ActiveArgument
     {
-      //StringID argument_id;
       rsl::string_view argument;
       rsl::string_view value;
     };
@@ -44,9 +44,10 @@ namespace rex
 
   private:
     void load_hardcoded_arguments();
-    void parse_cmd_line(rsl::string_view cmdLine);
-    void add_argument(rsl::string_view arg);
-    bool verify_args(const CommandLineArgument* args, count_t argCount);
+    DEFINE_YES_NO_ENUM(DisableInvalidArgumentWarning);
+    void parse_cmd_line(rsl::string_view cmdLine, DisableInvalidArgumentWarning disableInvalidArgumentWarning);
+    void add_argument(rsl::string_view arg, DisableInvalidArgumentWarning disableInvalidArgumentWarning);
+    bool verify_arg(rsl::string_view argument, rsl::string_view filepath) const;
     rsl::string_view find_next_full_argument(rsl::string_view cmdLine, count_t startPos);
 
   private:

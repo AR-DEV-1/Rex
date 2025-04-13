@@ -6,6 +6,7 @@
 #include "rex_engine/diagnostics/logging/log_macros.h"
 #include "rex_engine/text_processing/text_processing.h"
 #include "rex_engine/text_processing/json.h"
+#include "rex_std/bonus/algorithms.h"
 #include "rex_std/bonus/hashtable.h"
 #include "rex_std/bonus/utility.h"
 #include "rex_std/bonus/types.h"
@@ -31,7 +32,7 @@ namespace rex
       CommandLineArgument{ "BreakOnBoot", "Break on boot so you can attach a debugger", "<hardcoded>" },
       CommandLineArgument{ "AttachOnBoot", "Attach the debugger on boot", "<hardcoded>" },
 
-      CommandLineArgument{ "project", "The project to load by the editor", "Regina" },
+      CommandLineArgument{ "project", "The project to load by the editor", "<hardcoded>" },
     };
 
   } // namespace internal
@@ -47,17 +48,15 @@ namespace rex
   CommandLine::CommandLine(rsl::string_view cmdLine)
     : m_command_line(cmdLine)
   {
-    load_hardcoded_arguments();
-
-    // verify the auto generated command line arguments
-    //REX_ASSERT_X(verify_args(g_command_line_args.data(), g_command_line_args.size()), "You have ambiguous command line arguments");
-
     if (cmdLine.empty())
     {
       return;
     }
 
-    parse_cmd_line(rsl::string_view(cmdLine));
+    load_hardcoded_arguments();
+
+    // As we haven't loaded all the arguments yet, we need to ignore invalid arguments for now
+    parse_cmd_line(rsl::string_view(cmdLine), DisableInvalidArgumentWarning::yes);
   }
 
   void CommandLine::load_arguments_from_file(rsl::string_view file, rsl::string_view moduleName)
@@ -67,14 +66,22 @@ namespace rex
 
     for (const auto& args : cmdline_args)
     {
-      m_allowed_arguments.emplace_back(args["name"], args["desc"], moduleName);
+      rsl::string_view arg_name = args["name"];
+      if (verify_arg(arg_name, file))
+      {
+				continue;
+      }
+
+      m_allowed_arguments.emplace_back(arg_name, args["desc"], moduleName);
     }
   }
 
   void CommandLine::post_init()
   {
     m_active_arguments.clear();
-    parse_cmd_line(m_command_line);
+    
+    // We should've loaded all arguments by now so we should not ignore invalid arguments now
+    parse_cmd_line(m_command_line, DisableInvalidArgumentWarning::no);
   }
 
   void CommandLine::help()
@@ -84,7 +91,7 @@ namespace rex
 
     rsl::unordered_map<rsl::string_view, rsl::vector<CommandLineArgument>> project_to_arguments;
 
-    for (const CommandLineArgument& cmd : g_command_line_args)
+    for (const CommandLineArgument& cmd : m_allowed_arguments)
     {
       project_to_arguments[cmd.filename].push_back(cmd);
     }
@@ -117,8 +124,6 @@ namespace rex
 
   rsl::optional<rsl::string_view> CommandLine::get_argument(rsl::string_view arg)
   {
-    //const StringID arg_id = internal::create_string_id_for_arg(arg);
-
     for (const ActiveArgument& active_arg : m_active_arguments)
     {
       if (arg == active_arg.argument)
@@ -138,7 +143,7 @@ namespace rex
     }
   }
 
-  void CommandLine::parse_cmd_line(rsl::string_view cmdLine)
+  void CommandLine::parse_cmd_line(rsl::string_view cmdLine, DisableInvalidArgumentWarning disableInvalidArgumentWarning)
   {
     // skip all text that doesn't start until we find the first arg prefix
     const rsl::string_view arg_prefix = "-"; // all arguments should start with a '-'
@@ -174,11 +179,11 @@ namespace rex
     {
       const rsl::string_view full_argument = find_next_full_argument(cmdLine, start_pos);
       const bool starts_with_prefix = full_argument.starts_with(arg_prefix);
-      REX_ERROR_X(LogEngine, !starts_with_prefix, "argument '{}' doesn't start with '{}'. all arguments should start with '{}'", full_argument, arg_prefix, arg_prefix);
+      REX_ERROR_X(LogEngine, starts_with_prefix, "argument '{}' doesn't start with '{}'. all arguments should start with '{}'", full_argument, arg_prefix, arg_prefix);
       if (starts_with_prefix) // NOLINT(readability-simplify-boolean-expr, readability-implicit-bool-conversion)
       {
         const rsl::string_view argument = full_argument.substr(arg_prefix.size());
-        add_argument(argument);
+        add_argument(argument, disableInvalidArgumentWarning);
       }
 
       start_pos = cmdLine.find_first_not_of(" \"", start_pos + full_argument.length()); // skip all additional spaces
@@ -192,12 +197,12 @@ namespace rex
       if (starts_with_prefix) // NOLINT(readability-simplify-boolean-expr, readability-implicit-bool-conversion)
       {
         const rsl::string_view argument = full_argument.substr(arg_prefix.size());
-        add_argument(argument);
+        add_argument(argument, disableInvalidArgumentWarning);
       }
     }
   }
 
-  void CommandLine::add_argument(rsl::string_view arg)
+  void CommandLine::add_argument(rsl::string_view arg, DisableInvalidArgumentWarning disableInvalidArgumentWarning)
   {
     const card32 equal_pos = arg.find('=');
     rsl::string_view key = "";
@@ -219,48 +224,45 @@ namespace rex
       value = "1"; // this is so we can easily convert to bool/int
     }
 
-    //const StringID key_id = internal::create_string_id_for_arg(key);
-    //auto cmd_it = rsl::find_if(g_command_line_args.cbegin(), g_command_line_args.cend(), [key_id](const CommandLineArgument& cmdArg) { return key_id == cmdArg.name_id; });
+    auto cmd_it = rsl::find_if(m_allowed_arguments.cbegin(), m_allowed_arguments.cend(), [key](const CommandLineArgument& cmdArg) { return key == cmdArg.name; });
 
-    //if (cmd_it == g_command_line_args.cend())
-    //{
-    //  REX_WARN(LogEngine, "Command '{}' passed in but it's not recognised as a valid command so will be ignored", key);
-    //  return;
-    //}
+    if (cmd_it == g_command_line_args.cend())
+    {
+      if (!disableInvalidArgumentWarning)
+      {
+        REX_WARN(LogEngine, "Command '{}' passed in but it's not recognised as a valid command so will be ignored", key);
+      }
+      return;
+    }
 
-    //auto active_it = rsl::find_if(m_active_arguments.cbegin(), m_active_arguments.cend(), [key](const ActiveArgument& activeArg) { return rsl::stricmp(key.data(), activeArg.argument.data()) == 0; });
+    auto active_it = rsl::find_if(m_active_arguments.cbegin(), m_active_arguments.cend(), [key](const ActiveArgument& activeArg) { return rsl::stricmp(key.data(), activeArg.argument.data()) == 0; });
 
-    //if (active_it != m_active_arguments.cend())
-    //{
-    //  REX_WARN(LogEngine, "Command '{}' was already passed in. passing the same argument multiple times is not supported. will be skipped", key);
-    //  return;
-    //}
+    if (active_it != m_active_arguments.cend())
+    {
+      REX_WARN(LogEngine, "Command '{}' was already passed in. passing the same argument multiple times is not supported. will be skipped", key);
+      return;
+    }
 
-    //m_active_arguments.push_back({ key_id, key, value });
+    m_active_arguments.push_back({ key, value });
   }
 
-  bool CommandLine::verify_args(const CommandLineArgument* args, count_t argCount) // NOLINT(readability-convert-member-functions-to-static)
+  bool CommandLine::verify_arg(rsl::string_view argument, rsl::string_view filepath) const
   {
-    //for (count_t i = 0; i < argCount; ++i)
-    //{
-    //  const CommandLineArgument& lhs_arg = args[i];
-    //  for (count_t j = 0; j < argCount; ++j)
-    //  {
-    //    if (i == j)
-    //    {
-    //      continue;
-    //    }
+    auto it = rsl::find_if(m_allowed_arguments.cbegin(), m_allowed_arguments.cend(),
+      [argument](const CommandLineArgument& cmdArg)
+      {
+        return argument == cmdArg.name;
+      });
 
-    //    const CommandLineArgument& rhs_arg = args[j];
-    //    if (lhs_arg.name_id == rhs_arg.name_id)
-    //    {
-    //      REX_ERROR(LogEngine, "This executable already has an argument for {} specified in 'g_command_line_args', please resolve the ambiguity by changing the code_generation file resulting in this ambiguity", lhs_arg.name);
-    //      return false;
-    //    }
-    //  }
-    //}
+    const bool already_added = it != m_allowed_arguments.cend();
+    if (already_added)
+    {
+      REX_WARN(LogEngine, "This executable already has an argument for \"{}\".", argument);
+      REX_WARN(LogEngine, "Original file with argument: {}", it->filename);
+      REX_WARN(LogEngine, "Argument also found in: {}", filepath);
+    }
 
-    return true;
+    return !already_added;
   }
 
   rsl::string_view CommandLine::find_next_full_argument(rsl::string_view cmdLine, count_t startPos) // NOLINT(readability-convert-member-functions-to-static)
