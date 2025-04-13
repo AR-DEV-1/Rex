@@ -225,10 +225,13 @@ namespace rex
     // get the default settings of the engine and load them into memory
     const rsl::vector<rsl::string> files = directory::list_files(vfs::instance()->mount_path(MountingPoint::EngineSettings));
 
+    scratch_string fullpath;
     for(const rsl::string_view file: files)
     {
-      REX_DEBUG(LogCoreApp, "Loading settings file: {}", file);
-      settings::instance()->load(file);
+      fullpath.clear();
+      fullpath = path::join(vfs::instance()->mount_path(MountingPoint::EngineSettings), file);
+      REX_DEBUG(LogCoreApp, "Loading settings file: {}", fullpath);
+      settings::instance()->load(fullpath);
     }
   }
 
