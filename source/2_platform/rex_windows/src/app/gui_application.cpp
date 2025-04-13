@@ -98,7 +98,7 @@ namespace rex
           return result;
         }
 
-        REX_INFO(LogWindows, "All engine systems initialized");
+        REX_INFO(LogWindows, "App initialized");
 
         return result;
       }

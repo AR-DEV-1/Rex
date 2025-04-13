@@ -14,9 +14,11 @@ namespace rex
 {
   namespace internal
   {
+    DEFINE_LOG_CATEGORY(LogPreInit);
+
     void log_pre_init_results()
     {
-      REX_INFO(LogEngine, "Startup: {}", rsl::current_timepoint());
+      REX_INFO(LogPreInit, "Startup: {}", rsl::current_timepoint());
 
       // Now log the commandline we started the app with
       cmdline::instance()->print();
@@ -25,10 +27,10 @@ namespace rex
       // This is useful to have in the log file to make sure that correct sanitization is enabled when testing
       log_sanitization();
 
-      REX_INFO(LogEngine, "Project Name: {}", rex::engine::instance()->project_name());
-      REX_INFO(LogEngine, "Data Root: {}", rex::engine::instance()->data_root());
-      REX_INFO(LogEngine, "Session Directory: {}", rex::engine::instance()->current_session_root());
-      REX_INFO(LogEngine, "Log Path: {}", rex::project_log_path());
+      REX_INFO(LogPreInit, "Project Name: {}", rex::engine::instance()->project_name());
+      REX_INFO(LogPreInit, "Data Root: {}", rex::engine::instance()->data_root());
+      REX_INFO(LogPreInit, "Session Directory: {}", rex::engine::instance()->current_session_root());
+      REX_INFO(LogPreInit, "Log Path: {}", rex::project_log_path());
     }
 
     void pre_app_entry(REX_MAYBE_UNUSED const char8* cmdLine)
