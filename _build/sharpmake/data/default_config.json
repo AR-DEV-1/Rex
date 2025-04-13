@@ -51,7 +51,7 @@
     "Value": false
   },
   "graphics-api": {
-    "Description": "Specify the graphics API to use. DX12 is the default.",
+    "Description": "Specify the graphics API to use.",
     "Value": "DX12",
     "Options": [
       "DX12",
@@ -59,7 +59,7 @@
     ]
   },
   "IDE": {
-    "Description": "Select which IDE to use. Visual Studio is the default.",
+    "Description": "Select which IDE to use.",
     "Value": "None",
     "Options": [
       "VisualStudio",

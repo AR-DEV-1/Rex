@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Sharpmake;
@@ -28,44 +29,12 @@ public class Utils
     return current_directory;
   }
 
-  // Simple helper function to create a directory name that's unique per configuration
-  public static string PerConfigFolderFormat(RexConfiguration conf)
-  {
-    return Path.Combine(conf.Target.GetFragment<Sharpmake.Compiler>().ToString(), conf.Target.ProjectConfigurationName);
-  }
-  // Simple helper function to get the path of the compiler db
-  public static string GetCompilerDBOutputPath(RexConfiguration config)
-  {
-    return Path.Combine(GetCompilerDBOutputFolder(config), "compile_commands.json");
-  }
-
-  // Simple helper function to get the directory the compiler db will go to.
-  public static string GetCompilerDBOutputFolder(RexConfiguration config)
-  {
-    return Path.Combine(GetClangToolsOutputFolder(config), PerConfigFolderFormat(config));
-  }
-
-  // Simple helper function to get the directory clang tools intermediate files get stored
-  public static string GetClangToolsOutputFolder(RexConfiguration config)
-  {
-    return Path.Combine(config.ProjectPath, "clang_tools");
-  }
-
   // Returns true if the given path falls under the root
   public static bool IsPartOfRoot(string root, string path)
   {
     string relativePath = Util.PathGetRelative(root, path);
     string[] pathTokens = relativePath.Split(Path.DirectorySeparatorChar);
     return pathTokens.Length == 0 || pathTokens[0] != "..";
-  }
-
-  // Return a filter path for shaders. The filter path is the relative path from the shaders directory
-  public static string DataFilterPath(string projectSourceRoot, string projectShaderPath, string relativeFilePath)
-  {
-    string absPath = Path.GetFullPath(Path.Combine(projectSourceRoot, relativeFilePath));
-    string relativeFromShaders = Util.PathGetRelative(projectShaderPath, absPath, true);
-
-    return Path.GetDirectoryName(Path.Combine("data", relativeFromShaders));
   }
 
   // Always creates the file and writes the provided content to it
@@ -78,5 +47,16 @@ public class Utils
     }
 
     File.WriteAllText(filepath, text);
+  }
+}
+
+public static class DictionaryExtensionMethods
+{
+  public static void AddRange<TKey, TValue>(this Dictionary<TKey, TValue> me, Dictionary<TKey, TValue> merge)
+  {
+    foreach (var item in merge)
+    {
+      me[item.Key] = item.Value;
+    }
   }
 }

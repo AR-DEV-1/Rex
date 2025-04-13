@@ -36,9 +36,9 @@ namespace rex
 
 		// Example module content
 		// {
-		//   "Name": "Bob",
-		//   "DataPath": "D:\MyData",
-		//   "Dependencies": [
+		//   "name": "Bob",
+		//   "data_path": "D:\MyData",
+		//   "dependencies": [
 		//	   "D:\module_a\module.json",
 		//	   "D:\module_b\module.json",
 		//	  ]
@@ -46,7 +46,7 @@ namespace rex
 		//
 
 		rex::json::json json_content = rex::json::read_from_file(modulePath);
-		rsl::string_view name = json_content["Name"];
+		rsl::string_view name = json_content["name"];
 		auto it = rsl::find_if(m_all_modules.begin(), m_all_modules.end(),
 			[&](const rsl::unique_ptr<Module>& module)
 			{
@@ -58,8 +58,8 @@ namespace rex
 			return it->get();
 		}
 
-		rsl::string_view data_path = json_content["DataPath"];
-		const rex::json::json& dependencies = json_content["Dependencies"];
+		rsl::string_view data_path = json_content["data_path"];
+		const rex::json::json& dependencies = json_content["dependencies"];
 		rsl::vector<Module*> dependency_ptrs;
 		for (rsl::string_view dependency : dependencies)
 		{

@@ -6,7 +6,7 @@ public class RexEngineFuzzyTest : TestProject
 {
   public RexEngineFuzzyTest() : base()
   {
-    Name = GenerateName("RexEngineFuzzyTest");
+    Name = "RexEngineFuzzyTest";
     GenerateTargets();
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());

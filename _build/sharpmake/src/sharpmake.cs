@@ -26,7 +26,7 @@ namespace rex
       SourceFilesExcludeRegex.Add("templates");
 
       // manually add the sharpmake root files
-      var RootSharpmakeFiles = Directory.GetFiles(Path.Combine(Globals.SharpmakeRoot, "src"));
+      var RootSharpmakeFiles = Directory.GetFiles(Path.Combine(Globals.SharpmakeRoot, "src"), "*.cs", SearchOption.AllDirectories);
       foreach (var File in RootSharpmakeFiles)
       {
         SourceFiles.Add(File);
@@ -77,25 +77,75 @@ namespace rex
       listOfArgs.RemoveAt(0); // Removing the first argument as it's the path to sharpmake
       string argsAsString = string.Join(" ", listOfArgs);
 
-      // We need to quote all our sources
-      // we extract our sources string, and quote all of them
-      string sourcesPrefix = "/sources(";
-      int sourcesPrefixStart = argsAsString.IndexOf(sourcesPrefix);
-      int closeBracketPos = argsAsString.IndexOf(')', sourcesPrefixStart);
-      string sources = argsAsString.Substring(sourcesPrefixStart + sourcesPrefix.Length, closeBracketPos - (sourcesPrefixStart + sourcesPrefix.Length));
-      
-      string args = "";
-      args += argsAsString.Substring(0, sourcesPrefixStart + sourcesPrefix.Length);
-      args += "\"";
-      args += sources.Replace(", ", "\", \"");
-      args += "\"";
-      args += argsAsString.Substring(closeBracketPos);
+      // Surround all arguments within brackets with quotes
+      int openingBracketPos = argsAsString.IndexOf("(");
+      if (openingBracketPos == -1)
+      {
+        return;
+      }
+
+      string args = ConvertArgumentsForSharpmake(argsAsString);
 
       conf.CsprojUserFile = new Configuration.CsprojUserFileSettings();
       conf.CsprojUserFile.StartAction = Configuration.CsprojUserFileSettings.StartActionSetting.Program;
       conf.CsprojUserFile.StartArguments = $@"{args}";
       conf.CsprojUserFile.StartProgram = sharpmakeAppPath;
       conf.CsprojUserFile.WorkingDirectory = Directory.GetCurrentDirectory();
+    }
+
+    private string ConvertArgumentsForSharpmake(string inArgs)
+    {
+      if (string.IsNullOrEmpty(inArgs))
+      {
+        return inArgs;
+      }
+
+      // If there's not '(' in the argument, we don't need to convert anything
+      int openBracketPos = inArgs.IndexOf("(");
+      if (openBracketPos == -1)
+      {
+        return inArgs;
+      }
+
+      string result = "";
+
+      // Surround every arguments within brackets with quotes
+      int closeBracketPos = inArgs.IndexOf(")");
+      int start = 0;
+
+      while (openBracketPos != -1 && closeBracketPos != -1)
+      {
+        string argumentsWithinBrackets = inArgs.Substring(openBracketPos + 1, (closeBracketPos - openBracketPos) - 1);
+
+        // First add everything that's before the opening bracket
+        result += inArgs.Substring(start, (openBracketPos - start) + 1); // +1 to add the brace itself
+
+        // Split anything that's between brackets and add the quotes if they're not already there
+        List<string> splittedArgumentsWithinBrackets = argumentsWithinBrackets.Split(new char[] { ',' }).ToList();
+        foreach (string arg in splittedArgumentsWithinBrackets)
+        {
+          string argToAdd = arg;
+          if (!arg.StartsWith("\"") && !arg.EndsWith("\""))
+          {
+            argToAdd = $"\"{arg}\"";
+          }
+          
+          result += argToAdd;
+          result += ",";
+        }
+
+        // pop the last comma
+        result = result.Remove(result.Length - 1);
+
+        // scan for the next argument within brackets
+        start = closeBracketPos;
+        openBracketPos = inArgs.IndexOf("(", closeBracketPos + 1);
+        closeBracketPos = inArgs.IndexOf(")", closeBracketPos + 1);
+      }
+
+      result += inArgs.Substring(start);
+
+      return result;
     }
   }
 }

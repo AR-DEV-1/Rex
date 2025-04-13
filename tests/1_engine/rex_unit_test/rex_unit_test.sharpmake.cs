@@ -6,7 +6,7 @@ public class RexUnitTest : TestProject
 {
   public RexUnitTest() : base()
   {
-    Name = GenerateName("RexUnitTest");
+    Name = "RexUnitTest";
     GenerateTargets();
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());

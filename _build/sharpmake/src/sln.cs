@@ -9,7 +9,7 @@ namespace rex
     public MainSolution() : base(typeof(RexTarget))
     {
       // The name of the solution.
-      Name = GenerateName("rex");
+      Name = "rex";
       GenerateTargets();
     }
 
@@ -57,11 +57,6 @@ namespace rex
       }
 
       conf.AddProject<PokemonProject>(target);
-    }
-
-    protected string GenerateName(string baseName)
-    {
-      return baseName;
     }
 
     protected void GenerateTargets()
