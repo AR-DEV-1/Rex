@@ -4,8 +4,6 @@
 
 DEFINE_LOG_CATEGORY(LogEngine);
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: LOG PROJECT PATH
-
 namespace rex
 {
 	rsl::stack_string<char8, 256> project_log_path();
