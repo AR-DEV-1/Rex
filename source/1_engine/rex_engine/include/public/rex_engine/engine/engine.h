@@ -42,6 +42,7 @@ namespace rex
 		void* scratch_alloc(s64 size);
 		void scratch_free(void* ptr);
 		bool is_scratch_alloc(void* ptr) const;
+		s64 scratch_buffer_size() const;
 
 		template <typename T>
 		T* temp_alloc()
@@ -51,6 +52,7 @@ namespace rex
 		void* temp_alloc(s64 size);
 		void temp_free(void* ptr);
 		bool is_temp_alloc(void* ptr) const;
+		s64 temp_buffer_size() const;
 
 		const FrameInfo& frame_info() const;
 

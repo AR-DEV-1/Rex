@@ -4,18 +4,18 @@
 
 namespace rex
 {
-  void* GlobalScratchAllocator::allocate(const s32 count)
+  void* GlobalScratchAllocator::allocate(const s64 count)
   {
     return engine::instance()->scratch_alloc(count);
   }
-  void GlobalScratchAllocator::deallocate(void* const ptr, s32 /*count*/)
+  void GlobalScratchAllocator::deallocate(void* const ptr, s64 /*count*/)
   {
     engine::instance()->scratch_free(ptr);
   }
 
-  s32 GlobalScratchAllocator::max_size() const
+  s64 GlobalScratchAllocator::max_size() const
   {
-    return (rsl::numeric_limits<s32>::max)();
+    return engine::instance()->scratch_buffer_size();
   }
 
   bool GlobalScratchAllocator::has_allocated_ptr(void* ptr) const

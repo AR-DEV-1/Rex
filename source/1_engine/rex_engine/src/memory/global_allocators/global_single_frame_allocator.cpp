@@ -15,9 +15,9 @@ namespace rex
     engine::instance()->temp_free(ptr);
   }
 
-  s32 GlobalSingleFrameAllocator::max_size() const
+  s64 GlobalSingleFrameAllocator::max_size() const
   {
-    return (rsl::numeric_limits<s32>::max)();
+    return engine::instance()->temp_buffer_size();
   }
 
   bool GlobalSingleFrameAllocator::has_allocated_ptr(void* ptr) const

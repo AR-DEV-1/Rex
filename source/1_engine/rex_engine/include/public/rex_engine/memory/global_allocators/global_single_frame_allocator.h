@@ -10,7 +10,7 @@ namespace rex
     void* allocate(const s32 count);    // deallocates the storage reference by the pointer p.
     void deallocate(void* const ptr, s32 count);
 
-    s32 max_size() const;
+    s64 max_size() const;
 
     template <typename U, typename... Args>
     void construct(U* p, Args&&... args)

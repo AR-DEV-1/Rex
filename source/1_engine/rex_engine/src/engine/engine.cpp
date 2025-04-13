@@ -98,6 +98,10 @@ namespace rex
 	{
 		return m_scratch_allocator->has_allocated_ptr(ptr);
 	}
+	s64 EngineGlobals::scratch_buffer_size() const
+	{
+		return m_scratch_allocator->buffer_size();
+	}
 
 	void* EngineGlobals::temp_alloc(s64 size)
 	{
@@ -110,6 +114,10 @@ namespace rex
 	bool EngineGlobals::is_temp_alloc(void* ptr) const
 	{
 		return m_single_frame_allocator->has_allocated_ptr(ptr);
+	}
+	s64 EngineGlobals::temp_buffer_size() const
+	{
+		return m_single_frame_allocator->buffer_size();
 	}
 
 	const FrameInfo& EngineGlobals::frame_info() const
