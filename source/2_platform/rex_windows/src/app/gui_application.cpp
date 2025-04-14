@@ -352,7 +352,11 @@ namespace rex
         gfx::shader_lib::init(globals::make_unique<gfx::ShaderLibrary>());
 
         // Add the imgui renderer, which is our main UI renderer for the moment
-        gfx::gal::instance()->add_renderer<gfx::ImGuiRenderer>(m_window->primary_display_handle());
+        gfx::ImGuiRendererCreationInfo imgui_creation_info{};
+        imgui_creation_info.command_queue = gfx::gal::instance()->render_command_queue();
+        imgui_creation_info.max_frames_in_flight = gfx::gal::instance()->max_frames_in_flight();
+        imgui_creation_info.platformWindowHandle = m_window->primary_display_handle();
+        gfx::gal::instance()->add_renderer<gfx::ImGuiRenderer>(imgui_creation_info);
 
         return true;
       }

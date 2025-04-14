@@ -131,6 +131,16 @@ namespace rex
       // Return basic info about the graphics hardware of the current machine
       virtual const Info& info() const = 0;
 
+      // Return the max number of frames we can render at once
+      s32 max_frames_in_flight() const;
+
+      // Return the command queue of the render engine
+      // This is usually needed by graphics plugins (like ImGui)
+      CommandQueue* render_command_queue();
+
+      // Returns the format of the swapchain's buffers
+      TextureFormat swapchain_format() const;
+
       // --------------------------------
       // Configuration
       // --------------------------------
@@ -240,8 +250,6 @@ namespace rex
       void init_swapchain();
       // Initialize the sub engine, bringing them up and ready, to be used in the graphics pipeline
       void init_sub_engines();
-      // Initialize imgui so it can create its own windows if necessary
-      void init_imgui();
       // Initialize the descriptor heaps which keep track of all descriptors to various resources
       void init_desc_heaps();
       void init_desc_heap(ViewHeapPool& descHeapPool, ViewHeapType descHeapType, IsShaderVisible isShaderVisible);

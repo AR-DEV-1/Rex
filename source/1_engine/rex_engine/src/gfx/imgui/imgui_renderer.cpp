@@ -6,10 +6,10 @@
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/filesystem/path.h"
 
-
 #include "rex_engine/gfx/resources/texture_2d.h"
 #include "rex_engine/gfx/core/texture_format.h"
 
+#include "rex_engine/gfx/imgui/imgui_device.h"
 #include "rex_engine/gfx/imgui/imgui_frame_context.h"
 #include "rex_engine/gfx/imgui/imgui_viewport.h"
 #include "rex_engine/gfx/imgui/imgui_window_render_params.h"
@@ -25,9 +25,9 @@ namespace rex
   namespace gfx
   {
 
-    ImGuiRenderer::ImGuiRenderer(void* platformWindowHandle)
+    ImGuiRenderer::ImGuiRenderer(const ImGuiRendererCreationInfo& creationInfo)
     {
-      init_imgui(platformWindowHandle);
+      init_imgui(creationInfo);
       init_gpu_resources();
       init_main_imgui_viewport();
       init_colors();
@@ -83,7 +83,7 @@ namespace rex
     }
 
     // Initialize ImGui library
-    void ImGuiRenderer::init_imgui(void* platformWindowHandle)
+    void ImGuiRenderer::init_imgui(const ImGuiRendererCreationInfo& creationInfo)
     {
       IMGUI_CHECKVERSION();
       ImGui::CreateContext();
@@ -116,8 +116,15 @@ namespace rex
       io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
       io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;  // We can create multi-viewports on the Renderer side (optional)
 
+      // Init the device so windows can get created
+      ImGuiDevice imgui_device{};
+      imgui_device.command_queue = creationInfo.command_queue;
+      imgui_device.max_num_frames_in_flight = creationInfo.max_frames_in_flight;
+      imgui_device.rtv_format = gal::instance()->swapchain_format();
+      init_imgui_device(imgui_device);
+
       // Perform platform specific imgui initialization
-      imgui_platform_init(platformWindowHandle);
+      imgui_platform_init(creationInfo.platformWindowHandle);
     }
 
     // Initialize all gpu resources needed for imgui rendering

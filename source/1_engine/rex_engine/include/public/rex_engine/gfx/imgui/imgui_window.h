@@ -42,7 +42,7 @@ namespace rex
     class ImGuiWindow
     {
     public:
-      ImGuiWindow(ImGuiViewport* viewport, const ImGuiDevice& creationInfo);
+      ImGuiWindow(ImGuiViewport* viewport, const ImGuiDevice& imguiDevice);
 
       // Render the imgui window
       void render(ClearRenderTarget clearRenderTarget, ImGuiWindowRenderParams* renderParams);

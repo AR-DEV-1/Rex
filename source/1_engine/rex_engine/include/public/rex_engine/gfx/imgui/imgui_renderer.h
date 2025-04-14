@@ -20,10 +20,17 @@ namespace rex
     class PipelineState;
     class Shader;
 
+    struct ImGuiRendererCreationInfo
+    {
+      s32 max_frames_in_flight;
+      CommandQueue* command_queue;
+      void* platformWindowHandle;
+    };
+
     class ImGuiRenderer : public Renderer
     {
     public:
-      ImGuiRenderer(void* platformWindowHandle);
+      ImGuiRenderer(const ImGuiRendererCreationInfo& creationInfo);
       ~ImGuiRenderer();
 
       // Prepare a new frame for imgui, enabling users to queue imgui objects
@@ -33,7 +40,7 @@ namespace rex
 
     private:
       // Init imgui itself
-      void init_imgui(void* platformWindowHandle);
+      void init_imgui(const ImGuiRendererCreationInfo& creationInfo);
       // Init the gpu resources needed for imgui rendering
       void init_gpu_resources();
       // Init the main viewport of imgui. 

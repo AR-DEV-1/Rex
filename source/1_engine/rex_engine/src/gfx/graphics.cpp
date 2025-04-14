@@ -30,7 +30,6 @@ namespace rex
 
 		namespace gal
 		{
-
 			globals::GlobalUniquePtr<GALBase> g_gal_interface;
 			Error init(globals::GlobalUniquePtr<GALBase> galInterface)
 			{
@@ -54,8 +53,6 @@ namespace rex
 				g_gal_interface.reset();
 			}
 		}
-
-
 
 		// Make sure to not try and initialize any gpu resources in the constructor.
 		// The derived class of the gpu engine is responsible for making sure the gpu is ready.
@@ -84,7 +81,6 @@ namespace rex
 			init_desc_heaps();
 			init_sub_engines();
 			init_swapchain();
-			init_imgui();
 
 			// Init the common resources so that we don't have to repeat creating the same resources
 			init_common_resources();
@@ -115,6 +111,25 @@ namespace rex
 
 			// Present the last rendered frame to the screen
 			present();
+		}
+
+		// Return the max number of frames we can render at once
+		s32 GALBase::max_frames_in_flight() const
+		{
+			return m_max_frames_in_flight;
+		}
+
+		// Return the command queue of the render engine
+		// This is usually needed by graphics plugins (like ImGui)
+		CommandQueue* GALBase::render_command_queue()
+		{
+			return m_render_engine->command_queue();
+		}
+
+		// Returns the format of the swapchain's buffers
+		TextureFormat GALBase::swapchain_format() const
+		{
+			return m_swapchain->format();
 		}
 
 		// Prepare a new frame by incrementing the frame index and clearing the backbuffer
@@ -301,15 +316,6 @@ namespace rex
 			m_render_engine->init();
 			m_copy_engine->init();
 			m_compute_engine->init();
-		}
-		// Initialize imgui so it can create its own windows if necessary
-		void GALBase::init_imgui()
-		{
-			ImGuiDevice imgui_device{};
-			imgui_device.command_queue = m_render_engine->command_queue();
-			imgui_device.max_num_frames_in_flight = m_max_frames_in_flight;
-			imgui_device.rtv_format = m_swapchain->format();
-			init_imgui_device(imgui_device);
 		}
 		// Initialize the descriptor heaps which keep track of all descriptors to various resources
 		void GALBase::init_desc_heaps()

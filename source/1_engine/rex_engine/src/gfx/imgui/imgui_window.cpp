@@ -54,14 +54,14 @@ namespace rex
       imgui_window->yield_thread_until_in_sync_with_gpu();
     }
 
-    ImGuiWindow::ImGuiWindow(ImGuiViewport* viewport, const ImGuiDevice& creationInfo)
+    ImGuiWindow::ImGuiWindow(ImGuiViewport* viewport, const ImGuiDevice& imguiDevice)
       : m_viewport(viewport)
     {
       // On Windows PlatformHandleRaw should always be a HWND, whereas PlatformHandle might be a higher-level handle (e.g. GLFWWindow*, SDL_Window*).
       // Some backends will leave PlatformHandleRaw == 0, in which case we assume PlatformHandle will contain the HWND.
       void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
       IM_ASSERT(handle != nullptr);
-      m_swapchain = gfx::gal::instance()->create_swapchain(creationInfo.command_queue, creationInfo.max_num_frames_in_flight, handle);
+      m_swapchain = gfx::gal::instance()->create_swapchain(imguiDevice.command_queue, imguiDevice.max_num_frames_in_flight, handle);
 
       const s32 width = static_cast<s32>(viewport->Size.x);
       const s32 height = static_cast<s32>(viewport->Size.y);
