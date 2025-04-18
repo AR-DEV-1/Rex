@@ -48,7 +48,7 @@ TEST_CASE("Test - Growing Pool - Request Scoped Item")
 	rex::test::test_object::reset();
 
 	{
-		rex::ObjectWithDestructionCallback<rex::test::test_object> scoped_obj = growing_pool.request_scoped([](const rsl::unique_ptr<rex::test::test_object>& /*ptr*/) { return true; }, 2);
+		rex::ScopedPoolObject<rex::test::test_object> scoped_obj = growing_pool.request_scoped([](const rsl::unique_ptr<rex::test::test_object>& /*ptr*/) { return true; }, 2);
 
 		REX_CHECK(scoped_obj->x() == 2);
 		REX_CHECK(growing_pool.num_active_objects() == 1);

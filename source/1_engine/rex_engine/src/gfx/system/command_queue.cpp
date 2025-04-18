@@ -1,6 +1,6 @@
 #include "rex_engine/gfx/system/command_queue.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
@@ -33,7 +33,7 @@ namespace rex
       cpu_wait();
     }
 
-    ObjectWithDestructionCallback<SyncInfo> CommandQueue::create_sync_info(u64 fenceValue, Fence* fenceObject)
+    ScopedPoolObject<SyncInfo> CommandQueue::create_sync_info(u64 fenceValue, Fence* fenceObject)
     {
       return m_sync_info_pool.request(fenceValue, fenceObject);
     }

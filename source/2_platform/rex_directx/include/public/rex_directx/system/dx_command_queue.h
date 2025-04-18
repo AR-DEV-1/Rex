@@ -8,7 +8,7 @@
 #include "rex_engine/gfx/system/command_queue.h"
 #include "rex_engine/gfx/system/graphics_context.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
@@ -36,7 +36,7 @@ namespace rex
       // Execute a context on this command queue
       // Returning a sync object that can be used to make sure
       // another context cannot execute until this context has finished executing
-      ObjectWithDestructionCallback<SyncInfo> execute_context(GraphicsContext* ctx, WaitForFinish waitForFinish) override;
+      ScopedPoolObject<SyncInfo> execute_context(GraphicsContext* ctx, WaitForFinish waitForFinish) override;
 
       // Return the wrapped directx object
       ID3D12CommandQueue* dx_object();

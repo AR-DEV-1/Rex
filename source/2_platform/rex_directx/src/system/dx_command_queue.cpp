@@ -5,7 +5,7 @@
 #include "rex_directx/gfx/dx_compute_context.h"
 #include "rex_directx/gfx/dx_copy_context.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
@@ -37,7 +37,7 @@ namespace rex
       m_command_queue->Wait(fence, sync_info.fence_val());
     }
 
-    ObjectWithDestructionCallback<SyncInfo> DxCommandQueue::execute_context(GraphicsContext* ctx, WaitForFinish waitForFinish)
+    ScopedPoolObject<SyncInfo> DxCommandQueue::execute_context(GraphicsContext* ctx, WaitForFinish waitForFinish)
     {
       ID3D12GraphicsCommandList* cmdlist = cmdlist_from_ctx(ctx);
 

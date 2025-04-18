@@ -6,29 +6,63 @@
 
 #include "rex_std/functional.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
   namespace gfx
   {
     class CommandAllocator;
+    
+    template <typename TGraphicsCtx, typename PooledType>
+    class ScopedGraphicsContext : public ScopedPoolObject<TGraphicsCtx, PooledType>
+    {
+    public:
+      ScopedGraphicsContext(TGraphicsCtx* ctx, GrowingPool<PooledType>* pool)
+        : ScopedPoolObject<TGraphicsCtx, PooledType>(ctx, pool)
+      {}
+      ScopedGraphicsContext(const ScopedGraphicsContext&) = delete;
+      ScopedGraphicsContext(ScopedGraphicsContext&&) = default;
+      ~ScopedGraphicsContext()
+      {
+        if (get())
+        {
+          get()->execute_on_gpu();
+        }
+      }
+      ScopedGraphicsContext& operator=(const ScopedGraphicsContext&) = delete;
+      ScopedGraphicsContext& operator=(ScopedGraphicsContext&&) = default;
+
+    private:
+
+    };
 
     // The pool holding graphics contexts.
     // A pool is owned by the engine and is used to get a context from, for the given engine
     class GraphicsContextPool
     {
-      using alloc_context_func = rsl::function<rsl::unique_ptr<GraphicsContext>(CommandAllocator*)>;
+      using alloc_context_func = rsl::function<rsl::unique_ptr<GraphicsContext>()>;
 
     public:
-      GraphicsContextPool(alloc_context_func&& allocContextFunc);
+      GraphicsContextPool();
 
       // Request a new graphics context, which has for sure finished its commands.
       // If none is found, create a new one
-      ObjectWithDestructionCallback<GraphicsContext> request(CommandAllocator* alloc);
+      //ScopedGraphicsContext<GraphicsContext> request(CommandAllocator* alloc, const alloc_context_func& allocFunc);
+
+      template <typename TGraphicsCtx>
+      ScopedGraphicsContext<TGraphicsCtx, GraphicsContext> request(CommandAllocator* alloc, const alloc_context_func& allocFunc)
+      {
+        // We don't care which one we get, so we'll just get first we can find
+        auto find_free_ctx = [](const rsl::unique_ptr<GraphicsContext>&) { return true; }; // any idle one will do
+        GraphicsContext* ctx = m_context_pool.request(find_free_ctx, allocFunc);
+
+        return ScopedGraphicsContext<TGraphicsCtx, GraphicsContext>(static_cast<TGraphicsCtx*>(ctx), &m_context_pool);
+      }
+
 
     private:
-      GrowingPool<GraphicsContext, CommandAllocator*> m_context_pool;
+      GrowingPool<GraphicsContext> m_context_pool;
     };
   }
 }

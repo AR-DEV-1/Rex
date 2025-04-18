@@ -7,7 +7,7 @@
 #include "rex_engine/gfx/resources/index_buffer.h"
 #include "imgui/imgui.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
@@ -22,7 +22,7 @@ namespace rex
     }
 
     // Update the frame context's data based on the draw data and upload this to the gpu.
-    ObjectWithDestructionCallback<SyncInfo> ImGuiFrameContext::update_data(ImDrawData* drawData)
+    ScopedPoolObject<SyncInfo> ImGuiFrameContext::update_data(ImDrawData* drawData)
     {
       m_viewport.width = drawData->DisplaySize.x;
       m_viewport.height = drawData->DisplaySize.y;
@@ -79,7 +79,7 @@ namespace rex
       m_index_buffer = gfx::gal::instance()->create_index_buffer(newSize + s_buffer_increment_size, format);
     }
     // Update the frame context's data to the gpu
-    ObjectWithDestructionCallback<SyncInfo> ImGuiFrameContext::copy_buffer_data(ImDrawData* drawData)
+    ScopedPoolObject<SyncInfo> ImGuiFrameContext::copy_buffer_data(ImDrawData* drawData)
     {
       auto copy_context = gfx::gal::instance()->new_copy_ctx();
 

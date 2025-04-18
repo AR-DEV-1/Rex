@@ -12,7 +12,7 @@
 
 #include "rex_engine/diagnostics/log.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
@@ -41,7 +41,7 @@ namespace rex
 
       // Update the current frame context with the data for this frame
       ImGuiFrameContext& frame_ctx = current_frame_ctx();
-      ObjectWithDestructionCallback<SyncInfo> sync_info = frame_ctx.update_data(draw_data);
+      ScopedPoolObject<SyncInfo> sync_info = frame_ctx.update_data(draw_data);
 
       // Wait for the data to be updated on the gpu before we start executing render commands
       renderContext->stall(*sync_info);

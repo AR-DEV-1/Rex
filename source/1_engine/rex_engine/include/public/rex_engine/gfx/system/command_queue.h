@@ -8,7 +8,7 @@
 
 #include "rex_std/bonus/utility.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
@@ -28,7 +28,7 @@ namespace rex
       // Halt the gpu until the fence value is reached
       virtual void gpu_wait(SyncInfo& sync_info) = 0;
       // Submit all queued commands to the gpu and execute for execution
-      virtual ObjectWithDestructionCallback<SyncInfo> execute_context(GraphicsContext* ctx, WaitForFinish waitForFinish) = 0;
+      virtual ScopedPoolObject<SyncInfo> execute_context(GraphicsContext* ctx, WaitForFinish waitForFinish) = 0;
 
       // Returns if the last completed fence is equal or lower than the given fence value
       // Meaning that the commands before the given fence value got signaled have executed
@@ -44,7 +44,7 @@ namespace rex
       // Return the value of the fence, on the gpu
       virtual u64 gpu_fence_value() const = 0;
       // Create a sync info object with that needs to have the specified fence value for the given fence object
-      ObjectWithDestructionCallback<SyncInfo> create_sync_info(u64 fenceValue, Fence* fenceObject);
+      ScopedPoolObject<SyncInfo> create_sync_info(u64 fenceValue, Fence* fenceObject);
 
     private:
       GraphicsEngineType m_type;

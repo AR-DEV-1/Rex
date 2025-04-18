@@ -7,22 +7,18 @@
 #include "rex_engine/engine/types.h"
 #include "rex_engine/containers/vector_utils.h"
 #include "rex_engine/diagnostics/assert.h"
-#include "rex_engine/engine/object_with_destruction_callback.h"
+#include "rex_engine/engine/scoped_pooled_object.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
-  // This is a usability type alias but a user is not expected to create this themselves
-  template <typename PooledObject>
-  using ScopedPoolObject = ObjectWithDestructionCallback<PooledObject>;
-
   // The growing pool is a pool structure with the possibility to grow over time
   // An object can be requested, taking in an predicate to query for an idle object
   // If no idle object is found, a new one is constructed with the other parameters passed in
   // a function that's able to construct such an object is required in the constructor so
   // the pool can allocate such an object when there's no idle object found
-  template <typename PooledObject, typename ... Args>
+  template <typename PooledObject>
   class GrowingPool
   {
     // When looking for an idle object, we loop over all our idle objects and pass them into a function with the following signature
@@ -31,18 +27,19 @@ namespace rex
 
     // A function taking in variadic arguments and returning a unique pointer of the object we're pooling
     // They'll be added to the active objects immediateyly as you only want to create a new object if you need one
-    using create_new_obj_func = rsl::function<rsl::unique_ptr<PooledObject>(Args&&...)>;
+    using create_new_obj_func = rsl::function<rsl::unique_ptr<PooledObject>()>;
 
   public:
-    GrowingPool()
-      : m_allocate_new_object_func([](Args&& ... args) { return rsl::make_unique<PooledObject>(rsl::forward<Args>(args)...); })
-    {}
-    GrowingPool(create_new_obj_func&& createNewObjFunc)
-      : m_allocate_new_object_func(rsl::move(createNewObjFunc))
-    {}
+    // Look for an idle object matching the predicate.
+    // If no such object is found, a new one is constructed using the default heap allocation
+    PooledObject* request(const find_obj_func& findIdleObjfunc)
+    {
+      return request(findIdleObjfunc, []() {return rsl::make_unique<PooledObject>(); });
+    }
+
     // Look for an idle object matching the predicate.
     // If no such object is found, a new one is constructed using the params passed in
-    PooledObject* request(const find_obj_func& findIdleObjfunc, Args... args)
+    PooledObject* request(const find_obj_func& findIdleObjfunc, const create_new_obj_func& createObjFunc)
     {
       // First try to find if we have any idle object available for use, if so use one of those
       s32 free_obj_idx = find_free_object(findIdleObjfunc);
@@ -52,21 +49,17 @@ namespace rex
       }
 
       // If no idle object is available, create a new one
-      return create_new_active_object(rsl::forward<Args>(args)...);
+      return create_new_active_object(createObjFunc);
     }
     // Request an object that on destruction automatically returns itself to this pool
-    ObjectWithDestructionCallback<PooledObject> request_scoped(const find_obj_func& findIdleObjfunc, Args... args)
+    ScopedPoolObject<PooledObject> request_scoped(const find_obj_func& findIdleObjfunc, const create_new_obj_func& createObjFunc)
     {
-      PooledObject* obj = request(findIdleObjfunc, rsl::forward<Args>(args)...);
-      return ObjectWithDestructionCallback<PooledObject>(obj,
-        [this](PooledObject* pooledObj)
-        {
-          discard(pooledObj);
-        });
+      PooledObject* obj = request(findIdleObjfunc, createObjFunc);
+      return ScopedPoolObject<PooledObject>(obj, this);
     }
 
     // Return previously requested object back to the pool
-    void discard(PooledObject* obj)
+    void return_object(PooledObject* obj)
     {
       auto it = rsl::find_if(m_active_objects.begin(), m_active_objects.end(), [obj](const rsl::unique_ptr<PooledObject>& ptr) { return ptr.get() == obj; });
       REX_ASSERT_X(it != m_active_objects.end(), "Discarding object back to pool, but it doesn't belong to this pool");
@@ -99,14 +92,14 @@ namespace rex
 
     // Resize the buffer holding idle objects to support the number objects given
     // If the number is smaller than the current number, a smaller buffer is allocated
-    void resize(s32 newNumIdleObjects, Args... args)
+    void resize(s32 newNumIdleObjects, const create_new_obj_func& createObjFunc)
     {
       m_idle_objects.reserve(newNumIdleObjects);
       m_active_objects.reserve(newNumIdleObjects);
 
       for (s32 i = 0; i < newNumIdleObjects; ++i)
       {
-        m_idle_objects.emplace_back(rsl::make_unique<PooledObject>(rsl::forward<Args>(args)...));
+        m_idle_objects.emplace_back(createObjFunc);
       }
     }
 
@@ -130,17 +123,15 @@ namespace rex
       return rex::transfer_object_between_vectors(idx, m_idle_objects, m_active_objects).get();
     }
     // Create a new object and add it to the active objects
-    template <typename ... Args2>
-    PooledObject* create_new_active_object(Args2&&... args)
+    PooledObject* create_new_active_object(const create_new_obj_func& createObjFunc)
     {
       // Increment the array holding the idle objects to avoid a reallocation later
       m_idle_objects.reserve(m_idle_objects.capacity() + 1);
-      return m_active_objects.emplace_back(m_allocate_new_object_func(rsl::forward<Args>(args)...)).get();
+      return m_active_objects.emplace_back(createObjFunc()).get();
     }
 
   private:
     rsl::vector<rsl::unique_ptr<PooledObject>> m_idle_objects;     // Holds all objects currently not in use
     rsl::vector<rsl::unique_ptr<PooledObject>> m_active_objects;   // Holds all objects currently in use
-    create_new_obj_func m_allocate_new_object_func;
   };
 }

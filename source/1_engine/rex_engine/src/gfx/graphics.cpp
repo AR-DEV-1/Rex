@@ -208,28 +208,25 @@ namespace rex
 		}
 
 		// Create a new context which is used for copying resources from or to the gpu
-		ObjectWithDestructionCallback<CopyContext> GALBase::new_copy_ctx(PipelineState* pso, rsl::string_view eventName)
+		ScopedGraphicsContext<CopyContext, GraphicsContext> GALBase::new_copy_ctx(PipelineState* pso, rsl::string_view eventName)
 		{
 			ContextResetData reset_data = create_context_reset_data(pso);
 
-			auto base_ctx = m_copy_engine->new_context(reset_data, eventName);
-			return base_ctx.convert<CopyContext>();
+			return m_copy_engine->new_context<CopyContext>(reset_data, eventName);
 		}
 		// Create a new context which is used for rendering to render targets
-		ObjectWithDestructionCallback<RenderContext> GALBase::new_render_ctx(PipelineState* pso, rsl::string_view eventName)
+		ScopedGraphicsContext<RenderContext, GraphicsContext> GALBase::new_render_ctx(PipelineState* pso, rsl::string_view eventName)
 		{
 			ContextResetData reset_data = create_context_reset_data(pso);
 
-			auto base_ctx = m_render_engine->new_context(reset_data, eventName);
-			return base_ctx.convert<RenderContext>();
+			return m_render_engine->new_context<RenderContext>(reset_data, eventName);
 		}
 		// Create a new context which is used for computing data on the gpu
-		ObjectWithDestructionCallback<ComputeContext> GALBase::new_compute_ctx(PipelineState* pso, rsl::string_view eventName)
+		ScopedGraphicsContext<ComputeContext, GraphicsContext> GALBase::new_compute_ctx(PipelineState* pso, rsl::string_view eventName)
 		{
 			ContextResetData reset_data = create_context_reset_data(pso);
 
-			auto base_ctx = m_compute_engine->new_context(reset_data, eventName);
-			return base_ctx.convert<ComputeContext>();
+			return m_compute_engine->new_context<ComputeContext>(reset_data, eventName);
 		}
 
 		void GALBase::notify_textures_presence_on_gpu(Texture2D* texture, rsl::unique_ptr<ResourceView> resourceView)

@@ -8,21 +8,21 @@ namespace rex
 {
   enum class MemoryTag
   {
+    // MemoryTag values for ConsoleApp
+    ConsoleApp,
+ 
+    // MemoryTag values for Pokemon
+    Pokemon,
+ 
+    // MemoryTag values for Regina
+    Editor,
+ 
     // MemoryTag values for RexEngine
     Global,
     Engine,
     FileIO,
     StringPool,
     Renderer,
- 
-    // MemoryTag values for ConsoleApp
-    ConsoleApp,
- 
-    // MemoryTag values for Regina
-    Editor,
- 
-    // MemoryTag values for Pokemon
-    Pokemon,
  
     // MemoryTag values for RexWindows
     Windows,

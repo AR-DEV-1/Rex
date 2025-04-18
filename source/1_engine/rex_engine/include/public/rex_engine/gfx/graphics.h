@@ -26,7 +26,7 @@
 
 #include "rex_std/bonus/utility.h"
 
-#include "rex_engine/engine/object_with_destruction_callback.h"
+#include "rex_engine/engine/scoped_pooled_object.h"
 
 
 
@@ -60,7 +60,7 @@
 #include "rex_engine/gfx/system/shader_param_declaration.h"
 
 #include "rex_engine/gfx/core/renderer_output_window_user_data.h"
-#include "rex_engine/engine/object_with_destruction_callback.h"
+#include "rex_engine/engine/scoped_pooled_object.h"
 #include "rex_engine/gfx/core/graphics_engine_type.h"
 #include "rex_engine/gfx/system/copy_context.h"
 #include "rex_engine/gfx/system/compute_context.h"
@@ -189,11 +189,11 @@ namespace rex
       // Contexts
       // --------------------------------
       // Create a new context which is used for copying resources from or to the gpu
-      ObjectWithDestructionCallback<CopyContext> new_copy_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
+      ScopedGraphicsContext<CopyContext, GraphicsContext> new_copy_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
       // Create a new context which is used for rendering to render targets
-      ObjectWithDestructionCallback<RenderContext> new_render_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
+      ScopedGraphicsContext<RenderContext, GraphicsContext> new_render_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
       // Create a new context which is used for computing data on the gpu
-      ObjectWithDestructionCallback<ComputeContext> new_compute_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
+      ScopedGraphicsContext<ComputeContext, GraphicsContext> new_compute_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
 
       // --------------------------------
       // Render Pipeline
