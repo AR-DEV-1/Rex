@@ -588,21 +588,14 @@ namespace rex
 		}
 		void DirectXInterface::report_live_objects()
 		{
-			m_debug_interface->report_live_objects();
+			debug_interface()->report_live_objects();
 		}
 
 		void DirectXInterface::api_init()
 		{
-			// The debug interface needs to get created first (and destroyed last)
-			// to make sure all resources are tracked and it won't warn about resources
-			// not yet destroyed if they'd get destroyed at a later point in time.
-			#ifdef REX_ENABLE_DX12_DEBUG_LAYER
-				m_debug_interface = rsl::make_unique<DebugInterface>();
-			#endif
-
 			// 1) we need to init the dxgi factory.
 			// This is the system we use to create most other systems.
-			bool enable_debug_factory = m_debug_interface != nullptr;
+			bool enable_debug_factory = debug_interface() != nullptr;
 			m_factory = internal::create_dxgi_factory(enable_debug_factory);
 
 			// 2) Create the adapter manager
@@ -685,6 +678,11 @@ namespace rex
 		rsl::unique_ptr<ComputeEngine> DirectXInterface::init_compute_engine(ResourceStateTracker* resourceStateTracker)
 		{
 			return rsl::make_unique<DxComputeEngine>(resourceStateTracker);
+		}
+
+		rsl::unique_ptr<DebugInterface> DirectXInterface::allocate_debug_interface()
+		{
+			return rsl::make_unique<DxDebugInterface>();
 		}
 
 		// Initialize the resource heap which keeps track of all gpu resources

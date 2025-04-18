@@ -72,6 +72,11 @@ namespace rex
 		// can we initialize the rest of the objects
 		void GALBase::init()
 		{
+			// The debug interface needs to get created first (and destroyed last)
+			// to make sure all resources are tracked and it won't warn about resources
+			// not yet destroyed if they'd get destroyed at a later point in time.
+			init_debug_interface();
+
 			api_init();
 
 			// Log the info in case anything goes wrong after this.
@@ -120,7 +125,7 @@ namespace rex
 			m_copy_engine->end_frame();
 		}
 
-		void GALBase::resize_swapchain(s32 newWidth, s32 newHeight)
+		void GALBase::resize_backbuffers(s32 newWidth, s32 newHeight)
 		{
 			m_swapchain->resize(newWidth, newHeight);
 
@@ -187,21 +192,17 @@ namespace rex
 			REX_INFO(LogGraphics, "Renderer Info - Driver Version: {}", info.driver_version);
 		}
 
-		// Return the current render target of the swapchain
-		RenderTarget* GALBase::swapchain_rt()
-		{
-			return m_swapchain->current_buffer();
-		}
 		// Return the width of the render target of the swapchain
-		s32 GALBase::back_buffer_width()
+		s32 GALBase::back_buffer_width() const
 		{
 			return m_swapchain->width();
 		}
 		// Return the height of the render target of the swapchain
-		s32 GALBase::back_buffer_height()
+		s32 GALBase::back_buffer_height() const
 		{
 			return m_swapchain->height();
 		}
+		// Return the current render target of the swapchain
 		RenderTarget* GALBase::current_backbuffer_rt()
 		{
 			return m_swapchain->current_buffer();
@@ -296,6 +297,16 @@ namespace rex
 		ViewHeap* GALBase::shader_visible_desc_heap(ViewHeapType descHeapType)
 		{
 			return m_shader_visible_descriptor_heap_pool.at(descHeapType).get();
+		}
+
+		DebugInterface* GALBase::debug_interface()
+		{
+			return m_debug_interface.get();
+		}
+
+		void GALBase::init_debug_interface()
+		{
+			m_debug_interface = allocate_debug_interface();
 		}
 
 		// Initialize the swapchain which is used for presenting to the main window

@@ -127,6 +127,9 @@ namespace rex
       rsl::unique_ptr<CopyEngine>     init_copy_engine(ResourceStateTracker* resourceStateTracker) override;
       rsl::unique_ptr<ComputeEngine>  init_compute_engine(ResourceStateTracker* resourceStateTracker) override;
 
+      // Allocates a debug interface using DirectX debug interface API
+      rsl::unique_ptr<DebugInterface> allocate_debug_interface() override;
+
       // Initialize the resource heap which keeps track of all gpu resources
       void init_resource_heap() override;
       // Allocate a new view heap of a given type
@@ -158,7 +161,6 @@ namespace rex
 
     private:
       // Resources needed to create objects
-      rsl::unique_ptr<DebugInterface> m_debug_interface;        // Used to determine if we have any leaking resource on shutdown
       rsl::unique_ptr<DxDevice> m_device = nullptr;             // Used as the factory object to create gpu resources
       DxCommandQueue* m_render_command_queue = nullptr;         // Used as the object the swapchain speaks to queue a present command
       rsl::unique_ptr<dxgi::Factory> m_factory;

@@ -42,6 +42,7 @@
 #include "rex_engine/gfx/resources/sampler_2d.h"
 #include "rex_engine/gfx/system/command_queue.h"
 #include "rex_engine/gfx/system/command_allocator.h"
+#include "rex_engine/gfx/system/debug_interface.h"
 #include "rex_engine/gfx/system/swapchain.h"
 #include "rex_engine/gfx/resources/vertex_buffer.h"
 #include "rex_engine/gfx/resources/index_buffer.h"
@@ -119,6 +120,9 @@ namespace rex
       GALBase(const OutputWindowUserData& userData);
       virtual ~GALBase() = default;
 
+      // --------------------------------
+      // Application API
+      // --------------------------------
       // This is a virtual function as some of the common items are stored in the base class,
       // however they can only be initialized by the derived class.
       // Because virtual functions cannot be called from the constructor
@@ -132,11 +136,11 @@ namespace rex
       void flush();
 
       // Resize swapchain buffers
-      void resize_swapchain(s32 newWidth, s32 newHeight);
+      void resize_backbuffers(s32 newWidth, s32 newHeight);
 
-      // Return basic info about the graphics hardware of the current machine
-      virtual const Info& info() const = 0;
-
+      // --------------------------------
+      // Getters
+      // --------------------------------
       // Return the max number of frames we can render at once
       s32 max_frames_in_flight() const;
 
@@ -146,6 +150,9 @@ namespace rex
 
       // Returns the format of the swapchain's buffers
       TextureFormat swapchain_format() const;
+
+      // Return basic info about the graphics hardware of the current machine
+      virtual const Info& info() const = 0;
 
       // --------------------------------
       // Configuration
@@ -198,21 +205,12 @@ namespace rex
       // --------------------------------
       // Render Pipeline
       // --------------------------------
-
-		  // Return the current render target of the swapchain
-			RenderTarget* swapchain_rt();
 			// Return the width of the render target of the swapchain
-			s32 back_buffer_width();
+			s32 back_buffer_width() const;
 			// Return the height of the render target of the swapchain
-			s32 back_buffer_height();
+			s32 back_buffer_height() const;
+      // Return the current render target of the swapchain
       RenderTarget* current_backbuffer_rt();
-
-      void notify_textures_presence_on_gpu(Texture2D* texture, rsl::unique_ptr<ResourceView> resourceView);
-      const ResourceView* try_get_texture_gpu_handle(Texture2D* texture) const;
-      const ResourceView* try_get_gpu_views(const rsl::vector<const ResourceView*>& views) const;
-      const ResourceView* try_get_gpu_view(const ResourceView* cpuView) const;
-      const ResourceView* notify_views_on_gpu(const rsl::vector<const ResourceView*>& views, rsl::unique_ptr<ResourceView> gpuView);
-
       // Construct a new renderer and add it to the list of renderers we should call
       template <typename T, typename ... Args>
       T* add_renderer(Args&& ... args)
@@ -225,6 +223,15 @@ namespace rex
         return result;
       }
 
+      // --------------------------------
+      // GPU RESOURCE QUERYING
+      // --------------------------------
+      void notify_textures_presence_on_gpu(Texture2D* texture, rsl::unique_ptr<ResourceView> resourceView);
+      const ResourceView* try_get_texture_gpu_handle(Texture2D* texture) const;
+      const ResourceView* try_get_gpu_views(const rsl::vector<const ResourceView*>& views) const;
+      const ResourceView* try_get_gpu_view(const ResourceView* cpuView) const;
+      const ResourceView* notify_views_on_gpu(const rsl::vector<const ResourceView*>& views, rsl::unique_ptr<ResourceView> gpuView);
+
       RasterStateDesc common_raster_state(CommonRasterState type);
       Sampler2D* common_sampler(CommonSampler type);
 
@@ -236,6 +243,10 @@ namespace rex
       virtual rsl::unique_ptr<CopyEngine> init_copy_engine(ResourceStateTracker* resourceStateTracker) = 0;
       virtual rsl::unique_ptr<ComputeEngine> init_compute_engine(ResourceStateTracker* resourceStateTracker) = 0;
 
+      // Allocate the debug interface.
+      // This is done in the API specific level but we need to store the pointer in the base as it needs to get destroyed last
+      // That's why we need this function
+      virtual rsl::unique_ptr<DebugInterface> allocate_debug_interface() = 0;
       // Initialize the resource heap which allocates all gpu resources
       virtual void init_resource_heap() = 0;
       // Allocate a new descriptor heap of a given type
@@ -245,6 +256,10 @@ namespace rex
       ViewHeap* cpu_desc_heap(ViewHeapType descHeapType);
       ViewHeap* shader_visible_desc_heap(ViewHeapType descHeapType);
 
+      // Returns the debug interface
+      // This is sometimes needed in API specific code
+      DebugInterface* debug_interface();
+
     private:
       using ViewHeapPool = rsl::unordered_map<ViewHeapType, rsl::unique_ptr<ViewHeap>>;
 
@@ -252,6 +267,7 @@ namespace rex
       // Initialization
       // --------------------------------
 
+      void init_debug_interface();
       // Initialize the swapchain which is used for presenting to the main window
       void init_swapchain();
       // Initialize the sub engine, bringing them up and ready, to be used in the graphics pipeline
@@ -280,16 +296,17 @@ namespace rex
       void log_info(const Info& info);
 
     private:
-      rsl::unique_ptr<Swapchain> m_swapchain;           // The swapchain is responsible for swapping the backbuffer with the front buffer
-      rsl::unique_ptr<RenderEngine> m_render_engine;    // The render engine is the high level graphics engine responsible for queueing render commands
-      rsl::unique_ptr<ComputeEngine> m_compute_engine;  // The render engine is the high level graphics engine responsible for queueing compute commands
-      rsl::unique_ptr<CopyEngine> m_copy_engine;        // The render engine is the high level graphics engine responsible for queueing copy commands
-      s32 m_max_frames_in_flight;                       // The maximum number of we can have in flight for rendering.
-      void* m_primary_display_handle;                   // The display handle to render to (HWND on Windows)
-      s32 m_frame_idx;                                  // The current frame index
-      ViewHeapPool m_cpu_descriptor_heap_pool;          // Pool of descriptor heaps per type
+      rsl::unique_ptr<DebugInterface> m_debug_interface;  // Used to determine if we have any leaking resource on shutdown
+      rsl::unique_ptr<Swapchain> m_swapchain;             // The swapchain is responsible for swapping the backbuffer with the front buffer
+      rsl::unique_ptr<RenderEngine> m_render_engine;      // The render engine is the high level graphics engine responsible for queueing render commands
+      rsl::unique_ptr<ComputeEngine> m_compute_engine;    // The render engine is the high level graphics engine responsible for queueing compute commands
+      rsl::unique_ptr<CopyEngine> m_copy_engine;          // The render engine is the high level graphics engine responsible for queueing copy commands
+      s32 m_max_frames_in_flight;                         // The maximum number of we can have in flight for rendering.
+      void* m_primary_display_handle;                     // The display handle to render to (HWND on Windows)
+      s32 m_frame_idx;                                    // The current frame index
+      ViewHeapPool m_cpu_descriptor_heap_pool;            // Pool of descriptor heaps per type
       ViewHeapPool m_shader_visible_descriptor_heap_pool; // Pool of descriptor heaps per type
-      ResourceStateTracker m_resource_state_tracker; // The global tracker of resource states
+      ResourceStateTracker m_resource_state_tracker;      // The global tracker of resource states
 
       rsl::unordered_map<Texture2D*, rsl::unique_ptr<ResourceView>> m_textures_on_gpu;
       rsl::unordered_map<u64, rsl::unique_ptr<ResourceView>> m_resources_on_gpu;

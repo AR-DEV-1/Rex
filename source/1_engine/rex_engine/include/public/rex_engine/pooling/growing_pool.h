@@ -52,6 +52,12 @@ namespace rex
       return create_new_active_object(createObjFunc);
     }
     // Request an object that on destruction automatically returns itself to this pool
+    ScopedPoolObject<PooledObject> request_scoped(const find_obj_func& findIdleObjfunc)
+    {
+      PooledObject* obj = request(findIdleObjfunc);
+      return ScopedPoolObject<PooledObject>(obj, this);
+    }
+    // Request an object that on destruction automatically returns itself to this pool
     ScopedPoolObject<PooledObject> request_scoped(const find_obj_func& findIdleObjfunc, const create_new_obj_func& createObjFunc)
     {
       PooledObject* obj = request(findIdleObjfunc, createObjFunc);
@@ -92,6 +98,13 @@ namespace rex
 
     // Resize the buffer holding idle objects to support the number objects given
     // If the number is smaller than the current number, a smaller buffer is allocated
+    void resize(s32 newNumIdleObjects)
+    {
+      resize(newNumIdleObjects, []() {return rsl::make_unique<PooledObject>(); });
+    }
+
+    // Resize the buffer holding idle objects to support the number objects given
+    // If the number is smaller than the current number, a smaller buffer is allocated
     void resize(s32 newNumIdleObjects, const create_new_obj_func& createObjFunc)
     {
       m_idle_objects.reserve(newNumIdleObjects);
@@ -99,7 +112,7 @@ namespace rex
 
       for (s32 i = 0; i < newNumIdleObjects; ++i)
       {
-        m_idle_objects.emplace_back(createObjFunc);
+        m_idle_objects.emplace_back(createObjFunc());
       }
     }
 

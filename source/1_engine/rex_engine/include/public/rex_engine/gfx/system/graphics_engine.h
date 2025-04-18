@@ -63,7 +63,7 @@ namespace rex
       {
         // Find a command alloctor to be used for the context
         ScopedFencedAllocator alloc = request_allocator();
-        ScopedGraphicsContext<TGraphicsCtx, GraphicsContext> ctx = m_context_pool.request<TGraphicsCtx>(alloc->underlying_alloc(), [this, alloc = alloc->underlying_alloc()]() { return allocate_new_context(alloc); });
+        ScopedGraphicsContext<TGraphicsCtx, GraphicsContext> ctx = m_context_pool.request<TGraphicsCtx>([this, alloc = alloc->underlying_alloc()]() { return allocate_new_context(alloc); });
 
         // Always reset a context, making it ready to be used by a user
         ctx->begin_profile_event(eventName);

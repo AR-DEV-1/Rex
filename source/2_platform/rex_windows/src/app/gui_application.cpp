@@ -235,7 +235,7 @@ namespace rex
         //
         // Recreate swap chain buffers
         // Recreate depth stencil buffer
-        gfx::gal::instance()->resize_swapchain(newWidth, newHeight);
+        gfx::gal::instance()->resize_backbuffers(newWidth, newHeight);
         //
         // Transition depth stencil from it's initial state to be used as a depth buffer (DX only)
         //

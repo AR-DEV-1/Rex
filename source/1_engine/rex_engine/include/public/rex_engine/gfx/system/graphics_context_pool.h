@@ -51,7 +51,7 @@ namespace rex
       //ScopedGraphicsContext<GraphicsContext> request(CommandAllocator* alloc, const alloc_context_func& allocFunc);
 
       template <typename TGraphicsCtx>
-      ScopedGraphicsContext<TGraphicsCtx, GraphicsContext> request(CommandAllocator* alloc, const alloc_context_func& allocFunc)
+      ScopedGraphicsContext<TGraphicsCtx, GraphicsContext> request(const alloc_context_func& allocFunc)
       {
         // We don't care which one we get, so we'll just get first we can find
         auto find_free_ctx = [](const rsl::unique_ptr<GraphicsContext>&) { return true; }; // any idle one will do

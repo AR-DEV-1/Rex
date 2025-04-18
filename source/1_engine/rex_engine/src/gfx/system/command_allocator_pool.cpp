@@ -49,7 +49,7 @@ namespace rex
     }
 
     ScopedFencedAllocator::ScopedFencedAllocator()
-      : ScopedFencedAllocator(-1, nullptr, nullptr)
+      : ScopedFencedAllocator(static_cast<u64>(-1), nullptr, nullptr)
     {}
 
     ScopedFencedAllocator::ScopedFencedAllocator(u64 initialFenceValue, FencedAllocator* alloc, GrowingPool<FencedAllocator>* pool)

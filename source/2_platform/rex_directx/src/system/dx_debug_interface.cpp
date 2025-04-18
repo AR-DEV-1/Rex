@@ -9,7 +9,7 @@ namespace rex
 {
   namespace gfx
   {
-    DEFINE_LOG_CATEGORY(LogDebugInterface);
+    DEFINE_LOG_CATEGORY(LogDxDebugInterface);
 
 #ifdef REX_ENABLE_GFX_DEBUGGING
     constexpr bool g_enable_dxgi_severity_message     = false;
@@ -25,39 +25,39 @@ namespace rex
     constexpr bool g_enable_dxgi_severity_corruption  = false;
 #endif
 
-    DebugInterface::DebugInterface()
+    DxDebugInterface::DxDebugInterface()
     {
       init_dxgi_debug_interface();
       init_debug_controller();
       init_debug_info_queue();
     }
 
-    DebugInterface::~DebugInterface()
+    DxDebugInterface::~DxDebugInterface()
     {
       report_live_objects();
     }
 
-    void DebugInterface::report_live_objects()
+    void DxDebugInterface::report_live_objects()
     {
       // DXGI - Live Objects
       if (m_debug_interface)
       {
         if (DX_FAILED(m_debug_interface->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_FLAGS(DXGI_DEBUG_RLO_DETAIL | DXGI_DEBUG_RLO_IGNORE_INTERNAL)))) // NOLINT(hicpp-signed-bitwise)
         {
-          REX_ERROR(LogDebugInterface, "Cannot ReportLiveDeviceObjects of DXGI");
+          REX_ERROR(LogDxDebugInterface, "Cannot ReportLiveDeviceObjects of DXGI");
           return;
         }
       }
     }
 
-    void DebugInterface::init_dxgi_debug_interface()
+    void DxDebugInterface::init_dxgi_debug_interface()
     {
       if (DX_FAILED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(m_debug_interface.GetAddressOf()))))
       {
-        REX_ERROR(LogDebugInterface, "Cannot get debug interace of DXGI");
+        REX_ERROR(LogDxDebugInterface, "Cannot get debug interace of DXGI");
       }
     }
-    void DebugInterface::init_debug_controller()
+    void DxDebugInterface::init_debug_controller()
     {
       if (DX_SUCCESS(D3D12GetDebugInterface(IID_PPV_ARGS(&m_debug_controller))))
       {
@@ -65,10 +65,10 @@ namespace rex
       }
       else
       {
-        REX_ERROR(LogDebugInterface, "Cannot enable D3D12 Debug layer");
+        REX_ERROR(LogDxDebugInterface, "Cannot enable D3D12 Debug layer");
       }
     }
-    void DebugInterface::init_debug_info_queue()
+    void DxDebugInterface::init_debug_info_queue()
     {
       /*
         * Bug in the DXGI Debug Layer interaction with the DX12 Debug Layer w/ Windows 11.
@@ -103,7 +103,7 @@ namespace rex
       }
       else
       {
-        REX_ERROR(LogDebugInterface, "Unable to get DXGI Debug Info Queue");
+        REX_ERROR(LogDxDebugInterface, "Unable to get DXGI Debug Info Queue");
       }
     }
   } // namespace gfx
