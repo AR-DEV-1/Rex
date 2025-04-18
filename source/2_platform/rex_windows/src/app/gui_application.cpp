@@ -171,6 +171,8 @@ namespace rex
       }
       void on_stop_resize()
       {
+        resize(m_window->width(), m_window->height());
+
         m_app_instance->resume();
         m_window->stop_resize();
       }
@@ -219,11 +221,12 @@ namespace rex
           // Do nothing
         }
       }
-      void resize(s32 /*newWidth*/, s32 /*newHeight*/)
+      void resize(s32 newWidth, s32 newHeight)
       {
         // Resize window ( although we might want to capture this within the window itself ... )
         //
         // Flush Command Queue
+        gfx::gal::instance()->flush();
         //
         // Release front and back buffer
         // Release depth stencil buffer
@@ -232,6 +235,7 @@ namespace rex
         //
         // Recreate swap chain buffers
         // Recreate depth stencil buffer
+        gfx::gal::instance()->resize_swapchain(newWidth, newHeight);
         //
         // Transition depth stencil from it's initial state to be used as a depth buffer (DX only)
         //
@@ -322,7 +326,7 @@ namespace rex
               on_minimize();
               break;
             case WindowResizeType::Restored:
-              on_restore(evt.width(), evt.height());
+              //on_restore(evt.width(), evt.height());
               break;
             default:
               break;

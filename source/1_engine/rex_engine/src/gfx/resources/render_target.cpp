@@ -4,9 +4,10 @@ namespace rex
 {
   namespace gfx
   {
-    RenderTarget::RenderTarget(s32 width, s32 height, const ClearStateDesc& clearState)
+    RenderTarget::RenderTarget(s32 width, s32 height, ResourceView* resourceView, const ClearStateDesc& clearState)
       : m_width(width)
       , m_height(height)
+      , m_view(resourceView)
       , m_clear_state(clearState)
     {}
 
@@ -22,5 +23,10 @@ namespace rex
     {
       return m_clear_state;
     }
+    const ResourceView* RenderTarget::view() const
+    {
+      return m_view;
+    }
+
   }
 }

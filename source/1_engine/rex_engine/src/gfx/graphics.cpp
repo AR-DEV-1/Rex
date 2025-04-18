@@ -113,6 +113,20 @@ namespace rex
 			present();
 		}
 
+		void GALBase::flush()
+		{
+			m_render_engine->end_frame();
+			m_compute_engine->end_frame();
+			m_copy_engine->end_frame();
+		}
+
+		void GALBase::resize_swapchain(s32 newWidth, s32 newHeight)
+		{
+			m_swapchain->resize(newWidth, newHeight);
+
+			resize_swapchain_info(newWidth, newHeight);
+		}
+
 		// Return the max number of frames we can render at once
 		s32 GALBase::max_frames_in_flight() const
 		{
@@ -158,9 +172,7 @@ namespace rex
 		// Finish off the last frame
 		void GALBase::end_frame()
 		{
-			m_render_engine->end_frame();
-			m_compute_engine->end_frame();
-			m_copy_engine->end_frame();
+			flush();
 		}
 
 		void GALBase::log_info(const Info& info)
@@ -294,17 +306,7 @@ namespace rex
 		{
 			m_swapchain = gfx::gal::instance()->create_swapchain(m_render_engine->command_queue(), m_max_frames_in_flight, m_primary_display_handle);
 
-			SwapchainInfo swapchain_info{};
-			swapchain_info.width = m_swapchain->width();
-			swapchain_info.height = m_swapchain->height();
-			swapchain_info.viewport.top_left_x = 0.0f;
-			swapchain_info.viewport.top_left_y = 0.0f;
-			swapchain_info.viewport.width = static_cast<f32>(swapchain_info.width);
-			swapchain_info.viewport.height = static_cast<f32>(swapchain_info.height);
-			swapchain_info.scissor_rect.right = static_cast<f32>(swapchain_info.width);
-			swapchain_info.scissor_rect.bottom = static_cast<f32>(swapchain_info.height);
-
-			update_swapchain_info(swapchain_info);
+			resize_swapchain_info(m_swapchain->width(), m_swapchain->height());
 		}
 		// Initialize the sub engine, bringing them up and ready, to be used in the graphics pipeline
 		void GALBase::init_sub_engines()
@@ -362,6 +364,21 @@ namespace rex
 			sampler_desc.register_space = 0;
 			sampler_desc.shader_visibility = rex::gfx::ShaderVisibility::Pixel;
 			m_common_samplers[rsl::enum_refl::enum_index(CommonSampler::Default2D).value()] = gfx::gal::instance()->create_sampler2d(sampler_desc);
+		}
+
+		void GALBase::resize_swapchain_info(s32 newWidth, s32 newHeight)
+		{
+			SwapchainInfo swapchain_info{};
+			swapchain_info.width = m_swapchain->width();
+			swapchain_info.height = m_swapchain->height();
+			swapchain_info.viewport.top_left_x = 0.0f;
+			swapchain_info.viewport.top_left_y = 0.0f;
+			swapchain_info.viewport.width = static_cast<f32>(swapchain_info.width);
+			swapchain_info.viewport.height = static_cast<f32>(swapchain_info.height);
+			swapchain_info.scissor_rect.right = static_cast<f32>(swapchain_info.width);
+			swapchain_info.scissor_rect.bottom = static_cast<f32>(swapchain_info.height);
+
+			update_swapchain_info(swapchain_info);
 		}
 
 		ContextResetData GALBase::create_context_reset_data(PipelineState* pso)

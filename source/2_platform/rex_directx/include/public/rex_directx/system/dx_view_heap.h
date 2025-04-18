@@ -36,6 +36,9 @@ namespace rex
 
       // Create a render target view and return a handle pointing to it
       DxResourceView create_rtv(ID3D12Resource* resource);
+      // Retarget an existing rtv to a new resource
+      DxResourceView& retarget_rtv(ID3D12Resource* resource, DxResourceView& rtv);
+
       // Create a depth stencil view and return a handle pointing to it
       DxResourceView create_dsv(ID3D12Resource* resource);
       // Create a constant buffer view and return a handle pointing to it

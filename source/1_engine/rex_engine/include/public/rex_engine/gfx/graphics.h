@@ -128,6 +128,12 @@ namespace rex
       // Render a single frame by going over all the renderers
       void render();
 
+      // Flush all commands
+      void flush();
+
+      // Resize swapchain buffers
+      void resize_swapchain(s32 newWidth, s32 newHeight);
+
       // Return basic info about the graphics hardware of the current machine
       virtual const Info& info() const = 0;
 
@@ -266,6 +272,8 @@ namespace rex
       void present();
       // Finish off the last frame
       void end_frame();
+
+      void resize_swapchain_info(s32 newWidth, s32 newHeight);
 
       // Create a context reset structure, filling it in with all the data it needs to reset a context
       ContextResetData create_context_reset_data(PipelineState* pso);

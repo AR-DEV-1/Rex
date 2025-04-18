@@ -506,6 +506,11 @@ namespace rex
 			DxResourceView rtv = create_rtv(resource.Get());
 			return rsl::make_unique<DxRenderTarget>(resource, rtv, default_rtv_clear_state());
 		}
+		rsl::unique_ptr<RenderTarget> DirectXInterface::retarget_render_target(wrl::ComPtr<ID3D12Resource>& resource, DxResourceView view)
+		{
+			d3d::to_dx12(cpu_desc_heap(ViewHeapType::RenderTarget))->retarget_rtv(resource.Get(), view);
+			return rsl::make_unique<DxRenderTarget>(resource, view, default_rtv_clear_state());
+		}
 		wrl::ComPtr<ID3DBlob>                 DirectXInterface::compile_shader(const CompileShaderDesc& desc)
 		{
 			wrl::ComPtr<ID3DBlob> byte_code = m_shader_compiler.compile_shader(desc);

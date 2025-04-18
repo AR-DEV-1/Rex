@@ -3,6 +3,7 @@
 #include "rex_engine/engine/types.h"
 #include "rex_engine/gfx/resources/resource.h"
 #include "rex_engine/gfx/resources/clear_state.h"
+#include "rex_engine/gfx/system/resource_view.h"
 
 namespace rex
 {
@@ -13,17 +14,20 @@ namespace rex
     class RenderTarget : public Resource
     {
     public:
-      RenderTarget(s32 width, s32 height, const ClearStateDesc& clearState);
+      RenderTarget(s32 width, s32 height, ResourceView* resourceView, const ClearStateDesc& clearState);
       virtual ~RenderTarget() = default;
 
       s32 width() const;
       s32 height() const;
       const ClearStateDesc& clear_state() const;
+      // Return the resource view of the texture
+      const ResourceView* view() const;
 
     private:
       s32 m_width;
       s32 m_height;
       ClearStateDesc m_clear_state;
+      ResourceView* m_view;
     };
   }
 }

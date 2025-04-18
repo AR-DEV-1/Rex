@@ -111,11 +111,11 @@ namespace rex
       if (depthRenderTarget)
       {
         DxResourceView* dx_depth_render_target = d3d::to_dx12(depthRenderTarget->resource_view());
-        m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->view().cpu_handle(), true, &dx_depth_render_target->cpu_handle());
+        m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->dx_view().cpu_handle(), true, &dx_depth_render_target->cpu_handle());
       }
       else
       {
-			  m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->view().cpu_handle(), true, nullptr);
+			  m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->dx_view().cpu_handle(), true, nullptr);
       }
     }
     // Clear the render target of the context
@@ -124,7 +124,7 @@ namespace rex
       REX_ASSERT_X(renderTarget, "Trying to clear a nullptr rendertarget");
 
 			DxRenderTarget* dx_render_target = d3d::to_dx12(renderTarget);
-			m_cmd_list->ClearRenderTargetView(dx_render_target->view(), renderTarget->clear_state().rgba.data(), 0, nullptr);
+			m_cmd_list->ClearRenderTargetView(dx_render_target->dx_view(), renderTarget->clear_state().rgba.data(), 0, nullptr);
 
       if (depthRenderTarget)
       {

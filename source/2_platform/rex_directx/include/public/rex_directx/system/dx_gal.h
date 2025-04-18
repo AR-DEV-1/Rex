@@ -113,6 +113,9 @@ namespace rex
       // Return a new render target constructed from a given gpu resource (usefull for swapchains)
       rsl::unique_ptr<RenderTarget> create_render_target(wrl::ComPtr<ID3D12Resource>& resource);
 
+      // Repoint an existing render target view to a new buffer and return this as a new render target
+      rsl::unique_ptr<RenderTarget> retarget_render_target(wrl::ComPtr<ID3D12Resource>& resource, DxResourceView view);
+
       // Log live gpu objects using DirectX api
       void report_live_objects();
 
