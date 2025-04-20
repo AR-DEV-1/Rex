@@ -91,11 +91,11 @@ namespace rex
 
     void ImGuiWindow::wait_for_pending_operations()
     {
-      // Implementation pending
+      gfx::gal::instance()->flush();
     }
-    void ImGuiWindow::resize_buffers(s32 /*width*/, s32 /*height*/)
+    void ImGuiWindow::resize_buffers(s32 width, s32 height)
     {
-      //m_swapchain->resize_buffers(width, height, (DXGI_SWAP_CHAIN_FLAG)0);
+      m_swapchain->resize(width, height);
 
     }
     void ImGuiWindow::present()

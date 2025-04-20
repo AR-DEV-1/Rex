@@ -151,8 +151,8 @@ namespace regina
 
 					ImGui::BeginChild("Scrolling");
 					{
-						rex::imgui::ScopedColour button_color(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-						rex::imgui::ScopedColour hovered_button_color(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.35f));
+						rex::imgui::ScopedColor button_color(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+						rex::imgui::ScopedColor hovered_button_color(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.35f));
 
 						render_content_structure_context_menu();
 
@@ -425,7 +425,7 @@ namespace regina
 			// Breadcrumbs
 			{
 				rex::imgui::ScopedFont boldFont(ImGui::GetIO().Fonts->Fonts[0]);
-				rex::imgui::ScopedColour textColour(ImGuiCol_Text, rex::imgui::textDarker);
+				rex::imgui::ScopedColor textColour(ImGuiCol_Text, rex::imgui::textDarker);
 
 				rsl::string_view assetsDirectoryName = rex::path::cwd(); //  m_Project->GetConfig().AssetDirectory;
 				ImVec2 textSize = ImGui::CalcTextSize(assetsDirectoryName.data());

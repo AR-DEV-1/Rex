@@ -185,7 +185,7 @@ namespace rex
 			REX_UNUSED_PARAM(info);
 
 			REX_INFO(LogGraphics, "Renderer Info - Adaptor: {}", info.adaptor);
-			REX_INFO(LogGraphics, "Renderer Info - Vendor: {}", info.vendor);
+			REX_INFO(LogGraphics, "Renderer Info - GpuVendor: {}", info.vendor);
 			REX_INFO(LogGraphics, "Renderer Info - API: {}", info.api);
 			REX_INFO(LogGraphics, "Renderer Info - API Version: {}", info.api_version);
 			REX_INFO(LogGraphics, "Renderer Info - Shader Version: {}", info.shader_version);

@@ -2,6 +2,8 @@
 
 #include "rex_engine/engine/types.h"
 
+#include "glm/glm.hpp"
+
 namespace rex
 {
   namespace gfx
@@ -10,8 +12,7 @@ namespace rex
     struct Viewport
     {
       Viewport()
-        : top_left_x(0.0f)
-        , top_left_y(0.0f)
+        : top_left()
         , width(0.0f)
         , height(0.0f)
         , min_depth(0.0f)
@@ -19,9 +20,8 @@ namespace rex
       {
       }
 
-      Viewport(f32 topLeftX, f32 topLeftY, f32 vpWith, f32 vpHeight, f32 minDepth, f32 maxDepth)
-        : top_left_x(topLeftX)
-        , top_left_y(topLeftY)
+      Viewport(glm::vec2 topLeft, f32 vpWith, f32 vpHeight, f32 minDepth, f32 maxDepth)
+        : top_left(topLeft)
         , width(vpWith)
         , height(vpHeight)
         , min_depth(minDepth)
@@ -29,8 +29,7 @@ namespace rex
       {
       }
 
-      f32 top_left_x;
-      f32 top_left_y;
+      glm::vec2 top_left;
 
       f32 width;
       f32 height;

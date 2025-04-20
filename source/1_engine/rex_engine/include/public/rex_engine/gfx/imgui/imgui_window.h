@@ -38,7 +38,7 @@ namespace rex
 
     // Am imgui window is a standalone window that's just used for imgui rendering
     // Rex uses the docking branch of imgui which supports imgui viewports getting dragged outside of the main window
-    // This classes represents such a window that got created by dragging a viewport outside of the main window.
+    // This class represents such a window that got created by dragging a viewport outside of the main window.
     class ImGuiWindow
     {
     public:

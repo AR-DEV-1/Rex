@@ -6,23 +6,18 @@ namespace rex
 {
 	namespace gfx
 	{
-		Camera::Camera(const glm::vec3& pos, rsl::deg_angle fov, f32 width, f32 height, f32 nearPlane, f32 farPlane, ProjectionMode projectionMode)
+		Camera::Camera(const glm::vec3& pos, const glm::vec3& fwd, const CameraDimensions& camDimensions, ProjectionMode projectionMode = ProjectionMode::Perspective)
 			: m_position(pos)
-			, m_forward(glm::vec3() - m_position) // Always looking at center
+			, m_forward(fwd)
 			, m_view(glm::translate(glm::mat4(1.0f), m_position))
 			, m_projection(1.0f)
 			, m_projection_mode(projectionMode)
-			, m_width(width)
-			, m_height(height)
-			, m_fov(fov)
-			, m_near(nearPlane)
-			, m_far(farPlane)
+			, m_width(camDimensions.width)
+			, m_height(camDimensions.height)
+			, m_fov(camDimensions.fov)
+			, m_near(camDimensions.nearPlane)
+			, m_far(camDimensions.farPlane)
 		{
-			if (m_position == glm::vec3())
-			{
-				m_forward = s_default_forward;
-			}
-
 			calc_proj_matrix();
 		}
 
@@ -47,7 +42,7 @@ namespace rex
 			return m_projection;
 		}
 
-		void Camera::switch_mode(ProjectionMode newMode)
+		void Camera::switch_projection_mode(ProjectionMode newMode)
 		{
 			if (newMode != m_projection_mode)
 			{

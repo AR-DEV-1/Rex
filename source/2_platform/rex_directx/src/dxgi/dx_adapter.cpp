@@ -26,9 +26,9 @@ namespace
     rex::GpuDescription desc;
 
     desc.name = rsl::small_stack_string(rex::to_multibyte(dxgiDesc.Description, desc.name.max_size()));
-    desc.vendor_name = rex::vendor_to_string(dxgiDesc.VendorId);
+    desc.vendor_name = rex::gpu_vendor_to_string(dxgiDesc.VendorId);
 
-    desc.vendor_id = dxgiDesc.VendorId;
+    desc.vendor_id = static_cast<rex::GpuVendor>(dxgiDesc.VendorId);
     desc.device_id = dxgiDesc.DeviceId;
 
     desc.dedicated_video_memory = rsl::memory_size(dxgiDesc.DedicatedVideoMemory);

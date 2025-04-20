@@ -212,7 +212,7 @@ namespace rex
         REX_ASSERT("Unsupported cull mode given");
         return D3D12_CULL_MODE_NONE;
       }
-      DXGI_FORMAT to_dx12(VertexBufferFormat format)
+      DXGI_FORMAT to_dx12(ShaderArithmeticType format)
       {
         switch (format)
         {

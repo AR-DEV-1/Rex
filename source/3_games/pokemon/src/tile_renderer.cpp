@@ -238,8 +238,8 @@ namespace pokemon
     render_pass_desc.pso_desc.input_layout =
     {
       // Per vertex data
-      rex::gfx::InputLayoutElementDesc{ rex::gfx::ShaderSemantic::Position, rex::gfx::VertexBufferFormat::Float2 },
-      rex::gfx::InputLayoutElementDesc{ rex::gfx::ShaderSemantic::TexCoord, rex::gfx::VertexBufferFormat::Float2 },
+      rex::gfx::InputLayoutElementDesc{ rex::gfx::ShaderSemantic::Position, rex::gfx::ShaderArithmeticType::Float2 },
+      rex::gfx::InputLayoutElementDesc{ rex::gfx::ShaderSemantic::TexCoord, rex::gfx::ShaderArithmeticType::Float2 },
     };
 
     m_render_pass = rsl::make_unique<rex::gfx::RenderPass>(render_pass_desc);

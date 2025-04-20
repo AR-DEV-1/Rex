@@ -3,24 +3,10 @@
 #include "rex_std/string_view.h"
 #include "rex_std/bonus/string.h"
 #include "rex_engine/engine/types.h"
+#include "rex_engine/system/gpu_vendor.h"
 
 namespace rex
 {
-  //-------------------------------------------------------------------------
-	/**
-	 * The VendorId is a unique identifier assigned by the PCI-SIG (Peripheral Component Interconnect Special Interest Group)
-	 * to identify the manufacturer of a PCI device, including graphics adapters.
-	 * The VendorId is a 16-bit unsigned integer that is typically included in
-	 * the PCI Configuration space of the device.
-	 */
-  enum class Vendor
-  {
-    Unknown = 0,
-    Amd = 0x1002,
-    Nvidia = 0x10DE,
-    Intel = 0x163C
-  };
-
 	struct VideoDriverInfo
 	{
 		rsl::string device_description;
@@ -28,12 +14,11 @@ namespace rex
 		rsl::string internal_driver_version;
 		rsl::string user_driver_version;
 		rsl::string driver_date;
-		Vendor vendor_id = Vendor::Unknown;
+		GpuVendor vendor_id = GpuVendor::Unknown;
 	};
 
 	VideoDriverInfo query_video_driver(rsl::string_view deviceName);
 	rsl::string nvidia_unified_version(rsl::string_view internalVersion);
-	rsl::small_stack_string vendor_to_string(s32 vendor);
 
 }
 

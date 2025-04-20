@@ -172,29 +172,29 @@ namespace rex
 		{
 			if (driver_info.provider_name.contains("NVIDIA"))
 			{
-				driver_info.vendor_id = Vendor::Nvidia;
+				driver_info.vendor_id = GpuVendor::Nvidia;
 			}
 			else if (driver_info.provider_name.contains("Advanced Micro Devices"))
 			{
-				driver_info.vendor_id = Vendor::Amd;
+				driver_info.vendor_id = GpuVendor::Amd;
 			}
 			else if (driver_info.provider_name.contains("Intel"))	// usually TEXT("Intel Corporation")
 			{
-				driver_info.vendor_id = Vendor::Intel;
+				driver_info.vendor_id = GpuVendor::Intel;
 			}
 			else
 			{
-				driver_info.vendor_id = Vendor::Unknown;
+				driver_info.vendor_id = GpuVendor::Unknown;
 			}
 		}
 
 		driver_info.user_driver_version = driver_info.internal_driver_version;
 
-		if (driver_info.vendor_id == Vendor::Nvidia)
+		if (driver_info.vendor_id == GpuVendor::Nvidia)
 		{
 			driver_info.user_driver_version = nvidia_unified_version(driver_info.internal_driver_version);
 		}
-		else if (driver_info.vendor_id == Vendor::Amd && !registry_key.empty())
+		else if (driver_info.vendor_id == GpuVendor::Amd && !registry_key.empty())
 		{
 			// Get the AMD specific information directly from the registry
 			// AMD AGS could be used instead, but retrieving the radeon software version cannot occur after a D3D Device

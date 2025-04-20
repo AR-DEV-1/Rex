@@ -293,14 +293,12 @@ namespace rex
 
       imgui_pass_desc.pso_desc.input_layout = 
       {
-        InputLayoutElementDesc{ ShaderSemantic::Position,  VertexBufferFormat::Float2},
-        InputLayoutElementDesc{ ShaderSemantic::TexCoord,  VertexBufferFormat::Float2},
-        InputLayoutElementDesc{ ShaderSemantic::Color, VertexBufferFormat::UChar4Norm}
+        InputLayoutElementDesc{ ShaderSemantic::Position,  ShaderArithmeticType::Float2},
+        InputLayoutElementDesc{ ShaderSemantic::TexCoord,  ShaderArithmeticType::Float2},
+        InputLayoutElementDesc{ ShaderSemantic::Color, ShaderArithmeticType::UChar4Norm}
       };
 
-
       m_imgui_renderpass = rsl::make_unique<RenderPass>(imgui_pass_desc);
-      //m_imgui_renderpass->set("fonts_texture", m_fonts_texture.get());
       m_imgui_renderpass->set("default_sampler", m_default_sampler.get());
       m_imgui_renderpass->set_blend_factor({ 0.0f, 0.0f, 0.0f, 0.0f });
     }

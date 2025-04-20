@@ -44,7 +44,7 @@ namespace rex
     struct InputLayoutElementDesc
     {
       ShaderSemantic semantic;                                                              // The semantic of the element, mainly used by DirectX
-      VertexBufferFormat format;                                                            // The format of the element data
+      ShaderArithmeticType format;                                                          // The format of the element data
       InputLayoutClassification input_slot_class = InputLayoutClassification::PerVertex;    // A value that identifies the input data class for a single input. 
       s32 semantic_index = 0;                                                               // The semantic index for the element. A semantic index modifies a semantic, with an integer index number. eg NORMAL1
       s32 input_slot = 0;                                                                   // An integer that identifies the input-assembler.

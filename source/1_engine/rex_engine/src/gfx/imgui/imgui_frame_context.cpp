@@ -1,13 +1,9 @@
 #include "rex_engine/gfx/imgui/imgui_frame_context.h"
 
-
-
 #include "rex_engine/gfx/graphics.h"
 #include "rex_engine/gfx/resources/vertex_buffer.h"
 #include "rex_engine/gfx/resources/index_buffer.h"
 #include "imgui/imgui.h"
-
-
 
 namespace rex
 {
@@ -15,8 +11,8 @@ namespace rex
   {
     ImGuiFrameContext::ImGuiFrameContext()
     {
-      increase_vertex_buffer(5000);
-      increase_index_buffer(5000);
+      increase_vertex_buffer(s_buffer_increment_size);
+      increase_index_buffer(s_buffer_increment_size);
 
       m_constant_buffer = gfx::gal::instance()->create_constant_buffer(sizeof(ImGuiVertexConstantBuffer));
     }
@@ -28,7 +24,7 @@ namespace rex
       m_viewport.height = drawData->DisplaySize.y;
       m_viewport.min_depth = 0.0f;
       m_viewport.max_depth = 1.0f;
-      m_viewport.top_left_x = m_viewport.top_left_y = 0.0f;
+      m_viewport.top_left = glm::vec2();
 
       // Increase vertex or index buffer if needed
       if (m_vertex_buffer->count() < drawData->TotalVtxCount)

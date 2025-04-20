@@ -25,9 +25,6 @@ namespace rex
 {
   namespace gfx
   {
-    struct MaterialDesc;
-    struct ViewParam;
-    struct ParamBindingSlots;
     class ShaderParameter;
 
     // Material construct settings are a wrapper around all the settings a material needs to store
@@ -56,12 +53,6 @@ namespace rex
       void set(rsl::string_view name, Texture2D* texture);
       void set(rsl::string_view name, Sampler2D* sampler);
 
-      // Return all shader parameters of a material
-      const rsl::vector<rsl::unique_ptr<ShaderParameter>>& shader_params() const;
-
-      // Set the blend factor of the material
-      void set_blend_factor(const BlendFactor& blendFactor);
-
       // Bind a material to a render ctx
       void bind_to(RenderContext* ctx);
 
@@ -71,7 +62,7 @@ namespace rex
       // Create the PSO which would overwrite the one of the render pass
       // Often this doesn't do anything but if a material gets created
       // with a different set of shaders than the render pass its used in
-      // this function will create a cusom pso for the material
+      // this function will create a custom pso for the material
       MaterialPsoOverwrite load_pso_overwrite(const PipelineStateDesc& psoDesc);
 
     private:

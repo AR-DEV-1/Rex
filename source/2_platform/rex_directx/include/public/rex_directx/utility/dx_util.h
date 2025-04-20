@@ -166,7 +166,7 @@ namespace rex
       // ------------------------------------
       D3D12_FILL_MODE to_dx12(FillMode mode);
       D3D12_CULL_MODE to_dx12(CullMode mode);
-      DXGI_FORMAT to_dx12(VertexBufferFormat format);
+      DXGI_FORMAT to_dx12(ShaderArithmeticType format);
       DXGI_FORMAT to_dx12(IndexBufferFormat format);
       DXGI_FORMAT to_dx12(TextureFormat format);
       D3D12_PRIMITIVE_TOPOLOGY to_dx12(PrimitiveTopology topology);

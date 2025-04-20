@@ -12,7 +12,7 @@ TEST_CASE("TEST - Video Driver - Querying")
 	REX_CHECK(video_driver_info.internal_driver_version == "");
 	REX_CHECK(video_driver_info.user_driver_version == "");
 	REX_CHECK(video_driver_info.driver_date == "");
-	REX_CHECK(video_driver_info.vendor_id == rex::Vendor::Unknown);
+	REX_CHECK(video_driver_info.vendor_id == rex::GpuVendor::Unknown);
 
 	// I'm not sure how to test this with a valid gpu name as it requires engine initialization
 	// which takes some time and has some dependencies

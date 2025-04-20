@@ -13,7 +13,7 @@ namespace rex
       Unorm3,       // 3 components, 1 byte per component
       Unorm4,       // 4 components, 1 byte per component
       Unorm4Srgb,   // 4 components, 1 byte per component, scaled for SRGB
-      Depth32,      // 1 components, 4 bytes for depth
+      Depth32,      // 1 component,  4 bytes for depth
       Depth24Stencil8 // 2 components, 3 bytes for depth, 1 byte for stencil
     };
 

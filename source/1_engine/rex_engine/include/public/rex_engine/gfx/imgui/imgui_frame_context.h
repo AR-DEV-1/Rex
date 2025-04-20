@@ -25,7 +25,7 @@ namespace rex
       f32 mvp[4][4];
     };
 
-    // An frame context holds all the objects needed to render an imgui object for a frame
+    // A frame context holds all the objects needed to render an imgui viewport for a frame
     class ImGuiFrameContext
     {
     public:

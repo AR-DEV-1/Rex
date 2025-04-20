@@ -326,7 +326,6 @@ namespace rex
               on_minimize();
               break;
             case WindowResizeType::Restored:
-              //on_restore(evt.width(), evt.height());
               break;
             default:
               break;
