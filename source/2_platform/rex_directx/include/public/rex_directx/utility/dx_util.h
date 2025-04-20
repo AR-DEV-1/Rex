@@ -39,7 +39,7 @@
 #include "rex_engine/gfx/shader_reflection/shader_class_type.h"
 #include "rex_engine/gfx/shader_reflection/shader_variable_type.h"
 #include "rex_engine/gfx/shader_reflection/shader_arithmetic_type.h"
-#include "rex_engine/gfx/shader_reflection/shader_param_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_param_declaration.h"
 #include "rex_engine/gfx/resources/raster_state.h"
 #include "rex_std/bonus/utility.h"
 
@@ -58,7 +58,6 @@ namespace rex
     class Sampler2D;
     class InputLayout;
     struct RasterStateDesc;
-    enum class ShaderType;
     enum class ShaderVisibility;
     enum class ShaderParameterType;
     struct ShaderParameterDeclaration;

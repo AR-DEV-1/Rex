@@ -20,6 +20,7 @@ namespace rex
       s32 width() const;
       s32 height() const;
       const ClearStateDesc& clear_state() const;
+      
       // Return the resource view of the texture
       const ResourceView* view() const;
 

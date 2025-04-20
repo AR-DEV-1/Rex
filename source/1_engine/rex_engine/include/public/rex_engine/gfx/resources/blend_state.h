@@ -42,55 +42,55 @@ namespace rex
     // Specifies the logical operations to configure for a render target
     enum class LogicOp
     {
-      Clear, // Clears the render target
-      Set,   // Sets the render target
-      Copy,  // Copies the render target
-      CopyInverted, // Performs an inverted copy of the render target
-      Noop, // No operation is performed on the render target
-      Invert, // Inverts the render target
-      And, // Performs a logical and operation on the render target
-      Nand, // Performs a logical nand operation on the render target
-      Or, // performs a logical or operation on the render target
-      Nor, // performs a logical nor operation on the render target
-      Xor, // performs a logical xor operatoin on the render target
-      Equiv, // performs a logical equal operation on the render target
-      AndReverse, // performs a logical and and reverse operation on the render target
-      AndInverted, // performs a logical and and invert operation on the render target
-      OrReverse, // performs a logical or and reverse operation on the render target
-      OrInverted // performs a logical or and invert operation on the render target
+      Clear,                // Clears the render target
+      Set,                  // Sets the render target
+      Copy,                 // Copies the render target
+      CopyInverted,         // Performs an inverted copy of the render target
+      Noop,                 // No operation is performed on the render target
+      Invert,               // Inverts the render target
+      And,                  // Performs a logical and operation on the render target
+      Nand,                 // Performs a logical nand operation on the render target
+      Or,                   // performs a logical or operation on the render target
+      Nor,                  // performs a logical nor operation on the render target
+      Xor,                  // performs a logical xor operatoin on the render target
+      Equiv,                // performs a logical equal operation on the render target
+      AndReverse,           // performs a logical and and reverse operation on the render target
+      AndInverted,          // performs a logical and and invert operation on the render target
+      OrReverse,            // performs a logical or and reverse operation on the render target
+      OrInverted            // performs a logical or and invert operation on the render target
     };
 
     // Write mask to indicate which component of the render target can be written to
     enum class RenderTargetWriteMask
     {
-      Red = BIT(0), // Allow data to be stored in the red component
-      Green = BIT(1), // Allow data to be stored in the green component
-      Blue = BIT(2), // Allow data to be stored in the blue component
-      Alpha = BIT(3), // Allow data to be stored in the alpha component
-      All = Red | Green | Blue | Alpha // Allow data to be stored in all components
+      Red = BIT(0),                     // Allow data to be stored in the red component
+      Green = BIT(1),                   // Allow data to be stored in the green component
+      Blue = BIT(2),                    // Allow data to be stored in the blue component
+      Alpha = BIT(3),                   // Allow data to be stored in the alpha component
+      All = Red | Green | Blue | Alpha  // Allow data to be stored in all components
     };
 
     // Described the blend state for a render target
     struct RenderTargetBlendDesc
     {
-      Blend src_blend = Blend::One; // Specifies the operation to perform on the rgb value that the pixel shader outputs
-      Blend dst_blend = Blend::Zero; // Specifies the operation to perform on the current RGB value in the render target
-      BlendOp blend_op = BlendOp::Add; // Specifies how to combine the src blend and dst blend values
-      Blend src_blend_alpha = Blend::One; // specifies the operation to perform on the alpha value that the pixel shader outputs
-      Blend dst_blend_alpha = Blend::Zero; // specifies the operation to perform on the current alpha value in the render target
-      BlendOp blend_op_alpha = BlendOp::Add; // Specifies how to combine the src blend alpha and dst blend alpha values
-      LogicOp logic_op = LogicOp::Noop; // specifies the logical operation to configure for the render target
+      Blend src_blend = Blend::One;               // Specifies the operation to perform on the rgb value that the pixel shader outputs
+      Blend dst_blend = Blend::Zero;              // Specifies the operation to perform on the current RGB value in the render target
+      BlendOp blend_op = BlendOp::Add;            // Specifies how to combine the src blend and dst blend values
+      Blend src_blend_alpha = Blend::One;         // specifies the operation to perform on the alpha value that the pixel shader outputs
+      Blend dst_blend_alpha = Blend::Zero;        // specifies the operation to perform on the current alpha value in the render target
+      BlendOp blend_op_alpha = BlendOp::Add;      // Specifies how to combine the src blend alpha and dst blend alpha values
+      LogicOp logic_op = LogicOp::Noop;           // specifies the logical operation to configure for the render target
       RenderTargetWriteMask render_target_write_mask = RenderTargetWriteMask::All; // Specifies which components of the render target we'll be writing to
-      bool blend_enable = false; // Specifies whether to enable or disable blending
-      bool logic_op_enable = false; // Specifies whether to enable or disable a logical operation
+      bool blend_enable = false;                  // Specifies whether to enable or disable blending
+      bool logic_op_enable = false;               // Specifies whether to enable or disable a logical operation
     };
 
     // Describes the blend state
     struct BlendDesc
     {
       RenderTargetBlendDesc render_target[8]{}; // an array that specifies the blend states for each render target. if "independent_blend_state" is true, only the first is used and shared between all render targets, the rest is ignored.
-      bool enable_alpha_to_coverage = false; // Specifies whether to use alpha-to-coverage as a multisampling technique when setting a pixel to a render target (https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-blend-state#alpha-to-coverage)
-      bool independent_blend_state = false; // Specifies whether to enable independent blending in simultaneous render targets. If false, only render_target[0] members are used, render_target[1,7] are ignored
+      bool enable_alpha_to_coverage = false;    // Specifies whether to use alpha-to-coverage as a multisampling technique when setting a pixel to a render target (https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-blend-state#alpha-to-coverage)
+      bool independent_blend_state = false;     // Specifies whether to enable independent blending in simultaneous render targets. If false, only render_target[0] members are used, render_target[1,7] are ignored
     };
 
     using BlendFactor = rsl::array<f32, 4>;

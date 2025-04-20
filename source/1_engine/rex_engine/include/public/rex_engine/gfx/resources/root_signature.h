@@ -32,9 +32,9 @@ namespace rex
     //
     //
     // The above would result in a root signature as followed
-    // [0] - constant buffer view - register 0 - vertex visibility
-    // [1] - shader resource view - register 0 - pixel visibility
-    // [2] - sampler              - register 0 - pixel visibility
+    // [0] - constant buffer view - register b0 - vertex visibility
+    // [1] - shader resource view - register t0 - pixel visibility
+    // [2] - sampler              - register s0 - pixel visibility
     //
     class RootSignature
     {

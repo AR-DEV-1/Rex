@@ -6,6 +6,9 @@
 #include "rex_engine/gfx/core/scissor_rect.h"
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: SWAPCHAIN INFO
+// The swapchain info should not be required.
+// If we're rendering directly to the backbuffer, we should be able to provide functionality to do that
+// without having to query the backbuffer information
 
 namespace rex
 {
@@ -13,6 +16,7 @@ namespace rex
 	{
 		class RenderTarget;
 
+		// Swapchain info holds some information about the swapchain
 		struct SwapchainInfo
 		{
 			s32 width;

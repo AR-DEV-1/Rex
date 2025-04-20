@@ -1,15 +1,11 @@
 #include "rex_engine/gfx/system/command_allocator_pool.h"
 
+#include "rex_engine/containers/vector_utils.h"
 #include "rex_engine/engine/types.h"
 #include "rex_engine/diagnostics/assert.h"
 
 #include "rex_engine/gfx/system/command_allocator.h"
-
 #include "rex_engine/gfx/graphics.h"
-
-#include "rex_engine/containers/vector_utils.h"
-
-
 
 namespace rex
 {

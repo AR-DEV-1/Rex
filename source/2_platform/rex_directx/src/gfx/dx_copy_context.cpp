@@ -33,43 +33,6 @@ namespace rex
       return m_cmd_list.Get();
     }
 
-    // Transition a constant buffer to a new resource state
-    void DxCopyContext::transition_buffer(ConstantBuffer* resource, ResourceState state)
-    {
-      DxConstantBuffer* dx_constant_buffer = d3d::to_dx12(resource);
-      transition_buffer(resource, dx_constant_buffer->dx_object(), state);
-    }
-    // Transition a vertex buffer to a new resource state
-    void DxCopyContext::transition_buffer(VertexBuffer* resource, ResourceState state)
-    {
-      DxVertexBuffer* dx_vertex_buffer = d3d::to_dx12(resource);
-      transition_buffer(resource, dx_vertex_buffer->dx_object(), state);
-    }
-    // Transition a index buffer to a new resource state
-    void DxCopyContext::transition_buffer(IndexBuffer* resource, ResourceState state)
-    {
-      DxIndexBuffer* dx_index_buffer = d3d::to_dx12(resource);
-      transition_buffer(resource, dx_index_buffer->dx_object(), state);
-    }
-    // Transition a upload buffer to a new resource state
-    void DxCopyContext::transition_buffer(UploadBuffer* resource, ResourceState state)
-    {
-      DxUploadBuffer* dx_upload_buffer = d3d::to_dx12(resource);
-      transition_buffer(dx_upload_buffer, dx_upload_buffer->dx_object(), state);
-    }
-    // Transition an unordered access buffer to a new resource state
-    void DxCopyContext::transition_buffer(UnorderedAccessBuffer* resource, ResourceState state)
-    {
-      DxUnorderedAccessBuffer* dx_unordered_access_buffer = d3d::to_dx12(resource);
-      transition_buffer(dx_unordered_access_buffer, dx_unordered_access_buffer->dx_object(), state);
-    }
-    // Transition a texture to a new resource state
-    void DxCopyContext::transition_buffer(Texture2D* resource, ResourceState state)
-    {
-      DxTexture2D* dx_texture = d3d::to_dx12(resource);
-      transition_buffer(resource, dx_texture->dx_object(), state);
-    }
-
     // Update a constant buffer's data on the gpu
     void DxCopyContext::update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size)
     {
@@ -157,25 +120,22 @@ namespace rex
       d3d::reset_cmdlist(m_cmd_list.Get(), dx_alloc, resetData);
     }
     
+    // Profiling events
+    void DxCopyContext::begin_profile_event(rsl::string_view eventName)
+    {
+      ::PIXBeginEvent(m_cmd_list.Get(), 0, eventName.data());
+    }
+    void DxCopyContext::end_profile_event()
+    {
+      ::PIXEndEvent(m_cmd_list.Get());
+    }
+
     // Return the graphics engine casted into the directx class
     DxCopyEngine* DxCopyContext::api_engine()
     {
       return static_cast<DxCopyEngine*>(owning_engine());
     }
 
-    // Transition a buffer object into a new resource state
-    void DxCopyContext::transition_buffer(Resource* resource, ID3D12Resource* d3d_resource, ResourceState state)
-    {
-      ResourceStateTransition transition = track_resource_transition(resource, state);
-
-      if (transition.before != transition.after)
-      {
-        D3D12_RESOURCE_STATES before_state = d3d::to_dx12(transition.before);
-        D3D12_RESOURCE_STATES after_state = d3d::to_dx12(transition.after);
-        D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(d3d_resource, before_state, after_state);
-        m_cmd_list->ResourceBarrier(1, &barrier);
-      }
-    }
     // Update a buffer on the gpu
     void DxCopyContext::update_buffer(ID3D12Resource* resource, const void* data, rsl::memory_size size, s32 offset)
     {
@@ -185,14 +145,53 @@ namespace rex
       m_cmd_list->CopyBufferRegion(resource, offset, upload_buffer_lock.upload_buffer()->dx_object(), write_offset, size);
     }
 
-    // Profiling events
-    void DxCopyContext::begin_profile_event(rsl::string_view eventName)
+    // Transition a constant buffer to a new resource state
+    void DxCopyContext::transition_buffer(ConstantBuffer* resource, ResourceState state)
     {
-      ::PIXBeginEvent(m_cmd_list.Get(), 0, eventName.data());
+      // Resource transition needs to happen on a render context
+      // as the copy context is not allow to transition something from a non-copy state
+      auto render_ctx = gal::instance()->new_render_ctx();
+      render_ctx->transition_buffer(resource, state);
     }
-    void DxCopyContext::end_profile_event()
+    // Transition a vertex buffer to a new resource state
+    void DxCopyContext::transition_buffer(VertexBuffer* resource, ResourceState state)
     {
-      ::PIXEndEvent(m_cmd_list.Get());
+      // Resource transition needs to happen on a render context
+      // as the copy context is not allow to transition something from a non-copy state
+      auto render_ctx = gal::instance()->new_render_ctx();
+      render_ctx->transition_buffer(resource, state);
+    }
+    // Transition a index buffer to a new resource state
+    void DxCopyContext::transition_buffer(IndexBuffer* resource, ResourceState state)
+    {
+      // Resource transition needs to happen on a render context
+      // as the copy context is not allow to transition something from a non-copy state
+      auto render_ctx = gal::instance()->new_render_ctx();
+      render_ctx->transition_buffer(resource, state);
+    }
+    // Transition a upload buffer to a new resource state
+    void DxCopyContext::transition_buffer(UploadBuffer* resource, ResourceState state)
+    {
+      // Resource transition needs to happen on a render context
+      // as the copy context is not allow to transition something from a non-copy state
+      auto render_ctx = gal::instance()->new_render_ctx();
+      render_ctx->transition_buffer(resource, state);
+    }
+    // Transition an unordered access buffer to a new resource state
+    void DxCopyContext::transition_buffer(UnorderedAccessBuffer* resource, ResourceState state)
+    {
+      // Resource transition needs to happen on a render context
+      // as the copy context is not allow to transition something from a non-copy state
+      auto render_ctx = gal::instance()->new_render_ctx();
+      render_ctx->transition_buffer(resource, state);
+    }
+    // Transition a texture to a new resource state
+    void DxCopyContext::transition_buffer(Texture2D* resource, ResourceState state)
+    {
+      // Resource transition needs to happen on a render context
+      // as the copy context is not allow to transition something from a non-copy state
+      auto render_ctx = gal::instance()->new_render_ctx();
+      render_ctx->transition_buffer(resource, state);
     }
   }
 }

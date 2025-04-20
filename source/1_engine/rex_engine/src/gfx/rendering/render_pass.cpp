@@ -1,7 +1,7 @@
 #include "rex_engine/gfx/rendering/render_pass.h"
 
 
-#include "rex_engine/gfx/shader_reflection/shader_reflection_cache.h"
+#include "rex_engine/gfx/shader_reflection/shader_reflection.h"
 
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/text_processing/text_processing.h"

@@ -21,19 +21,6 @@ namespace rex
       // Return the wrapped directx commandlist object
       ID3D12GraphicsCommandList* dx_cmdlist();
 
-      // Transition a constant buffer to a new resource state
-      void transition_buffer(ConstantBuffer* resource, ResourceState state);
-      // Transition a vertex buffer to a new resource state
-      void transition_buffer(VertexBuffer* resource, ResourceState state);
-      // Transition a index buffer to a new resource state
-      void transition_buffer(IndexBuffer* resource, ResourceState state);
-      // Transition a upload buffer to a new resource state
-      void transition_buffer(UploadBuffer* resource, ResourceState state);
-      // Transition an unordered access buffer to a new resource state
-      void transition_buffer(UnorderedAccessBuffer* resource, ResourceState state);
-      // Transition a texture to a new resource state
-      void transition_buffer(Texture2D* resource, ResourceState state);
-
       // Update a constant buffer's data on the gpu
       void update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size) override;
       void update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size, s32 offset) override;
@@ -62,10 +49,21 @@ namespace rex
     private:
       // Return the graphics engine casted into the directx class
       DxCopyEngine* api_engine();
-      // Transition a buffer object into a new resource state
-      void transition_buffer(Resource* resource, ID3D12Resource* d3d_resource, ResourceState state);
       // Update a buffer on the gpu
       void update_buffer(ID3D12Resource* d3dResource, const void* data, rsl::memory_size size, s32 offset);
+
+      // Transition a constant buffer to a new resource state
+      void transition_buffer(ConstantBuffer* resource, ResourceState state);
+      // Transition a vertex buffer to a new resource state
+      void transition_buffer(VertexBuffer* resource, ResourceState state);
+      // Transition a index buffer to a new resource state
+      void transition_buffer(IndexBuffer* resource, ResourceState state);
+      // Transition a upload buffer to a new resource state
+      void transition_buffer(UploadBuffer* resource, ResourceState state);
+      // Transition an unordered access buffer to a new resource state
+      void transition_buffer(UnorderedAccessBuffer* resource, ResourceState state);
+      // Transition a texture to a new resource state
+      void transition_buffer(Texture2D* resource, ResourceState state);
 
     private:
       wrl::ComPtr<ID3D12GraphicsCommandList> m_cmd_list;

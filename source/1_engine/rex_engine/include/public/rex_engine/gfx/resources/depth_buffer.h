@@ -11,24 +11,22 @@ namespace rex
 	{
 		class ResourceView;
 
-		// A depth stencil buffer is a buffer holding depth and stencil data
+		// A depth buffer is a buffer holding depth data
 		// Main purpose of this is to be used for depth testing
-		// But it can also be used for stencil testing, which
-		// is a more advanced form of rendering
-		class DepthStencilBuffer : public Resource
+		class DepthBuffer : public Resource
 		{
 		public:
-			DepthStencilBuffer(ResourceView* view, s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc);
+			DepthBuffer(ResourceView* view, s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc);
 
-			// Return the width of the depth stencil buffer
+			// Return the width of the depth buffer
 			s32 width() const;
-			// Return the height of the depth stencil buffer
+			// Return the height of the depth buffer
 			s32 height() const;
-			// Return the format of the depth stencil buffer
+			// Return the format of the depth buffer
 			TextureFormat format() const;
-			// Return the resource view of the depth stencil buffer
+			// Return the resource view of the depth buffer
 			ResourceView* resource_view();
-			// Return the clear state of the depth stencil buffer
+			// Return the clear state of the depth buffer
 			const ClearStateDesc& clear_state() const;
 
 		private:

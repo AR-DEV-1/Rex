@@ -6,7 +6,7 @@
 #include "rex_std/functional.h"
 #include "rex_std/unordered_map.h"
 
-#include "rex_engine/gfx/shader_reflection/shader_reflection_cache.h"
+#include "rex_engine/gfx/shader_reflection/shader_reflection.h"
 
 namespace rex
 {

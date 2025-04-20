@@ -55,7 +55,7 @@
 #include "rex_directx/system/dx_shader_root_parameters.h"
 #include "rex_directx/resources/dx_sampler_2d.h"
 
-#include "rex_engine/gfx/materials/material_system.h"
+#include "rex_engine/gfx/materials/material_library.h"
 #include "rex_engine/gfx/rendering/render_pass.h"
 #include "rex_engine/gfx/system/input_layout_cache.h"
 #include "rex_engine/gfx/system/root_signature_cache.h"
@@ -65,8 +65,6 @@
 #include "rex_directx/system/dx_render_engine.h"
 #include "rex_directx/system/dx_compute_engine.h"
 #include "rex_directx/system/dx_copy_engine.h"
-
-#include "rex_engine/gfx/system/compile_shader.h"
 
 namespace rex
 {
@@ -412,7 +410,7 @@ namespace rex
 			compile_vs_desc.shader_feature_target = "vs_5_1";
 			compile_vs_desc.shader_name = shaderName;
 			compile_vs_desc.shader_type = ShaderType::Vertex;
-			wrl::ComPtr<ID3DBlob> compiled_vs_blob = compile_shader(compile_vs_desc);
+			wrl::ComPtr<ID3DBlob> compiled_vs_blob = shader_compiler::instance()->compile_shader(compile_vs_desc);
 
 			if (!compiled_vs_blob)
 			{
@@ -434,7 +432,7 @@ namespace rex
 			compile_ps_desc.shader_feature_target = "ps_5_1";
 			compile_ps_desc.shader_name = shaderName;
 			compile_ps_desc.shader_type = ShaderType::Pixel;
-			wrl::ComPtr<ID3DBlob> compiled_ps_blob = compile_shader(compile_ps_desc);
+			wrl::ComPtr<ID3DBlob> compiled_ps_blob = shader_compiler::instance()->compile_shader(compile_ps_desc);
 
 			if (!compiled_ps_blob)
 			{
@@ -494,11 +492,6 @@ namespace rex
 			return uab;
 		}
 
-		ShaderSignature DirectXInterface::reflect_shader(const gfx::Shader* shader)
-		{
-			return shader_reflection::reflect_shader(shader);
-		}
-
 		// API Specific functions
 		// -------------------------------------------
 		rsl::unique_ptr<RenderTarget> DirectXInterface::create_render_target(wrl::ComPtr<ID3D12Resource>& resource)
@@ -511,18 +504,7 @@ namespace rex
 			d3d::to_dx12(cpu_desc_heap(ViewHeapType::RenderTarget))->retarget_rtv(resource.Get(), view);
 			return rsl::make_unique<DxRenderTarget>(resource, view, default_rtv_clear_state());
 		}
-		wrl::ComPtr<ID3DBlob>                 DirectXInterface::compile_shader(const CompileShaderDesc& desc)
-		{
-			wrl::ComPtr<ID3DBlob> byte_code = m_shader_compiler.compile_shader(desc);
 
-			if (!byte_code)
-			{
-				REX_ERROR(LogDxRhi, "Failed to compile shader");
-				return nullptr;
-			}
-
-			return byte_code;
-		}
 		wrl::ComPtr<ID3D12GraphicsCommandList> DirectXInterface::create_commandlist(CommandAllocator* alloc, GraphicsEngineType type)
 		{
 			DxCommandAllocator* dx_alloc = d3d::to_dx12(alloc);

@@ -53,6 +53,7 @@ namespace rex
     {
     public:
       explicit UploadBuffer(rsl::memory_size size);
+      virtual ~UploadBuffer() = default;
 
       // Reset the offset back to 0 so new allocations would happen at the start
       void reset();

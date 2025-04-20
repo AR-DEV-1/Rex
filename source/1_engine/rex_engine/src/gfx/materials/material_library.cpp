@@ -15,7 +15,7 @@
 
 #include "rex_engine/string/stringid.h"
 
-#include "rex_engine/gfx/shader_reflection/bound_resource_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_resource_reflection.h"
 #include "rex_std/string.h"
 
 namespace rex

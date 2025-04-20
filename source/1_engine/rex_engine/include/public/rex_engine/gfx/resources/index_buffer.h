@@ -9,7 +9,7 @@ namespace rex
 {
   namespace gfx
   {
-    // A buffer holding the indices for a primitive to render to the gpu
+    // A buffer holding the indices for a primitive to render on the gpu
     class IndexBuffer : public Buffer
     {
     public:

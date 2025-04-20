@@ -9,6 +9,7 @@ namespace rex
   namespace gfx
   {
     // A 1D array on the gpu
+    // Provided as a abstract implementation
     class Buffer : public Resource
     {
     public:

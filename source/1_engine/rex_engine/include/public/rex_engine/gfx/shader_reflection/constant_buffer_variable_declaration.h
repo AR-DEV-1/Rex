@@ -12,7 +12,7 @@ namespace rex
 	namespace gfx
 	{
 		// Reflection of a constant buffer variable, specified in a shader
-		struct CBufferVarReflDesc
+		struct CBufferVarReflDecl
 		{
 			rsl::tiny_stack_string name;		// The name of the variable in the constant buffer
 			s32 offset;											// The offset in bytes from the start of the constant buffer where the var is located

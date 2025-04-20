@@ -7,7 +7,7 @@ namespace rex
 {
   namespace gfx
   {
-    // Structure used to syncronise multiple engine with each other
+    // Structure used to syncronise multiple engines  with each other
     // eg: If the compute engine needs to wait for the copy engine to finish
     // you somehow need to signal this to the compute engine
     // the sync info is the structure you need to do exactly that.

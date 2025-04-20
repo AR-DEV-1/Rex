@@ -2,7 +2,7 @@
 
 #include "rex_engine/engine/types.h"
 #include "rex_engine/gfx/core/input_layout_classification.h"
-#include "rex_engine/gfx/core/vertex_buffer_format.h"
+#include "rex_engine/gfx/shader_reflection/shader_arithmetic_type.h"
 #include "rex_engine/gfx/shader_reflection/shader_param_reflection.h"
 #include "rex_std/string_view.h"
 
@@ -68,7 +68,7 @@ namespace rex
       // We can store the size of a single vertex using the input layout
       s32 vertex_size() const;
 
-      // Validate an description to see if it can be used with this input layout
+      // Validate a description to see if it can be used with this input layout
       // It's possible some elements do not match directly but can be converted
       // eg: an 4 component normalized byte type can be converted to a 4 component float type
       bool validate_desc(const InputLayoutDesc& desc);

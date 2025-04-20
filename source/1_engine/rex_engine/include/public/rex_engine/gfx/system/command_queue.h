@@ -8,8 +8,6 @@
 
 #include "rex_std/bonus/utility.h"
 
-
-
 namespace rex
 {
   namespace gfx
@@ -23,9 +21,9 @@ namespace rex
       CommandQueue(GraphicsEngineType type);
       virtual ~CommandQueue() = default;
 
-      // Halt the cpu until the fence value is reached
+      // Halt the cpu until all commands are executed on the gpu
       virtual void cpu_wait() = 0;
-      // Halt the gpu until the fence value is reached
+      // Halt the gpu until we're in sync with what the sync info requires
       virtual void gpu_wait(SyncInfo& sync_info) = 0;
       // Submit all queued commands to the gpu and execute for execution
       virtual ScopedPoolObject<SyncInfo> execute_context(GraphicsContext* ctx, WaitForFinish waitForFinish) = 0;
@@ -33,7 +31,7 @@ namespace rex
       // Returns if the last completed fence is equal or lower than the given fence value
       // Meaning that the commands before the given fence value got signaled have executed
       bool is_fence_completed(u64 fenceValue) const;
-      // All commands before this fence value have executed
+      // All commands before this fence value have xeecuted
       u64 last_completed_fence() const;
       // Return the command queue's type
       GraphicsEngineType type() const;

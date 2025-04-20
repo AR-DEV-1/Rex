@@ -20,6 +20,22 @@ namespace rex
     class RootSignature;
     class Shader;
 
+    // A pipeline state is all configuration for the render pipeline
+    // It holds the following information
+    // - all shaders
+    // - all shader parameter types (not values)
+    // - input layout
+    // - primitive topology
+    // - rasterizer state
+    // - blend state
+    // - depth stencil state
+    // - render target formats
+    // - depth stencil formats
+    //
+    // A pipeline state is created using a descriptor holding the above values and immediately serialized for most optimal storage
+    // Duplicate pipeline states get deduplicated at runtime and cached in a pipeline state library
+    // The pipeline state library gets loaded at init time as pipeline state creation is quite expensive
+
     // A descriptor describing the pipeline state to be constructed
     struct PipelineStateDesc
     {

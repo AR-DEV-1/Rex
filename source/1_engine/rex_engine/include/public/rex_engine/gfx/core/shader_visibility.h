@@ -25,24 +25,5 @@ namespace rex
 
       All = Vertex | Pixel | Geometry | Compute | Hull | Domain | Amplification | Mesh // all shaders have access to this resource
     };
-    using ShaderType = ShaderVisibility;
-
-    // Convert a shader type enum to the shader visibility flag it belongs to
-    //constexpr ShaderVisibility shader_type_to_visibility(ShaderType type)
-    //{
-    //  switch (type)
-    //  {
-    //  case rex::gfx::ShaderType::Vertex:            return ShaderVisibility::Vertex;
-    //  case rex::gfx::ShaderType::Pixel:             return ShaderVisibility::Pixel;
-    //  case rex::gfx::ShaderType::Geometry:          return ShaderVisibility::Geometry;
-    //  case rex::gfx::ShaderType::Hull:              return ShaderVisibility::Hull;
-    //  case rex::gfx::ShaderType::Domain:            return ShaderVisibility::Domain;
-    //  case rex::gfx::ShaderType::Amplification:     return ShaderVisibility::Amplification;
-    //  case rex::gfx::ShaderType::Mesh:              return ShaderVisibility::Mesh;
-    //  default: break;
-    //  }
-
-    //  return invalid_obj<ShaderVisibility>();
-    //}
   }
 }

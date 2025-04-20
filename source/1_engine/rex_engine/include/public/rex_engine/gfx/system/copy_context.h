@@ -45,7 +45,7 @@ namespace rex
       // Update a vertex buffer's data
       virtual void update_buffer(VertexBuffer* buffer, const void* data, rsl::memory_size size) = 0;
       virtual void update_buffer(VertexBuffer* buffer, const void* data, rsl::memory_size size, s32 offset) = 0;
-      // Update a index buffer's data
+      // Update an index buffer's data
       virtual void update_buffer(IndexBuffer* buffer, const void* data, rsl::memory_size size) = 0;
       virtual void update_buffer(IndexBuffer* buffer, const void* data, rsl::memory_size size, s32 offset) = 0;
       // Update an unordered access buffer's data

@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "rex_engine/gfx/graphics.h"
 
 #include "rex_directx/dxgi/includes.h"
@@ -103,8 +102,8 @@ namespace rex
       // Shader stuff
       // -------------------------
       // Compile a shader and return its binary blob
-      wrl::ComPtr<ID3DBlob> compile_shader(const CompileShaderDesc& desc);
-      ShaderSignature reflect_shader(const gfx::Shader* shader)                                                                                               override;
+      //wrl::ComPtr<ID3DBlob> compile_shader(const CompileShaderDesc& desc);
+      //ShaderSignature reflect_shader(const gfx::Shader* shader) override;
 
       // -------------------------
       // Resource creation from Direct X
@@ -167,7 +166,7 @@ namespace rex
       rsl::unique_ptr<dxgi::AdapterManager> m_adapter_manager;  // The manager holding all the adapters on this machine
 
       rsl::unique_ptr<ResourceHeap> m_heap;  // The heap we use to allocate gpu resources
-      ShaderCompiler m_shader_compiler;      // A shader compiler with internal caching
+      //DxShaderCompiler m_shader_compiler;      // A shader compiler with internal caching
     };
   }
 }

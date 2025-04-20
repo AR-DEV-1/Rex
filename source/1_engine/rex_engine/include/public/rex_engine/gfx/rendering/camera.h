@@ -23,8 +23,8 @@ namespace rex
 			rsl::deg_angle fov;
 			f32 width;
 			f32 height;
-			f32 nearPlane;
-			f32 farPlane;
+			f32 near;
+			f32 far;
 		};
 
 		// A basic camera class
@@ -50,12 +50,6 @@ namespace rex
 			// Switch the projection mode of the camera
 			void switch_projection_mode(ProjectionMode newMode);
 
-			// Return the default forward vector if the actual one cannot get calculated
-			constexpr static glm::vec3 default_forward()
-			{
-				return s_default_forward;
-			}
-
 		private:
 			// Calculate the projection matrix based on the current camera settings
 			void calc_proj_matrix();
@@ -64,14 +58,9 @@ namespace rex
 			glm::vec3 m_position;
 			glm::vec3 m_forward;
 
-			glm::mat4 m_view;
 			glm::mat4 m_projection;
 
-			f32 m_width;
-			f32 m_height;
-			f32 m_near;
-			f32 m_far;
-			rsl::deg_angle m_fov;
+			CameraDimensions m_cam_dimensions;
 			ProjectionMode m_projection_mode;
 		};
 	}
