@@ -31,6 +31,8 @@
 #include "rex_directx/system/dx_view_heap.h"
 #include "rex_directx/system/dx_shader_compiler.h"
 
+#include "rex_std/bonus/math/color.h"
+
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
 
 struct ID3D12GraphicsCommandList;
@@ -138,7 +140,7 @@ namespace rex
       // Initialize the resource heap which keeps track of all gpu resources
       void init_resource_heap() override;
       // Allocate a new view heap of a given type
-      rsl::unique_ptr<ViewHeap> allocate_view_heap(ViewHeapType viewHeapType, IsShaderVisible isShaderVisible) override;
+      rsl::unique_ptr<ViewHeap> allocate_view_heap(ResourceViewType viewHeapType, IsShaderVisible isShaderVisible) override;
 
     private:
       // Allocate a 1D buffer on the gpu, returning a DirectX resource
@@ -172,7 +174,7 @@ namespace rex
       rsl::unique_ptr<dxgi::AdapterManager> m_adapter_manager;  // The manager holding all the adapters on this machine
 
       rsl::unique_ptr<ResourceHeap> m_heap;  // The heap we use to allocate gpu resources
-      //DxShaderCompiler m_shader_compiler;      // A shader compiler with internal caching
+      rsl::Color4f m_rtv_clear_color;
     };
   }
 }

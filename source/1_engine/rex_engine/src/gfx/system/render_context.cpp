@@ -10,14 +10,18 @@ namespace rex
       : GraphicsContext(owningEngine, GraphicsEngineType::Render)
     {
     }
+    
+    // Set the render target on the pipeline, removes any depth stencil buffer from the pipeline
     void RenderContext::set_render_target(RenderTarget* colorRenderTarget)
     {
       set_render_target(colorRenderTarget, nullptr);
     }
+    // Clears the render target with its clear color. Does not clear depth stencil buffer
     void RenderContext::clear_render_target(RenderTarget* renderTarget)
     {
       clear_render_target(renderTarget, nullptr);
     }
+    // Assigns a vertex buffer to the pipeline at slot 0
     void RenderContext::set_vertex_buffer(VertexBuffer* vb)
     {
       set_vertex_buffer(vb, 0);
@@ -32,15 +36,8 @@ namespace rex
       m_shader_visible_sampler_heap = resetData.shader_visible_sampler_desc_heap;
     }
 
-    const ResourceView* RenderContext::copy_texture_views_to_shaders(const rsl::vector<const ResourceView*>& views)
-    {
-      return copy_views(m_shader_visible_srv_heap, views);
-    }
-    const ResourceView* RenderContext::copy_sampler_views_to_shaders(const rsl::vector<const ResourceView*>& views)
-    {
-      return copy_views(m_shader_visible_sampler_heap, views);
-    }
-    const ResourceView* RenderContext::copy_views(ViewHeapType heapType, const rsl::vector<const ResourceView*>& views)
+    // Copy views of a certain type to the gpu. All views within the list are expected to be of the same type
+    const ResourceView* RenderContext::copy_views(ResourceViewType resourceType, const rsl::vector<const ResourceView*>& views)
     {
       const ResourceView* gpuViews = gfx::gal::instance()->try_get_gpu_views(views);
       if (gpuViews != nullptr)
@@ -48,10 +45,10 @@ namespace rex
         return gpuViews;
       }
 
-      switch (heapType)
+      switch (resourceType)
       {
-      case rex::gfx::ViewHeapType::Texture2D:       return copy_texture_views_to_shaders(views);
-      case rex::gfx::ViewHeapType::Sampler:         return copy_sampler_views_to_shaders(views);
+      case rex::gfx::ResourceViewType::Texture2D:       return copy_views(m_shader_visible_srv_heap, views);
+      case rex::gfx::ResourceViewType::Sampler:         return copy_views(m_shader_visible_sampler_heap, views);
       default: break;
       }
 

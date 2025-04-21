@@ -277,12 +277,12 @@ namespace rex
 		}
 
 		// Returns a specific descriptor heap based on type
-		ViewHeap* GALBase::cpu_desc_heap(ViewHeapType descHeapType)
+		ViewHeap* GALBase::cpu_desc_heap(ResourceViewType descHeapType)
 		{
 			return m_cpu_descriptor_heap_pool.at(descHeapType).get();
 		}
 		// Returns a specific descriptor heap based on type that's visible to shaders
-		ViewHeap* GALBase::shader_visible_desc_heap(ViewHeapType descHeapType)
+		ViewHeap* GALBase::shader_visible_desc_heap(ResourceViewType descHeapType)
 		{
 			return m_shader_visible_descriptor_heap_pool.at(descHeapType).get();
 		}
@@ -316,15 +316,15 @@ namespace rex
 		// Initialize the descriptor heaps which keep track of all descriptors to various resources
 		void GALBase::init_desc_heaps()
 		{
-			init_desc_heap(m_cpu_descriptor_heap_pool, ViewHeapType::RenderTarget, IsShaderVisible::no);
-			init_desc_heap(m_cpu_descriptor_heap_pool, ViewHeapType::DepthStencil, IsShaderVisible::no);
-			init_desc_heap(m_cpu_descriptor_heap_pool, ViewHeapType::Texture2D, IsShaderVisible::no);
-			init_desc_heap(m_cpu_descriptor_heap_pool, ViewHeapType::Sampler, IsShaderVisible::no);
+			init_desc_heap(m_cpu_descriptor_heap_pool, ResourceViewType::RenderTarget, IsShaderVisible::no);
+			init_desc_heap(m_cpu_descriptor_heap_pool, ResourceViewType::DepthStencil, IsShaderVisible::no);
+			init_desc_heap(m_cpu_descriptor_heap_pool, ResourceViewType::Texture2D, IsShaderVisible::no);
+			init_desc_heap(m_cpu_descriptor_heap_pool, ResourceViewType::Sampler, IsShaderVisible::no);
 
-			init_desc_heap(m_shader_visible_descriptor_heap_pool, ViewHeapType::Texture2D, IsShaderVisible::yes);
-			init_desc_heap(m_shader_visible_descriptor_heap_pool, ViewHeapType::Sampler, IsShaderVisible::yes);
+			init_desc_heap(m_shader_visible_descriptor_heap_pool, ResourceViewType::Texture2D, IsShaderVisible::yes);
+			init_desc_heap(m_shader_visible_descriptor_heap_pool, ResourceViewType::Sampler, IsShaderVisible::yes);
 		}
-		void GALBase::init_desc_heap(ViewHeapPool& descHeapPool, ViewHeapType descHeapType, IsShaderVisible isShaderVisible)
+		void GALBase::init_desc_heap(ViewHeapPool& descHeapPool, ResourceViewType descHeapType, IsShaderVisible isShaderVisible)
 		{
 			descHeapPool.emplace(descHeapType, allocate_view_heap(descHeapType, isShaderVisible));
 		}
@@ -360,7 +360,7 @@ namespace rex
 			m_common_samplers[rsl::enum_refl::enum_index(CommonSampler::Default2D).value()] = gfx::gal::instance()->create_sampler2d(sampler_desc);
 		}
 
-		void GALBase::resize_swapchain_info(s32 newWidth, s32 newHeight)
+		void GALBase::resize_swapchain_info(s32 /*newWidth*/, s32 /*newHeight*/)
 		{
 			SwapchainInfo swapchain_info{};
 			swapchain_info.width = m_swapchain->width();
@@ -379,8 +379,8 @@ namespace rex
 		{
 			ContextResetData reset_data{};
 			reset_data.pso = pso;
-			reset_data.shader_visible_srv_desc_heap = shader_visible_desc_heap(ViewHeapType::Texture2D);
-			reset_data.shader_visible_sampler_desc_heap = shader_visible_desc_heap(ViewHeapType::Sampler);
+			reset_data.shader_visible_srv_desc_heap = shader_visible_desc_heap(ResourceViewType::Texture2D);
+			reset_data.shader_visible_sampler_desc_heap = shader_visible_desc_heap(ResourceViewType::Sampler);
 			reset_data.current_backbuffer_rt = m_swapchain->current_buffer();
 
 			return reset_data;

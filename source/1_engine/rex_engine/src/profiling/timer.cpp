@@ -35,6 +35,15 @@ namespace rex
 		return elapsed_time;
 	}
 
+	f32 Timer::elapsed_ms() const
+	{
+		return rsl::chrono::duration_cast<rsl::chrono::duration<f32, rsl::milli>>(elapsed_time()).count();
+	}
+	f32 Timer::elapsed_seconds() const
+	{
+		return rsl::chrono::duration_cast<rsl::chrono::duration<f32>>(elapsed_time()).count();
+	}
+
 	rsl::string_view Timer::name() const
 	{
 		return m_name;

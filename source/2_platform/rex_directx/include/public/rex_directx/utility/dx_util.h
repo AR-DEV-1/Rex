@@ -33,7 +33,7 @@
 #include "rex_engine/gfx/core/resource_state.h"
 #include "rex_engine/gfx/core/graphics_engine_type.h"
 #include "rex_engine/gfx/core/resource_state.h"
-#include "rex_engine/gfx/system/view_heap_type.h"
+#include "rex_engine/gfx/system/resource_view_type.h"
 
 #include "rex_engine/gfx/shader_reflection/shader_class_type.h"
 #include "rex_engine/gfx/shader_reflection/shader_variable_type.h"
@@ -185,7 +185,7 @@ namespace rex
       D3D12_STENCIL_OP to_dx12(StencilOp stencilOp);
       D3D12_RESOURCE_STATES to_dx12(ResourceState state);
       D3D12_COMMAND_LIST_TYPE to_dx12(GraphicsEngineType type);
-      D3D12_DESCRIPTOR_HEAP_TYPE to_dx12(ViewHeapType type);
+      D3D12_DESCRIPTOR_HEAP_TYPE to_dx12(ResourceViewType type);
       D3D12_PRIMITIVE_TOPOLOGY_TYPE to_dx12(PrimitiveTopologyType type);
       D3D12_DESCRIPTOR_RANGE_TYPE to_dx12(ShaderParameterType type);
       D3D12_SAMPLER_DESC to_dx12(const SamplerDesc& desc);

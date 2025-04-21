@@ -4,7 +4,7 @@ namespace rex
 {
   namespace gfx
   {
-    enum class ViewHeapType
+    enum class ResourceViewType
     {
       Undefined,
       ConstantBuffer   = 1,  // Constant buffers, unordered access buffers and textures are sharing the same view heap

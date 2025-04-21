@@ -70,7 +70,7 @@
 #include "rex_engine/gfx/system/render_engine.h"
 #include "rex_engine/gfx/system/compute_engine.h"
 #include "rex_engine/gfx/resources/clear_state.h"
-#include "rex_engine/gfx/system/view_heap_type.h"
+#include "rex_engine/gfx/system/resource_view_type.h"
 #include "rex_engine/gfx/system/view_heap.h"
 #include "rex_engine/gfx/system/swapchain.h"
 #include "rex_engine/gfx/system/resource_state_tracker.h"
@@ -240,18 +240,18 @@ namespace rex
       // Initialize the resource heap which allocates all gpu resources
       virtual void init_resource_heap() = 0;
       // Allocate a new descriptor heap of a given type
-      virtual rsl::unique_ptr<ViewHeap> allocate_view_heap(ViewHeapType descHeapType, IsShaderVisible isShaderVisible) = 0;
+      virtual rsl::unique_ptr<ViewHeap> allocate_view_heap(ResourceViewType descHeapType, IsShaderVisible isShaderVisible) = 0;
 
       // Returns a specific descriptor heap based on type
-      ViewHeap* cpu_desc_heap(ViewHeapType descHeapType);
-      ViewHeap* shader_visible_desc_heap(ViewHeapType descHeapType);
+      ViewHeap* cpu_desc_heap(ResourceViewType descHeapType);
+      ViewHeap* shader_visible_desc_heap(ResourceViewType descHeapType);
 
       // Returns the debug interface
       // This is sometimes needed in API specific code
       DebugInterface* debug_interface();
 
     private:
-      using ViewHeapPool = rsl::unordered_map<ViewHeapType, rsl::unique_ptr<ViewHeap>>;
+      using ViewHeapPool = rsl::unordered_map<ResourceViewType, rsl::unique_ptr<ViewHeap>>;
 
       // --------------------------------
       // Initialization
@@ -264,7 +264,7 @@ namespace rex
       void init_sub_engines();
       // Initialize the descriptor heaps which keep track of all descriptors to various resources
       void init_desc_heaps();
-      void init_desc_heap(ViewHeapPool& descHeapPool, ViewHeapType descHeapType, IsShaderVisible isShaderVisible);
+      void init_desc_heap(ViewHeapPool& descHeapPool, ResourceViewType descHeapType, IsShaderVisible isShaderVisible);
 
       void init_common_resources();
 

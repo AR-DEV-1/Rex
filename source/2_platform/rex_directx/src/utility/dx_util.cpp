@@ -634,15 +634,15 @@ namespace rex
 
         return invalid_obj<D3D12_COMMAND_LIST_TYPE>();
       }
-      D3D12_DESCRIPTOR_HEAP_TYPE to_dx12(ViewHeapType type)
+      D3D12_DESCRIPTOR_HEAP_TYPE to_dx12(ResourceViewType type)
       {
         switch (type)
         {
-        case ViewHeapType::ConstantBuffer:  return D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-        case ViewHeapType::RenderTarget:    return D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        case ViewHeapType::DepthStencil:    return D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-        case ViewHeapType::Sampler:         return D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
-        case ViewHeapType::Undefined:       return D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES;
+        case ResourceViewType::ConstantBuffer:  return D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        case ResourceViewType::RenderTarget:    return D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        case ResourceViewType::DepthStencil:    return D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+        case ResourceViewType::Sampler:         return D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
+        case ResourceViewType::Undefined:       return D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES;
         }
 
         return invalid_obj<D3D12_DESCRIPTOR_HEAP_TYPE>();

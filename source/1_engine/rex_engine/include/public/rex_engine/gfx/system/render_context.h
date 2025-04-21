@@ -18,7 +18,7 @@
 
 #include "rex_engine/gfx/system/command_allocator.h"
 #include "rex_engine/gfx/system/view_heap.h"
-#include "rex_engine/gfx/system/view_heap_type.h"
+#include "rex_engine/gfx/system/resource_view_type.h"
 
 #include "rex_engine/gfx/system/graphics_context.h"
 
@@ -121,13 +121,11 @@ namespace rex
 			// ---------------------------
 			// COPY COMMANDS
 			// ---------------------------
-			// Copy texture views into a heap that's accessible to shaders
-			const ResourceView* copy_texture_views_to_shaders(const rsl::vector<const ResourceView*>& views);
-			// Copy sampler views into a heap that's accessible to shaders
-			const ResourceView* copy_sampler_views_to_shaders(const rsl::vector<const ResourceView*>& views);
 			// Copy views into a heap that's accessible to shaders
-			const ResourceView* copy_views(ViewHeapType heapType, const rsl::vector<const ResourceView*>& views);
+			const ResourceView* copy_views(ResourceViewType resourceType, const rsl::vector<const ResourceView*>& views);
 
+			// Implemented by Graphics API specific derived classes
+			// ----------------------------------------------------------------
 			// Update a constant buffer's data
 			virtual void update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size) = 0;
 			virtual void update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size, s32 offset) = 0;

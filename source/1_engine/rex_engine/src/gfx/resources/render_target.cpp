@@ -4,11 +4,11 @@ namespace rex
 {
   namespace gfx
   {
-    RenderTarget::RenderTarget(s32 width, s32 height, ResourceView* resourceView, const ClearStateDesc& clearState)
+    RenderTarget::RenderTarget(s32 width, s32 height, ResourceView* resourceView, const rsl::Color4f& clearColor)
       : m_width(width)
       , m_height(height)
       , m_view(resourceView)
-      , m_clear_state(clearState)
+      , m_clear_color(clearColor)
     {}
 
     s32 RenderTarget::width() const
@@ -19,10 +19,11 @@ namespace rex
     {
       return m_height;
     }
-    const ClearStateDesc& RenderTarget::clear_state() const
+    const rsl::Color4f& RenderTarget::clear_color() const
     {
-      return m_clear_state;
+      return m_clear_color;
     }
+
     const ResourceView* RenderTarget::view() const
     {
       return m_view;

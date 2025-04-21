@@ -12,7 +12,7 @@ namespace rex
     class DxRenderTarget : public RenderTarget
     {
     public:
-      DxRenderTarget(const wrl::ComPtr<ID3D12Resource>& resource, DxResourceView view, const ClearStateDesc& clearState);
+      DxRenderTarget(const wrl::ComPtr<ID3D12Resource>& resource, DxResourceView view, const rsl::Color4f& clearColor);
 
       // Return the wrapped DirectX object
       ID3D12Resource* dx_object();

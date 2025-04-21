@@ -14,20 +14,21 @@ namespace rex
     class RenderTarget : public Resource
     {
     public:
-      RenderTarget(s32 width, s32 height, ResourceView* resourceView, const ClearStateDesc& clearState);
+      RenderTarget(s32 width, s32 height, ResourceView* resourceView, const rsl::Color4f& clearColor);
       virtual ~RenderTarget() = default;
 
       s32 width() const;
       s32 height() const;
-      const ClearStateDesc& clear_state() const;
       
+      const rsl::Color4f& clear_color() const;
+
       // Return the resource view of the texture
       const ResourceView* view() const;
 
     private:
       s32 m_width;
       s32 m_height;
-      ClearStateDesc m_clear_state;
+      rsl::Color4f m_clear_color;
       ResourceView* m_view;
     };
   }

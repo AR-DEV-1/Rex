@@ -129,7 +129,7 @@ namespace rex
       REX_ASSERT_X(renderTarget, "Trying to clear a nullptr rendertarget");
 
 			DxRenderTarget* dx_render_target = d3d::to_dx12(renderTarget);
-			m_cmd_list->ClearRenderTargetView(dx_render_target->dx_view(), renderTarget->clear_state().rgba.data(), 0, nullptr);
+			m_cmd_list->ClearRenderTargetView(dx_render_target->dx_view(), renderTarget->clear_color().data(), 0, nullptr);
 
       if (depthRenderTarget)
       {
@@ -220,7 +220,7 @@ namespace rex
     //    rsl::vector<const ResourceView*> views;
     //    views.push_back(texture->resource_view());
     //    auto render_ctx = new_render_ctx();
-    //    auto start_handle = render_ctx->copy_views(ViewHeapType::Texture2D, views);
+    //    auto start_handle = render_ctx->copy_views(ResourceViewType::Texture2D, views);
     //    gpu_handle = start_handle.get();
 				//gpu_engine()->notify_textures_presence_on_gpu(texture, rsl::move(start_handle));
     //  }
@@ -228,7 +228,7 @@ namespace rex
       rsl::vector<const ResourceView*> views;
       views.push_back(texture->resource_view());
       auto render_ctx = gfx::gal::instance()->new_render_ctx();
-      auto start_handle = render_ctx->copy_views(ViewHeapType::Texture2D, views);
+      auto start_handle = render_ctx->copy_views(ResourceViewType::Texture2D, views);
 
 			// Textures need to be bind using a view table and cannot be bound directly
       bind_view_table(paramIdx, start_handle);
