@@ -20,6 +20,10 @@ namespace rex
     public:
       DxRenderContext(gfx::GraphicsEngine* owningEngine, const wrl::ComPtr<ID3D12GraphicsCommandList> cmdList);
 
+      // ---------------------------
+      // RENDER COMMANDS
+      // ---------------------------
+
       // Set the viewport of the context
       void set_viewport(const Viewport& vp) override;
       // Set the scissor rect of the context
@@ -77,6 +81,26 @@ namespace rex
       // Draw instances of indexed primitive
       void draw_indexed_instanced(s32 indexCountPerInstance, s32 instanceCount, s32 startIndexLocation, s32 baseVertexLocation, s32 startInstanceLocation) override;
 
+      // ---------------------------
+      // COPY COMMANDS
+      // ---------------------------
+
+      // Update a constant buffer's data on the gpu
+      void update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size) override;
+      void update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size, s32 offset) override;
+      // Update a vertex buffer's data on the gpu
+      void update_buffer(VertexBuffer* buffer, const void* data, rsl::memory_size size) override;
+      void update_buffer(VertexBuffer* buffer, const void* data, rsl::memory_size size, s32 offset) override;
+      // Update a index buffer's data on the gpu
+      void update_buffer(IndexBuffer* buffer, const void* data, rsl::memory_size size) override;
+      void update_buffer(IndexBuffer* buffer, const void* data, rsl::memory_size size, s32 offset) override;
+      // Update an unordered access buffer's data
+      void update_buffer(UnorderedAccessBuffer* buffer, const void* data, rsl::memory_size size) override;
+      void update_buffer(UnorderedAccessBuffer* buffer, const void* data, rsl::memory_size size, s32 offset) override;
+
+      // Update a texture's data on the gpu
+      void update_texture2d(Texture2D* texture, const void* data) override;
+
       // Return the wrapped directx commandlist
       ID3D12GraphicsCommandList* dx_cmdlist();
 
@@ -91,7 +115,10 @@ namespace rex
     private:
       // Transition a buffer into a new resource state
       void transition_buffer(Resource* resource, ID3D12Resource* d3d_resource, ResourceState state);
-      
+      void update_buffer(ID3D12Resource* resource, const void* data, rsl::memory_size size, s32 offset);
+
+      class DxRenderEngine* api_engine();
+
     private:
       wrl::ComPtr<ID3D12GraphicsCommandList> m_cmd_list;
       rsl::string_view m_profile_event_name;

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "rex_directx/utility/dx_util.h"
+
+#include "rex_engine/engine/globals.h"
 #include "rex_engine/gfx/system/shader_type.h"
 
 namespace rex

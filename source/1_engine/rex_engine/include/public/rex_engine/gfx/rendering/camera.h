@@ -23,8 +23,8 @@ namespace rex
 			rsl::deg_angle fov;
 			f32 width;
 			f32 height;
-			f32 near;
-			f32 far;
+			f32 near_plane;
+			f32 far_plane;
 		};
 
 		// A basic camera class

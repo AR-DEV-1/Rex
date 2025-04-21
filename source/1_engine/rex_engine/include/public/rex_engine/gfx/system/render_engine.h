@@ -2,6 +2,8 @@
 
 #include "rex_engine/gfx/system/graphics_engine.h"
 #include "rex_engine/gfx/system/render_context.h"
+#include "rex_engine/gfx/system/upload_buffer_lock.h"
+#include "rex_engine/gfx/resources/upload_buffer.h"
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
 
@@ -15,8 +17,17 @@ namespace rex
     public:
       RenderEngine(ResourceStateTracker* globalResourceStateTracker);
 
-    private:
+      void new_frame() final;
 
+      UploadBufferLock lock_upload_buffer();
+      void unlock_upload_buffer();
+
+    protected:
+      virtual void api_new_frame() = 0;
+
+    private:
+      rsl::unique_ptr<UploadBuffer> m_upload_buffer;
+      rsl::mutex m_upload_buffer_access_mtx;
     };
   }
 }

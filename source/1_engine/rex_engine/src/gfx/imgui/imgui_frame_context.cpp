@@ -77,7 +77,7 @@ namespace rex
     // Update the frame context's data to the gpu
     ScopedPoolObject<SyncInfo> ImGuiFrameContext::copy_buffer_data(ImDrawData* drawData)
     {
-      auto copy_context = gfx::gal::instance()->new_copy_ctx();
+      auto copy_context = gfx::gal::instance()->new_render_ctx();
 
       s32 vtx_offset = 0;
       s32 idx_offset = 0;

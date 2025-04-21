@@ -57,7 +57,7 @@ namespace rex
 			if (is_item_hovered(delayInSeconds))
 			{
 				ScopedStyle tooltipPadding(ImGuiStyleVar_WindowPadding, padding);
-				ScopedColor textCol(ImGuiCol_Text, text_brighter);
+				ScopedColor textCol(ImGuiCol_Text, colors::text_brighter);
 				ImGui::SetTooltip(txt.data());
 			}
 		}

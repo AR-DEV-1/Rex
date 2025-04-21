@@ -3,7 +3,7 @@
 #include "rex_std/bonus/utility.h"
 
 #include "rex_engine/gfx/shader_reflection/shader_signature.h"
-#include "rex_engine/gfx/shader_reflection/shader_resource_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_resource_declaration.h"
 #include "rex_engine/gfx/shader_reflection/shader_pipeline_reflection_builder.h"
 #include "rex_engine/gfx/core/shader_visibility.h"
 

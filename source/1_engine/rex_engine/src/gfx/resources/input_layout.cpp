@@ -79,7 +79,7 @@ namespace rex
         }
 
         ShaderArithmeticType format = it->format;
-        if (!is_convertible_shader_param_type(format, elem.format))
+        if (!format.is_convertible_to(elem.format))
         {
           return false;
         }

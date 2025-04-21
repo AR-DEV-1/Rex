@@ -15,7 +15,7 @@
 
 #include "rex_engine/gfx/system/render_context.h"
 #include "rex_engine/gfx/system/compute_context.h"
-#include "rex_engine/gfx/system/copy_context.h"
+
 #include "rex_engine/gfx/core/info.h"
 
 #include "rex_engine/gfx/system/graphics_engine.h"
@@ -26,7 +26,7 @@
 
 #include "rex_std/bonus/utility.h"
 
-#include "rex_engine/engine/scoped_pooled_object.h"
+#include "rex_engine/pooling/scoped_pooled_object.h"
 
 
 
@@ -57,19 +57,17 @@
 #include "rex_engine/gfx/materials/material.h"
 #include "rex_engine/gfx/system/shader_pipeline.h"
 #include "rex_engine/gfx/shader_reflection/shader_signature.h"
-#include "rex_engine/gfx/shader_reflection/shader_param_reflection.h"
-#include "rex_engine/gfx/system/shader_param_declaration.h"
+#include "rex_engine/gfx/shader_reflection/shader_param_declaration.h"
 
 #include "rex_engine/gfx/core/renderer_output_window_user_data.h"
-#include "rex_engine/engine/scoped_pooled_object.h"
+#include "rex_engine/pooling/scoped_pooled_object.h"
 #include "rex_engine/gfx/core/graphics_engine_type.h"
-#include "rex_engine/gfx/system/copy_context.h"
+
 #include "rex_engine/gfx/system/compute_context.h"
 #include "rex_engine/gfx/system/render_context.h"
 #include "rex_engine/gfx/system/command_queue.h"
 #include "rex_engine/gfx/core/gpu_description.h"
 #include "rex_engine/gfx/system/render_engine.h"
-#include "rex_engine/gfx/system/copy_engine.h"
 #include "rex_engine/gfx/system/compute_engine.h"
 #include "rex_engine/gfx/resources/clear_state.h"
 #include "rex_engine/gfx/system/view_heap_type.h"
@@ -188,15 +186,8 @@ namespace rex
       virtual rsl::unique_ptr<UnorderedAccessBuffer> create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr) = 0;
 
       // --------------------------------
-      // Shader stuff
-      // --------------------------------
-      virtual ShaderSignature reflect_shader(const gfx::Shader* shader) = 0;
-
-      // --------------------------------
       // Contexts
       // --------------------------------
-      // Create a new context which is used for copying resources from or to the gpu
-      ScopedGraphicsContext<CopyContext, GraphicsContext> new_copy_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
       // Create a new context which is used for rendering to render targets
       ScopedGraphicsContext<RenderContext, GraphicsContext> new_render_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
       // Create a new context which is used for computing data on the gpu
@@ -240,7 +231,6 @@ namespace rex
 
       // Initialize the various sub engines
       virtual rsl::unique_ptr<RenderEngine> init_render_engine(ResourceStateTracker* resourceStateTracker) = 0;
-      virtual rsl::unique_ptr<CopyEngine> init_copy_engine(ResourceStateTracker* resourceStateTracker) = 0;
       virtual rsl::unique_ptr<ComputeEngine> init_compute_engine(ResourceStateTracker* resourceStateTracker) = 0;
 
       // Allocate the debug interface.
@@ -300,7 +290,6 @@ namespace rex
       rsl::unique_ptr<Swapchain> m_swapchain;             // The swapchain is responsible for swapping the backbuffer with the front buffer
       rsl::unique_ptr<RenderEngine> m_render_engine;      // The render engine is the high level graphics engine responsible for queueing render commands
       rsl::unique_ptr<ComputeEngine> m_compute_engine;    // The render engine is the high level graphics engine responsible for queueing compute commands
-      rsl::unique_ptr<CopyEngine> m_copy_engine;          // The render engine is the high level graphics engine responsible for queueing copy commands
       s32 m_max_frames_in_flight;                         // The maximum number of we can have in flight for rendering.
       void* m_primary_display_handle;                     // The display handle to render to (HWND on Windows)
       s32 m_frame_idx;                                    // The current frame index

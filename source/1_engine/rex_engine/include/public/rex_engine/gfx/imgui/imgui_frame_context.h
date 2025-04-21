@@ -2,14 +2,13 @@
 
 #include "rex_engine/gfx/core/viewport.h"
 
-#include "rex_engine/gfx/system/copy_context.h"
-
 #include "rex_engine/gfx/resources/index_buffer.h"
 #include "rex_engine/gfx/resources/vertex_buffer.h"
 
+#include "rex_engine/gfx/system/sync_info.h"
+#include "rex_engine/pooling/scoped_pooled_object.h"
+
 struct ImDrawData;
-
-
 
 namespace rex
 {

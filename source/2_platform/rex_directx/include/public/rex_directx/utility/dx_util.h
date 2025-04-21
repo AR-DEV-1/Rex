@@ -22,7 +22,6 @@
 #include "rex_engine/gfx/core/input_layout_classification.h"
 #include "rex_engine/gfx/core/primitive_topology.h"
 #include "rex_engine/gfx/core/texture_format.h"
-#include "rex_engine/gfx/core/vertex_buffer_format.h"
 #include "rex_engine/gfx/core/shader_visibility.h"
 #include "rex_engine/gfx/core/sampler_filtering.h"
 #include "rex_engine/gfx/core/comparison_func.h"

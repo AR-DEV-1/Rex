@@ -12,7 +12,7 @@
 #include "rex_engine/diagnostics/assert.h"
 
 #include "rex_engine/gfx/shader_reflection/shader_signature.h"
-#include "rex_engine/gfx/shader_reflection/shader_io_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_io_declaration.h"
 namespace rex
 {
   namespace gfx
@@ -46,7 +46,7 @@ namespace rex
       input_param.semantic_name = param_desc.SemanticName;
       input_param.semantic_index = param_desc.SemanticIndex;
       input_param.type = shader_arithmetic_type(param_desc.ComponentType, param_desc.Mask, param_desc.MinPrecision);
-      input_param.size = format_byte_size(input_param.type);
+      input_param.size = input_param.type.format_byte_size();
 
       return input_param;
     }
@@ -59,7 +59,7 @@ namespace rex
       output_param.semantic_name = param_desc.SemanticName;
       output_param.semantic_index = param_desc.SemanticIndex;
       output_param.type = shader_arithmetic_type(param_desc.ComponentType, param_desc.Mask, param_desc.MinPrecision);
-      output_param.size = format_byte_size(output_param.type);
+      output_param.size = output_param.type.format_byte_size();
 
       return output_param;
     }

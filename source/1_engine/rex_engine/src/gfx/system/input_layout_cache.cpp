@@ -10,25 +10,37 @@ namespace rex
 {
 	namespace gfx
 	{
-		namespace input_layout_cache
+		InputLayout* InputLayoutCache::load(const InputLayoutDesc& desc)
 		{
-			rsl::unordered_map<InputLayoutDesc, rsl::unique_ptr<InputLayout>> g_cached_layouts;
-
-			InputLayout* load(const InputLayoutDesc& desc)
+			auto it = m_cached_layouts.find(desc);
+			if (it != m_cached_layouts.end())
 			{
-				auto it = g_cached_layouts.find(desc);
-				if (it != g_cached_layouts.end())
-				{
-					return it->value.get();
-				}
-
-				auto layout = gfx::gal::instance()->create_input_layout(desc);
-				return g_cached_layouts.emplace(desc, rsl::move(layout)).inserted_element->value.get();
+				return it->value.get();
 			}
 
-			void clear()
+			auto layout = gfx::gal::instance()->create_input_layout(desc);
+			return m_cached_layouts.emplace(desc, rsl::move(layout)).inserted_element->value.get();
+		}
+
+		void InputLayoutCache::clear()
+		{
+			m_cached_layouts.clear();
+		}
+
+		namespace input_layout_cache
+		{
+			globals::GlobalUniquePtr<InputLayoutCache> g_input_layout_cache;
+			void init(globals::GlobalUniquePtr<InputLayoutCache> inputLayoutCache)
 			{
-				g_cached_layouts.clear();
+				g_input_layout_cache = rsl::move(inputLayoutCache);
+			}
+			InputLayoutCache* instance()
+			{
+				return g_input_layout_cache.get();
+			}
+			void shutdown()
+			{
+				g_input_layout_cache.reset();
 			}
 		}
 	}

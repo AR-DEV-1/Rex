@@ -1,15 +1,11 @@
 #pragma once
 
 #include "rex_engine/engine/defines.h"
-#include "rex_engine/gfx/system/shader_type.h"
-#include "rex_engine/engine/invalid_object.h"
 
 namespace rex
 {
   namespace gfx
   {
-    REX_STATIC_WARNING("Combine shader type with shader visibility");
-
     // shader visibility is used to indicate which shader type has access to the specified resource
     enum class ShaderVisibility
     {

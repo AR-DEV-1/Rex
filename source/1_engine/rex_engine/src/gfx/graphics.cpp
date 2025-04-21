@@ -48,8 +48,6 @@ namespace rex
 			}
 			void shutdown()
 			{
-				root_signature_cache::clear();
-
 				g_gal_interface.reset();
 			}
 		}
@@ -59,7 +57,6 @@ namespace rex
 		GALBase::GALBase(const OutputWindowUserData& userData)
 			: m_render_engine()
 			, m_compute_engine()
-			, m_copy_engine()
 			, m_swapchain()
 			, m_max_frames_in_flight(userData.max_frames_in_flight)
 			, m_primary_display_handle(userData.primary_display_handle)
@@ -67,8 +64,8 @@ namespace rex
 		{
 		}
 
-		// Because some objects have a dependency on the gpu engine itself
-		// We need to wait for the gpu engine to be constructed, only then 
+		// Because some objects have a dependency on the GAL itself
+		// We need to wait for the GAL to be constructed, only then 
 		// can we initialize the rest of the objects
 		void GALBase::init()
 		{
@@ -122,7 +119,6 @@ namespace rex
 		{
 			m_render_engine->end_frame();
 			m_compute_engine->end_frame();
-			m_copy_engine->end_frame();
 		}
 
 		void GALBase::resize_backbuffers(s32 newWidth, s32 newHeight)
@@ -158,7 +154,6 @@ namespace rex
 
 			m_render_engine->new_frame();
 			m_compute_engine->new_frame();
-			m_copy_engine->new_frame();
 
 			auto render_ctx = new_render_ctx(rsl::Nullptr<PipelineState>, "New Frame");
 			render_ctx->transition_buffer(current_backbuffer_rt(), ResourceState::RenderTarget);
@@ -208,13 +203,6 @@ namespace rex
 			return m_swapchain->current_buffer();
 		}
 
-		// Create a new context which is used for copying resources from or to the gpu
-		ScopedGraphicsContext<CopyContext, GraphicsContext> GALBase::new_copy_ctx(PipelineState* pso, rsl::string_view eventName)
-		{
-			ContextResetData reset_data = create_context_reset_data(pso);
-
-			return m_copy_engine->new_context<CopyContext>(reset_data, eventName);
-		}
 		// Create a new context which is used for rendering to render targets
 		ScopedGraphicsContext<RenderContext, GraphicsContext> GALBase::new_render_ctx(PipelineState* pso, rsl::string_view eventName)
 		{
@@ -320,11 +308,9 @@ namespace rex
 		void GALBase::init_sub_engines()
 		{
 			m_render_engine = init_render_engine(&m_resource_state_tracker);
-			m_copy_engine = init_copy_engine(&m_resource_state_tracker);
 			m_compute_engine = init_compute_engine(&m_resource_state_tracker);
 
 			m_render_engine->init();
-			m_copy_engine->init();
 			m_compute_engine->init();
 		}
 		// Initialize the descriptor heaps which keep track of all descriptors to various resources
@@ -379,8 +365,8 @@ namespace rex
 			SwapchainInfo swapchain_info{};
 			swapchain_info.width = m_swapchain->width();
 			swapchain_info.height = m_swapchain->height();
-			swapchain_info.viewport.top_left_x = 0.0f;
-			swapchain_info.viewport.top_left_y = 0.0f;
+			swapchain_info.viewport.top_left.x = 0.0f;
+			swapchain_info.viewport.top_left.y = 0.0f;
 			swapchain_info.viewport.width = static_cast<f32>(swapchain_info.width);
 			swapchain_info.viewport.height = static_cast<f32>(swapchain_info.height);
 			swapchain_info.scissor_rect.right = static_cast<f32>(swapchain_info.width);

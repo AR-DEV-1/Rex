@@ -3,7 +3,7 @@
 #include "rex_engine/engine/types.h"
 #include "rex_engine/gfx/core/input_layout_classification.h"
 #include "rex_engine/gfx/shader_reflection/shader_arithmetic_type.h"
-#include "rex_engine/gfx/shader_reflection/shader_param_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_param_declaration.h"
 #include "rex_std/string_view.h"
 
 namespace rex

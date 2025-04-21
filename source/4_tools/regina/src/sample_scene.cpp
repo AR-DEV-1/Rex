@@ -18,7 +18,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "rex_engine/gfx/materials/material_system.h"
+#include "rex_engine/gfx/materials/material_library.h"
 #include "rex_engine/gfx/components/mesh_component.h"
 #include "rex_engine/components/transform_component.h"
 #include "rex_engine/gfx/system/shader_library.h"
@@ -39,7 +39,7 @@ namespace regina
 
   void SampleScene::build_geometry()
   {
-    m_primitive_material = rex::gfx::load_material(rex::vfs::instance()->abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
+    m_primitive_material = rex::gfx::material_lib::instance()->load_material(rex::vfs::instance()->abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
 
     s32 x, y, channels;
     stbi_uc* data = stbi_load(rex::path::join(rex::engine::instance()->project_root(), "dev", "maps", "kanto", "old", "celadon_city.png").data(), &x, &y, &channels, 4);

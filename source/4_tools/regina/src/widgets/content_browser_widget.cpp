@@ -1,6 +1,12 @@
 #include "regina/widgets/content_browser_widget.h"
 
 #include "rex_engine/gfx/imgui/imgui_utils.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_style.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_widget.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_font.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_color.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_color_stack.h"
+#include "rex_engine/gfx/imgui/imgui_colors.h"
 
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/directory.h"
@@ -425,7 +431,7 @@ namespace regina
 			// Breadcrumbs
 			{
 				rex::imgui::ScopedFont boldFont(ImGui::GetIO().Fonts->Fonts[0]);
-				rex::imgui::ScopedColor textColour(ImGuiCol_Text, rex::imgui::textDarker);
+				rex::imgui::ScopedColor textColour(ImGuiCol_Text, rex::imgui::colors::text_darker);
 
 				rsl::string_view assetsDirectoryName = rex::path::cwd(); //  m_Project->GetConfig().AssetDirectory;
 				ImVec2 textSize = ImGui::CalcTextSize(assetsDirectoryName.data());

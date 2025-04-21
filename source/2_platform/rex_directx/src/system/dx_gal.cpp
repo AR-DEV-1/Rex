@@ -28,7 +28,7 @@
 #include "rex_directx/resources/dx_depth_stencil_buffer.h"
 #include "rex_directx/shader_reflection/dx_shader_reflection.h"
 
-#include "rex_directx/gfx/dx_copy_context.h"
+
 #include "rex_engine/gfx/graphics.h"
 
 #include "rex_directx/resources/dx_root_signature.h"
@@ -64,7 +64,7 @@
 
 #include "rex_directx/system/dx_render_engine.h"
 #include "rex_directx/system/dx_compute_engine.h"
-#include "rex_directx/system/dx_copy_engine.h"
+
 
 namespace rex
 {
@@ -107,6 +107,14 @@ namespace rex
 		{
 		}
 
+		DirectXInterface::~DirectXInterface()
+		{
+			root_signature_cache::shutdown();
+			input_layout_cache::shutdown();
+			shader_reflection::shutdown();
+			material_lib::shutdown();
+		}
+
 		// Return information about the graphics hardware and software
 		const Info& DirectXInterface::info() const
 		{
@@ -146,7 +154,7 @@ namespace rex
 			switch (type)
 			{
 			case GraphicsEngineType::Render: d3d::set_debug_name_for(d3d_command_queue.Get(), "Render Command Queue"); break;
-			case GraphicsEngineType::Copy:     d3d::set_debug_name_for(d3d_command_queue.Get(), "Copy Command Queue"); break;
+			case GraphicsEngineType::Copy: d3d::set_debug_name_for(d3d_command_queue.Get(), "Copy Command Queue"); break;
 			case GraphicsEngineType::Compute: d3d::set_debug_name_for(d3d_command_queue.Get(), "Compute Command Queue"); break;
 			}
 
@@ -200,7 +208,7 @@ namespace rex
 			switch (type)
 			{
 			case GraphicsEngineType::Render: d3d::set_debug_name_for(allocator.Get(), "Render Command Allocator"); break;
-			case GraphicsEngineType::Copy:     d3d::set_debug_name_for(allocator.Get(), "Copy Command Allocator"); break;
+			case GraphicsEngineType::Copy: d3d::set_debug_name_for(allocator.Get(), "Copy Command Allocator"); break;
 			case GraphicsEngineType::Compute: d3d::set_debug_name_for(allocator.Get(), "Compute Command Allocator"); break;
 			}
 
@@ -218,7 +226,7 @@ namespace rex
 
 			if (data)
 			{
-				auto copy_context = gfx::gal::instance()->new_copy_ctx();
+				auto copy_context = gfx::gal::instance()->new_render_ctx();
 				copy_context->update_buffer(vb.get(), data, total_size, 0);
 				auto sync_info = copy_context->execute_on_gpu();
 
@@ -239,7 +247,7 @@ namespace rex
 			auto ib = rsl::make_unique<DxIndexBuffer>(buffer, numIndices, format);
 			if (data)
 			{
-				auto copy_context = gfx::gal::instance()->new_copy_ctx();
+				auto copy_context = gfx::gal::instance()->new_render_ctx();
 				copy_context->update_buffer(ib.get(), data, total_size, 0);
 				auto sync_info = copy_context->execute_on_gpu();
 
@@ -302,8 +310,8 @@ namespace rex
 			REX_ASSERT_X(desc.shader_pipeline.vs, "No vertex shader specified for the pso");
 			REX_ASSERT_X(desc.shader_pipeline.ps, "No pixel shader specified for the pso");
 
-			InputLayout* input_layout = input_layout_cache::load(desc.input_layout);
-			RootSignature* root_signature = root_signature_cache::load(desc.shader_pipeline);
+			InputLayout* input_layout = input_layout_cache::instance()->load(desc.input_layout);
+			RootSignature* root_signature = root_signature_cache::instance()->load(desc.shader_pipeline);
 
 			// Make sure our critical required parameters are specified
 			REX_ASSERT_X(input_layout, "No input layout for the pso");
@@ -349,7 +357,7 @@ namespace rex
 			// Upload data to gpu and transition to pixel shader resource
 			if (data)
 			{
-				auto copy_context = gfx::gal::instance()->new_copy_ctx();
+				auto copy_context = gfx::gal::instance()->new_render_ctx();
 				copy_context->update_texture2d(texture.get(), data);
 				auto sync_info = copy_context->execute_on_gpu();
 
@@ -481,7 +489,7 @@ namespace rex
 
 			if (data)
 			{
-				auto copy_context = gfx::gal::instance()->new_copy_ctx();
+				auto copy_context = gfx::gal::instance()->new_render_ctx();
 				copy_context->update_buffer(uab.get(), data, size, 0);
 				auto sync_info = copy_context->execute_on_gpu();
 
@@ -519,7 +527,7 @@ namespace rex
 			switch (type)
 			{
 			case GraphicsEngineType::Render: d3d::set_debug_name_for(cmd_list.Get(), "Render Command List"); break;
-			case GraphicsEngineType::Copy:   d3d::set_debug_name_for(cmd_list.Get(), "Copy Command List"); break;
+			case GraphicsEngineType::Copy: d3d::set_debug_name_for(cmd_list.Get(), "Copy Command List"); break;
 			case GraphicsEngineType::Compute: d3d::set_debug_name_for(cmd_list.Get(), "Compute Command List"); break;
 			};
 
@@ -595,6 +603,11 @@ namespace rex
 				REX_ERROR(LogDxRhi, "Failed to create D3D Device");
 				return;
 			}
+
+			material_lib::init(globals::make_unique<MaterialLibrary>());
+			shader_reflection::init(globals::make_unique<DxShaderReflection>());
+			input_layout_cache::init(globals::make_unique<InputLayoutCache>());
+			root_signature_cache::init(globals::make_unique<RootSignatureCache>());
 		}
 
 		// Allocate a 1D buffer on the gpu, returning a DirectX resource
@@ -652,10 +665,6 @@ namespace rex
 		rsl::unique_ptr<RenderEngine> DirectXInterface::init_render_engine(ResourceStateTracker* resourceStateTracker)
 		{
 			return rsl::make_unique<DxRenderEngine>(resourceStateTracker);
-		}
-		rsl::unique_ptr<CopyEngine> DirectXInterface::init_copy_engine(ResourceStateTracker* resourceStateTracker)
-		{
-			return rsl::make_unique<DxCopyEngine>(resourceStateTracker);
 		}
 		rsl::unique_ptr<ComputeEngine> DirectXInterface::init_compute_engine(ResourceStateTracker* resourceStateTracker)
 		{

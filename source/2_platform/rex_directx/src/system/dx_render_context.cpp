@@ -1,4 +1,4 @@
-#include "rex_directx/gfx/dx_render_context.h"
+#include "rex_directx/system/dx_render_context.h"
 
 #include "rex_directx/utility/d3dx12.h"
 #include "rex_directx/resources/dx_constant_buffer.h"
@@ -15,6 +15,7 @@
 #include "rex_engine/engine/casting.h"
 #include "rex_directx/system/dx_command_allocator.h"
 #include "rex_directx/system/dx_gal.h"
+#include "rex_directx/system/dx_render_engine.h"
 #include "rex_directx/utility/dx_util.h"
 
 #include "WinPixEventRuntime/pix3.h"
@@ -31,12 +32,16 @@ namespace rex
     {
     }
 
+    // ---------------------------
+    // RENDER COMMANDS
+    // ---------------------------
+
     // Set the viewport of the context
     void DxRenderContext::set_viewport(const Viewport& vp)
     {
       D3D12_VIEWPORT d3d_viewport;
-      d3d_viewport.TopLeftX = vp.top_left_x;
-      d3d_viewport.TopLeftY = vp.top_left_y;
+      d3d_viewport.TopLeftX = vp.top_left.x;
+      d3d_viewport.TopLeftY = vp.top_left.y;
       d3d_viewport.Width = vp.width;
       d3d_viewport.Height = vp.height;
       d3d_viewport.MinDepth = vp.min_depth;
@@ -214,16 +219,16 @@ namespace rex
     //  {
     //    rsl::vector<const ResourceView*> views;
     //    views.push_back(texture->resource_view());
-    //    auto copy_ctx = new_copy_ctx();
-    //    auto start_handle = copy_ctx->copy_views(ViewHeapType::Texture2D, views);
+    //    auto render_ctx = new_render_ctx();
+    //    auto start_handle = render_ctx->copy_views(ViewHeapType::Texture2D, views);
     //    gpu_handle = start_handle.get();
 				//gpu_engine()->notify_textures_presence_on_gpu(texture, rsl::move(start_handle));
     //  }
 
       rsl::vector<const ResourceView*> views;
       views.push_back(texture->resource_view());
-      auto copy_ctx = gfx::gal::instance()->new_copy_ctx();
-      auto start_handle = copy_ctx->copy_views(ViewHeapType::Texture2D, views);
+      auto render_ctx = gfx::gal::instance()->new_render_ctx();
+      auto start_handle = render_ctx->copy_views(ViewHeapType::Texture2D, views);
 
 			// Textures need to be bind using a view table and cannot be bound directly
       bind_view_table(paramIdx, start_handle);
@@ -260,6 +265,93 @@ namespace rex
     {
       m_cmd_list->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
     }
+
+    // ---------------------------
+    // COPY COMMANDS
+    // ---------------------------
+
+    // Update a constant buffer's data on the gpu
+    void DxRenderContext::update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size)
+    {
+      s32 offset = 0;
+      update_buffer(buffer, data, size, offset);
+    }
+    void DxRenderContext::update_buffer(ConstantBuffer* buffer, const void* data, rsl::memory_size size, s32 offset)
+    {
+      REX_ASSERT_X(size.size_in_bytes() + offset <= buffer->size().size_in_bytes(), "Would write outside of the bounds of a resource.");
+      DxConstantBuffer* dx_constant_buffer = d3d::to_dx12(buffer);
+      transition_buffer(buffer, ResourceState::CopyDest);
+      update_buffer(dx_constant_buffer->dx_object(), data, size, offset);
+    }
+    // Update a vertex buffer's data on the gpu
+    void DxRenderContext::update_buffer(VertexBuffer* buffer, const void* data, rsl::memory_size size)
+    {
+      s32 offset = 0;
+      update_buffer(buffer, data, size, offset);
+    }
+    void DxRenderContext::update_buffer(VertexBuffer* buffer, const void* data, rsl::memory_size size, s32 offset)
+    {
+      REX_ASSERT_X(size.size_in_bytes() + offset <= buffer->size().size_in_bytes(), "Would write outside of the bounds of a resource.");
+      DxVertexBuffer* dx_vertex_buffer = d3d::to_dx12(buffer);
+      transition_buffer(buffer, ResourceState::CopyDest);
+      update_buffer(dx_vertex_buffer->dx_object(), data, size, offset);
+    }
+    // Update a index buffer's data on the gpu
+    void DxRenderContext::update_buffer(IndexBuffer* buffer, const void* data, rsl::memory_size size)
+    {
+      s32 offset = 0;
+      update_buffer(buffer, data, size, offset);
+    }
+    void DxRenderContext::update_buffer(IndexBuffer* buffer, const void* data, rsl::memory_size size, s32 offset)
+    {
+      REX_ASSERT_X(size.size_in_bytes() + offset <= buffer->size().size_in_bytes(), "Would write outside of the bounds of a resource.");
+      DxIndexBuffer* dx_index_buffer = d3d::to_dx12(buffer);
+      transition_buffer(buffer, ResourceState::CopyDest);
+      update_buffer(dx_index_buffer->dx_object(), data, size, offset);
+    }
+    // Update an unordered access buffer's data
+    void DxRenderContext::update_buffer(UnorderedAccessBuffer* buffer, const void* data, rsl::memory_size size)
+    {
+      s32 offset = 0;
+      update_buffer(buffer, data, size, offset);
+    }
+    void DxRenderContext::update_buffer(UnorderedAccessBuffer* buffer, const void* data, rsl::memory_size size, s32 offset)
+    {
+      REX_ASSERT_X(size.size_in_bytes() + offset <= buffer->size().size_in_bytes(), "Would write outside of the bounds of a resource.");
+      DxUnorderedAccessBuffer* dx_ua_buffer = d3d::to_dx12(buffer);
+      transition_buffer(buffer, ResourceState::CopyDest);
+      update_buffer(dx_ua_buffer->dx_object(), data, size, offset);
+    }
+
+    // Update a texture's data on the gpu
+    void DxRenderContext::update_texture2d(Texture2D* texture, const void* data)
+    {
+      UploadBufferLock upload_buffer_lock = api_engine()->lock_upload_buffer();
+
+      transition_buffer(texture, ResourceState::CopyDest);
+
+      s32 width = texture->width();
+      s32 height = texture->height();
+      TextureFormat format = texture->format();
+
+      s64 write_offset = upload_buffer_lock.upload_buffer()->write_texture_data_from_cpu(data, width, height, format);
+      DxTexture2D* dx_texture = d3d::to_dx12(texture);
+
+      CD3DX12_TEXTURE_COPY_LOCATION dst_loc(dx_texture->dx_object(), 0);
+      D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint{};
+      footprint.Footprint.Format = d3d::to_dx12(format);
+      footprint.Footprint.Width = width;
+      footprint.Footprint.Height = height;
+      footprint.Footprint.Depth = 1;
+      footprint.Footprint.RowPitch = d3d::aligned_texture_pitch_size(width, format);
+      footprint.Offset = write_offset;
+      CD3DX12_TEXTURE_COPY_LOCATION src_loc(d3d::to_dx12(upload_buffer_lock.upload_buffer())->dx_object(), footprint);
+      m_cmd_list->CopyTextureRegion(&dst_loc, 0, 0, 0, &src_loc, nullptr);
+    }
+
+
+
+
 
     // Return the wrapped directx commandlist
     ID3D12GraphicsCommandList* DxRenderContext::dx_cmdlist()
@@ -303,5 +395,19 @@ namespace rex
         m_cmd_list->ResourceBarrier(1, &barrier);
       }
     }
+    // Update a buffer on the gpu
+    void DxRenderContext::update_buffer(ID3D12Resource* resource, const void* data, rsl::memory_size size, s32 offset)
+    {
+      UploadBufferLock upload_buffer_lock = api_engine()->lock_upload_buffer();
+
+      s64 write_offset = upload_buffer_lock.upload_buffer()->write_buffer_data_from_cpu(data, size);
+      m_cmd_list->CopyBufferRegion(resource, offset, d3d::to_dx12(upload_buffer_lock.upload_buffer())->dx_object(), write_offset, size);
+    }
+
+    class DxRenderEngine* DxRenderContext::api_engine()
+    {
+      return static_cast<DxRenderEngine*>(owning_engine());
+    }
+
   }
 }

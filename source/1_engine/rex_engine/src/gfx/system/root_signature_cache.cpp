@@ -12,26 +12,37 @@ namespace rex
 {
 	namespace gfx
 	{
-		namespace root_signature_cache
-		{
-			rsl::unordered_map<ShaderPipeline, rsl::unique_ptr<RootSignature>> g_root_sig_cache;
-
-			RootSignature* load(const ShaderPipeline& pipeline)
+			RootSignature* RootSignatureCache::load(const ShaderPipeline& pipeline)
 			{
-				auto it = g_root_sig_cache.find(pipeline);
-				if (it != g_root_sig_cache.end())
+				auto it = m_root_sig_cache.find(pipeline);
+				if (it != m_root_sig_cache.end())
 				{
 					return it->value.get();
 				}
 
-				const ShaderPipelineReflection& reflection = shader_reflection_cache::load(pipeline);
+				const ShaderPipelineReflection& reflection = shader_reflection::instance()->load(pipeline);
 				rsl::unique_ptr<RootSignature> root_sig = gfx::gal::instance()->create_root_signature(reflection.parameters);
-				return g_root_sig_cache.emplace(pipeline, rsl::move(root_sig)).inserted_element->value.get();
+				return m_root_sig_cache.emplace(pipeline, rsl::move(root_sig)).inserted_element->value.get();
 			}
 
-			void clear()
+			void RootSignatureCache::clear()
 			{
-				g_root_sig_cache.clear();
+				m_root_sig_cache.clear();
+			}
+		namespace root_signature_cache
+		{
+			globals::GlobalUniquePtr<RootSignatureCache> g_root_sig_cache;
+			void init(globals::GlobalUniquePtr<RootSignatureCache> rootSignatureCache)
+			{
+				g_root_sig_cache = rsl::move(rootSignatureCache);
+			}
+			RootSignatureCache* instance()
+			{
+				return g_root_sig_cache.get();
+			}
+			void shutdown()
+			{
+				g_root_sig_cache.reset();
 			}
 		}
 	}

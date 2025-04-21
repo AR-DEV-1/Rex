@@ -23,7 +23,7 @@ namespace rex
 				Bool,
 			};
 
-			constexpr ScalarType(EScalarType val)
+			constexpr ScalarType(EScalarType val = EScalarType::Unknown)
 				: m_value(val)
 			{}
 
@@ -148,7 +148,7 @@ namespace rex
 				Double4,			// float			- 64 bits - 4 component
 			};
 
-			constexpr ShaderArithmeticType(EShaderArithmeticType val)
+			constexpr ShaderArithmeticType(EShaderArithmeticType val = EShaderArithmeticType::Unknown)
 				: m_value(val)
 			{}
 
@@ -358,6 +358,11 @@ namespace rex
 				}
 
 				return false;
+			}
+
+			constexpr operator EShaderArithmeticType() const
+			{
+				return m_value;
 			}
 
 			bool operator==(ShaderArithmeticType other) const

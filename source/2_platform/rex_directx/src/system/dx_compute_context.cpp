@@ -1,4 +1,4 @@
-#include "rex_directx/gfx/dx_compute_context.h"
+#include "rex_directx/system/dx_compute_context.h"
 
 #include "rex_directx/system/dx_command_allocator.h"
 #include "rex_directx/system/dx_view_heap.h"

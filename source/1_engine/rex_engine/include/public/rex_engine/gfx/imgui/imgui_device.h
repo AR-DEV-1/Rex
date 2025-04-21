@@ -17,8 +17,11 @@ namespace rex
       TextureFormat rtv_format; // This is needed to initialize the swapchain on imgui spawned windows
     };
 
-    void init(globals::GlobalUniquePtr<ImGuiDevice> device);
-    ImGuiDevice* instance();
-    void shutdown();
+    namespace imgui_device
+    {
+			void init(globals::GlobalUniquePtr<ImGuiDevice> device);
+			ImGuiDevice* instance();
+			void shutdown();
+		}
   }
 }

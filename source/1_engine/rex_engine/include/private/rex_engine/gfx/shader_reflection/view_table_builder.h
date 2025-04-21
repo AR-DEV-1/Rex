@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rex_engine/engine/types.h"
-#include "rex_engine/gfx/shader_reflection/shader_resource_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_resource_declaration.h"
 #include "rex_engine/gfx/shader_reflection/shader_param_declaration.h"
 
 namespace rex

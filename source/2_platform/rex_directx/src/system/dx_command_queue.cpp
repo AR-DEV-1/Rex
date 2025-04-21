@@ -1,11 +1,8 @@
 #include "rex_directx/system/dx_command_queue.h"
 #include "rex_directx/diagnostics/dx_call.h"
 
-#include "rex_directx/gfx/dx_render_context.h"
-#include "rex_directx/gfx/dx_compute_context.h"
-#include "rex_directx/gfx/dx_copy_context.h"
-
-
+#include "rex_directx/system/dx_render_context.h"
+#include "rex_directx/system/dx_compute_context.h"
 
 namespace rex
 {
@@ -72,7 +69,6 @@ namespace rex
       switch (type())
       {
       case GraphicsEngineType::Render:   return static_cast<DxRenderContext*>(ctx)->dx_cmdlist();
-      case GraphicsEngineType::Copy:     return static_cast<DxCopyContext*>(ctx)->dx_cmdlist();
       case GraphicsEngineType::Compute:  return static_cast<DxComputeContext*>(ctx)->dx_cmdlist();
       }
 

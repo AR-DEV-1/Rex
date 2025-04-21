@@ -6,6 +6,7 @@
 #include "rex_engine/diagnostics/log.h"
 
 #include "rex_engine/gfx/imgui/imgui_utils.h"
+#include "rex_engine/gfx/imgui/imgui_colors.h"
 
 #include "imgui/imgui_internal.h"
 
@@ -88,6 +89,6 @@ namespace regina
 			window->WorkRect.Max.x, window->DC.CursorPos.y + window->DC.CurrLineSize.y
 		};
 
-		ImGui::GetWindowDrawList()->AddRectFilled(item_rect.Min, item_rect.Max, rex::imgui::selection);
+		ImGui::GetWindowDrawList()->AddRectFilled(item_rect.Min, item_rect.Max, rex::imgui::colors::selection);
 	}
 }

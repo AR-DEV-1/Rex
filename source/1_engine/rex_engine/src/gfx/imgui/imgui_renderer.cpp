@@ -39,6 +39,7 @@ namespace rex
     {
       destroy_viewports();
       imgui_platform_shutdown();
+      imgui_device::shutdown();
       ImGui::DestroyContext();
     }
 
@@ -121,7 +122,7 @@ namespace rex
       imgui_device.command_queue = creationInfo.command_queue;
       imgui_device.max_num_frames_in_flight = creationInfo.max_frames_in_flight;
       imgui_device.rtv_format = gal::instance()->swapchain_format();
-      init_imgui_device(imgui_device);
+      imgui_device::init(globals::make_unique<ImGuiDevice>(imgui_device));
 
       // Perform platform specific imgui initialization
       imgui_platform_init(creationInfo.platformWindowHandle);

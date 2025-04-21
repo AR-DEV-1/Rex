@@ -19,7 +19,7 @@ namespace rex
     }
 
     // Prepare a new frame
-    void DxRenderEngine::new_frame()
+    void DxRenderEngine::api_new_frame()
     {
       // Nothing to implement
     }

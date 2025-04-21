@@ -2,7 +2,7 @@
 
 #include "rex_engine/engine/types.h"
 #include "rex_engine/pooling/growing_pool.h"
-#include "rex_engine/engine/scoped_pooled_object.h"
+#include "rex_engine/pooling/scoped_pooled_object.h"
 
 #include "rex_engine/gfx/system/command_allocator.h"
 #include "rex_engine/gfx/core/graphics_engine_type.h"

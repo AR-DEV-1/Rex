@@ -1,6 +1,6 @@
 #include "rex_unit_test/rex_catch2.h"
 
-#include "rex_engine/engine/scoped_pooled_object.h"
+#include "rex_engine/pooling/scoped_pooled_object.h"
 #include "rex_engine/pooling/growing_pool.h"
 #include "rex_unit_test/test_object.h"
 

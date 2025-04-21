@@ -58,6 +58,13 @@ namespace rex
     {
     public:
       DirectXInterface(const OutputWindowUserData& userData);
+      DirectXInterface(const DirectXInterface&) = delete;
+      DirectXInterface(DirectXInterface&&) = delete;
+      ~DirectXInterface();
+
+      DirectXInterface& operator=(const DirectXInterface&) = delete;
+      DirectXInterface& operator=(DirectXInterface&&) = delete;
+
 
       // Return basic info about the graphics hardware of the current machine
       const Info& info() const override;
@@ -123,7 +130,6 @@ namespace rex
 
       // Initialize the various sub engines
       rsl::unique_ptr<RenderEngine>   init_render_engine(ResourceStateTracker* resourceStateTracker) override;
-      rsl::unique_ptr<CopyEngine>     init_copy_engine(ResourceStateTracker* resourceStateTracker) override;
       rsl::unique_ptr<ComputeEngine>  init_compute_engine(ResourceStateTracker* resourceStateTracker) override;
 
       // Allocates a debug interface using DirectX debug interface API

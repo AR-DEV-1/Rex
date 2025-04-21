@@ -7,7 +7,7 @@
 #include "rex_engine/engine/types.h"
 #include "rex_engine/containers/vector_utils.h"
 #include "rex_engine/diagnostics/assert.h"
-#include "rex_engine/engine/scoped_pooled_object.h"
+#include "rex_engine/pooling/scoped_pooled_object.h"
 
 
 

@@ -5,7 +5,7 @@
 
 #include "rex_engine/gfx/graphics.h"
 
-#include "rex_engine/gfx/materials/material_system.h"
+#include "rex_engine/gfx/materials/material_library.h"
 
 #include "rex_engine/gfx/shader_reflection/shader_reflection.h"
 #include "rex_engine/gfx/system/root_signature_cache.h"
@@ -19,7 +19,7 @@ namespace rex
     Material::Material(const MaterialDesc& matDesc)
       : m_shader_pipeline(matDesc.shader_pipeline)
     {
-      const ShaderPipelineReflection& reflection = shader_reflection_cache::load(m_shader_pipeline);
+      const ShaderPipelineReflection& reflection = shader_reflection::instance()->load(m_shader_pipeline);
       m_parameters_store = rsl::make_unique<ShaderParametersStore>(reflection.material_param_store_desc);
     }
 

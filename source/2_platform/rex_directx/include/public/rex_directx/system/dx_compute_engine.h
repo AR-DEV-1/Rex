@@ -3,7 +3,7 @@
 #include "rex_engine/gfx/system/compute_engine.h"
 #include "rex_directx/system/dx_command_allocator.h"
 #include "rex_directx/utility/dx_util.h"
-#include "rex_directx/gfx/dx_compute_context.h"
+#include "rex_directx/system/dx_compute_context.h"
 #include "rex_directx/system/dx_gal.h"
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS

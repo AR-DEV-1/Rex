@@ -6,7 +6,7 @@ namespace rex
 {
 	namespace gfx
 	{
-		Camera::Camera(const glm::vec3& pos, const glm::vec3& fwd, const CameraDimensions& camDimensions, ProjectionMode projectionMode = ProjectionMode::Perspective)
+		Camera::Camera(const glm::vec3& pos, const glm::vec3& fwd, const CameraDimensions& camDimensions, ProjectionMode projectionMode)
 			: m_position(pos)
 			, m_forward(fwd)
 			, m_projection(1.0f)
@@ -53,7 +53,7 @@ namespace rex
 			switch (m_projection_mode)
 			{
 			case ProjectionMode::Perspective:
-				m_projection = glm::perspectiveFov(fov_rad, m_cam_dimensions.width, m_cam_dimensions.height, m_cam_dimensions.near, m_cam_dimensions.far);
+				m_projection = glm::perspectiveFov(fov_rad, m_cam_dimensions.width, m_cam_dimensions.height, m_cam_dimensions.near_plane, m_cam_dimensions.far_plane);
 				break;
 			case ProjectionMode::Ortographic:
 			{
@@ -65,7 +65,7 @@ namespace rex
 				f32 top = -h;
 				f32 bottom = h;
 
-				m_projection = glm::ortho(left, right, top, bottom, m_cam_dimensions.near, m_cam_dimensions.far);
+				m_projection = glm::ortho(left, right, top, bottom, m_cam_dimensions.near_plane, m_cam_dimensions.far_plane);
 				break;
 			}
 			}

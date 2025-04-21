@@ -28,11 +28,11 @@
 #include "rex_directx/resources/dx_depth_stencil_buffer.h"
 #include "rex_directx/resources/dx_unordered_access_buffer.h"
 #include "rex_directx/system/dx_view_heap.h"
-#include "rex_engine/gfx/system/shader_param_declaration.h"
 
+#include "rex_engine/gfx/shader_reflection/shader_param_declaration.h"
 #include "rex_engine/gfx/shader_reflection/shader_signature.h"
 
-#include "rex_engine/gfx/materials/material_system.h"
+#include "rex_engine/gfx/materials/material_library.h"
 
 #include "rex_engine/gfx/system/graphics_engine.h"
 

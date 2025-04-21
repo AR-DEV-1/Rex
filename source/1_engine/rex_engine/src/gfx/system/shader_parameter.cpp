@@ -105,8 +105,8 @@ namespace rex
 			default: REX_ASSERT("Invalid shader parameter type"); break;
 			}
 
-			auto copy_ctx = gfx::gal::instance()->new_copy_ctx();
-			auto start_handle = copy_ctx->copy_views(target_view_heap_type, m_views);
+			auto render_ctx = gfx::gal::instance()->new_render_ctx();
+			auto start_handle = render_ctx->copy_views(target_view_heap_type, m_views);
 			ctx->bind_view_table(slot(), start_handle);
 		}
 

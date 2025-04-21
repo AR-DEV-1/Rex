@@ -5,7 +5,7 @@
 
 #include "rex_engine/gfx/rendering/camera.h"
 
-#include "rex_engine/gfx/system/copy_context.h"
+
 #include "rex_engine/gfx/graphics.h"
 
 #include "rex_engine/filesystem/vfs.h"
@@ -137,8 +137,8 @@ namespace rex
 			per_instance_data.world = transform.world_mat();
 			per_instance_data.worldviewproj = per_instance_data.world * m_per_view_data.view_proj;
 
-			auto copy_ctx = gfx::gal::instance()->new_copy_ctx();
-			copy_ctx->update_buffer(m_per_instance_cbs[constant_buffer_idx].get(), &per_instance_data, sizeof(per_instance_data));
+			auto render_ctx = gfx::gal::instance()->new_render_ctx();
+			render_ctx->update_buffer(m_per_instance_cbs[constant_buffer_idx].get(), &per_instance_data, sizeof(per_instance_data));
 
 			DrawList draw_list{};
 			draw_list.vb = mesh.vb();
@@ -156,9 +156,9 @@ namespace rex
 
 			m_per_scene_data.light_direction = m_scene_data.light_direction;
 
-			auto copy_ctx = gfx::gal::instance()->new_copy_ctx();
-			copy_ctx->update_buffer(m_cb_view_data.get(), &m_per_view_data, sizeof(m_per_view_data));
-			copy_ctx->update_buffer(m_cb_scene_data.get(), &m_per_scene_data, sizeof(m_per_scene_data));
+			auto render_ctx = gfx::gal::instance()->new_render_ctx();
+			render_ctx->update_buffer(m_cb_view_data.get(), &m_per_view_data, sizeof(m_per_view_data));
+			render_ctx->update_buffer(m_cb_scene_data.get(), &m_per_scene_data, sizeof(m_per_scene_data));
 		}
 
 		void SceneRenderer::geometry_pass(RenderContext* ctx)
