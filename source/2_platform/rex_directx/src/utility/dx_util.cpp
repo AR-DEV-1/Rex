@@ -330,6 +330,7 @@ namespace rex
       {
         switch (visibility)
         {
+        case ShaderVisibility::None: break;
         case ShaderVisibility::Vertex: return D3D12_SHADER_VISIBILITY_VERTEX;
         case ShaderVisibility::Pixel: return D3D12_SHADER_VISIBILITY_PIXEL;
         case ShaderVisibility::Amplification: return D3D12_SHADER_VISIBILITY_AMPLIFICATION;
@@ -338,6 +339,7 @@ namespace rex
         case ShaderVisibility::Hull: return D3D12_SHADER_VISIBILITY_HULL;
         case ShaderVisibility::Mesh: return D3D12_SHADER_VISIBILITY_MESH;
         case ShaderVisibility::All: return D3D12_SHADER_VISIBILITY_ALL;
+        case ShaderVisibility::Compute: break;
         }
 
         REX_ASSERT("Unsupported shader visibility for directx 12: {}", rsl::enum_refl::enum_name(visibility));

@@ -58,7 +58,7 @@ namespace rex
 			{
 				ScopedStyle tooltipPadding(ImGuiStyleVar_WindowPadding, padding);
 				ScopedColor textCol(ImGuiCol_Text, colors::text_brighter);
-				ImGui::SetTooltip(txt.data());
+				ImGui::SetTooltip("%s", txt.data());
 			}
 		}
 

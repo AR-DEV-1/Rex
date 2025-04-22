@@ -62,4 +62,6 @@ namespace rex
       return !(*this == rhs);
     }
   };
+
+  void create_minimal_global_allocators();
 } // namespace rex

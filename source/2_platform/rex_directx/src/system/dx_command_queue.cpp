@@ -70,6 +70,8 @@ namespace rex
       {
       case GraphicsEngineType::Render:   return static_cast<DxRenderContext*>(ctx)->dx_cmdlist();
       case GraphicsEngineType::Compute:  return static_cast<DxComputeContext*>(ctx)->dx_cmdlist();
+      default:
+        break;
       }
 
       REX_ASSERT("Unknown command type used for command queue. Cannot get command list of context");

@@ -35,6 +35,10 @@ namespace rex
 
     void pre_app_entry(REX_MAYBE_UNUSED const char8* cmdLine)
     {
+      // Create minimal global allocators, in case we need them
+      // they'll get destroyed and properly initialized later
+      create_minimal_global_allocators();
+
       // Initialize the commandline first as this can influence everything else
       cmdline::init(globals::make_unique<CommandLine>(rsl::string_view(cmdLine)));
 

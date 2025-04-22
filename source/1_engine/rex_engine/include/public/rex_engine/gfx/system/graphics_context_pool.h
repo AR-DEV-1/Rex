@@ -25,9 +25,9 @@ namespace rex
       ScopedGraphicsContext(ScopedGraphicsContext&&) = default;
       ~ScopedGraphicsContext()
       {
-        if (get())
+        if (this->get())
         {
-          get()->execute_on_gpu();
+          this->get()->execute_on_gpu();
         }
       }
       ScopedGraphicsContext& operator=(const ScopedGraphicsContext&) = delete;

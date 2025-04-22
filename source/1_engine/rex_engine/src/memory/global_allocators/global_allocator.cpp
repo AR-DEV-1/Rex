@@ -94,4 +94,10 @@ namespace rex
     internal::backend_allocator().deallocate(ptr, size);
   }
 
+  void create_minimal_global_allocators()
+  {
+    // Just touch the global allocator, that'll initialize everything
+    rex::GlobalAllocator();
+  }
+
 } // namespace rex

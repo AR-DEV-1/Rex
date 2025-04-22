@@ -59,7 +59,7 @@ namespace rex
   template <typename T, typename Allocator, typename... Args, rsl::enable_if_t<!rsl::is_array_v<T>, bool> = true>
   RSL_NO_DISCARD rsl::unique_ptr<T, DeleterWithAllocator<T, Allocator>> alloc_unique(Allocator& alloc, Args&&... args)
   {
-    T* ptr = alloc.allocate<T>();
+    T* ptr = alloc.template allocate<T>();
     alloc.construct(ptr, rsl::forward<Args>(args)...);
     DeleterWithAllocator<T, Allocator> deleter(alloc);
     return rsl::unique_ptr<T, DeleterWithAllocator<T, Allocator>>(ptr, deleter);
