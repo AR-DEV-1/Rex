@@ -59,11 +59,11 @@ namespace rex
       
       // Get a new context object from the engine, using an idle one or creating a new one if no idle one is found
       template <typename TGraphicsCtx>
-      ScopedGraphicsContext<TGraphicsCtx, GraphicsContext> new_context(const ContextResetData& resetData, rsl::string_view eventName)
+      ScopedGraphicsContext<TGraphicsCtx> new_context(const ContextResetData& resetData, rsl::string_view eventName)
       {
         // Find a command alloctor to be used for the context
         ScopedFencedAllocator alloc = request_allocator();
-        ScopedGraphicsContext<TGraphicsCtx, GraphicsContext> ctx = m_context_pool.request<TGraphicsCtx>([this, alloc = alloc->underlying_alloc()]() { return allocate_new_context(alloc); });
+        ScopedGraphicsContext<TGraphicsCtx> ctx = m_context_pool.request<TGraphicsCtx>([this, alloc = alloc->underlying_alloc()]() { return allocate_new_context(alloc); });
 
         // Always reset a context, making it ready to be used by a user
         ctx->begin_profile_event(eventName);

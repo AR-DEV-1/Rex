@@ -1,5 +1,7 @@
 #include "rex_engine/gfx/shader_reflection/view_table_builder.h"
 
+#include "rex_engine/diagnostics/assert.h"
+
 #include "rex_std/bonus/utility.h"
 
 namespace rex

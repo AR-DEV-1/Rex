@@ -77,7 +77,7 @@ namespace rex
 			log_info(info());
 
 			init_resource_heap();
-			init_desc_heaps();
+			init_view_heaps();
 			init_sub_engines();
 			init_swapchain();
 
@@ -201,23 +201,18 @@ namespace rex
 		}
 
 		// Create a new context which is used for rendering to render targets
-		ScopedGraphicsContext<RenderContext, GraphicsContext> GALBase::new_render_ctx(PipelineState* pso, rsl::string_view eventName)
+		ScopedGraphicsContext<RenderContext> GALBase::new_render_ctx(PipelineState* pso, rsl::string_view eventName)
 		{
 			ContextResetData reset_data = create_context_reset_data(pso);
 
 			return m_render_engine->new_context<RenderContext>(reset_data, eventName);
 		}
 		// Create a new context which is used for computing data on the gpu
-		ScopedGraphicsContext<ComputeContext, GraphicsContext> GALBase::new_compute_ctx(PipelineState* pso, rsl::string_view eventName)
+		ScopedGraphicsContext<ComputeContext> GALBase::new_compute_ctx(PipelineState* pso, rsl::string_view eventName)
 		{
 			ContextResetData reset_data = create_context_reset_data(pso);
 
 			return m_compute_engine->new_context<ComputeContext>(reset_data, eventName);
-		}
-
-		void GALBase::notify_textures_presence_on_gpu(Texture2D* texture, rsl::unique_ptr<ResourceView> resourceView)
-		{
-			m_textures_on_gpu[texture] = rsl::move(resourceView);
 		}
 
 		const ResourceView* GALBase::try_get_gpu_views(const rsl::vector<const ResourceView*>& views) const
@@ -265,12 +260,12 @@ namespace rex
 		}
 
 		// Returns a specific descriptor heap based on type
-		ViewHeap* GALBase::cpu_desc_heap(ResourceViewType descHeapType)
+		ViewHeap* GALBase::cpu_view_heap(ResourceViewType descHeapType)
 		{
 			return m_cpu_descriptor_heap_pool.at(descHeapType).get();
 		}
 		// Returns a specific descriptor heap based on type that's visible to shaders
-		ViewHeap* GALBase::shader_visible_desc_heap(ResourceViewType descHeapType)
+		ViewHeap* GALBase::gpu_view_heap(ResourceViewType descHeapType)
 		{
 			return m_shader_visible_descriptor_heap_pool.at(descHeapType).get();
 		}
@@ -302,17 +297,17 @@ namespace rex
 			m_compute_engine->init();
 		}
 		// Initialize the descriptor heaps which keep track of all descriptors to various resources
-		void GALBase::init_desc_heaps()
+		void GALBase::init_view_heaps()
 		{
-			init_desc_heap(m_cpu_descriptor_heap_pool, ResourceViewType::RenderTarget, IsShaderVisible::no);
-			init_desc_heap(m_cpu_descriptor_heap_pool, ResourceViewType::DepthStencil, IsShaderVisible::no);
-			init_desc_heap(m_cpu_descriptor_heap_pool, ResourceViewType::Texture2D, IsShaderVisible::no);
-			init_desc_heap(m_cpu_descriptor_heap_pool, ResourceViewType::Sampler, IsShaderVisible::no);
+			init_view_heap(m_cpu_descriptor_heap_pool, ResourceViewType::RenderTarget, IsShaderVisible::no);
+			init_view_heap(m_cpu_descriptor_heap_pool, ResourceViewType::DepthStencil, IsShaderVisible::no);
+			init_view_heap(m_cpu_descriptor_heap_pool, ResourceViewType::Texture2D, IsShaderVisible::no);
+			init_view_heap(m_cpu_descriptor_heap_pool, ResourceViewType::Sampler, IsShaderVisible::no);
 
-			init_desc_heap(m_shader_visible_descriptor_heap_pool, ResourceViewType::Texture2D, IsShaderVisible::yes);
-			init_desc_heap(m_shader_visible_descriptor_heap_pool, ResourceViewType::Sampler, IsShaderVisible::yes);
+			init_view_heap(m_shader_visible_descriptor_heap_pool, ResourceViewType::Texture2D, IsShaderVisible::yes);
+			init_view_heap(m_shader_visible_descriptor_heap_pool, ResourceViewType::Sampler, IsShaderVisible::yes);
 		}
-		void GALBase::init_desc_heap(ViewHeapPool& descHeapPool, ResourceViewType descHeapType, IsShaderVisible isShaderVisible)
+		void GALBase::init_view_heap(ViewHeapPool& descHeapPool, ResourceViewType descHeapType, IsShaderVisible isShaderVisible)
 		{
 			descHeapPool.emplace(descHeapType, allocate_view_heap(descHeapType, isShaderVisible));
 		}
@@ -367,8 +362,8 @@ namespace rex
 		{
 			ContextResetData reset_data{};
 			reset_data.pso = pso;
-			reset_data.shader_visible_srv_desc_heap = shader_visible_desc_heap(ResourceViewType::Texture2D);
-			reset_data.shader_visible_sampler_desc_heap = shader_visible_desc_heap(ResourceViewType::Sampler);
+			reset_data.shader_visible_srv_desc_heap = gpu_view_heap(ResourceViewType::Texture2D);
+			reset_data.shader_visible_sampler_desc_heap = gpu_view_heap(ResourceViewType::Sampler);
 			reset_data.current_backbuffer_rt = m_swapchain->current_buffer();
 
 			return reset_data;

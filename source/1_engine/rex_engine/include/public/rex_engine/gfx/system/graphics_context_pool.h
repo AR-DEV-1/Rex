@@ -6,20 +6,18 @@
 
 #include "rex_std/functional.h"
 
-
-
 namespace rex
 {
   namespace gfx
   {
     class CommandAllocator;
     
-    template <typename TGraphicsCtx, typename PooledType>
-    class ScopedGraphicsContext : public ScopedPoolObject<TGraphicsCtx, PooledType>
+    template <typename TGraphicsCtx>
+    class ScopedGraphicsContext : public ScopedPoolObject<TGraphicsCtx, GraphicsContext>
     {
     public:
-      ScopedGraphicsContext(TGraphicsCtx* ctx, GrowingPool<PooledType>* pool)
-        : ScopedPoolObject<TGraphicsCtx, PooledType>(ctx, pool)
+      ScopedGraphicsContext(TGraphicsCtx* ctx, GrowingPool<GraphicsContext>* pool)
+        : ScopedPoolObject<TGraphicsCtx, GraphicsContext>(ctx, pool)
       {}
       ScopedGraphicsContext(const ScopedGraphicsContext&) = delete;
       ScopedGraphicsContext(ScopedGraphicsContext&&) = default;
@@ -51,13 +49,13 @@ namespace rex
       //ScopedGraphicsContext<GraphicsContext> request(CommandAllocator* alloc, const alloc_context_func& allocFunc);
 
       template <typename TGraphicsCtx>
-      ScopedGraphicsContext<TGraphicsCtx, GraphicsContext> request(const alloc_context_func& allocFunc)
+      ScopedGraphicsContext<TGraphicsCtx> request(const alloc_context_func& allocFunc)
       {
         // We don't care which one we get, so we'll just get first we can find
         auto find_free_ctx = [](const rsl::unique_ptr<GraphicsContext>&) { return true; }; // any idle one will do
         GraphicsContext* ctx = m_context_pool.request(find_free_ctx, allocFunc);
 
-        return ScopedGraphicsContext<TGraphicsCtx, GraphicsContext>(static_cast<TGraphicsCtx*>(ctx), &m_context_pool);
+        return ScopedGraphicsContext<TGraphicsCtx>(static_cast<TGraphicsCtx*>(ctx), &m_context_pool);
       }
 
 

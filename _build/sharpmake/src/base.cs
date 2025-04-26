@@ -658,7 +658,7 @@ public abstract class BasicCPPProject : Project
 
     // The header filter is a list of regexes we care about when using clang-tidy
     // This is useful for ignoring headers of thirdparty libraries we don't want to run clang-tools on.
-    ClangToolsConfig project = new ClangToolsConfig()
+    ClangToolsConfig clangToolsConfig = new ClangToolsConfig()
     {
       Name = Name,
       SrcRoot = SourceRootPath,
@@ -674,7 +674,7 @@ public abstract class BasicCPPProject : Project
     };
 
     // Write the text to disk in json format
-    string jsonBlob = JsonSerializer.Serialize(project, options);
+    string jsonBlob = JsonSerializer.Serialize(clangToolsConfig, options);
 
     Utils.SafeWriteFile(PathGeneration.ClangToolsConfigFilePath(conf), jsonBlob);
   }

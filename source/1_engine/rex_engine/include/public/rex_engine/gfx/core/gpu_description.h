@@ -22,6 +22,10 @@ namespace rex
 
     rsl::memory_size dedicated_video_memory;    // Num bytes of dedicated VRAM that's not shared with the CPU
     rsl::memory_size dedicated_system_memory;   // Num bytes of dedicated system memory that is not shared with the CPU
+
+    // Note: On Windows, 50% of CPU RAM is used as shared VRAM
+    // this is to avoid your system from crashing if all VRAM is used
+    // Using this memory has a performance hit though
     rsl::memory_size shared_system_memory;      // Num bytes of shared system memory. This is the max number of system memory that can be used by the GPU
   };
 

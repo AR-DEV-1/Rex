@@ -8,6 +8,8 @@ namespace rex
 {
 	namespace gfx
 	{
+		// Build a view table, which is a 2D array of resources
+		// a view table is used for all resources except constant buffers
 		class ViewTableBuilder
 		{
 		public:
@@ -21,12 +23,12 @@ namespace rex
 			void add_new_range();
 
 		private:
-			s32 m_start_register;
-			s32 m_expected_register;
-			s32 m_expected_register_space;
-			s32 m_total_num_views;
-			ShaderParameterType m_expected_resource_type;
-			rsl::vector<ViewRangeDeclaration> m_ranges;
+			s32 m_start_register;														// The start register of a new range being added to the table
+			s32 m_expected_register;												// the expected register of a new resource to be aded to the table
+			s32 m_expected_register_space;									// the expected register space of a new resource to be added to the table
+			s32 m_total_num_views;													// the total number of views within the table, an accumulation of the number of views of every range within the table
+			ShaderParameterType m_expected_resource_type;		// the expected resource type to be added to the table. all ranges should have the same resource type
+			rsl::vector<ViewRangeDeclaration> m_ranges;			// all the ranges within the table
 		};
 	}
 }

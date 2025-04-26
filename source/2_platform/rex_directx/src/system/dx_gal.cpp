@@ -507,7 +507,7 @@ namespace rex
 		}
 		rsl::unique_ptr<RenderTarget> DirectXInterface::retarget_render_target(wrl::ComPtr<ID3D12Resource>& resource, DxResourceView view)
 		{
-			d3d::to_dx12(cpu_desc_heap(ResourceViewType::RenderTarget))->retarget_rtv(resource.Get(), view);
+			d3d::to_dx12(cpu_view_heap(ResourceViewType::RenderTarget))->retarget_rtv(resource.Get(), view);
 			return rsl::make_unique<DxRenderTarget>(resource, view, m_rtv_clear_color);
 		}
 
@@ -632,30 +632,30 @@ namespace rex
 		// Create a render target view for a given resource
 		DxResourceView DirectXInterface::create_rtv(const wrl::ComPtr<ID3D12Resource>& texture)
 		{
-			return d3d::to_dx12(cpu_desc_heap(ResourceViewType::RenderTarget))->create_rtv(texture.Get());
+			return d3d::to_dx12(cpu_view_heap(ResourceViewType::RenderTarget))->create_rtv(texture.Get());
 		}
 		// Create a shader resource view pointing to a 2D texture
 		DxResourceView DirectXInterface::create_texture2d_srv(const wrl::ComPtr<ID3D12Resource>& texture)
 		{
-			return d3d::to_dx12(cpu_desc_heap(ResourceViewType::Texture2D))->create_texture2d_srv(texture.Get());
+			return d3d::to_dx12(cpu_view_heap(ResourceViewType::Texture2D))->create_texture2d_srv(texture.Get());
 		}
 		// Create a constant buffer view pointing for a given resource
 		DxResourceView DirectXInterface::create_cbv(const wrl::ComPtr<ID3D12Resource>& resource, rsl::memory_size size)
 		{
-			return d3d::to_dx12(cpu_desc_heap(ResourceViewType::ConstantBuffer))->create_cbv(resource.Get(), size);
+			return d3d::to_dx12(cpu_view_heap(ResourceViewType::ConstantBuffer))->create_cbv(resource.Get(), size);
 		}
 		DxResourceView DirectXInterface::create_dsv(const wrl::ComPtr<ID3D12Resource>& resource)
 		{
-			return d3d::to_dx12(cpu_desc_heap(ResourceViewType::DepthStencil))->create_dsv(resource.Get());
+			return d3d::to_dx12(cpu_view_heap(ResourceViewType::DepthStencil))->create_dsv(resource.Get());
 		}
 		DxResourceView DirectXInterface::create_uav(const wrl::ComPtr<ID3D12Resource>& resource, rsl::memory_size size)
 		{
-			return d3d::to_dx12(cpu_desc_heap(ResourceViewType::UnorderedAccess))->create_uav(resource.Get(), size);
+			return d3d::to_dx12(cpu_view_heap(ResourceViewType::UnorderedAccess))->create_uav(resource.Get(), size);
 		}
 
 		rsl::unique_ptr<DxSampler2D> DirectXInterface::allocate_sampler2d(const SamplerDesc& desc)
 		{
-			return d3d::to_dx12(cpu_desc_heap(ResourceViewType::Sampler))->create_sampler2d(desc);
+			return d3d::to_dx12(cpu_view_heap(ResourceViewType::Sampler))->create_sampler2d(desc);
 		}
 
 		// Initialize the various sub engines

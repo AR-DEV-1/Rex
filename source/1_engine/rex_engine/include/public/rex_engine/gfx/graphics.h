@@ -189,9 +189,9 @@ namespace rex
       // Contexts
       // --------------------------------
       // Create a new context which is used for rendering to render targets
-      ScopedGraphicsContext<RenderContext, GraphicsContext> new_render_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
+      ScopedGraphicsContext<RenderContext> new_render_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
       // Create a new context which is used for computing data on the gpu
-      ScopedGraphicsContext<ComputeContext, GraphicsContext> new_compute_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
+      ScopedGraphicsContext<ComputeContext> new_compute_ctx(PipelineState* pso = nullptr, rsl::string_view eventName = "");
 
       // --------------------------------
       // Render Pipeline
@@ -217,7 +217,6 @@ namespace rex
       // --------------------------------
       // GPU RESOURCE QUERYING
       // --------------------------------
-      void notify_textures_presence_on_gpu(Texture2D* texture, rsl::unique_ptr<ResourceView> resourceView);
       const ResourceView* try_get_gpu_views(const rsl::vector<const ResourceView*>& views) const;
       const ResourceView* try_get_gpu_view(const ResourceView* cpuView) const;
       const ResourceView* notify_views_on_gpu(const rsl::vector<const ResourceView*>& views, rsl::unique_ptr<ResourceView> gpuView);
@@ -242,8 +241,10 @@ namespace rex
       virtual rsl::unique_ptr<ViewHeap> allocate_view_heap(ResourceViewType descHeapType, IsShaderVisible isShaderVisible) = 0;
 
       // Returns a specific descriptor heap based on type
-      ViewHeap* cpu_desc_heap(ResourceViewType descHeapType);
-      ViewHeap* shader_visible_desc_heap(ResourceViewType descHeapType);
+      // Return the view heap, accessible from the CPU
+      ViewHeap* cpu_view_heap(ResourceViewType descHeapType);
+      // Return the view heap, accessible from the GPU
+      ViewHeap* gpu_view_heap(ResourceViewType descHeapType);
 
       // Returns the debug interface
       // This is sometimes needed in API specific code
@@ -262,8 +263,8 @@ namespace rex
       // Initialize the sub engine, bringing them up and ready, to be used in the graphics pipeline
       void init_sub_engines();
       // Initialize the descriptor heaps which keep track of all descriptors to various resources
-      void init_desc_heaps();
-      void init_desc_heap(ViewHeapPool& descHeapPool, ResourceViewType descHeapType, IsShaderVisible isShaderVisible);
+      void init_view_heaps();
+      void init_view_heap(ViewHeapPool& descHeapPool, ResourceViewType descHeapType, IsShaderVisible isShaderVisible);
 
       void init_common_resources();
 
@@ -289,18 +290,17 @@ namespace rex
       rsl::unique_ptr<Swapchain> m_swapchain;             // The swapchain is responsible for swapping the backbuffer with the front buffer
       rsl::unique_ptr<RenderEngine> m_render_engine;      // The render engine is the high level graphics engine responsible for queueing render commands
       rsl::unique_ptr<ComputeEngine> m_compute_engine;    // The render engine is the high level graphics engine responsible for queueing compute commands
-      s32 m_max_frames_in_flight;                         // The maximum number of we can have in flight for rendering.
       void* m_primary_display_handle;                     // The display handle to render to (HWND on Windows)
+      s32 m_max_frames_in_flight;                         // The maximum number of we can have in flight for rendering.
       s32 m_frame_idx;                                    // The current frame index
       ViewHeapPool m_cpu_descriptor_heap_pool;            // Pool of descriptor heaps per type
       ViewHeapPool m_shader_visible_descriptor_heap_pool; // Pool of descriptor heaps per type
       ResourceStateTracker m_resource_state_tracker;      // The global tracker of resource states
 
-      rsl::unordered_map<Texture2D*, rsl::unique_ptr<ResourceView>> m_textures_on_gpu;
-      rsl::unordered_map<u64, rsl::unique_ptr<ResourceView>> m_resources_on_gpu;
-      rsl::vector<rsl::unique_ptr<Renderer>> m_renderers;
-      rsl::array<RasterStateDesc, rsl::enum_refl::enum_count<CommonRasterState>()> m_common_raster_states;
-      rsl::array<rsl::unique_ptr<Sampler2D>, rsl::enum_refl::enum_count<CommonSampler>()> m_common_samplers;
+      rsl::unordered_map<u64, rsl::unique_ptr<ResourceView>> m_resources_on_gpu;                                    // Holds a map of all resources already present on the GPU and their views
+      rsl::vector<rsl::unique_ptr<Renderer>> m_renderers;                                                           // Holds all the renderers
+      rsl::array<RasterStateDesc, rsl::enum_refl::enum_count<CommonRasterState>()> m_common_raster_states;          // Holds a list of common raster states
+      rsl::array<rsl::unique_ptr<Sampler2D>, rsl::enum_refl::enum_count<CommonSampler>()> m_common_samplers;        // Holds a list of common samplers
     };
   }
 }

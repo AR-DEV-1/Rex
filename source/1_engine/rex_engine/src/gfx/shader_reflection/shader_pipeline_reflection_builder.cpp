@@ -8,11 +8,11 @@ namespace rex
 		void ShaderPipelineReflectionBuilder::process_shader(const ShaderSignature& signature, ShaderVisibility visibility)
 		{
 			// Split of the shader parameters by register space
-			SplittedResources splitted_babs = split_resources(signature.byte_address_buffers_resources());
-			SplittedResources splitted_uabs = split_resources(signature.unordered_access_buffers_resources());
-			SplittedResources splitted_cbs = split_resources(signature.constant_buffers_resources());
-			SplittedResources splitted_textures = split_resources(signature.textures());
-			SplittedResources splitted_samplers = split_resources(signature.samplers());
+			ShaderResources splitted_babs = split_resources(signature.byte_address_buffers_resources());
+			ShaderResources splitted_uabs = split_resources(signature.unordered_access_buffers_resources());
+			ShaderResources splitted_cbs = split_resources(signature.constant_buffers_resources());
+			ShaderResources splitted_textures = split_resources(signature.textures());
+			ShaderResources splitted_samplers = split_resources(signature.samplers());
 
 			add_bindings(splitted_babs.renderpass_resources, ShaderParameterType::ByteAddress, s_renderpass_register_space, visibility);
 			add_bindings(splitted_uabs.renderpass_resources, ShaderParameterType::UnorderedAccessView, s_renderpass_register_space, visibility);
@@ -32,9 +32,9 @@ namespace rex
 			return rsl::exchange(m_reflection_result, ShaderPipelineReflection());
 		}
 
-		SplittedResources ShaderPipelineReflectionBuilder::split_resources(const rsl::vector<ShaderResourceDeclaration> resources)
+		ShaderResources ShaderPipelineReflectionBuilder::split_resources(const rsl::vector<ShaderResourceDeclaration> resources)
 		{
-			SplittedResources splitted_resources{};
+			ShaderResources splitted_resources{};
 
 			for (const auto& resource : resources)
 			{
