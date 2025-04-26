@@ -1,0 +1,14 @@
+{
+  "BlacklistedDirectories": [
+    ".vs",
+    "$AV_AVG",
+    "AVG sandbox",
+    "$RECYCLE.BIN",
+    ".rex",
+    "obj"
+  ],
+  "BlacklistedFiles": [
+  ],
+  "BlacklistedExtensions": [
+  ]
+}

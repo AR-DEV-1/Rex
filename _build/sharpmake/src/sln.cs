@@ -54,6 +54,7 @@ namespace rex
         conf.AddProject<DokanFs>(target);
         conf.AddProject<ProjectedFileSystem>(target);
         conf.AddProject<ConsoleApp>(target);
+        conf.AddProject<BackupCreator>(target);
       }
 
       conf.AddProject<PokemonProject>(target);
