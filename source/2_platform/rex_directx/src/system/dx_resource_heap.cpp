@@ -11,6 +11,9 @@ namespace rex
   {
     DEFINE_LOG_CATEGORY(LogResourceHeap);
 
+    // A resource heap currently acts like a stack based allocator
+    // This is likely not sufficient enough in the future, but it'll do for now
+
     ResourceHeap::ResourceHeap(const wrl::ComPtr<ID3D12Heap>& heap, const wrl::ComPtr<ID3D12Device1>& device)
         : m_heap(heap)
         , m_device(device)
