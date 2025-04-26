@@ -182,6 +182,13 @@ namespace rex
     // Return a handle pointing to the start of the view heap
     DxResourceView DxViewHeap::new_free_handle(s32 numDescriptors)
     {
+      // This function could benefit from some more complicated logic
+      // Right now the view heap acts like a stack allocator
+      // This is likely not sufficient for all operations and we need to come up with a better system
+      // However, it'll due for now..
+
+      REX_ASSERT_X(m_num_used_views + numDescriptors < m_num_views, "Trying to allocate more views that can fit in the heap");
+
       DxResourceView handle = my_start_handle();
       handle += m_num_used_views;
       m_num_used_views += numDescriptors;
