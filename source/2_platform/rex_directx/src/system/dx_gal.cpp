@@ -561,7 +561,7 @@ namespace rex
 
 			return rsl::make_unique<DxViewHeap>(desc_heap, m_device->dx_object(), isShaderVisible);
 		}
-		rsl::unique_ptr<ResourceHeap> DirectXInterface::create_resource_heap()
+		rsl::unique_ptr<DxResourceHeap> DirectXInterface::create_resource_heap()
 		{
 			CD3DX12_HEAP_DESC desc(100_mib, D3D12_HEAP_TYPE_DEFAULT);
 
@@ -572,7 +572,7 @@ namespace rex
 				return nullptr;
 			}
 
-			return rsl::make_unique<ResourceHeap>(d3d_heap, m_device->dx_object());
+			return rsl::make_unique<DxResourceHeap>(d3d_heap, m_device->dx_object());
 		}
 		void DirectXInterface::report_live_objects()
 		{
@@ -685,7 +685,7 @@ namespace rex
 				REX_ERROR(LogDxRhi, "Failed to create global resource heap");
 			}
 
-			m_heap = rsl::make_unique<ResourceHeap>(d3d_heap, m_device->dx_object());
+			m_heap = rsl::make_unique<DxResourceHeap>(d3d_heap, m_device->dx_object());
 		}
 
 		// Allocate a new view heap of a given type

@@ -43,7 +43,7 @@ namespace rex
   {
 		class DxDevice;
 		class DxCommandQueue;
-		class ResourceHeap;
+		class DxResourceHeap;
 		class ViewHeap;
 		struct CompileShaderDesc;
 		class DxSampler2D;
@@ -84,7 +84,7 @@ namespace rex
       // Create a DirectX descriptor heap
       rsl::unique_ptr<ViewHeap>               create_view_heap(D3D12_DESCRIPTOR_HEAP_TYPE type, IsShaderVisible isShaderVisible);
       // Create a DirectX resource heap
-      rsl::unique_ptr<ResourceHeap>           create_resource_heap();
+      rsl::unique_ptr<DxResourceHeap>           create_resource_heap();
       // Create a DirectX fence object
       rsl::unique_ptr<DxFence>                create_fence();
 
@@ -173,7 +173,7 @@ namespace rex
       rsl::unique_ptr<dxgi::Factory> m_factory;
       rsl::unique_ptr<dxgi::AdapterManager> m_adapter_manager;  // The manager holding all the adapters on this machine
 
-      rsl::unique_ptr<ResourceHeap> m_heap;  // The heap we use to allocate gpu resources
+      rsl::unique_ptr<DxResourceHeap> m_heap;  // The heap we use to allocate gpu resources
       rsl::Color4f m_rtv_clear_color;
     };
   }
