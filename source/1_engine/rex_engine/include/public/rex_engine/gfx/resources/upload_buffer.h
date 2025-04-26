@@ -60,9 +60,9 @@ namespace rex
       void reset();
 
       // Write data on cpu side, it returns the offset into the upload buffer where data was written to
-      virtual s64 write_buffer_data_from_cpu(const void* data, s64 size, s32 alignment = 1) = 0;
+      virtual s64 stage_buffer_data(const void* data, s64 size, s32 alignment = 1) = 0;
       // Write data on cpu side, it returns the offset into the upload buffer where data was written to
-      virtual s64 write_texture_data_from_cpu(const void* data, s32 width, s32 height, TextureFormat format) = 0;
+      virtual s64 stage_texture_data(const void* data, s32 width, s32 height, TextureFormat format) = 0;
 
 
     protected:

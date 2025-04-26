@@ -1,9 +1,6 @@
 #include "rex_engine/gfx/graphics.h"
 
-
-
 #include "rex_engine/gfx/core/gpu_description.h"
-#include "rex_engine/gfx/system/root_signature_cache.h"
 
 #include "rex_std/bonus/utility.h"
 #include "rex_std/memory.h"
@@ -222,28 +219,19 @@ namespace rex
 		{
 			m_textures_on_gpu[texture] = rsl::move(resourceView);
 		}
-		const ResourceView* GALBase::try_get_texture_gpu_handle(Texture2D* texture) const
-		{
-			if (m_textures_on_gpu.contains(texture))
-			{
-				return m_textures_on_gpu.at(texture).get();
-			}
-
-			return nullptr;
-		}
 
 		const ResourceView* GALBase::try_get_gpu_views(const rsl::vector<const ResourceView*>& views) const
 		{
 			// Hash all pointers together to calculate the final hash
-			u64 seed = 0;
+			u64 hash = 0;
 			for (const ResourceView* cpuView : views)
 			{
-				seed = rsl::hash_combine(seed, rsl::comp_hash(cpuView));
+				hash = rsl::hash_combine(hash, rsl::comp_hash(cpuView));
 			}
 
-			if (m_resources_on_gpu.contains(seed))
+			if (m_resources_on_gpu.contains(hash))
 			{
-				return m_resources_on_gpu.at(seed).get();
+				return m_resources_on_gpu.at(hash).get();
 			}
 
 			return nullptr;
@@ -254,14 +242,14 @@ namespace rex
 		}
 		const ResourceView* GALBase::notify_views_on_gpu(const rsl::vector<const ResourceView*>& views, rsl::unique_ptr<ResourceView> gpuView)
 		{
-			u64 seed = 0;
+			u64 hash = 0;
 			for (const ResourceView* cpuView : views)
 			{
-				seed = rsl::hash_combine(seed, rsl::comp_hash(cpuView));
+				hash = rsl::hash_combine(hash, rsl::comp_hash(cpuView));
 			}
 
 			const ResourceView* result = gpuView.get();
-			m_resources_on_gpu[seed] = rsl::move(gpuView);
+			m_resources_on_gpu[hash] = rsl::move(gpuView);
 
 			return result;
 		}

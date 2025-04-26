@@ -15,6 +15,10 @@
 #include "rex_std/internal/algorithm/min.h"
 #include "rex_std/string_view.h"
 
+#include <vector>
+
+#include "rex_engine/diagnostics/debug.h"
+
 // The current implementation of this namespace is Windows only
 
 namespace rex
@@ -629,7 +633,8 @@ namespace rex
       path = path::unsafe_abs_path(path);
       dir = path::unsafe_abs_path(dir);
 
-      rsl::range<rsl::string_view> paths{ path, dir };
+      rsl::initializer_list<rsl::string_view> init_list = { path, dir };
+      rsl::range<rsl::string_view> paths(init_list.begin(), init_list.end());
       rsl::string_view common = common_path(paths);
 
       PathIterator path_it(path);
@@ -888,7 +893,9 @@ namespace rex
 
       // If there is a mismatch however, we need to find where this happens and construct a path from the root to this path
       // Afterwards we can just append the remaining path
-      rsl::range<rsl::string_view> paths{ path, start };
+      rsl::initializer_list<rsl::string_view> paths_init_list{ path, start };
+      rsl::range<rsl::string_view> paths(paths_init_list.begin(), paths_init_list.end());
+
       rsl::string_view common = common_path(paths);
 
       rsl::string_view diff_in_path = path.substr(common.length());
@@ -903,6 +910,7 @@ namespace rex
       scratch_string result = path::join(result_on_stack, diff_in_path);
       return result;
     }
+
     // Returns true if 2 paths point to the same file or directory
     bool is_same_abspath(rsl::string_view path1, rsl::string_view path2)
     {

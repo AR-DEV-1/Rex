@@ -54,7 +54,7 @@ namespace rex
 								if (RegQueryValueEx(key, valueName.data(), NULL, NULL, (LPBYTE)buffer.get(), &size) == ERROR_SUCCESS)
 								{
 									const uint32 length = (size / sizeof(TCHAR)) - 1;
-									return rsl::string(buffer.get(), static_cast<card32>(buffer.count()));
+									return rsl::string(buffer.get(), length);
 								}
 								break;
 							}

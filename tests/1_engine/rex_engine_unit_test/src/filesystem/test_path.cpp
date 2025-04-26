@@ -202,32 +202,36 @@ TEST_CASE("TEST - Path - Common Path")
 	rex::TempCwd tmp_cwd("path_tests");
 
 	{
-		rsl::range<rsl::string_view> paths =
+		rsl::initializer_list<rsl::string_view> init_list = 
 		{
 			"c:/bar/foo.txt",
 			"c:/bar/text.txt"
 		};
+
+		rsl::range<rsl::string_view> paths(init_list.begin(), init_list.end());
 
 		REX_CHECK(rex::path::common_path(paths) == "c:/bar/");
 	}
 
 	{
-		rsl::range<rsl::string_view> paths =
+		rsl::initializer_list<rsl::string_view> init_list =
 		{
 			"c:/foo/foo.txt",
 			"c:/bar/text.txt"
 		};
 
+		rsl::range<rsl::string_view> paths(init_list.begin(), init_list.end());
 		REX_CHECK(rex::path::common_path(paths) == "c:/");
 	}
 
 	{
-		rsl::range<rsl::string_view> paths =
+		rsl::initializer_list<rsl::string_view> init_list =
 		{
 			"c:/bar/foo.txt",
 			"d:/bar/text.txt"
 		};
 
+		rsl::range<rsl::string_view> paths(init_list.begin(), init_list.end());
 		REX_CHECK(rex::path::common_path(paths) == "");
 	}
 }

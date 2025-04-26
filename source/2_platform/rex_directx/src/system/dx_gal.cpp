@@ -57,8 +57,7 @@
 
 #include "rex_engine/gfx/materials/material_library.h"
 #include "rex_engine/gfx/rendering/render_pass.h"
-#include "rex_engine/gfx/system/input_layout_cache.h"
-#include "rex_engine/gfx/system/root_signature_cache.h"
+#include "rex_engine/gfx/system/gpu_cache.h"
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
 
@@ -109,8 +108,7 @@ namespace rex
 
 		DirectXInterface::~DirectXInterface()
 		{
-			root_signature_cache::shutdown();
-			input_layout_cache::shutdown();
+			gpu_cache::shutdown();
 			shader_reflection::shutdown();
 			material_lib::shutdown();
 		}
@@ -310,8 +308,8 @@ namespace rex
 			REX_ASSERT_X(desc.shader_pipeline.vs, "No vertex shader specified for the pso");
 			REX_ASSERT_X(desc.shader_pipeline.ps, "No pixel shader specified for the pso");
 
-			InputLayout* input_layout = input_layout_cache::instance()->load(desc.input_layout);
-			RootSignature* root_signature = root_signature_cache::instance()->load(desc.shader_pipeline);
+			InputLayout* input_layout = gpu_cache::instance()->load_input_layout(desc.input_layout);
+			RootSignature* root_signature = gpu_cache::instance()->load_root_signature(desc.shader_pipeline);
 
 			// Make sure our critical required parameters are specified
 			REX_ASSERT_X(input_layout, "No input layout for the pso");
@@ -606,8 +604,7 @@ namespace rex
 
 			material_lib::init(globals::make_unique<MaterialLibrary>());
 			shader_reflection::init(globals::make_unique<DxShaderReflection>());
-			input_layout_cache::init(globals::make_unique<InputLayoutCache>());
-			root_signature_cache::init(globals::make_unique<RootSignatureCache>());
+			gpu_cache::init(globals::make_unique<GpuCache>());
 		}
 
 		// Allocate a 1D buffer on the gpu, returning a DirectX resource

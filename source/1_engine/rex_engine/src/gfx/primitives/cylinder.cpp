@@ -31,8 +31,8 @@ namespace rex
 
             // Scale down by the height to try and make top cap texture coord area
             // proportional to base.
-            const f32 u = x / height + 0.5f;
-            const f32 v = z / height + 0.5f;
+            //const f32 u = x / height + 0.5f;
+            //const f32 v = z / height + 0.5f;
 
             meshData.add_vertex(VertexPosNormTex(glm::vec3(x, y, z), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)));
           }
@@ -69,8 +69,8 @@ namespace rex
 
             // Scale down by the height to try and make top cap texture coord area
             // proportional to base.
-            const f32 u = x / height + 0.5f;
-            const f32 v = z / height + 0.5f;
+            //const f32 u = x / height + 0.5f;
+            //const f32 v = z / height + 0.5f;
 
             meshData.add_vertex(VertexPosNormTex(glm::vec3(x, y, z), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)));
           }

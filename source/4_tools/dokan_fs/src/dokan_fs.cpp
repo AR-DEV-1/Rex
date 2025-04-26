@@ -21,8 +21,8 @@
   #define DOKAN_MAX_PATH MAX_PATH
 #endif // DEBUG
 
-BOOL g_UseStdErr;
-BOOL g_DebugMode;
+extern BOOL g_UseStdErr;
+extern BOOL g_DebugMode;
 BOOL g_CaseSensitive;
 BOOL g_HasSeSecurityPrivilege;
 BOOL g_ImpersonateCallerUser;

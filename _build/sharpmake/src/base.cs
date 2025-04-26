@@ -312,7 +312,7 @@ public abstract class BasicCPPProject : Project
 
     if (!ProjectGen.Settings.UnityBuildsDisabled)
     {
-      conf.Options.Add(Options.Vc.Compiler.JumboBuild.Enable);
+      conf.Options.Add(Options.Vc.Compiler.JumboBuild.EnableWithAdaptive);
     }
 
     // Linker options

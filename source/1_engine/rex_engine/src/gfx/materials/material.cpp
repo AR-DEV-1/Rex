@@ -8,7 +8,6 @@
 #include "rex_engine/gfx/materials/material_library.h"
 
 #include "rex_engine/gfx/shader_reflection/shader_reflection.h"
-#include "rex_engine/gfx/system/root_signature_cache.h"
 
 namespace rex
 {

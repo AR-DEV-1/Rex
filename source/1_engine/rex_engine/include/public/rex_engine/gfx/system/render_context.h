@@ -43,6 +43,14 @@ namespace rex
 		class DepthStencilBuffer;
 		class UnorderedAccessBuffer;
 
+		struct InputAssembler
+		{
+			VertexBuffer* vb;
+			IndexBuffer* ib;
+			PrimitiveTopology topology;
+			s32 vb_slot;
+		};
+
 		class RenderContext : public GraphicsContext
 		{
 		public:
@@ -58,6 +66,11 @@ namespace rex
 			void clear_render_target(RenderTarget* renderTarget);
 			// Set the vertex buffer of the context, always assigned to input slot 0
 			void set_vertex_buffer(VertexBuffer* vb);
+			// Set the input assembler
+			void set_input_assembler(const InputAssembler& ia);
+			// Set the pipeline state and root signature of the context
+			void set_pipeline_state(PipelineState* pso, RootSignature* rootSig);
+
 
 			// Implemented by Graphics API specific derived classes
 			// ----------------------------------------------------------------

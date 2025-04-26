@@ -113,15 +113,14 @@ namespace rex
     void DxRenderContext::set_render_target(RenderTarget* colorRenderTarget, DepthStencilBuffer* depthRenderTarget)
     {
       DxRenderTarget* dx_color_render_target = d3d::to_dx12(colorRenderTarget);
+      const CD3DX12_CPU_DESCRIPTOR_HANDLE* dx_depth_render_target_view = nullptr;
       if (depthRenderTarget)
       {
         DxResourceView* dx_depth_render_target = d3d::to_dx12(depthRenderTarget->resource_view());
-        m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->dx_view().cpu_handle(), true, &dx_depth_render_target->cpu_handle());
+        dx_depth_render_target_view = &dx_depth_render_target->cpu_handle();
       }
-      else
-      {
-			  m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->dx_view().cpu_handle(), true, nullptr);
-      }
+
+      m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->dx_view().cpu_handle(), true, dx_depth_render_target_view);
     }
     // Clear the render target of the context
     void DxRenderContext::clear_render_target(RenderTarget* renderTarget, DepthStencilBuffer* depthRenderTarget)
@@ -133,12 +132,7 @@ namespace rex
 
       if (depthRenderTarget)
       {
-        s32 d3d_clear_flags = 0;
-        d3d_clear_flags |= depthRenderTarget->clear_state().flags.has_state(ClearBits::ClearDepthBuffer) ? D3D12_CLEAR_FLAG_DEPTH : 0;
-        d3d_clear_flags |= depthRenderTarget->clear_state().flags.has_state(ClearBits::ClearStencilBuffer) ? D3D12_CLEAR_FLAG_STENCIL : 0;
-
-        DxResourceView* dsv = d3d::to_dx12(depthRenderTarget->resource_view());
-        m_cmd_list->ClearDepthStencilView(dsv->cpu_handle(), (D3D12_CLEAR_FLAGS)d3d_clear_flags, depthRenderTarget->clear_state().depth, depthRenderTarget->clear_state().stencil, 0, nullptr);
+        clear_depth_stencil_target(depthRenderTarget);
       }
     }
     void DxRenderContext::clear_depth_stencil_target(DepthStencilBuffer* depthRenderTarget)
@@ -212,23 +206,9 @@ namespace rex
     }
     void DxRenderContext::bind_texture2d(s32 paramIdx, Texture2D* texture)
     {
-    //  const ResourceView* gpu_handle = gpu_engine()->try_get_texture_gpu_handle(texture);
-
-    //  // If the texture is not on the GPU yet, copy it there first
-    //  if (gpu_handle == nullptr)
-    //  {
-    //    rsl::vector<const ResourceView*> views;
-    //    views.push_back(texture->resource_view());
-    //    auto render_ctx = new_render_ctx();
-    //    auto start_handle = render_ctx->copy_views(ResourceViewType::Texture2D, views);
-    //    gpu_handle = start_handle.get();
-				//gpu_engine()->notify_textures_presence_on_gpu(texture, rsl::move(start_handle));
-    //  }
-
       rsl::vector<const ResourceView*> views;
       views.push_back(texture->resource_view());
-      auto render_ctx = gfx::gal::instance()->new_render_ctx();
-      auto start_handle = render_ctx->copy_views(ResourceViewType::Texture2D, views);
+      auto start_handle = copy_views(ResourceViewType::Texture2D, views);
 
 			// Textures need to be bind using a view table and cannot be bound directly
       bind_view_table(paramIdx, start_handle);
@@ -334,7 +314,7 @@ namespace rex
       s32 height = texture->height();
       TextureFormat format = texture->format();
 
-      s64 write_offset = upload_buffer_lock.upload_buffer()->write_texture_data_from_cpu(data, width, height, format);
+      s64 write_offset = upload_buffer_lock.upload_buffer()->stage_texture_data(data, width, height, format);
       DxTexture2D* dx_texture = d3d::to_dx12(texture);
 
       CD3DX12_TEXTURE_COPY_LOCATION dst_loc(dx_texture->dx_object(), 0);
@@ -400,7 +380,7 @@ namespace rex
     {
       UploadBufferLock upload_buffer_lock = api_engine()->lock_upload_buffer();
 
-      s64 write_offset = upload_buffer_lock.upload_buffer()->write_buffer_data_from_cpu(data, size);
+      s64 write_offset = upload_buffer_lock.upload_buffer()->stage_buffer_data(data, size);
       m_cmd_list->CopyBufferRegion(resource, offset, d3d::to_dx12(upload_buffer_lock.upload_buffer())->dx_object(), write_offset, size);
     }
 

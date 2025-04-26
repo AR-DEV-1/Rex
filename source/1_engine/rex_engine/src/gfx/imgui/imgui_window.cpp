@@ -62,9 +62,6 @@ namespace rex
       void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
       IM_ASSERT(handle != nullptr);
       m_swapchain = gfx::gal::instance()->create_swapchain(imguiDevice.command_queue, imguiDevice.max_num_frames_in_flight, handle);
-
-      const s32 width = static_cast<s32>(viewport->Size.x);
-      const s32 height = static_cast<s32>(viewport->Size.y);
     }
 
     void ImGuiWindow::render(ClearRenderTarget clearRenderTarget, ImGuiWindowRenderParams* renderParams)

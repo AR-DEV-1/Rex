@@ -26,9 +26,9 @@ namespace rex
       DxUploadBuffer& operator=(DxUploadBuffer&&) = delete;
 
       // Write data on cpu side, it returns the offset into the upload buffer where data was written to
-      s64 write_buffer_data_from_cpu(const void* data, s64 size, s32 alignment = 1) override;
+      s64 stage_buffer_data(const void* data, s64 size, s32 alignment = 1) override;
       // Write data on cpu side, it returns the offset into the upload buffer where data was written to
-      s64 write_texture_data_from_cpu(const void* data, s32 width, s32 height, TextureFormat format) override;
+      s64 stage_texture_data(const void* data, s32 width, s32 height, TextureFormat format) override;
 
       ID3D12Resource* dx_object();
 

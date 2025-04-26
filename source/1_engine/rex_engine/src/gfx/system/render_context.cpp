@@ -26,6 +26,18 @@ namespace rex
     {
       set_vertex_buffer(vb, 0);
     }
+    // Set the input assembler
+    void RenderContext::set_input_assembler(const InputAssembler& ia)
+    {
+      set_vertex_buffer(ia.vb, ia.vb_slot);
+      set_index_buffer(ia.ib);
+      set_primitive_topology(ia.topology);
+    }
+    void RenderContext::set_pipeline_state(PipelineState* pso, RootSignature* rootSig)
+    {
+      set_pipeline_state(pso);
+      set_root_signature(rootSig);
+    }
 
     // Reset the engine specific context
     void RenderContext::type_specific_reset(const ContextResetData& resetData)
@@ -39,6 +51,8 @@ namespace rex
     // Copy views of a certain type to the gpu. All views within the list are expected to be of the same type
     const ResourceView* RenderContext::copy_views(ResourceViewType resourceType, const rsl::vector<const ResourceView*>& views)
     {
+      // check if the views aren't already present on the GPU
+      // if they are, just return those
       const ResourceView* gpuViews = gfx::gal::instance()->try_get_gpu_views(views);
       if (gpuViews != nullptr)
       {

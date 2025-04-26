@@ -136,6 +136,7 @@ namespace rex
     // Copy the given views into this heap
     rsl::unique_ptr<ResourceView> DxViewHeap::copy_views(const rsl::vector<const ResourceView*>& views)
     {
+      // If we have no views to copy, early out
       if (views.empty())
       {
         return nullptr;
@@ -147,6 +148,7 @@ namespace rex
       for (const ResourceView* view : views)
       {
         cpu_handle = m_null_view.cpu_handle();
+
         // It's possible a null view is provided if the parameter has not been set yet
         if (view != nullptr)
         {
@@ -173,7 +175,7 @@ namespace rex
     // it only repoints the allocating start back to the beginning of the heap
     void DxViewHeap::clear()
     {
-      // We always have 1 view in user for the null view
+      // We always have 1 view in use for the null view
       m_num_used_views = 1;
     }
 
