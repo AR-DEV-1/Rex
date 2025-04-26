@@ -75,7 +75,7 @@
 #include "rex_engine/gfx/system/swapchain.h"
 #include "rex_engine/gfx/system/resource_state_tracker.h"
 
- // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
+ 
 
 namespace rex
 {

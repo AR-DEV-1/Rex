@@ -17,7 +17,7 @@
 
 #include "rex_engine/gfx/rendering/swapchain_info.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
+
 
 namespace rex
 {

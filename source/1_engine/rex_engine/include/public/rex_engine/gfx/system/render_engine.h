@@ -5,7 +5,7 @@
 #include "rex_engine/gfx/system/upload_buffer_lock.h"
 #include "rex_engine/gfx/resources/upload_buffer.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
+
 
 namespace rex
 {

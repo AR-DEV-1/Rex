@@ -33,7 +33,7 @@
 
 #include "rex_std/bonus/math/color.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
+
 
 struct ID3D12GraphicsCommandList;
 

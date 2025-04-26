@@ -59,7 +59,7 @@
 #include "rex_engine/gfx/rendering/render_pass.h"
 #include "rex_engine/gfx/system/gpu_cache.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
+
 
 #include "rex_directx/system/dx_render_engine.h"
 #include "rex_directx/system/dx_compute_engine.h"
