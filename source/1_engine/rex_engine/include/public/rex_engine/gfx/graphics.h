@@ -279,8 +279,6 @@ namespace rex
       // Finish off the last frame
       void end_frame();
 
-      void resize_swapchain_info(s32 newWidth, s32 newHeight);
-
       // Create a context reset structure, filling it in with all the data it needs to reset a context
       ContextResetData create_context_reset_data(PipelineState* pso);
       void log_info(const Info& info);

@@ -16,7 +16,7 @@ namespace rex
 			ScopedColourStack(ImGuiCol firstColourID, ColourType firstColour, OtherColours&& ... otherColourPairs)
 				: m_Count((sizeof... (otherColourPairs) / 2) + 1)
 			{
-				static_assert ((sizeof... (otherColourPairs) & 1u) == 0,
+				static_assert ((sizeof... (otherColourPairs) & 1) == 0,
 					"ScopedColourStack constructor expects a list of pairs of colour IDs and colours as its arguments");
 
 				push_color(firstColourID, firstColour, std::forward<OtherColours>(otherColourPairs)...);

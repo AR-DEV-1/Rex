@@ -63,5 +63,7 @@ namespace rex
     }
   };
 
+  // Create a set of global allocator with minimal memory in the backend
+  // This is used for very early initialization
   void create_minimal_global_allocators();
 } // namespace rex

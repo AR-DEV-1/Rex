@@ -4,12 +4,12 @@ namespace rex
 {
 	namespace gfx
 	{
-		StencilBuffer::StencilBuffer(ResourceView* view, s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc)
+		StencilBuffer::StencilBuffer(ResourceView* view, s32 width, s32 height, TextureFormat format, u8 clearValue)
 			: m_width(width)
 			, m_height(height)
 			, m_format(format)
 			, m_view(view)
-			, m_clear_state(clearStateDesc)
+			, m_clear_value(clearValue)
 		{
 
 		}
@@ -30,9 +30,9 @@ namespace rex
 		{
 			return m_view;
 		}
-		const ClearStateDesc& StencilBuffer::clear_state() const
+		u8 StencilBuffer::clear_value() const
 		{
-			return m_clear_state;
+			return m_clear_value;
 		}
 
 	}

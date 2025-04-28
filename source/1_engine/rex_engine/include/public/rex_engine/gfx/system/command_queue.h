@@ -31,7 +31,7 @@ namespace rex
       // Returns if the last completed fence is equal or lower than the given fence value
       // Meaning that the commands before the given fence value got signaled have executed
       bool is_fence_completed(u64 fenceValue) const;
-      // All commands before this fence value have xeecuted
+      // All commands before this fence value have executed
       u64 last_completed_fence() const;
       // Return the command queue's type
       GraphicsEngineType type() const;

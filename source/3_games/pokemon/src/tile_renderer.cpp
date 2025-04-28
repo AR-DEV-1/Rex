@@ -6,7 +6,6 @@
 #include "rex_engine/filesystem/vfs.h"
 
 #include "rex_engine/gfx/system/shader_library.h"
-#include "rex_engine/gfx/rendering/swapchain_info.h"
 #include "rex_engine/gfx/graphics.h"
 
 #include "glm/gtc/matrix_transform.hpp"

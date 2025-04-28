@@ -193,8 +193,6 @@ namespace rex
 
 		void init(globals::GlobalUniquePtr<EngineGlobals> globals)
 		{
-			// crashes here on clang because the delete operator for pointers doesn't go to the global allocator
-			// it does seem to work for arrays though..
 			engine_globals() = rsl::move(globals);
 		}
 		EngineGlobals* instance()

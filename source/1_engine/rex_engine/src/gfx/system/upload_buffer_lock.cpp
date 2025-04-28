@@ -7,13 +7,13 @@ namespace rex
 	namespace gfx
 	{
     UploadBufferLock::UploadBufferLock(RenderEngine* owningEngine, UploadBuffer* uploadBuffer)
-      : m_owning_copy_engine(owningEngine)
+      : m_owning_engine(owningEngine)
       , m_upload_buffer(uploadBuffer)
     {}
 
     UploadBufferLock::~UploadBufferLock()
     {
-      m_owning_copy_engine->unlock_upload_buffer();
+      m_owning_engine->unlock_upload_buffer();
     }
 
     UploadBuffer* UploadBufferLock::upload_buffer()

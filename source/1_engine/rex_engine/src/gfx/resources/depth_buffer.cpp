@@ -4,12 +4,12 @@ namespace rex
 {
 	namespace gfx
 	{
-		DepthBuffer::DepthBuffer(ResourceView* view, s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc)
+		DepthBuffer::DepthBuffer(ResourceView* view, s32 width, s32 height, TextureFormat format, f32 clearValue)
 			: m_width(width)
 			, m_height(height)
 			, m_format(format)
 			, m_view(view)
-			, m_clear_state(clearStateDesc)
+			, m_clear_value(clearValue)
 		{
 
 		}
@@ -30,9 +30,9 @@ namespace rex
 		{
 			return m_view;
 		}
-		const ClearStateDesc& DepthBuffer::clear_state() const
+		f32 DepthBuffer::clear_value() const
 		{
-			return m_clear_state;
+			return m_clear_value;
 		}
 
 	}

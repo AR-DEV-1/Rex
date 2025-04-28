@@ -46,8 +46,6 @@ namespace rex
 
       // Request a new graphics context, which has for sure finished its commands.
       // If none is found, create a new one
-      //ScopedGraphicsContext<GraphicsContext> request(CommandAllocator* alloc, const alloc_context_func& allocFunc);
-
       template <typename TGraphicsCtx>
       ScopedGraphicsContext<TGraphicsCtx> request(const alloc_context_func& allocFunc)
       {

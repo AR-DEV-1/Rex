@@ -17,7 +17,7 @@ namespace rex
 		class StencilBuffer : public Resource
 		{
 		public:
-			StencilBuffer(ResourceView* view, s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc);
+			StencilBuffer(ResourceView* view, s32 width, s32 height, TextureFormat format, u8 clearValue);
 
 			// Return the width of the stencil buffer
 			s32 width() const;
@@ -28,14 +28,14 @@ namespace rex
 			// Return the resource view of the stencil buffer
 			ResourceView* resource_view();
 			// Return the clear state of the stencil buffer
-			const ClearStateDesc& clear_state() const;
+			u8 clear_value() const;
 
 		private:
 			s32 m_width;
 			s32 m_height;
 			TextureFormat m_format;
 			ResourceView* m_view;
-			ClearStateDesc m_clear_state;
+			u8 m_clear_value;                           // the value to set to the stencil buffer
 		};
 	}
 }

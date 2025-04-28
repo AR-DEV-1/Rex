@@ -15,9 +15,6 @@
 
 #include "rex_engine/gfx/graphics.h"
 
-#include "rex_engine/gfx/rendering/swapchain_info.h"
-
-
 
 namespace rex
 {
@@ -341,21 +338,6 @@ namespace rex
 			sampler_desc.register_space = 0;
 			sampler_desc.shader_visibility = rex::gfx::ShaderVisibility::Pixel;
 			m_common_samplers[rsl::enum_refl::enum_index(CommonSampler::Default2D).value()] = gfx::gal::instance()->create_sampler2d(sampler_desc);
-		}
-
-		void GALBase::resize_swapchain_info(s32 /*newWidth*/, s32 /*newHeight*/)
-		{
-			SwapchainInfo swapchain_info{};
-			swapchain_info.width = m_swapchain->width();
-			swapchain_info.height = m_swapchain->height();
-			swapchain_info.viewport.top_left.x = 0.0f;
-			swapchain_info.viewport.top_left.y = 0.0f;
-			swapchain_info.viewport.width = static_cast<f32>(swapchain_info.width);
-			swapchain_info.viewport.height = static_cast<f32>(swapchain_info.height);
-			swapchain_info.scissor_rect.right = static_cast<f32>(swapchain_info.width);
-			swapchain_info.scissor_rect.bottom = static_cast<f32>(swapchain_info.height);
-
-			update_swapchain_info(swapchain_info);
 		}
 
 		ContextResetData GALBase::create_context_reset_data(PipelineState* pso)

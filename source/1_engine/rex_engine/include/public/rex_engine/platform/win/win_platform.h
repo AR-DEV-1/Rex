@@ -17,22 +17,4 @@ namespace rex
 #define NOMINMAX // prevent windows redefining min/max
 #endif
 
-// Reduce the size of Win32 header files
-// This also helps avoid some compiler errors
-//#ifndef WIN32_LEAN_AND_MEAN
-//#define WIN32_LEAN_AND_MEAN
-//#endif
-
 #include <windows.h>
-
-// Undefining these as it can be a bit annoying and can cause compiler errors
-// if you define a variable to be "near"
-//#ifdef near
-//#undef near
-//#endif
-//
-//// Undefining these as it can be a bit annoying and can cause compiler errors
-//// if you define a variable to be "far"
-//#ifdef far
-//#undef far
-//#endif
