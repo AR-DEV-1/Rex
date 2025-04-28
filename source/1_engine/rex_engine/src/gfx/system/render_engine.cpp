@@ -12,10 +12,28 @@ namespace rex
       m_upload_buffer = gfx::gal::instance()->create_upload_buffer(5_mib);
     }
 
-    void RenderEngine::new_frame()
+    void RenderEngine::new_frame(const PerFrameBackbufferInfo& backbufferInfo)
     {
       m_upload_buffer->reset();
+      m_backbuffer_info = backbufferInfo;
       api_new_frame();
+    }
+    void RenderEngine::end_frame()
+    {
+      api_end_frame();
+    }
+
+    RenderTarget* RenderEngine::current_backbuffer()
+    {
+      return m_backbuffer_info.render_target;
+    }
+    const Viewport& RenderEngine::swapchain_viewport() const
+    {
+      return m_backbuffer_info.viewport;
+    }
+    const ScissorRect& RenderEngine::swapchain_scissor_rect() const
+    {
+      return m_backbuffer_info.scissor_rect;
     }
 
     UploadBufferLock RenderEngine::lock_upload_buffer()

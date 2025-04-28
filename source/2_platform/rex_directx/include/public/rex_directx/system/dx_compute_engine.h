@@ -20,12 +20,12 @@ namespace rex
       // Initialize all the resources required for the compute engine
       void init() override;
 
-      // Prepare a new frame
-      void new_frame() override;
-      // Finalise the frame
-      void end_frame() override;
-
     protected:
+      // Prepare a new frame
+      void api_new_frame() final;
+      // Finalise the frame
+      void api_end_frame() final;
+
       // Allocate a copy context
       rsl::unique_ptr<GraphicsContext> allocate_new_context(CommandAllocator* alloc) override;
     };

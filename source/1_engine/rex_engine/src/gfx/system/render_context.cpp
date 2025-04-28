@@ -2,6 +2,8 @@
 
 #include "rex_engine/gfx/graphics.h"
 
+#include "rex_engine/gfx/system/render_engine.h"
+
 namespace rex
 {
   namespace gfx
@@ -37,6 +39,15 @@ namespace rex
     {
       set_pipeline_state(pso);
       set_root_signature(rootSig);
+    }
+    void RenderContext::use_swapchain_framebuffer()
+    {
+      // Use swapchain backbuffer as render target
+      // Map the viewport to the entire backbuffer
+      // Use the scissor rect to write to all of the viewport
+      set_render_target(owning_render_engine()->current_backbuffer());
+      set_viewport(owning_render_engine()->swapchain_viewport());
+      set_scissor_rect(owning_render_engine()->swapchain_scissor_rect());
     }
 
     // Reset the engine specific context
@@ -74,5 +85,11 @@ namespace rex
       rsl::unique_ptr<ResourceView> gpuView = dstHeap->copy_views(views);
       return gfx::gal::instance()->notify_views_on_gpu(views, rsl::move(gpuView));
     }
+
+    RenderEngine* RenderContext::owning_render_engine()
+    {
+      return static_cast<RenderEngine*>(owning_engine());
+    }
+
   }
 }

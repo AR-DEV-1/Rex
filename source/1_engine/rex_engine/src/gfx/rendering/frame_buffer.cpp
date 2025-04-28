@@ -3,6 +3,7 @@
 #include "rex_engine/diagnostics/assert.h"
 
 #include "rex_engine/gfx/system/render_context.h"
+#include "rex_engine/gfx/system/swapchain_framebuffer_handle.h"
 #include "rex_engine/gfx/graphics.h"
 
 namespace rex

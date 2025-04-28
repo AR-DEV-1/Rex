@@ -15,6 +15,15 @@ namespace rex
     public:
       ComputeEngine(ResourceStateTracker* globalResourceStateTracker);
 
+      void new_frame();
+      void end_frame();
+
+    protected:
+      // Prepare a new frame
+      virtual void api_new_frame() = 0;
+      // Finalise the frame
+      virtual void api_end_frame() = 0;
+
     private:
 
     };

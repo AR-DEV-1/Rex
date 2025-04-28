@@ -84,10 +84,6 @@ namespace rex
 
       // Fully initialize the engine, allocating all required resources etc
       virtual void init() = 0;
-      // Prepare the engine for executing a new frame
-      virtual void new_frame() = 0;
-      // End the engine for executing the last frame
-      virtual void end_frame() = 0;
 
     protected:
       // Flush all commands on the gpu and halt the current thread untill all commands are executed

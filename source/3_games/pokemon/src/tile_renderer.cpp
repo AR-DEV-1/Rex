@@ -39,8 +39,7 @@ namespace pokemon
     // Bind all the resources to the gfx pipeline
     render_ctx->set_vertex_buffer(m_tiles_vb_gpu.get(), 0);
     render_ctx->set_index_buffer(m_tiles_ib_gpu.get());
-    render_ctx->set_viewport(rex::gfx::swapchain_info().viewport);
-    render_ctx->set_scissor_rect(rex::gfx::swapchain_info().scissor_rect);
+    render_ctx->use_swapchain_framebuffer();
 
     // Send the draw command
     const s32 index_count_per_instance = 6;

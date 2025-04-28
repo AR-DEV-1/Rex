@@ -42,6 +42,7 @@ namespace rex
 		class Material;
 		class DepthStencilBuffer;
 		class UnorderedAccessBuffer;
+		class RenderEngine;
 
 		struct InputAssembler
 		{
@@ -70,7 +71,8 @@ namespace rex
 			void set_input_assembler(const InputAssembler& ia);
 			// Set the pipeline state and root signature of the context
 			void set_pipeline_state(PipelineState* pso, RootSignature* rootSig);
-
+			// Use the swapchain backbuffer as render target, matching the viewport and scissor rect to it
+			void use_swapchain_framebuffer();
 
 			// Implemented by Graphics API specific derived classes
 			// ----------------------------------------------------------------
@@ -160,6 +162,8 @@ namespace rex
 		private:
 			// Copy views into a heap that's accessible to shaders
 			const ResourceView* copy_views(ViewHeap* dstHeap, const rsl::vector<const ResourceView*>& views);
+
+			RenderEngine* owning_render_engine();
 
 		private:
 			ViewHeap* m_shader_visible_srv_heap;      // the srv view heap that's accessible to shaders

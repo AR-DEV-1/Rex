@@ -118,8 +118,6 @@ namespace rex
 		void GALBase::resize_backbuffers(s32 newWidth, s32 newHeight)
 		{
 			m_swapchain->resize(newWidth, newHeight);
-
-			resize_swapchain_info(newWidth, newHeight);
 		}
 
 		// Return the max number of frames we can render at once
@@ -146,7 +144,16 @@ namespace rex
 		{
 			++m_frame_idx;
 
-			m_render_engine->new_frame();
+			PerFrameBackbufferInfo backbuffer_info{};
+			backbuffer_info.render_target = m_swapchain->current_buffer();
+			backbuffer_info.viewport.top_left.x = 0.0f;
+			backbuffer_info.viewport.top_left.y = 0.0f;
+			backbuffer_info.viewport.width = static_cast<f32>(m_swapchain->width());
+			backbuffer_info.viewport.height = static_cast<f32>(m_swapchain->height());
+			backbuffer_info.scissor_rect.right = static_cast<f32>(m_swapchain->width());
+			backbuffer_info.scissor_rect.bottom = static_cast<f32>(m_swapchain->height());
+
+			m_render_engine->new_frame(backbuffer_info);
 			m_compute_engine->new_frame();
 
 			auto render_ctx = new_render_ctx(rsl::Nullptr<PipelineState>, "New Frame");
@@ -281,8 +288,6 @@ namespace rex
 		void GALBase::init_swapchain()
 		{
 			m_swapchain = gfx::gal::instance()->create_swapchain(m_render_engine->command_queue(), m_max_frames_in_flight, m_primary_display_handle);
-
-			resize_swapchain_info(m_swapchain->width(), m_swapchain->height());
 		}
 		// Initialize the sub engine, bringing them up and ready, to be used in the graphics pipeline
 		void GALBase::init_sub_engines()

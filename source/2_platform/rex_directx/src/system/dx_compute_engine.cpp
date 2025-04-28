@@ -25,12 +25,12 @@ namespace rex
     }
 
     // Prepare a new frame
-    void DxComputeEngine::new_frame()
+    void DxComputeEngine::api_new_frame()
     {
       // Nothing to implement
     }
     // Finalise the frame
-    void DxComputeEngine::end_frame()
+    void DxComputeEngine::api_end_frame()
     {
       flush();
     }

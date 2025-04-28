@@ -21,7 +21,7 @@ namespace rex
       // Prepare a new frame
       void api_new_frame() override;
       // Finalise the frame
-      void end_frame() override;
+      void api_end_frame() override;
 
     protected:
       // Allocate a render context

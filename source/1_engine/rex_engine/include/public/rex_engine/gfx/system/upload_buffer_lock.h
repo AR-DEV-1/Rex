@@ -27,7 +27,7 @@ namespace rex
       UploadBuffer* upload_buffer();
 
     private:
-      RenderEngine* m_owning_copy_engine;
+      RenderEngine* m_owning_engine;
       UploadBuffer* m_upload_buffer;
     };
 	}

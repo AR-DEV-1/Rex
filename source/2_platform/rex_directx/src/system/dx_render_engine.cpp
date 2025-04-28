@@ -24,7 +24,7 @@ namespace rex
       // Nothing to implement
     }
     // Finalise the frame
-    void DxRenderEngine::end_frame()
+    void DxRenderEngine::api_end_frame()
     {
       flush();
     }
