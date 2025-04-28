@@ -108,13 +108,6 @@ namespace rex
       rsl::unique_ptr<UnorderedAccessBuffer>  create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr)                               override;
 
       // -------------------------
-      // Shader stuff
-      // -------------------------
-      // Compile a shader and return its binary blob
-      //wrl::ComPtr<ID3DBlob> compile_shader(const CompileShaderDesc& desc);
-      //ShaderSignature reflect_shader(const gfx::Shader* shader) override;
-
-      // -------------------------
       // Resource creation from Direct X
       // -------------------------
 
