@@ -179,13 +179,6 @@ namespace rex
     {
       RECT r;
 
-      DwmGetWindowAttribute(
-        static_cast<HWND>(m_hwnd),
-        DWMWA_EXTENDED_FRAME_BOUNDS,
-        &r,
-        sizeof(r)
-      );
-
       GetWindowRect(static_cast<HWND>(m_hwnd), &r);
 
       return r.right - r.left;
