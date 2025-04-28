@@ -11,7 +11,10 @@ namespace rex
   {
     DEFINE_LOG_CATEGORY(LogResourceHeap);
 
-    ResourceHeap::ResourceHeap(const wrl::ComPtr<ID3D12Heap>& heap, const wrl::ComPtr<ID3D12Device1>& device)
+    // A resource heap currently acts like a stack based allocator
+    // This is likely not sufficient enough in the future, but it'll do for now
+
+    DxResourceHeap::DxResourceHeap(const wrl::ComPtr<ID3D12Heap>& heap, const wrl::ComPtr<ID3D12Device1>& device)
         : m_heap(heap)
         , m_device(device)
         , m_used_memory(0)
@@ -21,16 +24,16 @@ namespace rex
       m_memory_limit            = static_cast<s64>(heap_desc.SizeInBytes);
     }
 
-    wrl::ComPtr<ID3D12Resource> ResourceHeap::create_buffer(rsl::memory_size size, s32 alignment)
+    wrl::ComPtr<ID3D12Resource> DxResourceHeap::create_buffer(rsl::memory_size size, s32 alignment)
     {
       return create_buffer(size, alignment, D3D12_RESOURCE_FLAG_NONE);
     }
-    wrl::ComPtr<ID3D12Resource> ResourceHeap::create_unordered_access_buffer(rsl::memory_size size, s32 alignment)
+    wrl::ComPtr<ID3D12Resource> DxResourceHeap::create_unordered_access_buffer(rsl::memory_size size, s32 alignment)
     {
       return create_buffer(size, alignment, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
     }
 
-    wrl::ComPtr<ID3D12Resource> ResourceHeap::create_texture2d(DXGI_FORMAT format, s32 width, s32 height)
+    wrl::ComPtr<ID3D12Resource> DxResourceHeap::create_texture2d(DXGI_FORMAT format, s32 width, s32 height)
     {
       CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(format, width, height);
       desc.MipLevels = 1;
@@ -48,7 +51,7 @@ namespace rex
       return texture;
     }
 
-    wrl::ComPtr<ID3D12Resource> ResourceHeap::create_depth_stencil_buffer(DXGI_FORMAT format, s32 width, s32 height, const ClearStateDesc& clearStateDesc)
+    wrl::ComPtr<ID3D12Resource> DxResourceHeap::create_depth_stencil_buffer(DXGI_FORMAT format, s32 width, s32 height, const ClearStateDesc& clearStateDesc)
     {
       CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(format, width, height);
       desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
@@ -72,12 +75,12 @@ namespace rex
       return texture;
     }
 
-    bool ResourceHeap::can_fit_allocation(const D3D12_RESOURCE_ALLOCATION_INFO& alloc_info) const
+    bool DxResourceHeap::can_fit_allocation(const D3D12_RESOURCE_ALLOCATION_INFO& alloc_info) const
     {
       return static_cast<s64>(m_used_memory.size_in_bytes() + alloc_info.SizeInBytes) < m_memory_limit;
     }
 
-    wrl::ComPtr<ID3D12Resource> ResourceHeap::create_buffer(rsl::memory_size size, s32 alignment, D3D12_RESOURCE_FLAGS flags)
+    wrl::ComPtr<ID3D12Resource> DxResourceHeap::create_buffer(rsl::memory_size size, s32 alignment, D3D12_RESOURCE_FLAGS flags)
     {
       auto desc = CD3DX12_RESOURCE_DESC::Buffer(size, flags, alignment);
       const D3D12_RESOURCE_ALLOCATION_INFO alloc_info = m_device->GetResourceAllocationInfo(0, 1, &desc);

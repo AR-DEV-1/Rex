@@ -30,6 +30,9 @@ namespace rex
       // Return the index of the current bufffer
       virtual s32 current_buffer_idx() const = 0;
 
+      // Resize the backbuffers to a new resolution
+      virtual void resize(s32 newWidth, s32 newHeight) = 0;
+
     protected:
       // Empty the list of buffers
       void clear_buffers();
@@ -37,6 +40,9 @@ namespace rex
       void store_render_target(rsl::unique_ptr<RenderTarget> buffer);
       // called on resize to change the cached width and height
       void on_resize(s32 width, s32 height);
+
+      // Return the buffer at the given index
+      RenderTarget* buffer_at(s32 idx);
 
     private:
       rsl::vector<rsl::unique_ptr<RenderTarget>> m_swapchain_buffers;

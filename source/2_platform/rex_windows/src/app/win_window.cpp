@@ -10,6 +10,7 @@
 #define NOMINMAX
 #include <Windows.h>
 #include <cstddef>
+#include <dwmapi.h>
 
 namespace rex
 {
@@ -177,6 +178,7 @@ namespace rex
     s32 Window::width() const
     {
       RECT r;
+
       GetWindowRect(static_cast<HWND>(m_hwnd), &r);
 
       return r.right - r.left;

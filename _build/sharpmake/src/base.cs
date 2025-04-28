@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using System.Reflection;
+using rex;
 
 // This file defines the base class for all different kind of projects supported for rex.
 // The BaseProject is cross-language and defines things like config name, intermediate directory, ...
@@ -89,54 +90,6 @@ public class BaseConfiguration
   }
 }
 
-// This is a very dirty hack but here's how it works
-// Because Visual Studio will start the dependencies on the same node all at once
-// We need to find a way to run a generation before any of the dependencies
-// get run, but only do it once (not per project build)
-// So what we do is, we create a dummy project that every project depends on
-// which does nothing except rerunning sharpmake
-// Because every project depends on this, this project will be put on the top node
-// with no other projects at the same level, so this project gets "build" before any other
-// and only once, resulting in the rerunning sharpmake only once
-[Generate]
-public class RegenerateProjects : Project
-{
-  public RegenerateProjects() : base(typeof(RexTarget), typeof(RexConfiguration))
-  {
-    // We need to mimic the targets generated, but only for visual studio IDE
-    AddTargets(RexTarget.CreateTargetsForDevEnv(ProjectGen.Settings.IDE.ToDevEnv()).ToArray());
-  }
-
-  [Configure]
-  public void Configure(RexConfiguration conf, RexTarget target)
-  {
-    // We need give the configuration a proper name or sharpmake fails to generate
-    conf.Name = string.Concat(target.Config.ToString().ToLower(), target.Compiler.ToString().ToLower());
-    conf.ProjectPath = Path.Combine(Globals.BuildFolder, ProjectGen.Settings.IntermediateDir, target.DevEnv.ToString(), Name);
-    conf.SolutionFolder = "_Generation";
-
-    string rexpyPath = Path.Combine(Globals.Root, "_rex.py");
-
-    // The custom build steps just perform a generation step
-    string IdeCommandLineOption = "VisualStudio19";
-    switch (ProjectGen.Settings.IDE)
-    {
-      case ProjectGen.IDE.VisualStudio: IdeCommandLineOption = "VisualStudio"; break;
-      case ProjectGen.IDE.VisualStudio19: IdeCommandLineOption = "VisualStudio19"; break;
-      case ProjectGen.IDE.VisualStudio22: IdeCommandLineOption = "VisualStudio22"; break;
-      case ProjectGen.IDE.VSCode: IdeCommandLineOption = "VSCode"; break;
-      default:
-        break;
-    }
-
-    conf.CustomBuildSettings = new Configuration.NMakeBuildSettings();
-    conf.CustomBuildSettings.BuildCommand = $"py {rexpyPath} generate -IDE None";
-    conf.CustomBuildSettings.RebuildCommand = $"py {rexpyPath} generate -use-default-config -IDE {IdeCommandLineOption}"; // Perform a generation from scratch
-    conf.CustomBuildSettings.CleanCommand = "";
-    conf.CustomBuildSettings.OutputFile = "";
-  }
-}
-
 // This is the base class for every C++ project used in the rex solution
 // Some of its functionality is sharedwith BasicCSProject through BaseConfiguration
 public abstract class BasicCPPProject : Project
@@ -148,8 +101,9 @@ public abstract class BasicCPPProject : Project
 
   // indicates if the project creates a compiler DB for itself
   protected bool ClangToolsEnabled = true;
-  // The filename of the module file that'll store module information
-  private string ModuleFileName = "module.json";
+
+  // The module that this project represents
+  RexModule _Module = new RexModule();
 
   // The path where you can find the data for this project, if there is any
   public string DataPath { get; protected set; }
@@ -185,7 +139,7 @@ public abstract class BasicCPPProject : Project
         // the relative path is from the source root directory, so if it starts with the double dots, it means it's not under there
         if (relativeFilePath.StartsWith("..") || !File.Exists(Path.Combine(SourceRootPath, relativeFilePath)))
         {
-          filterPath = Utils.DataFilterPath(SourceRootPath, DataPath, relativeFilePath);
+          filterPath = PathGeneration.DataFilterPath(SourceRootPath, DataPath, relativeFilePath);
           return true;
         }
       }
@@ -206,12 +160,22 @@ public abstract class BasicCPPProject : Project
       ClangToolsEnabled = false;
     }
 
+    // If the DataPath was not set in the constructor, we're using the default datapath
+    if (string.IsNullOrEmpty(DataPath))
+    {
+      DataPath = Path.Combine(Globals.DataRoot, Name);
+    }
+
     // We read the code generation file in the pre config step
     // so it's only done once (Configure is called for every target)
     ReadCodeGenerationConfigFile();
 
     // Setup the data paths so they're added to the project, if there are any
     SetupDataPaths();
+
+    // Store the default properties of the module
+    // they can be overwriten later by derived project classes
+    AddModuleDefaultProperties();
   }
 
   // This is called by Sharpmake and acts as the configure entry point.
@@ -348,7 +312,7 @@ public abstract class BasicCPPProject : Project
 
     if (!ProjectGen.Settings.UnityBuildsDisabled)
     {
-      conf.Options.Add(Options.Vc.Compiler.JumboBuild.Enable);
+      conf.Options.Add(Options.Vc.Compiler.JumboBuild.EnableWithAdaptive);
     }
 
     // Linker options
@@ -469,13 +433,13 @@ public abstract class BasicCPPProject : Project
     switch (target.Optimization)
     {
       case Optimization.FullOptWithPdb:
-      case Optimization.FullOpt:
         conf.Options.Add(Options.Vc.General.DebugInformation.ProgramDatabase);   
         conf.Options.Add(Options.Vc.Compiler.OmitFramePointers.Disable);         // Disable so we can have a stack trace
         break;
-        //conf.Options.Add(Options.Vc.General.DebugInformation.Disable);
-        //conf.Options.Add(Options.Vc.Compiler.OmitFramePointers.Enable);
-        //break;
+      case Optimization.FullOpt:
+        conf.Options.Add(Options.Vc.General.DebugInformation.Disable);
+        conf.Options.Add(Options.Vc.Compiler.OmitFramePointers.Enable);
+        break;
     }
   }
   // Setup rules that need to be defined based on the platform
@@ -542,6 +506,10 @@ public abstract class BasicCPPProject : Project
         ClangToolsEnabled = false;
         break;
     }
+
+    SetModulePropertyForConfig(conf, "compiler", target.Compiler.ToString());
+    SetModulePropertyForConfig(conf, "config", target.Config.ToString());
+    SetModulePropertyForConfig(conf, "platform", target.Platform.ToString());
   }
   // Setup rules for events that need to get fired after a build has finished.
   // Remember that these need to be in batch format.
@@ -572,6 +540,21 @@ public abstract class BasicCPPProject : Project
       conf.IncludePrivatePaths.Add(path);
     }
   }
+
+  // Add or update a property of the module
+  // all module properties will be serialized to json after sharpmake linking
+  // This allows the engine to load these files at runtime to get information about its modules
+  protected void SetModuleProperty(string name, object value)
+  {
+    _Module.SetModuleProperty(name, value);
+  }
+  // Add or update a property of the module
+  // all module properties will be serialized to json after sharpmake linking
+  // This allows the engine to load these files at runtime to get information about its modules
+  protected void SetModulePropertyForConfig(RexConfiguration conf, string name, object value)
+  {
+    _Module.SetModulePropertyForConfig(conf, name, value);
+  }
   #endregion
 
   // Sets up the project to use clang tools when enabled.
@@ -594,21 +577,16 @@ public abstract class BasicCPPProject : Project
     }
 
     // Prepare to generate the compiler db and copy the config files over
-    string compilerDBPath = Utils.GetCompilerDBOutputFolder(conf);
+    string compilerDBPath = PathGeneration.GetCompilerDBOutputFolder(conf);
     QueueCompilerDatabaseGeneration(conf);
     CopyClangToolConfigFiles(compilerDBPath);
 
-    // create the extra arguments to be passed in to post_build.py
-    string post_build_command = "";
-    post_build_command += $" -compdb={compilerDBPath}";
-    post_build_command += $" -use_clang_tools";
-    post_build_command += $" -clang_tidy_regex=\"{ProjectGen.Settings.ClangTidyRegex}\"";
-    if (ProjectGen.Settings.PerformAllClangTidyChecks)
-    {
-      post_build_command += $" -perform_all_checks";
-    }
-
-    return post_build_command;
+    // create and return the extra arguments to be passed in to post_build.py
+    // Note: the clang-tools-config is not generated yet at this point
+    // it gets generated at sharpmake link time (as the configuration fills in ClangToolHeaderFilterList)
+    // but we do know the filepath where it'll be created at
+    // so we can create the post build commandline
+    return $" -clang-tools-config={PathGeneration.ClangToolsConfigFilePath(conf)}";
   }
 
   // Set testing flags based on configuration specified by the user when calling Sharpmake.
@@ -638,7 +616,7 @@ public abstract class BasicCPPProject : Project
   // Delete the clang tools output folder if there is one.
   private void DeleteClangToolsFolder(RexConfiguration conf)
   {
-    string clangToolsPath = Utils.GetClangToolsOutputFolder(conf);
+    string clangToolsPath = PathGeneration.GetClangToolsOutputFolder(conf);
     if (Directory.Exists(clangToolsPath))
     {
       Directory.Delete(clangToolsPath, recursive: true);
@@ -656,9 +634,10 @@ public abstract class BasicCPPProject : Project
       RexTarget rexTarget = config.Target as RexTarget;
 
       GenerateClangToolProjectFile(rexConfig, rexTarget);
+      SetModuleDependencies(rexConfig);
+
       WriteModuleFile(rexConfig);
     }
-
   }
 
   // Creates the clang tools project file
@@ -677,12 +656,17 @@ public abstract class BasicCPPProject : Project
       return;
     }
 
-    string clangToolsProjectPath = Utils.GetCompilerDBOutputFolder(conf);
-
     // The header filter is a list of regexes we care about when using clang-tidy
     // This is useful for ignoring headers of thirdparty libraries we don't want to run clang-tools on.
-    ClangToolsProject project = new ClangToolsProject(Name, clangToolsProjectPath);
-    project.HeaderFilters = conf.ClangToolHeaderFilterList.ToList();
+    ClangToolsConfig clangToolsConfig = new ClangToolsConfig()
+    {
+      Name = Name,
+      SrcRoot = SourceRootPath,
+      CompilerDBDirectory = PathGeneration.GetCompilerDBOutputFolder(conf),
+      PerformAllChecks = ProjectGen.Settings.PerformAllClangTidyChecks,
+      ClangTidyRegex = $"\"{ProjectGen.Settings.ClangTidyRegex}\"",
+      HeaderFilters = conf.ClangToolHeaderFilterList.ToList()
+    };
 
     var options = new JsonSerializerOptions
     {
@@ -690,14 +674,9 @@ public abstract class BasicCPPProject : Project
     };
 
     // Write the text to disk in json format
-    string jsonBlob = JsonSerializer.Serialize(project, options);
+    string jsonBlob = JsonSerializer.Serialize(clangToolsConfig, options);
 
-    if (!Directory.Exists(clangToolsProjectPath))
-    {
-      Directory.CreateDirectory(clangToolsProjectPath);
-    }
-
-    File.WriteAllText(project.ProjectPath, jsonBlob);
+    Utils.SafeWriteFile(PathGeneration.ClangToolsConfigFilePath(conf), jsonBlob);
   }
 
   // Reads the code generation config file from disk
@@ -733,7 +712,7 @@ public abstract class BasicCPPProject : Project
   {
     string ninja_file_path = GetNinjaFilePath(config);
     string build_step_name = $"compdb_{Name.ToLower()}_{config.Name}_clang";
-    string outputPath = Utils.GetCompilerDBOutputPath(config);
+    string outputPath = PathGeneration.GetCompilerDBOutputPath(config);
 
     lock (LockToCompilerDBGenerationQueue)
     {
@@ -804,10 +783,6 @@ public abstract class BasicCPPProject : Project
     conf.UseRelativePdbPath = false;
     conf.LinkerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{target.ProjectConfigurationName}_{target.Compiler}{conf.LinkerPdbSuffix}.pdb");
     conf.CompilerPdbFilePath = Path.Combine(conf.TargetPath, $"{Name}_{target.ProjectConfigurationName}_{target.Compiler}{conf.CompilerPdbSuffix}.pdb");
-    if (string.IsNullOrEmpty(DataPath))
-    {
-      DataPath = Path.Combine(Globals.DataRoot, Name);
-    }
   }
 
   // Add the include path to the configuration, if the path exists
@@ -830,14 +805,15 @@ public abstract class BasicCPPProject : Project
     }
   }
 
-  // Create the full filepath where the module info will be saved to
-  private string CreateFilepathForModuleFile(RexConfiguration conf)
+  // Sets the common module properties of this module
+  private void AddModuleDefaultProperties()
   {
-    string targetDir = Path.GetDirectoryName(conf.TargetPath);
-    return Path.Combine(targetDir, ModuleFileName);
+    // Fill in common module fields
+    SetModuleProperty("name", Name);
+    SetModuleProperty("data_path", DataPath);
   }
-  // Write the module file of this project
-  private void WriteModuleFile(RexConfiguration conf)
+  // Write the module dependencies to the module properties
+  private void SetModuleDependencies(RexConfiguration conf)
   {
     // Add every module filepath of every dependency to the module file we're currently writing
     List<string> rexDependencies = new List<string>();
@@ -849,26 +825,21 @@ public abstract class BasicCPPProject : Project
         continue;
       }
 
-      rexDependencies.Add(CreateFilepathForModuleFile(dependency));
+      rexDependencies.Add(PathGeneration.CreateModuleFilePath(dependency));
     }
 
-    rex.RexModule module = new rex.RexModule()
-    {
-      Name = Name,
-      DataPath = DataPath,
-      Dependencies = rexDependencies
-    };
-
-    string jsonString = JsonSerializer.Serialize(module, new JsonSerializerOptions()
-    {
-      WriteIndented = true
-    });
+    SetModulePropertyForConfig(conf, "dependencies", rexDependencies);
+  }
+  // Write the module file of this project
+  private void WriteModuleFile(RexConfiguration conf)
+  {
+    string moduleAsJson = _Module.SerializeForConfig(conf);
 
     // Write the module file at the intermediate location
-    string intermediateModuleFilePath = Path.Combine(conf.IntermediatePath, ModuleFileName);
-    Utils.SafeWriteFile(intermediateModuleFilePath, jsonString);
+    string intermediateModuleFilePath = Path.Combine(conf.IntermediatePath, $"{Name}_{conf.Name}_module.json");
+    Utils.SafeWriteFile(intermediateModuleFilePath, moduleAsJson);
 
-    string moduleFilePath = CreateFilepathForModuleFile(conf);
+    string moduleFilePath = PathGeneration.CreateModuleFilePath(conf);
     // Make sure the directory where the module file would be created exists
     // otherwise we can't create the file
     if (!Directory.Exists(Path.GetDirectoryName(moduleFilePath)))
@@ -1011,10 +982,18 @@ public class GameProject : BasicCPPProject
   // This is the project name that'll be defined
   // The root project directory will have a folder name 
   // that matches this name
-  private string ProjectName = "project_name";
+  private string ProjectName = "";
 
   public GameProject() : base()
   { }
+
+  public override void PreConfigure()
+  {
+    base.PreConfigure();
+
+    // By default, we use the Visual Studio project (or its equivalent) as the project name
+    ProjectName = Name;
+  }
 
   protected override void SetupSolutionFolder(RexConfiguration conf, RexTarget target)
   {
@@ -1025,6 +1004,7 @@ public class GameProject : BasicCPPProject
   {
     base.SetupConfigSettings(conf, target);
 
+    // Setup the working directory of this project
     conf.VcxprojUserFile = new Configuration.VcxprojUserFileSettings();
     conf.VcxprojUserFile.LocalDebuggerWorkingDirectory = Globals.DataRoot;
 
@@ -1033,11 +1013,7 @@ public class GameProject : BasicCPPProject
       Directory.CreateDirectory(conf.VcxprojUserFile.LocalDebuggerWorkingDirectory);
     }
 
-    // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: Merge all module data into a single file
-    if (ProjectName != "project_name")
-    {
-      WriteProjectNameFile(conf);
-    }
+    SetModuleProperty("project_name", ProjectName);
   }
 
   protected override void SetupOutputType(RexConfiguration conf, RexTarget target)
@@ -1048,21 +1024,6 @@ public class GameProject : BasicCPPProject
   protected void SetProjectName(string projectName)
   {
     ProjectName = projectName;
-  }
-
-  private void WriteProjectNameFile(RexConfiguration conf)
-  {
-    string projectNamePath = Path.Combine(conf.IntermediatePath, "project_name.txt");
-    Utils.SafeWriteFile(projectNamePath, ProjectName);
-
-    string targetDir = Path.GetDirectoryName(conf.TargetPath);
-    if (!Directory.Exists(targetDir))
-    {
-      Directory.CreateDirectory(targetDir);
-    }
-
-    string projectNameNextToTarget = Path.Combine(targetDir, "project_name.txt");
-    conf.EventPostBuild.Add($"copy {projectNamePath} {projectNameNextToTarget} /Y");
   }
 }
 

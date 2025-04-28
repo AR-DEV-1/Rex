@@ -2,8 +2,8 @@
 
 #include "rex_engine/engine/types.h"
 #include "rex_engine/gfx/core/input_layout_classification.h"
-#include "rex_engine/gfx/core/vertex_buffer_format.h"
-#include "rex_engine/gfx/shader_reflection/shader_param_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_arithmetic_type.h"
+#include "rex_engine/gfx/shader_reflection/shader_param_declaration.h"
 #include "rex_std/string_view.h"
 
 namespace rex
@@ -44,7 +44,7 @@ namespace rex
     struct InputLayoutElementDesc
     {
       ShaderSemantic semantic;                                                              // The semantic of the element, mainly used by DirectX
-      VertexBufferFormat format;                                                            // The format of the element data
+      ShaderArithmeticType format;                                                          // The format of the element data
       InputLayoutClassification input_slot_class = InputLayoutClassification::PerVertex;    // A value that identifies the input data class for a single input. 
       s32 semantic_index = 0;                                                               // The semantic index for the element. A semantic index modifies a semantic, with an integer index number. eg NORMAL1
       s32 input_slot = 0;                                                                   // An integer that identifies the input-assembler.
@@ -68,7 +68,7 @@ namespace rex
       // We can store the size of a single vertex using the input layout
       s32 vertex_size() const;
 
-      // Validate an description to see if it can be used with this input layout
+      // Validate a description to see if it can be used with this input layout
       // It's possible some elements do not match directly but can be converted
       // eg: an 4 component normalized byte type can be converted to a 4 component float type
       bool validate_desc(const InputLayoutDesc& desc);

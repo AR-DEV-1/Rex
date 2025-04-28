@@ -6,7 +6,9 @@ namespace rex
 {
   namespace gfx
   {
-    // Graphics api abstraction of the scissor rect
+    // Graphics api abstraction of the scissor rec
+    // A scissor rect is the region within the viewport you're allowed to draw
+    // If you specify the viewports dimension, you draw to the viewport
     struct ScissorRect
     {
       ScissorRect()

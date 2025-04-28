@@ -290,6 +290,10 @@ namespace rex
 
       const rsl::scopeguard reset_win_error_scopeguard([=]() { SetLastError(last_windows_error); });
 
+      // As WM_ENTERSIZEMOVE and WM_EXITSIZEMOVE can be called on resizing as well as on window moving
+      // we need to track if we're actually resizing or moving
+      static bool was_resizing = false;
+
       switch(msg)
       {
         case WM_CLOSE: REX_WARN(LogWindows, "Verify if the user really wants to close"); break;
@@ -314,7 +318,11 @@ namespace rex
           return 0;
 
         case WM_EXITSIZEMOVE:
-          event_system::instance()->enqueue_event(rex::WindowEndResize());
+          if (was_resizing)
+          {
+            event_system::instance()->enqueue_event(rex::WindowEndResize());
+          }
+          was_resizing = false;
           return 0;
 
         case WM_MENUCHAR:
@@ -329,9 +337,16 @@ namespace rex
           ((MINMAXINFO*)lparam)->ptMinTrackSize.x = m_wnd->min_width();  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast, google-readability-casting, performance-no-int-to-ptr)
           ((MINMAXINFO*)lparam)->ptMinTrackSize.y = m_wnd->min_height(); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast, google-readability-casting, performance-no-int-to-ptr)
           return 0;
-
+        case WM_SIZING:
+          was_resizing = true;
+          break;
         case WM_SIZE:
         {
+          if (was_resizing)
+          {
+            break;
+          }
+
           s32 width = LOWORD(lparam);
           s32 height = HIWORD(lparam);
           WindowResizeType resize_type = WindowResizeType::Invalid;
@@ -360,6 +375,9 @@ namespace rex
           break;
         case WM_KEYUP:
           event_system::instance()->enqueue_event(KeyUp(internal::keycode_from_vk(wparam, lparam)));
+          break;
+        case WM_SHOWWINDOW:
+          was_resizing = was_resizing;
           break;
         default:
           // Nothing to implement

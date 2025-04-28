@@ -28,11 +28,11 @@
 #include "rex_directx/resources/dx_depth_stencil_buffer.h"
 #include "rex_directx/resources/dx_unordered_access_buffer.h"
 #include "rex_directx/system/dx_view_heap.h"
-#include "rex_engine/gfx/system/shader_param_declaration.h"
 
+#include "rex_engine/gfx/shader_reflection/shader_param_declaration.h"
 #include "rex_engine/gfx/shader_reflection/shader_signature.h"
 
-#include "rex_engine/gfx/materials/material_system.h"
+#include "rex_engine/gfx/materials/material_library.h"
 
 #include "rex_engine/gfx/system/graphics_engine.h"
 
@@ -212,7 +212,7 @@ namespace rex
         REX_ASSERT("Unsupported cull mode given");
         return D3D12_CULL_MODE_NONE;
       }
-      DXGI_FORMAT to_dx12(VertexBufferFormat format)
+      DXGI_FORMAT to_dx12(ShaderArithmeticType format)
       {
         switch (format)
         {
@@ -330,6 +330,7 @@ namespace rex
       {
         switch (visibility)
         {
+        case ShaderVisibility::None: break;
         case ShaderVisibility::Vertex: return D3D12_SHADER_VISIBILITY_VERTEX;
         case ShaderVisibility::Pixel: return D3D12_SHADER_VISIBILITY_PIXEL;
         case ShaderVisibility::Amplification: return D3D12_SHADER_VISIBILITY_AMPLIFICATION;
@@ -338,6 +339,7 @@ namespace rex
         case ShaderVisibility::Hull: return D3D12_SHADER_VISIBILITY_HULL;
         case ShaderVisibility::Mesh: return D3D12_SHADER_VISIBILITY_MESH;
         case ShaderVisibility::All: return D3D12_SHADER_VISIBILITY_ALL;
+        case ShaderVisibility::Compute: break;
         }
 
         REX_ASSERT("Unsupported shader visibility for directx 12: {}", rsl::enum_refl::enum_name(visibility));
@@ -634,15 +636,15 @@ namespace rex
 
         return invalid_obj<D3D12_COMMAND_LIST_TYPE>();
       }
-      D3D12_DESCRIPTOR_HEAP_TYPE to_dx12(ViewHeapType type)
+      D3D12_DESCRIPTOR_HEAP_TYPE to_dx12(ResourceViewType type)
       {
         switch (type)
         {
-        case ViewHeapType::ConstantBuffer:  return D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-        case ViewHeapType::RenderTarget:    return D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        case ViewHeapType::DepthStencil:    return D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-        case ViewHeapType::Sampler:         return D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
-        case ViewHeapType::Undefined:       return D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES;
+        case ResourceViewType::ConstantBuffer:  return D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        case ResourceViewType::RenderTarget:    return D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        case ResourceViewType::DepthStencil:    return D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+        case ResourceViewType::Sampler:         return D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
+        case ResourceViewType::Undefined:       return D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES;
         }
 
         return invalid_obj<D3D12_DESCRIPTOR_HEAP_TYPE>();

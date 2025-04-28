@@ -1,7 +1,7 @@
 #include "rex_engine/gfx/rendering/render_pass.h"
 
 
-#include "rex_engine/gfx/shader_reflection/shader_reflection_cache.h"
+#include "rex_engine/gfx/shader_reflection/shader_reflection.h"
 
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/text_processing/text_processing.h"
@@ -23,7 +23,7 @@ namespace rex
 		{
 			m_pso_desc = desc.pso_desc;
 			m_pso = gfx::gal::instance()->create_pso(desc.pso_desc);
-			const ShaderPipelineReflection& reflection = shader_reflection_cache::load(desc.pso_desc.shader_pipeline);
+			const ShaderPipelineReflection& reflection = shader_reflection::instance()->load(desc.pso_desc.shader_pipeline);
 			m_parameters_store = rsl::make_unique<ShaderParametersStore>(reflection.renderpass_param_store_desc);
 			m_framebuffer = rsl::make_unique<FrameBuffer>(desc.framebuffer_desc);
 		}
@@ -50,7 +50,7 @@ namespace rex
 					// It's possible the slots have change if a new PSO was bound
 					// So we need calcualte the new slot positions.
 					MaterialPipelineState mat_pipeline_state{};
-					const ShaderPipelineReflection& reflection = shader_reflection_cache::load(pso_overwrite_result.shader_pipeline);
+					const ShaderPipelineReflection& reflection = shader_reflection::instance()->load(pso_overwrite_result.shader_pipeline);
 					mat_pipeline_state.parameter_store = rsl::make_unique<ShaderParametersStore>(reflection.renderpass_param_store_desc);
 
 					// Copy the render pass parameters into the new slot positions

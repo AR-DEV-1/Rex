@@ -1,13 +1,9 @@
 #include "rex_engine/gfx/imgui/imgui_frame_context.h"
 
-
-
 #include "rex_engine/gfx/graphics.h"
 #include "rex_engine/gfx/resources/vertex_buffer.h"
 #include "rex_engine/gfx/resources/index_buffer.h"
 #include "imgui/imgui.h"
-
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
 
 namespace rex
 {
@@ -15,20 +11,20 @@ namespace rex
   {
     ImGuiFrameContext::ImGuiFrameContext()
     {
-      increase_vertex_buffer(5000);
-      increase_index_buffer(5000);
+      increase_vertex_buffer(s_buffer_increment_size);
+      increase_index_buffer(s_buffer_increment_size);
 
       m_constant_buffer = gfx::gal::instance()->create_constant_buffer(sizeof(ImGuiVertexConstantBuffer));
     }
 
     // Update the frame context's data based on the draw data and upload this to the gpu.
-    ObjectWithDestructionCallback<SyncInfo> ImGuiFrameContext::update_data(ImDrawData* drawData)
+    ScopedPoolObject<SyncInfo> ImGuiFrameContext::update_data(ImDrawData* drawData)
     {
       m_viewport.width = drawData->DisplaySize.x;
       m_viewport.height = drawData->DisplaySize.y;
       m_viewport.min_depth = 0.0f;
       m_viewport.max_depth = 1.0f;
-      m_viewport.top_left_x = m_viewport.top_left_y = 0.0f;
+      m_viewport.top_left = glm::vec2();
 
       // Increase vertex or index buffer if needed
       if (m_vertex_buffer->count() < drawData->TotalVtxCount)
@@ -79,9 +75,9 @@ namespace rex
       m_index_buffer = gfx::gal::instance()->create_index_buffer(newSize + s_buffer_increment_size, format);
     }
     // Update the frame context's data to the gpu
-    ObjectWithDestructionCallback<SyncInfo> ImGuiFrameContext::copy_buffer_data(ImDrawData* drawData)
+    ScopedPoolObject<SyncInfo> ImGuiFrameContext::copy_buffer_data(ImDrawData* drawData)
     {
-      auto copy_context = gfx::gal::instance()->new_copy_ctx();
+      auto copy_context = gfx::gal::instance()->new_render_ctx();
 
       s32 vtx_offset = 0;
       s32 idx_offset = 0;

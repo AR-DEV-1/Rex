@@ -21,8 +21,8 @@ namespace rex
     class RenderTarget;
   }
 
-  // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
-  // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+  
+  
 
   namespace gfx
   {
@@ -55,10 +55,22 @@ namespace rex
       virtual ~GraphicsEngine();
 
       // Executes the context and returns the fence value that'll be set when all commands are executed
-      ObjectWithDestructionCallback<SyncInfo> execute_context(GraphicsContext* context, WaitForFinish waitForFinish);
+      ScopedPoolObject<SyncInfo> execute_context(GraphicsContext* context, WaitForFinish waitForFinish);
       
       // Get a new context object from the engine, using an idle one or creating a new one if no idle one is found
-      ObjectWithDestructionCallback<GraphicsContext> new_context(const ContextResetData& resetData, rsl::string_view eventName = "");
+      template <typename TGraphicsCtx>
+      ScopedGraphicsContext<TGraphicsCtx> new_context(const ContextResetData& resetData, rsl::string_view eventName)
+      {
+        // Find a command alloctor to be used for the context
+        ScopedFencedAllocator alloc = request_allocator();
+        ScopedGraphicsContext<TGraphicsCtx> ctx = m_context_pool.request<TGraphicsCtx>([this, alloc = alloc->underlying_alloc()]() { return allocate_new_context(alloc); });
+
+        // Always reset a context, making it ready to be used by a user
+        ctx->begin_profile_event(eventName);
+        ctx->reset(rsl::move(alloc), &m_resource_state_tracker, resetData);
+
+        return ctx;
+      }
 
       // Halt gpu commands from being executed until the sync info object is triggered
       void stall(SyncInfo& syncInfo);
@@ -72,10 +84,6 @@ namespace rex
 
       // Fully initialize the engine, allocating all required resources etc
       virtual void init() = 0;
-      // Prepare the engine for executing a new frame
-      virtual void new_frame() = 0;
-      // End the engine for executing the last frame
-      virtual void end_frame() = 0;
 
     protected:
       // Flush all commands on the gpu and halt the current thread untill all commands are executed
@@ -85,7 +93,7 @@ namespace rex
 
     private:
       // Request a new allocator from the command allocator pool
-      ObjectWithDestructionCallback<PooledAllocator> request_allocator();
+      ScopedFencedAllocator request_allocator();
 
     private:
       rsl::unique_ptr<CommandQueue> m_command_queue;        // the command queue to submit gpu commands

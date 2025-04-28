@@ -1,5 +1,7 @@
 #pragma once
 
+#include "rex_engine/gfx/system/debug_interface.h"
+
 #include "rex_directx/dxgi/includes.h"
 #include "rex_directx/utility/dx_util.h"
 
@@ -10,18 +12,18 @@ namespace rex
     // DirectX debug interface
     // It enables all debug levels when constructed
     // Reports remaining live objects on destruction
-    class DebugInterface
+    class DxDebugInterface : public DebugInterface
     {
     public:
-      DebugInterface();
-      DebugInterface(const DebugInterface&) = delete;
-      DebugInterface(DebugInterface&&) = delete;
-      ~DebugInterface();
+      DxDebugInterface();
+      DxDebugInterface(const DxDebugInterface&) = delete;
+      DxDebugInterface(DxDebugInterface&&) = delete;
+      ~DxDebugInterface();
 
-      DebugInterface& operator=(const DebugInterface&) = delete;
-      DebugInterface& operator=(DebugInterface&&) = delete;
+      DxDebugInterface& operator=(const DxDebugInterface&) = delete;
+      DxDebugInterface& operator=(DxDebugInterface&&) = delete;
 
-      void report_live_objects();
+      void report_live_objects() override;
 
     private:
       void init_dxgi_debug_interface();

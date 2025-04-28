@@ -5,7 +5,7 @@
 #include "rex_engine/gfx/system/graphics_engine.h"
 
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+
 
 namespace rex
 {
@@ -26,7 +26,7 @@ namespace rex
     }
 
     // Reset the context, freeing up any previously allocated commands
-    void GraphicsContext::reset(ObjectWithDestructionCallback<gfx::PooledAllocator>&& alloc, ResourceStateTracker* resourceStateTracker, const ContextResetData& resetData)
+    void GraphicsContext::reset(ScopedFencedAllocator&& alloc, ResourceStateTracker* resourceStateTracker, const ContextResetData& resetData)
     {
       REX_ASSERT_X(m_allocator.has_object() == false, "Overwriting the allocator of a gfx context is not allowed. You need to execute the commands of the context first");
       REX_ASSERT_X(alloc.has_object(), "Assigning a nullptr as allocator for a gfx context is not allowed.");
@@ -38,7 +38,7 @@ namespace rex
     }
     // Execute the commands on the gpu.
     // A sync info is returned so the user can use it to sync with other contexts
-    ObjectWithDestructionCallback<SyncInfo> GraphicsContext::execute_on_gpu(WaitForFinish waitForFinish)
+    ScopedPoolObject<SyncInfo> GraphicsContext::execute_on_gpu(WaitForFinish waitForFinish)
     {
       // If we've already executed this context, we don't need to execute it again
       if (has_executed())
@@ -50,9 +50,9 @@ namespace rex
       flush_render_states();
 
       // Execute the context and return the command allocator back to the pool
-      ObjectWithDestructionCallback<SyncInfo> sync_info = m_owning_engine->execute_context(this, waitForFinish);
+      ScopedPoolObject<SyncInfo> sync_info = m_owning_engine->execute_context(this, waitForFinish);
       m_allocator->reset_fence(sync_info->fence_val());
-      m_allocator.call_destruction_callback();
+      m_allocator.return_object_to_pool();
 
       return sync_info;
     }

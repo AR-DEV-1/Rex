@@ -2,14 +2,13 @@
 
 #include "rex_engine/gfx/core/viewport.h"
 
-#include "rex_engine/gfx/system/copy_context.h"
-
 #include "rex_engine/gfx/resources/index_buffer.h"
 #include "rex_engine/gfx/resources/vertex_buffer.h"
 
-struct ImDrawData;
+#include "rex_engine/gfx/system/sync_info.h"
+#include "rex_engine/pooling/scoped_pooled_object.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: OBJECT WITH DESTRUCTION CALLBACK
+struct ImDrawData;
 
 namespace rex
 {
@@ -25,14 +24,14 @@ namespace rex
       f32 mvp[4][4];
     };
 
-    // An frame context holds all the objects needed to render an imgui object for a frame
+    // A frame context holds all the objects needed to render an imgui viewport for a frame
     class ImGuiFrameContext
     {
     public:
       ImGuiFrameContext();
 
       // Update the frame context's data based on the draw data and upload this to the gpu.
-      ObjectWithDestructionCallback<SyncInfo> update_data(ImDrawData* drawData);
+      ScopedPoolObject<SyncInfo> update_data(ImDrawData* drawData);
 
       // Return the viewport used for the frame const
       const Viewport& viewport() const;
@@ -49,7 +48,7 @@ namespace rex
       // Incrase the index buffer to a new size
       void increase_index_buffer(s32 newSize);
       // Update the frame context's data to the gpu
-      ObjectWithDestructionCallback<SyncInfo> copy_buffer_data(ImDrawData* drawData);
+      ScopedPoolObject<SyncInfo> copy_buffer_data(ImDrawData* drawData);
 
     private:
       rsl::unique_ptr<VertexBuffer> m_vertex_buffer;

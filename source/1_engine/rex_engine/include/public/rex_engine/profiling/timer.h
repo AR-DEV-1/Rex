@@ -19,6 +19,10 @@ namespace rex
 
 		rsl::chrono::time_point<rsl::chrono::steady_clock> start_time() const;
 		rsl::chrono::nanoseconds elapsed_time() const;
+
+		f32 elapsed_ms() const;
+		f32 elapsed_seconds() const;
+
 		void reset();
 
 	private:

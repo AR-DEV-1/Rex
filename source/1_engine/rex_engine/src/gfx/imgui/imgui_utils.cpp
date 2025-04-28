@@ -1,4 +1,7 @@
 #include "rex_engine/gfx/imgui/imgui_utils.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_style.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_color.h"
+#include "rex_engine/gfx/imgui/imgui_colors.h"
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: IMGUI UTILS
 
@@ -6,36 +9,27 @@ namespace rex
 {
 	namespace imgui
 	{
-		ScopedWidget::ScopedWidget(const char* name, bool* pOpen, ImGuiWindowFlags flags)
-		{
-			m_is_open = ImGui::Begin(name, pOpen, flags);
-		}
-		ScopedWidget::~ScopedWidget()
-		{
-			ImGui::End();
-		}
-		ScopedWidget::operator bool() const
-		{
-			return m_is_open;
-		}
-
-		ImColor color_with_multiplied_value(const ImColor& color, float multiplier)
+		// multiply a color with a multiplier, clamped at 1.0f
+		ImColor color_with_multiplied_value(const ImColor& color, f32 multiplier)
 		{
 			const ImVec4& colRaw = color.Value;
-			float hue, sat, val;
+			f32 hue, sat, val;
 			ImGui::ColorConvertRGBtoHSV(colRaw.x, colRaw.y, colRaw.z, hue, sat, val);
 			return ImColor::HSV(hue, sat, std::min(val * multiplier, 1.0f));
 		}
 
-		// src will be added to the dst window
+		// dock a window (src) to another window (dst)
 		void dock_to_window(rsl::string_view src, rsl::string_view dst, ImGuiDir dir)
 		{
 			ImGuiWindow* src_window = ImGui::FindWindowByName(src.data());
 			ImGuiWindow* dst_window = ImGui::FindWindowByName(dst.data());
 
-			dock_to_window(src_window, dst_window, dir);
+			if (src_window != nullptr && dst_window != nullptr)
+			{
+				dock_to_window(src_window, dst_window, dir);
+			}
 		}
-
+		// dock a window (src) to another window (dst)
 		void dock_to_window(ImGuiWindow* src, ImGuiWindow* dst, ImGuiDir dir)
 		{
 			ImGuiContext* context = ImGui::GetCurrentContext();
@@ -51,41 +45,46 @@ namespace rex
 			);
 		}
 
-		void shift_cursor_y(float distance)
+		// returns true if the current item is hovered
+		bool is_item_hovered(f32 delayInSeconds)
 		{
-			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + distance);
-		}
-
-		bool is_item_hovered(float delayInSeconds, ImGuiHoveredFlags flags)
-		{
-			REX_UNUSED_PARAM(flags);
-
 			return ImGui::IsItemHovered() && GImGui->HoveredIdTimer > delayInSeconds; /*HoveredIdNotActiveTimer*/
 		}
 
-		void set_tooltip(std::string_view txt, float delayInSeconds, bool allowWhenDisabled, ImVec2 padding)
+		// apply a tooltip to an item if it's currently hovered
+		void set_tooltip(std::string_view txt, f32 delayInSeconds, ImVec2 padding)
 		{
-			if (is_item_hovered(delayInSeconds, allowWhenDisabled ? ImGuiHoveredFlags_AllowWhenDisabled : 0))
+			if (is_item_hovered(delayInSeconds))
 			{
 				ScopedStyle tooltipPadding(ImGuiStyleVar_WindowPadding, padding);
-				ScopedColour textCol(ImGuiCol_Text, textBrighter);
-				ImGui::SetTooltip(txt.data());
+				ScopedColor textCol(ImGuiCol_Text, colors::text_brighter);
+				ImGui::SetTooltip("%s", txt.data());
 			}
 		}
-		ImRect rect_offset(const ImRect& rect, float x, float y)
+
+		// offset a rect by a given offset
+		ImRect shift_rect(const ImRect& rect, ImVec2 offset)
 		{
 			ImRect result = rect;
-			result.Min.x += x;
-			result.Min.y += y;
-			result.Max.x += x;
-			result.Max.y += y;
+			result.Min.x += offset.x;
+			result.Min.y += offset.y;
+			result.Max.x += offset.x;
+			result.Max.y += offset.y;
 			return result;
 		}
-		void shift_cursor(float x, float y)
+		// shift the y cursor with a given distance
+		void shift_cursor_y(f32 distance)
+		{
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + distance);
+		}
+		// shift the cursor by a given offset
+		void shift_cursor(ImVec2 offset)
 		{
 			const ImVec2 cursor = ImGui::GetCursorPos();
-			ImGui::SetCursorPos(ImVec2(cursor.x + x, cursor.y + y));
+			ImGui::SetCursorPos(ImVec2(cursor.x + offset.x, cursor.y + offset.y));
 		}
+
+		// create an imgui image from a texture
 		void image(const rex::gfx::Texture2D* tex)
 		{
 			ImVec2 texSize{};
@@ -93,6 +92,5 @@ namespace rex
 			texSize.y = static_cast<f32>(tex->height());
 			ImGui::Image((ImTextureID)tex, texSize);
 		}
-
 	}
 }

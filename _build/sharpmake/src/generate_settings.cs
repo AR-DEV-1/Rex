@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using rex;
 
 // These are the classes used for automatic code generation
 namespace CodeGen
@@ -107,7 +108,14 @@ namespace CodeGen
       sb.AppendLine($"  enum class {ClassName}");
       sb.AppendLine("  {");
 
-      foreach (var project_vals in ProjectToContent)
+      // Sort the content so we're not affected by threading
+      List<KeyValuePair<string, List<string>>> projectToContentAsList = ProjectToContent.ToList();
+      projectToContentAsList.Sort(delegate (KeyValuePair<string, List<string>> lhs, KeyValuePair<string, List<string>> rhs)
+      {
+        return lhs.Key.CompareTo(rhs.Key);
+      });
+      
+      foreach (var project_vals in projectToContentAsList)
       {
         sb.AppendLine($"    // {ClassName} values for {project_vals.Key}");
 
@@ -161,7 +169,14 @@ namespace CodeGen
       sb.AppendLine($"  inline rsl::array {Name} = ");
       sb.AppendLine("  {");
 
-      foreach (var project_vals in ProjectToContent)
+      // Sort the content so we're not affected by threading
+      List<KeyValuePair<string, List<string>>> projectToContentAsList = ProjectToContent.ToList();
+      projectToContentAsList.Sort(delegate (KeyValuePair<string, List<string>> lhs, KeyValuePair<string, List<string>> rhs)
+      {
+        return lhs.Key.CompareTo(rhs.Key);
+      });
+
+      foreach (var project_vals in projectToContentAsList)
       {
         sb.AppendLine($"    // {ElementType} values for {project_vals.Key} - using code generation key: '{key}'");
 
@@ -332,7 +347,7 @@ namespace ProjectGen
           RunnableType runnableType = RunnableTypeForConfig(conf);
 
           TargetRunnables.Add(new Runnable(fullTargetPath, runnableType));
-          CompilerDBPaths.Add(Utils.GetCompilerDBOutputPath((RexConfiguration)conf));
+          CompilerDBPaths.Add(PathGeneration.GetCompilerDBOutputPath((RexConfiguration)conf));
         }
 
       }

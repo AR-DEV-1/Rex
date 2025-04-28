@@ -14,20 +14,20 @@ namespace rex
     {
       switch (semantic)
       {
-      case rex::gfx::ShaderSemantic::Color:         return "COLOR";
-      case rex::gfx::ShaderSemantic::Position:      return "POSITION";
-      case rex::gfx::ShaderSemantic::PSize:         return "PSIZE";
-      case rex::gfx::ShaderSemantic::BiNormal:      return "BINORMAL";
-      case rex::gfx::ShaderSemantic::BlendIndices:  return "BLENDINDICES";
-      case rex::gfx::ShaderSemantic::BlendWeight:   return "BLENDWEIGHT";
-      case rex::gfx::ShaderSemantic::Normal:        return "NORMAL";
-      case rex::gfx::ShaderSemantic::PositionT:     return "POSITIONT";
-      case rex::gfx::ShaderSemantic::Tangent:       return "TANGENT";
-      case rex::gfx::ShaderSemantic::TexCoord:      return "TEXCOORD";
-      case rex::gfx::ShaderSemantic::Fog:           return "FOG";
-      case rex::gfx::ShaderSemantic::TessFactor:    return "TESSFACTOR";
+      case rex::gfx::ShaderSemantic::Color:             return "COLOR";
+      case rex::gfx::ShaderSemantic::Position:          return "POSITION";
+      case rex::gfx::ShaderSemantic::PSize:             return "PSIZE";
+      case rex::gfx::ShaderSemantic::BiNormal:          return "BINORMAL";
+      case rex::gfx::ShaderSemantic::BlendIndices:      return "BLENDINDICES";
+      case rex::gfx::ShaderSemantic::BlendWeight:       return "BLENDWEIGHT";
+      case rex::gfx::ShaderSemantic::Normal:            return "NORMAL";
+      case rex::gfx::ShaderSemantic::PositionT:         return "POSITIONT";
+      case rex::gfx::ShaderSemantic::Tangent:           return "TANGENT";
+      case rex::gfx::ShaderSemantic::TexCoord:          return "TEXCOORD";
+      case rex::gfx::ShaderSemantic::Fog:               return "FOG";
+      case rex::gfx::ShaderSemantic::TessFactor:        return "TESSFACTOR";
       case rex::gfx::ShaderSemantic::InstanceMatrix:    return "InstMatrix";
-      case rex::gfx::ShaderSemantic::InstanceIndex:    return "InstTileOffset";
+      case rex::gfx::ShaderSemantic::InstanceIndex:     return "InstTileOffset";
       }
 
       return "";
@@ -79,7 +79,7 @@ namespace rex
         }
 
         ShaderArithmeticType format = it->format;
-        if (!is_convertible_shader_param_type(format, elem.format))
+        if (!format.is_convertible_to(elem.format))
         {
           return false;
         }

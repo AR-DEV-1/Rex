@@ -12,10 +12,10 @@ namespace rex
 {
   namespace gfx
   {
-    class ResourceHeap
+    class DxResourceHeap
     {
     public:
-      ResourceHeap(const wrl::ComPtr<ID3D12Heap>& heap, const wrl::ComPtr<ID3D12Device1>& device);
+      DxResourceHeap(const wrl::ComPtr<ID3D12Heap>& heap, const wrl::ComPtr<ID3D12Device1>& device);
 
       // Create a new 1D buffer on the gpu
       wrl::ComPtr<ID3D12Resource> create_buffer(rsl::memory_size size, s32 alignment = 0);

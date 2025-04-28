@@ -143,6 +143,11 @@ namespace rex
 			return !(*this == rhs);
 		}
 
+		size_type buffer_size() const
+		{
+			return m_buffer.count();
+		}
+
 	private:
 		rsl::unique_array<rsl::byte, DeleterWithAllocator<rsl::byte, BackendAllocator>> m_buffer;
 		rsl::byte* m_current;

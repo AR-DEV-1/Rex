@@ -3,6 +3,8 @@
 #include "rex_engine/filesystem/path.h"
 
 #include "rex_engine/gfx/imgui/imgui_utils.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_style.h"
+#include "rex_engine/gfx/imgui/imgui_colors.h"
 
 namespace regina
 {
@@ -49,11 +51,11 @@ namespace regina
 			//{
 			//	drawList->AddRectFilled(topLeft, thumbBottomRight, rex::imgui::backgroundDark);
 			//}
-			drawList->AddRectFilled(infoTopLeft, bottomRight, rex::imgui::groupHeader, 6.0f, ImDrawFlags_RoundCornersBottom);
+			drawList->AddRectFilled(infoTopLeft, bottomRight, rex::imgui::colors::group_header, 6.0f, ImDrawFlags_RoundCornersBottom);
 		}
 
 		 //Shift the offset so we leave some space between the thumbnail and the corner
-		rex::imgui::shift_cursor(edgeOffset, edgeOffset);
+		rex::imgui::shift_cursor(ImVec2(edgeOffset, edgeOffset));
 
 		 //render the thumbnail
 		{
@@ -95,7 +97,7 @@ namespace regina
 		ImGui::EndVertical();
 
 		 //Put the cursor back where it came from
-		rex::imgui::shift_cursor(-edgeOffset, -edgeOffset);
+		rex::imgui::shift_cursor(ImVec2(-edgeOffset, -edgeOffset));
 		ImGui::EndGroup();
 
 		 //UI actions

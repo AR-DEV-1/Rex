@@ -6,7 +6,7 @@ public class RexUnitTest : TestProject
 {
   public RexUnitTest() : base()
   {
-    Name = GenerateName("RexUnitTest");
+    Name = "RexUnitTest";
     GenerateTargets();
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
@@ -31,7 +31,7 @@ public class RexUnitTest : TestProject
   {
     base.SetupConfigSettings(conf, target);
 
-    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
+    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.EnableWithAdaptive);
   }
 
   protected override void SetupOutputType(RexConfiguration conf, RexTarget target)

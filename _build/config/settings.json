@@ -11,6 +11,6 @@
   "asan_folder": "tests/coverage",
   "ubsan_folder": "tests/ubsan",
   "logs_folder": "logs",
-  "clang_tools_project_extension": ".project",
+  "clang_tools_project_extension": ".clangtools",
   "build_projects_filename" : "build_projects.json"
 }

@@ -7,8 +7,8 @@ namespace rex
   {
     os << "\n";
     os << "Description: " << desc.name << "\n";
-    os << "Vendor Name: " << desc.vendor_name << "\n";
-    os << "Vendor ID: " << desc.vendor_id << "\n";
+    os << "GpuVendor Name: " << desc.vendor_name << "\n";
+    os << "GpuVendor: " << gpu_vendor_to_string(desc.vendor_id) << "\n";
     os << "Device ID: " << desc.device_id << "\n";
     os << "Dedicated Video Memory: " << desc.dedicated_video_memory.size_in_mb() << "MB"
        << "\n";
@@ -24,7 +24,7 @@ namespace rex
   GpuDescription::GpuDescription()
       : name("")
       , vendor_name("")
-      , vendor_id(0)
+      , vendor_id(GpuVendor::Unknown)
       , device_id(0)
       , dedicated_video_memory(0)
       , dedicated_system_memory(0)

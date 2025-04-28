@@ -46,6 +46,6 @@ public class DokanFs : ToolsProject
     conf.Defines.Add("_EXPORTING");
 
     conf.enable_exceptions(); // This must be enabled in order to compile the driver
-    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
+    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.EnableWithAdaptive);
   }
 }

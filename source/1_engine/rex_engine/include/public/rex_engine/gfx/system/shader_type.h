@@ -1,20 +1,11 @@
 #pragma once
 
+#include "rex_engine/gfx/core/shader_visibility.h"
+
 namespace rex
 {
   namespace gfx
   {
-    enum class ShaderType
-    {
-      None = 0,
-      Vertex,    // Used for vertex shader
-      Pixel,     // Used for pixel shader
-      Geometry,  // Used for geometry shader
-      Compute,   // Used for compute shader
-      Hull,      // Used for hull shader
-      Domain,    // Used for domain shader
-      Amplification,  // Used for amplification shader
-      Mesh,      // Used for mesh shader
-    };
+    using ShaderType = ShaderVisibility;
   } // namespace gfx
 } // namespace rex

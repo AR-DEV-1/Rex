@@ -26,7 +26,7 @@ namespace rex
     }
 
     // Write data on cpu side, it returns the offset into the upload buffer where data was written to
-    s64 DxUploadBuffer::write_buffer_data_from_cpu(const void* data, s64 size, s32 alignment)
+    s64 DxUploadBuffer::stage_buffer_data(const void* data, s64 size, s32 alignment)
     {
       // Write the data into our mapped memory
       REX_ASSERT_X(can_fit_alloc(size, alignment), "Upload buffer overflow. Would write more into the upload buffer than is supported");
@@ -41,7 +41,7 @@ namespace rex
     }
 
     // Write data on cpu side, it returns the offset into the upload buffer where data was written to
-    s64 DxUploadBuffer::write_texture_data_from_cpu(const void* data, s32 width, s32 height, TextureFormat format)
+    s64 DxUploadBuffer::stage_texture_data(const void* data, s32 width, s32 height, TextureFormat format)
     {
       // Write the data into our mapped memory
       s32 alignment = D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT;

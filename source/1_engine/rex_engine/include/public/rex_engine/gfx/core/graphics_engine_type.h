@@ -7,7 +7,7 @@ namespace rex
     enum class GraphicsEngineType
     {
       Render, // Type used to specify for render commands
-      Copy,   // Type used to specify for copy commands
+      Copy,   // Type used to specify for copy commands (this is currently unused)
       Compute // Type used to specify for compute commands
     };
 

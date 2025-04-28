@@ -6,7 +6,7 @@ public class RexEngineUnitTest : TestProject
 {
   public RexEngineUnitTest() : base()
   {
-    Name = GenerateName("RexEngineUnitTest");
+    Name = "RexEngineUnitTest";
     GenerateTargets();
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
@@ -34,7 +34,7 @@ public class RexEngineUnitTest : TestProject
   {
     base.SetupConfigSettings(conf, target);
 
-    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
+    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.EnableWithAdaptive);
 
     if (target.Compiler == Compiler.MSVC)
     {

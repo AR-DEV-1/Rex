@@ -1,0 +1,6 @@
+[
+  {
+    "name": "Directory",
+    "desc": "The directory to start creating a backup of."
+  }
+]

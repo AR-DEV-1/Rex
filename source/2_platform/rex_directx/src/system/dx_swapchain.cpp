@@ -24,26 +24,6 @@ namespace rex
       query_buffers(bufferCount);
     }
 
-    void DxSwapchain::resize_buffers(s32 width, s32 height, DXGI_SWAP_CHAIN_FLAG flags)
-    {
-      // Update the cached width and height
-      on_resize(width, height);
-
-      // Empty the cached buffers
-      s32 buffer_count = num_buffers();
-      clear_buffers();
-
-      // Resize the DirectX buffers
-      if(DX_FAILED(m_swapchain->ResizeBuffers(buffer_count, width, height, m_format, flags)))
-      {
-        REX_ERROR(LogSwapchain, "Failed to resize swapchain buffers");
-        return;
-      }
-
-      // Cache the new resized buffers
-      query_buffers(buffer_count);
-    }
-
     void DxSwapchain::present()
     {
       m_swapchain->Present(1, rsl::no_flags());
@@ -69,9 +49,53 @@ namespace rex
       }
     }
 
+    void DxSwapchain::retarget_buffers(const scratch_vector<DxResourceView>& rtvs)
+    {
+      for (s32 i = 0; i < rtvs.size(); ++i)
+      {
+        wrl::ComPtr<ID3D12Resource> d3d_buffer;
+        m_swapchain->GetBuffer(i, IID_PPV_ARGS(&d3d_buffer));
+        d3d::set_debug_name_for(d3d_buffer.Get(), rsl::format("DxSwapchain Back Buffer {}", i));
+        auto render_target = static_cast<DirectXInterface*>(gfx::gal::instance())->retarget_render_target(d3d_buffer, rtvs[i]);
+        store_render_target(rsl::move(render_target));
+      }
+    }
+
     s32 DxSwapchain::current_buffer_idx() const
     {
       return m_swapchain->GetCurrentBackBufferIndex();
+    }
+
+    void DxSwapchain::resize(s32 newWidth, s32 newHeight)
+    {
+      // Update the cached width and height
+      on_resize(newWidth, newHeight);
+
+      // First get the views of the render targets
+      s32 buffer_count = num_buffers();
+      scratch_vector<DxResourceView> rtvs;
+      rtvs.reserve(buffer_count);
+      for (s32 i = 0; i < buffer_count; ++i)
+      {
+        const DxResourceView* dx_rtv = static_cast<const DxResourceView*>(buffer_at(i)->view());
+        rtvs.push_back(*dx_rtv);
+      }
+
+      // Empty the cached buffers
+      clear_buffers();
+
+      DXGI_SWAP_CHAIN_DESC desc;
+      DX_CALL(m_swapchain->GetDesc(&desc));
+      
+      // Resize the DirectX buffers
+      if (DX_FAILED(m_swapchain->ResizeBuffers(buffer_count, newWidth, newHeight, m_format, desc.Flags)))
+      {
+        REX_ERROR(LogSwapchain, "Failed to resize swapchain buffers");
+        return;
+      }
+
+      // Cache the new resized buffers
+      retarget_buffers(rtvs);
     }
 
   } // namespace gfx

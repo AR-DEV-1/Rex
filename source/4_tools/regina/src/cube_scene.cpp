@@ -17,7 +17,7 @@
 
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
-#include "rex_engine/gfx/materials/material_system.h"
+#include "rex_engine/gfx/materials/material_library.h"
 
 #include "rex_engine/gfx/primitives/sphere.h"
 
@@ -41,7 +41,7 @@ namespace regina
       rex::gfx::StaticMeshComponent& smc = cube_entity.add_component<rex::gfx::StaticMeshComponent>(rsl::move(box));
 
       // 3. Initialize the static mesh with a material
-      m_cube_material = rex::gfx::load_material(rex::vfs::instance()->abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
+      m_cube_material = rex::gfx::material_lib::instance()->load_material(rex::vfs::instance()->abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
       smc.set_material(m_cube_material.get());
     }
 

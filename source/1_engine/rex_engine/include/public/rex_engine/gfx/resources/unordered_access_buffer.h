@@ -11,7 +11,7 @@ namespace rex
 	{
 		class ResourceView;
 
-		// A class representing a buffer shaders have random access to
+		// A class representing a buffer that shaders have random access to
 		// As in, the shader determines at which offset it wants to read from this buffer
 		class UnorderedAccessBuffer : public Buffer
 		{

@@ -6,10 +6,10 @@ namespace rex
 {
   namespace gfx
   {
-    DxRenderTarget::DxRenderTarget(const wrl::ComPtr<ID3D12Resource>& resource, DxResourceView descHandle, const ClearStateDesc& clearState)
-      : RenderTarget(static_cast<s32>(resource->GetDesc().Width), static_cast<s32>(resource->GetDesc().Height), clearState)
+    DxRenderTarget::DxRenderTarget(const wrl::ComPtr<ID3D12Resource>& resource, DxResourceView view, const rsl::Color4f& clearColor)
+      : RenderTarget(static_cast<s32>(resource->GetDesc().Width), static_cast<s32>(resource->GetDesc().Height), &m_view, clearColor)
       , m_resource(resource)
-      , m_view(descHandle)
+      , m_view(view)
     {}
 
     ID3D12Resource* DxRenderTarget::dx_object()
@@ -17,7 +17,7 @@ namespace rex
       return m_resource.Get();
     }
 
-    DxResourceView DxRenderTarget::view() const
+    const DxResourceView& DxRenderTarget::dx_view() const
     {
       return m_view;
     }

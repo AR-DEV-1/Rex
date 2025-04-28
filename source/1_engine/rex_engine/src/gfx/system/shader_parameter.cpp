@@ -94,19 +94,19 @@ namespace rex
 		}
 		void ViewTableShaderParam::bind_to(RenderContext* ctx) const
 		{
-			ViewHeapType target_view_heap_type = ViewHeapType::Undefined;
+			ResourceViewType target_view_heap_type = ResourceViewType::Undefined;
 			switch (type())
 			{
-			case ShaderParameterType::ByteAddress: target_view_heap_type = ViewHeapType::ByteAddress; break;
-			case ShaderParameterType::UnorderedAccessView: target_view_heap_type = ViewHeapType::UnorderedAccess; break;
-			case ShaderParameterType::ConstantBuffer: target_view_heap_type = ViewHeapType::ConstantBuffer; break;
-			case ShaderParameterType::Texture: target_view_heap_type = ViewHeapType::Texture2D; break;
-			case ShaderParameterType::Sampler: target_view_heap_type = ViewHeapType::Sampler; break;
+			case ShaderParameterType::ByteAddress: target_view_heap_type = ResourceViewType::ByteAddress; break;
+			case ShaderParameterType::UnorderedAccessView: target_view_heap_type = ResourceViewType::UnorderedAccess; break;
+			case ShaderParameterType::ConstantBuffer: target_view_heap_type = ResourceViewType::ConstantBuffer; break;
+			case ShaderParameterType::Texture: target_view_heap_type = ResourceViewType::Texture2D; break;
+			case ShaderParameterType::Sampler: target_view_heap_type = ResourceViewType::Sampler; break;
 			default: REX_ASSERT("Invalid shader parameter type"); break;
 			}
 
-			auto copy_ctx = gfx::gal::instance()->new_copy_ctx();
-			auto start_handle = copy_ctx->copy_views(target_view_heap_type, m_views);
+			auto render_ctx = gfx::gal::instance()->new_render_ctx();
+			auto start_handle = render_ctx->copy_views(target_view_heap_type, m_views);
 			ctx->bind_view_table(slot(), start_handle);
 		}
 

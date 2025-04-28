@@ -11,7 +11,7 @@ namespace rex
 	{
 		class ResourceView;
 
-		// A depth stencil buffer is a buffer holding depth and/or stencil data
+		// A depth stencil buffer is a buffer holding depth and stencil data
 		// Main purpose of this is to be used for depth testing
 		// But it can also be used for stencil testing, which
 		// is a more advanced form of rendering

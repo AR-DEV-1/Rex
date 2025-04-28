@@ -105,7 +105,7 @@ namespace rex
     REX_NO_DISCARD ReadRequest read_file_async(MountingPoint root, rsl::string_view filepath)      ;
     REX_NO_DISCARD ReadRequest read_file_async(rsl::string_view filepath)                          ;
 
-    virtual REX_NO_DISCARD memory::Blob read_file(rsl::string_view filepath)                               = 0;
+    REX_NO_DISCARD virtual memory::Blob read_file(rsl::string_view filepath)                               = 0;
     virtual s32 read_file(rsl::string_view filepath, rsl::byte* buffer, s32 size)                          = 0;
 
     // --------------------------------
@@ -139,9 +139,9 @@ namespace rex
     REX_NO_DISCARD rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path)         ;
     REX_NO_DISCARD rsl::vector<rsl::string> list_files(MountingPoint root, rsl::string_view path)        ;
     
-    virtual REX_NO_DISCARD rsl::vector<rsl::string> list_entries(rsl::string_view path)                          = 0;
-    virtual REX_NO_DISCARD rsl::vector<rsl::string> list_dirs(rsl::string_view path)                             = 0;
-    virtual REX_NO_DISCARD rsl::vector<rsl::string> list_files(rsl::string_view path)                            = 0;
+    REX_NO_DISCARD virtual rsl::vector<rsl::string> list_entries(rsl::string_view path)                          = 0;
+    REX_NO_DISCARD virtual rsl::vector<rsl::string> list_dirs(rsl::string_view path)                             = 0;
+    REX_NO_DISCARD virtual rsl::vector<rsl::string> list_files(rsl::string_view path)                            = 0;
 
   protected:
     rsl::string_view no_mount_path() const;

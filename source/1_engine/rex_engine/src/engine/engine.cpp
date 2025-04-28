@@ -6,6 +6,7 @@
 #include "rex_engine/system/process.h"
 #include "rex_engine/cmdline/cmdline.h"
 #include "rex_engine/engine/globals.h"
+#include "rex_engine/text_processing/json.h"
 
 namespace rex
 {
@@ -25,12 +26,16 @@ namespace rex
 
 		// search for a project name txt file
 		// Need to check through the global accessor as it's possible this gets called from the ctor
-		scratch_string project_name_txt_path = path::find_in_parent("project_name.txt", path::parent_path(processPath));
-		if (!project_name_txt_path.empty())
+		scratch_string module_json_path = path::find_in_parent("module.json", path::parent_path(processPath));
+		if (!module_json_path.empty())
 		{
-			memory::Blob blob = file::read_file_abspath(project_name_txt_path);
-			project_name.assign(memory::blob_to_string_view(blob));
-			return project_name;
+			memory::Blob blob = file::read_file_abspath(module_json_path);
+			json::json module_content = json::parse(blob);
+			if (module_content.contains("project_name"))
+			{
+				project_name.assign(rsl::string_view(module_content["project_name"]));
+				return project_name;
+			}
 		}
 
 		// Get the project name from the exe
@@ -98,6 +103,10 @@ namespace rex
 	{
 		return m_scratch_allocator->has_allocated_ptr(ptr);
 	}
+	s64 EngineGlobals::scratch_buffer_size() const
+	{
+		return m_scratch_allocator->buffer_size();
+	}
 
 	void* EngineGlobals::temp_alloc(s64 size)
 	{
@@ -110,6 +119,10 @@ namespace rex
 	bool EngineGlobals::is_temp_alloc(void* ptr) const
 	{
 		return m_single_frame_allocator->has_allocated_ptr(ptr);
+	}
+	s64 EngineGlobals::temp_buffer_size() const
+	{
+		return m_single_frame_allocator->buffer_size();
 	}
 
 	const FrameInfo& EngineGlobals::frame_info() const

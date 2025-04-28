@@ -1,6 +1,6 @@
 #include "rex_directx/system/dx_render_engine.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
+
 
 #include "rex_engine/gfx/graphics.h"
 
@@ -19,12 +19,12 @@ namespace rex
     }
 
     // Prepare a new frame
-    void DxRenderEngine::new_frame()
+    void DxRenderEngine::api_new_frame()
     {
       // Nothing to implement
     }
     // Finalise the frame
-    void DxRenderEngine::end_frame()
+    void DxRenderEngine::api_end_frame()
     {
       flush();
     }

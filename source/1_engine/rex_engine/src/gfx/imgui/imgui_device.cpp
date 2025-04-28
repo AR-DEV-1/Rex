@@ -2,20 +2,23 @@
 
 namespace rex
 {
-  namespace gfx
-  {
-    ImGuiDevice g_imgui_device;
-
-    // Initialize the imgui device so imgui can use it to create its own windows
-    void init_imgui_device(const ImGuiDevice& imguiDevice)
-    {
-      g_imgui_device = imguiDevice;
-    }
-
-    // Retrieve the imgui device to initialize an imgui window
-    const ImGuiDevice& imgui_device()
-    {
-      return g_imgui_device;
-    }
-  }
+	namespace gfx
+	{
+		namespace imgui_device
+		{
+			globals::GlobalUniquePtr<ImGuiDevice> g_imgui_device;
+			void init(globals::GlobalUniquePtr<ImGuiDevice> device)
+			{
+				g_imgui_device = rsl::move(device);
+			}
+			ImGuiDevice* instance()
+			{
+				return g_imgui_device.get();
+			}
+			void shutdown()
+			{
+				g_imgui_device.reset();
+			}
+		}
+	}
 }

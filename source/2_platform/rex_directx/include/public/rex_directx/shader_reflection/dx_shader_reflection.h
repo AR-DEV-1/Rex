@@ -1,12 +1,17 @@
 #pragma once
 
+#include "rex_engine/gfx/shader_reflection/shader_reflection.h"
+
 namespace rex
 {
   namespace gfx
   {
-    namespace shader_reflection
+    class DxShaderReflection : public ShaderReflectionBase
     {
-      ShaderSignature reflect_shader(const gfx::Shader* shader);
-    }
+    public:
+
+    protected:
+      ShaderSignature reflect(const Shader* shader) override;
+    };
   }
 }

@@ -15,7 +15,7 @@ namespace rex
     // Create a new imgui window object
     void imgui_create_window(ImGuiViewport* viewport)
     {
-      ImGuiWindow* imgui_window = alloc_unique_debug<ImGuiWindow>(viewport, imgui_device()).release();
+      ImGuiWindow* imgui_window = alloc_unique_debug<ImGuiWindow>(viewport, *imgui_device::instance()).release();
       viewport->RendererUserData = imgui_window;
     }
     // Destroy an imgui window object
@@ -54,17 +54,14 @@ namespace rex
       imgui_window->yield_thread_until_in_sync_with_gpu();
     }
 
-    ImGuiWindow::ImGuiWindow(ImGuiViewport* viewport, const ImGuiDevice& creationInfo)
+    ImGuiWindow::ImGuiWindow(ImGuiViewport* viewport, const ImGuiDevice& imguiDevice)
       : m_viewport(viewport)
     {
       // On Windows PlatformHandleRaw should always be a HWND, whereas PlatformHandle might be a higher-level handle (e.g. GLFWWindow*, SDL_Window*).
       // Some backends will leave PlatformHandleRaw == 0, in which case we assume PlatformHandle will contain the HWND.
       void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
       IM_ASSERT(handle != nullptr);
-      m_swapchain = gfx::gal::instance()->create_swapchain(creationInfo.command_queue, creationInfo.max_num_frames_in_flight, handle);
-
-      const s32 width = static_cast<s32>(viewport->Size.x);
-      const s32 height = static_cast<s32>(viewport->Size.y);
+      m_swapchain = gfx::gal::instance()->create_swapchain(imguiDevice.command_queue, imguiDevice.max_num_frames_in_flight, handle);
     }
 
     void ImGuiWindow::render(ClearRenderTarget clearRenderTarget, ImGuiWindowRenderParams* renderParams)
@@ -91,11 +88,11 @@ namespace rex
 
     void ImGuiWindow::wait_for_pending_operations()
     {
-      // Implementation pending
+      gfx::gal::instance()->flush();
     }
-    void ImGuiWindow::resize_buffers(s32 /*width*/, s32 /*height*/)
+    void ImGuiWindow::resize_buffers(s32 width, s32 height)
     {
-      //m_swapchain->resize_buffers(width, height, (DXGI_SWAP_CHAIN_FLAG)0);
+      m_swapchain->resize(width, height);
 
     }
     void ImGuiWindow::present()

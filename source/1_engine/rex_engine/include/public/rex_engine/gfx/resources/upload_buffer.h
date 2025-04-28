@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rex_engine/gfx/core/texture_format.h"
 #include "rex_engine/gfx/resources/buffer.h"
 #include "rex_engine/engine/types.h"
 #include "rex_std/bonus/memory.h"
@@ -53,9 +54,16 @@ namespace rex
     {
     public:
       explicit UploadBuffer(rsl::memory_size size);
+      virtual ~UploadBuffer() = default;
 
       // Reset the offset back to 0 so new allocations would happen at the start
       void reset();
+
+      // Write data on cpu side, it returns the offset into the upload buffer where data was written to
+      virtual s64 stage_buffer_data(const void* data, s64 size, s32 alignment = 1) = 0;
+      // Write data on cpu side, it returns the offset into the upload buffer where data was written to
+      virtual s64 stage_texture_data(const void* data, s32 width, s32 height, TextureFormat format) = 0;
+
 
     protected:
       // Return if the buffer can support an allocation of a given size and allignment

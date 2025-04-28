@@ -1,7 +1,6 @@
 #include "rex_directx/system/dx_shader_compiler.h"
 
 #include "rex_directx/diagnostics/dx_call.h"
-#include "rex_engine/gfx/system/compile_shader.h"
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/filesystem/path.h"
@@ -71,7 +70,7 @@ namespace rex
       rsl::vector<rsl::string_view> m_include_paths;
     };
 
-    wrl::ComPtr<ID3DBlob> ShaderCompiler::compile_shader(const CompileShaderDesc& desc) // NOLINT(readability-convert-member-functions-to-static)
+    wrl::ComPtr<ID3DBlob> DxShaderCompiler::compile_shader(const CompileShaderDesc& desc) // NOLINT(readability-convert-member-functions-to-static)
     {
       s32 compile_flags = 0;
 #ifdef REX_ENABLE_DEBUG_SHADER_COMPILATION
@@ -112,6 +111,24 @@ namespace rex
 
       return byte_code;
     }
+
+    namespace shader_compiler
+    {
+      globals::GlobalUniquePtr<DxShaderCompiler> g_shader_compiler;
+      void init(globals::GlobalUniquePtr<DxShaderCompiler> shaderCompiler)
+      {
+        g_shader_compiler = rsl::move(shaderCompiler);
+      }
+      DxShaderCompiler* instance()
+      {
+        return g_shader_compiler.get();
+      }
+      void shutdown()
+      {
+        g_shader_compiler.reset();
+      }
+    }
+
 
   } // namespace gfx
 } // namespace rex

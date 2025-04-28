@@ -52,6 +52,10 @@ namespace rex
       m_width = width;
       m_height = height;
     }
+    RenderTarget* Swapchain::buffer_at(s32 idx)
+    {
+      return m_swapchain_buffers[idx].get();
+    }
 
   }
 }

@@ -5,7 +5,7 @@
 #include "rex_engine/memory/pointer_math.h"
 
 #include "rex_directx/resources/dx_sampler_2d.h"
-
+#include "rex_engine/gfx/graphics.h"
 
 namespace rex
 {
@@ -30,16 +30,24 @@ namespace rex
     DxResourceView DxViewHeap::create_rtv(ID3D12Resource* resource)
     {
       REX_ASSERT_X(m_view_heap_type == D3D12_DESCRIPTOR_HEAP_TYPE_RTV, "Trying to create a render target view from a view heap that's not configured to create render target views");
+      DxResourceView rtv_handle = new_free_handle();
 
-      D3D12_RENDER_TARGET_VIEW_DESC rtv_desc {};
-      rtv_desc.Format        = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+      return retarget_rtv(resource, rtv_handle);
+    }
+    // Retarget an existing rtv to a new resource
+    DxResourceView& DxViewHeap::retarget_rtv(ID3D12Resource* resource, DxResourceView& rtv)
+    {
+      REX_ASSERT_X(m_view_heap_type == D3D12_DESCRIPTOR_HEAP_TYPE_RTV, "Trying to create a render target view from a view heap that's not configured to create render target views");
+
+      D3D12_RENDER_TARGET_VIEW_DESC rtv_desc{};
+      rtv_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
       rtv_desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
-      DxResourceView rtv_handle = new_free_handle();
-      m_device->CreateRenderTargetView(resource, &rtv_desc, rtv_handle);
+      m_device->CreateRenderTargetView(resource, &rtv_desc, rtv);
 
-      return rtv_handle;
+      return rtv;
     }
+
     // Create a depth stencil view and return a handle pointing to it
     DxResourceView DxViewHeap::create_dsv(ID3D12Resource* resource)
     {
@@ -128,6 +136,7 @@ namespace rex
     // Copy the given views into this heap
     rsl::unique_ptr<ResourceView> DxViewHeap::copy_views(const rsl::vector<const ResourceView*>& views)
     {
+      // If we have no views to copy, early out
       if (views.empty())
       {
         return nullptr;
@@ -139,6 +148,7 @@ namespace rex
       for (const ResourceView* view : views)
       {
         cpu_handle = m_null_view.cpu_handle();
+
         // It's possible a null view is provided if the parameter has not been set yet
         if (view != nullptr)
         {
@@ -165,13 +175,20 @@ namespace rex
     // it only repoints the allocating start back to the beginning of the heap
     void DxViewHeap::clear()
     {
-      // We always have 1 view in user for the null view
+      // We always have 1 view in use for the null view
       m_num_used_views = 1;
     }
 
     // Return a handle pointing to the start of the view heap
     DxResourceView DxViewHeap::new_free_handle(s32 numDescriptors)
     {
+      // This function could benefit from some more complicated logic
+      // Right now the view heap acts like a stack allocator
+      // This is likely not sufficient for all operations and we need to come up with a better system
+      // However, it'll due for now..
+
+      REX_ASSERT_X(m_num_used_views + numDescriptors < m_num_views, "Trying to allocate more views that can fit in the heap");
+
       DxResourceView handle = my_start_handle();
       handle += m_num_used_views;
       m_num_used_views += numDescriptors;

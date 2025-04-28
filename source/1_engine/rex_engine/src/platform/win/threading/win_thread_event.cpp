@@ -7,13 +7,6 @@ namespace rex
 {
   ThreadEvent::ThreadEvent(rsl::string_view name)
   {
-    // create an auto-reset event object ad let the system automatically reset
-    // the event state to non signaled after a single waiting thread has been release
-    const bool manual_reset = false;
-
-    // Start the event non signaled so the user needs to signal it themselves
-    const bool start_signaled = false;
-
     m_handle = rsl::win::handle(CreateEventExA(rsl::Nullptr<SECURITY_ATTRIBUTES>, name.data(), rsl::no_flags(), EVENT_ALL_ACCESS));
   }
 

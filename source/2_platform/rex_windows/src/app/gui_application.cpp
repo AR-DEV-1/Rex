@@ -98,7 +98,7 @@ namespace rex
           return result;
         }
 
-        REX_INFO(LogWindows, "All engine systems initialized");
+        REX_INFO(LogWindows, "App initialized");
 
         return result;
       }
@@ -171,6 +171,8 @@ namespace rex
       }
       void on_stop_resize()
       {
+        resize(m_window->width(), m_window->height());
+
         m_app_instance->resume();
         m_window->stop_resize();
       }
@@ -219,11 +221,12 @@ namespace rex
           // Do nothing
         }
       }
-      void resize(s32 /*newWidth*/, s32 /*newHeight*/)
+      void resize(s32 newWidth, s32 newHeight)
       {
         // Resize window ( although we might want to capture this within the window itself ... )
         //
         // Flush Command Queue
+        gfx::gal::instance()->flush();
         //
         // Release front and back buffer
         // Release depth stencil buffer
@@ -232,6 +235,7 @@ namespace rex
         //
         // Recreate swap chain buffers
         // Recreate depth stencil buffer
+        gfx::gal::instance()->resize_backbuffers(newWidth, newHeight);
         //
         // Transition depth stencil from it's initial state to be used as a depth buffer (DX only)
         //
@@ -322,7 +326,6 @@ namespace rex
               on_minimize();
               break;
             case WindowResizeType::Restored:
-              on_restore(evt.width(), evt.height());
               break;
             default:
               break;
@@ -352,7 +355,11 @@ namespace rex
         gfx::shader_lib::init(globals::make_unique<gfx::ShaderLibrary>());
 
         // Add the imgui renderer, which is our main UI renderer for the moment
-        gfx::gal::instance()->add_renderer<gfx::ImGuiRenderer>(m_window->primary_display_handle());
+        gfx::ImGuiRendererCreationInfo imgui_creation_info{};
+        imgui_creation_info.command_queue = gfx::gal::instance()->render_command_queue();
+        imgui_creation_info.max_frames_in_flight = gfx::gal::instance()->max_frames_in_flight();
+        imgui_creation_info.platformWindowHandle = m_window->primary_display_handle();
+        gfx::gal::instance()->add_renderer<gfx::ImGuiRenderer>(imgui_creation_info);
 
         return true;
       }

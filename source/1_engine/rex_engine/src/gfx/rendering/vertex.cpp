@@ -33,7 +33,7 @@ namespace rex
       {
         InputLayoutElementDesc
         {
-          ShaderSemantic::Position,  VertexBufferFormat::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
+          ShaderSemantic::Position,  ShaderArithmeticType::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
         }
       };
 
@@ -80,11 +80,11 @@ namespace rex
       {
         InputLayoutElementDesc
         {
-          ShaderSemantic::Position,  VertexBufferFormat::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
+          ShaderSemantic::Position,  ShaderArithmeticType::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
         },
         InputLayoutElementDesc
         {
-          ShaderSemantic::Color, VertexBufferFormat::Float4, InputLayoutClassification::PerVertex, 0, 0, 12, 0
+          ShaderSemantic::Color, ShaderArithmeticType::Float4, InputLayoutClassification::PerVertex, 0, 0, 12, 0
         }
       };
 
@@ -134,15 +134,15 @@ namespace rex
       {
         InputLayoutElementDesc
         {
-          ShaderSemantic::Position,  VertexBufferFormat::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
+          ShaderSemantic::Position,  ShaderArithmeticType::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
         },
         InputLayoutElementDesc
         {
-          ShaderSemantic::Normal,  VertexBufferFormat::Float3, InputLayoutClassification::PerVertex, 0, 0, 12, 0
+          ShaderSemantic::Normal,  ShaderArithmeticType::Float3, InputLayoutClassification::PerVertex, 0, 0, 12, 0
         },
         InputLayoutElementDesc
         {
-          ShaderSemantic::Color, VertexBufferFormat::Float4, InputLayoutClassification::PerVertex, 0, 0, 24, 0
+          ShaderSemantic::Color, ShaderArithmeticType::Float4, InputLayoutClassification::PerVertex, 0, 0, 24, 0
         }
       };
 
@@ -189,11 +189,11 @@ namespace rex
       {
         InputLayoutElementDesc
         {
-          ShaderSemantic::Position,  VertexBufferFormat::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
+          ShaderSemantic::Position,  ShaderArithmeticType::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
         },
         InputLayoutElementDesc
         {
-          ShaderSemantic::TexCoord,  VertexBufferFormat::Float2, InputLayoutClassification::PerVertex, 0, 0, 12, 0
+          ShaderSemantic::TexCoord,  ShaderArithmeticType::Float2, InputLayoutClassification::PerVertex, 0, 0, 12, 0
         },
       };
 
@@ -243,15 +243,15 @@ namespace rex
       {
         InputLayoutElementDesc
         {
-          ShaderSemantic::Position,  VertexBufferFormat::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
+          ShaderSemantic::Position,  ShaderArithmeticType::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
         },
         InputLayoutElementDesc
         {
-          ShaderSemantic::Color,  VertexBufferFormat::Float4, InputLayoutClassification::PerVertex, 0, 0, 12, 0
+          ShaderSemantic::Color,  ShaderArithmeticType::Float4, InputLayoutClassification::PerVertex, 0, 0, 12, 0
         },
         InputLayoutElementDesc
         {
-          ShaderSemantic::TexCoord,  VertexBufferFormat::Float2, InputLayoutClassification::PerVertex, 0, 0, 28, 0
+          ShaderSemantic::TexCoord,  ShaderArithmeticType::Float2, InputLayoutClassification::PerVertex, 0, 0, 28, 0
         },
       };
 
@@ -301,15 +301,15 @@ namespace rex
       {
         InputLayoutElementDesc
         {
-          ShaderSemantic::Position,  VertexBufferFormat::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
+          ShaderSemantic::Position,  ShaderArithmeticType::Float3, InputLayoutClassification::PerVertex, 0, 0, 0, 0
         },
         InputLayoutElementDesc
         {
-          ShaderSemantic::Normal,  VertexBufferFormat::Float3, InputLayoutClassification::PerVertex, 0, 0, 12, 0
+          ShaderSemantic::Normal,  ShaderArithmeticType::Float3, InputLayoutClassification::PerVertex, 0, 0, 12, 0
         },
         InputLayoutElementDesc
         {
-          ShaderSemantic::TexCoord, VertexBufferFormat::Float2, InputLayoutClassification::PerVertex, 0, 0, 24, 0
+          ShaderSemantic::TexCoord, ShaderArithmeticType::Float2, InputLayoutClassification::PerVertex, 0, 0, 24, 0
         }
       };
 

@@ -3,8 +3,8 @@
 #include "rex_std/vector.h"
 #include "rex_engine/engine/types.h"
 #include "rex_engine/gfx/resources/clear_state.h"
+#include "rex_engine/gfx/system/swapchain_framebuffer_handle.h"
 #include "rex_engine/gfx/core/texture_format.h"
-#include "rex_engine/gfx/rendering/swapchain_info.h"
 
 namespace rex
 {

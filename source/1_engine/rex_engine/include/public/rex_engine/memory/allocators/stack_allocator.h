@@ -152,7 +152,10 @@ namespace rex
     {
       return narrow_cast<size_type>(m_current_marker - m_buffer.get());
     }
-
+    size_type buffer_size() const
+    {
+      return m_buffer.count();
+    }
   private:
 		rsl::unique_array<rsl::byte, DeleterWithAllocator<rsl::byte, BackendAllocator>> m_buffer;
     rsl::byte* m_current_marker;

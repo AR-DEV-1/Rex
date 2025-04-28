@@ -6,6 +6,7 @@
 #include "rex_engine/event_system/events/app/quit_app.h"
 
 #include "rex_engine/gfx/imgui/imgui_utils.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_widget.h"
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/filesystem/file.h"

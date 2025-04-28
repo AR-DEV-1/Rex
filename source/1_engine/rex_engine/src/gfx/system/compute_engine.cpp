@@ -7,5 +7,14 @@ namespace rex
     ComputeEngine::ComputeEngine(ResourceStateTracker* globalResourceStateTracker)
       : GraphicsEngine(GraphicsEngineType::Compute, globalResourceStateTracker)
     {}
+
+    void ComputeEngine::new_frame()
+    {
+      api_new_frame();
+    }
+    void ComputeEngine::end_frame()
+    {
+      api_end_frame();
+    }
   }
 }

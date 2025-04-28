@@ -22,7 +22,6 @@
 #include "rex_engine/gfx/core/input_layout_classification.h"
 #include "rex_engine/gfx/core/primitive_topology.h"
 #include "rex_engine/gfx/core/texture_format.h"
-#include "rex_engine/gfx/core/vertex_buffer_format.h"
 #include "rex_engine/gfx/core/shader_visibility.h"
 #include "rex_engine/gfx/core/sampler_filtering.h"
 #include "rex_engine/gfx/core/comparison_func.h"
@@ -34,12 +33,12 @@
 #include "rex_engine/gfx/core/resource_state.h"
 #include "rex_engine/gfx/core/graphics_engine_type.h"
 #include "rex_engine/gfx/core/resource_state.h"
-#include "rex_engine/gfx/system/view_heap_type.h"
+#include "rex_engine/gfx/system/resource_view_type.h"
 
 #include "rex_engine/gfx/shader_reflection/shader_class_type.h"
 #include "rex_engine/gfx/shader_reflection/shader_variable_type.h"
 #include "rex_engine/gfx/shader_reflection/shader_arithmetic_type.h"
-#include "rex_engine/gfx/shader_reflection/shader_param_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_param_declaration.h"
 #include "rex_engine/gfx/resources/raster_state.h"
 #include "rex_std/bonus/utility.h"
 
@@ -58,7 +57,6 @@ namespace rex
     class Sampler2D;
     class InputLayout;
     struct RasterStateDesc;
-    enum class ShaderType;
     enum class ShaderVisibility;
     enum class ShaderParameterType;
     struct ShaderParameterDeclaration;
@@ -166,7 +164,7 @@ namespace rex
       // ------------------------------------
       D3D12_FILL_MODE to_dx12(FillMode mode);
       D3D12_CULL_MODE to_dx12(CullMode mode);
-      DXGI_FORMAT to_dx12(VertexBufferFormat format);
+      DXGI_FORMAT to_dx12(ShaderArithmeticType format);
       DXGI_FORMAT to_dx12(IndexBufferFormat format);
       DXGI_FORMAT to_dx12(TextureFormat format);
       D3D12_PRIMITIVE_TOPOLOGY to_dx12(PrimitiveTopology topology);
@@ -187,7 +185,7 @@ namespace rex
       D3D12_STENCIL_OP to_dx12(StencilOp stencilOp);
       D3D12_RESOURCE_STATES to_dx12(ResourceState state);
       D3D12_COMMAND_LIST_TYPE to_dx12(GraphicsEngineType type);
-      D3D12_DESCRIPTOR_HEAP_TYPE to_dx12(ViewHeapType type);
+      D3D12_DESCRIPTOR_HEAP_TYPE to_dx12(ResourceViewType type);
       D3D12_PRIMITIVE_TOPOLOGY_TYPE to_dx12(PrimitiveTopologyType type);
       D3D12_DESCRIPTOR_RANGE_TYPE to_dx12(ShaderParameterType type);
       D3D12_SAMPLER_DESC to_dx12(const SamplerDesc& desc);

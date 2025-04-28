@@ -2,9 +2,9 @@
 
 #include "rex_engine/gfx/system/shader_type.h"
 
-#include "rex_engine/gfx/shader_reflection/bound_resource_reflection.h"
-#include "rex_engine/gfx/shader_reflection/constant_buffer_reflection.h"
-#include "rex_engine/gfx/shader_reflection/shader_param_reflection.h"
+#include "rex_engine/gfx/shader_reflection/shader_resource_declaration.h"
+#include "rex_engine/gfx/shader_reflection/constant_buffer_declaration.h"
+#include "rex_engine/gfx/shader_reflection/shader_io_declaration.h"
 
 #include "rex_engine/gfx/system/shader_pipeline.h"
 

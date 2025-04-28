@@ -6,7 +6,7 @@ public class RexEngineFuzzyTest : TestProject
 {
   public RexEngineFuzzyTest() : base()
   {
-    Name = GenerateName("RexEngineFuzzyTest");
+    Name = "RexEngineFuzzyTest";
     GenerateTargets();
 
     string ThisFileFolder = Path.GetDirectoryName(Utils.CurrentFile());
@@ -34,6 +34,6 @@ public class RexEngineFuzzyTest : TestProject
   {
     base.SetupConfigSettings(conf, target);
 
-    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.Enable);
+    conf.Options.Remove(Options.Vc.Compiler.JumboBuild.EnableWithAdaptive);
   }
 }

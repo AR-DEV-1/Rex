@@ -6,7 +6,6 @@
 #include "rex_engine/filesystem/vfs.h"
 
 #include "rex_engine/gfx/system/shader_library.h"
-#include "rex_engine/gfx/rendering/swapchain_info.h"
 #include "rex_engine/gfx/graphics.h"
 
 #include "glm/gtc/matrix_transform.hpp"
@@ -40,8 +39,7 @@ namespace pokemon
     // Bind all the resources to the gfx pipeline
     render_ctx->set_vertex_buffer(m_tiles_vb_gpu.get(), 0);
     render_ctx->set_index_buffer(m_tiles_ib_gpu.get());
-    render_ctx->set_viewport(rex::gfx::swapchain_info().viewport);
-    render_ctx->set_scissor_rect(rex::gfx::swapchain_info().scissor_rect);
+    render_ctx->use_swapchain_framebuffer();
 
     // Send the draw command
     const s32 index_count_per_instance = 6;
@@ -153,11 +151,8 @@ namespace pokemon
       m_tiles_vb_gpu = rex::gfx::gal::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
     }
 
-    auto copy_ctx = rex::gfx::gal::instance()->new_copy_ctx();
-    copy_ctx->update_buffer(m_tiles_vb_gpu.get(), tile_vertices.data(), tile_vertices.size() * sizeof(TileVertex));
-    copy_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
-
     auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
+    render_ctx->update_buffer(m_tiles_vb_gpu.get(), tile_vertices.data(), tile_vertices.size() * sizeof(TileVertex));
     render_ctx->transition_buffer(m_tiles_vb_gpu.get(), rex::gfx::ResourceState::VertexAndConstantBuffer);
     render_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
   }
@@ -186,12 +181,10 @@ namespace pokemon
 
     m_tiles_ib_gpu = rex::gfx::gal::instance()->create_index_buffer(num_indices_per_tile, rex::gfx::IndexBufferFormat::Uint16);
 
-    auto copy_ctx = rex::gfx::gal::instance()->new_copy_ctx();
-    copy_ctx->update_buffer(m_tiles_ib_gpu.get(), tiles_ib_cpu.get(), tiles_ib_cpu.byte_size());
-    copy_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
-
     auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
+    render_ctx->update_buffer(m_tiles_ib_gpu.get(), tiles_ib_cpu.get(), tiles_ib_cpu.byte_size());
     render_ctx->transition_buffer(m_tiles_ib_gpu.get(), rex::gfx::ResourceState::IndexBuffer);
+    render_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
   }
   void TileRenderer::init_cb()
   {
@@ -211,9 +204,9 @@ namespace pokemon
       m_tile_renderer_cb = rex::gfx::gal::instance()->create_constant_buffer(sizeof(RenderingMetaData));
     }
 
-    auto copy_ctx = rex::gfx::gal::instance()->new_copy_ctx();
-    copy_ctx->update_buffer(m_tile_renderer_cb.get(), &texture_data, sizeof(texture_data));
-    copy_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
+    auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
+    render_ctx->update_buffer(m_tile_renderer_cb.get(), &texture_data, sizeof(texture_data));
+    render_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
   }
   void TileRenderer::init_sampler()
   {
@@ -238,8 +231,8 @@ namespace pokemon
     render_pass_desc.pso_desc.input_layout =
     {
       // Per vertex data
-      rex::gfx::InputLayoutElementDesc{ rex::gfx::ShaderSemantic::Position, rex::gfx::VertexBufferFormat::Float2 },
-      rex::gfx::InputLayoutElementDesc{ rex::gfx::ShaderSemantic::TexCoord, rex::gfx::VertexBufferFormat::Float2 },
+      rex::gfx::InputLayoutElementDesc{ rex::gfx::ShaderSemantic::Position, rex::gfx::ShaderArithmeticType::Float2 },
+      rex::gfx::InputLayoutElementDesc{ rex::gfx::ShaderSemantic::TexCoord, rex::gfx::ShaderArithmeticType::Float2 },
     };
 
     m_render_pass = rsl::make_unique<rex::gfx::RenderPass>(render_pass_desc);
@@ -251,9 +244,9 @@ namespace pokemon
 
   void TileRenderer::upload_tile_indices_buffer()
   {
-    auto copy_ctx = rex::gfx::gal::instance()->new_copy_ctx();
-    copy_ctx->update_buffer(m_tile_indices_buffer.get(), m_tile_cache.get(), m_tile_cache.byte_size());
-    copy_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
+    auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
+    render_ctx->update_buffer(m_tile_indices_buffer.get(), m_tile_cache.get(), m_tile_cache.byte_size());
+    render_ctx->execute_on_gpu(rex::gfx::WaitForFinish::yes);
 
     auto render_context = rex::gfx::gal::instance()->new_render_ctx();
     render_context->transition_buffer(m_tile_indices_buffer.get(), rex::gfx::ResourceState::NonPixelShaderResource);

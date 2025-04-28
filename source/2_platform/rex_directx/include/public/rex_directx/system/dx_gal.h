@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "rex_engine/gfx/graphics.h"
 
 #include "rex_directx/dxgi/includes.h"
@@ -32,7 +31,9 @@
 #include "rex_directx/system/dx_view_heap.h"
 #include "rex_directx/system/dx_shader_compiler.h"
 
-// #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: GRAPHICS
+#include "rex_std/bonus/math/color.h"
+
+
 
 struct ID3D12GraphicsCommandList;
 
@@ -42,7 +43,7 @@ namespace rex
   {
 		class DxDevice;
 		class DxCommandQueue;
-		class ResourceHeap;
+		class DxResourceHeap;
 		class ViewHeap;
 		struct CompileShaderDesc;
 		class DxSampler2D;
@@ -59,6 +60,13 @@ namespace rex
     {
     public:
       DirectXInterface(const OutputWindowUserData& userData);
+      DirectXInterface(const DirectXInterface&) = delete;
+      DirectXInterface(DirectXInterface&&) = delete;
+      ~DirectXInterface();
+
+      DirectXInterface& operator=(const DirectXInterface&) = delete;
+      DirectXInterface& operator=(DirectXInterface&&) = delete;
+
 
       // Return basic info about the graphics hardware of the current machine
       const Info& info() const override;
@@ -76,7 +84,7 @@ namespace rex
       // Create a DirectX descriptor heap
       rsl::unique_ptr<ViewHeap>               create_view_heap(D3D12_DESCRIPTOR_HEAP_TYPE type, IsShaderVisible isShaderVisible);
       // Create a DirectX resource heap
-      rsl::unique_ptr<ResourceHeap>           create_resource_heap();
+      rsl::unique_ptr<DxResourceHeap>           create_resource_heap();
       // Create a DirectX fence object
       rsl::unique_ptr<DxFence>                create_fence();
 
@@ -100,18 +108,14 @@ namespace rex
       rsl::unique_ptr<UnorderedAccessBuffer>  create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr)                               override;
 
       // -------------------------
-      // Shader stuff
-      // -------------------------
-      // Compile a shader and return its binary blob
-      wrl::ComPtr<ID3DBlob> compile_shader(const CompileShaderDesc& desc);
-      ShaderSignature reflect_shader(const gfx::Shader* shader)                                                                                               override;
-
-      // -------------------------
       // Resource creation from Direct X
       // -------------------------
 
       // Return a new render target constructed from a given gpu resource (usefull for swapchains)
       rsl::unique_ptr<RenderTarget> create_render_target(wrl::ComPtr<ID3D12Resource>& resource);
+
+      // Repoint an existing render target view to a new buffer and return this as a new render target
+      rsl::unique_ptr<RenderTarget> retarget_render_target(wrl::ComPtr<ID3D12Resource>& resource, DxResourceView view);
 
       // Log live gpu objects using DirectX api
       void report_live_objects();
@@ -121,13 +125,15 @@ namespace rex
 
       // Initialize the various sub engines
       rsl::unique_ptr<RenderEngine>   init_render_engine(ResourceStateTracker* resourceStateTracker) override;
-      rsl::unique_ptr<CopyEngine>     init_copy_engine(ResourceStateTracker* resourceStateTracker) override;
       rsl::unique_ptr<ComputeEngine>  init_compute_engine(ResourceStateTracker* resourceStateTracker) override;
+
+      // Allocates a debug interface using DirectX debug interface API
+      rsl::unique_ptr<DebugInterface> allocate_debug_interface() override;
 
       // Initialize the resource heap which keeps track of all gpu resources
       void init_resource_heap() override;
       // Allocate a new view heap of a given type
-      rsl::unique_ptr<ViewHeap> allocate_view_heap(ViewHeapType viewHeapType, IsShaderVisible isShaderVisible) override;
+      rsl::unique_ptr<ViewHeap> allocate_view_heap(ResourceViewType viewHeapType, IsShaderVisible isShaderVisible) override;
 
     private:
       // Allocate a 1D buffer on the gpu, returning a DirectX resource
@@ -155,14 +161,13 @@ namespace rex
 
     private:
       // Resources needed to create objects
-      rsl::unique_ptr<DebugInterface> m_debug_interface;        // Used to determine if we have any leaking resource on shutdown
       rsl::unique_ptr<DxDevice> m_device = nullptr;             // Used as the factory object to create gpu resources
       DxCommandQueue* m_render_command_queue = nullptr;         // Used as the object the swapchain speaks to queue a present command
       rsl::unique_ptr<dxgi::Factory> m_factory;
       rsl::unique_ptr<dxgi::AdapterManager> m_adapter_manager;  // The manager holding all the adapters on this machine
 
-      rsl::unique_ptr<ResourceHeap> m_heap;  // The heap we use to allocate gpu resources
-      ShaderCompiler m_shader_compiler;      // A shader compiler with internal caching
+      rsl::unique_ptr<DxResourceHeap> m_heap;  // The heap we use to allocate gpu resources
+      rsl::Color4f m_rtv_clear_color;
     };
   }
 }
