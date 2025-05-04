@@ -24,8 +24,6 @@
 #include "rex_engine/gfx/system/shader_library.h"
 #include "rex_engine/gfx/graphics.h"
 
-#include "rex_engine/images/internal/stb_image.h"
-
 namespace regina
 {
   SampleScene::SampleScene()
@@ -41,9 +39,9 @@ namespace regina
   {
     m_primitive_material = rex::gfx::material_lib::instance()->load_material(rex::vfs::instance()->abs_path(rex::MountingPoint::EngineMaterials, "default.material"));
 
-    s32 x, y, channels;
-    stbi_uc* data = stbi_load(rex::path::join(rex::engine::instance()->project_root(), "dev", "maps", "kanto", "old", "celadon_city.png").data(), &x, &y, &channels, 4);
-    m_pokemon_texture = rex::gfx::gal::instance()->create_texture2d(x, y, rex::gfx::TextureFormat::Unorm4, data);
+    //s32 x, y, channels;
+    //stbi_uc* data = stbi_load(rex::path::join(rex::engine::instance()->project_root(), "dev", "maps", "kanto", "old", "celadon_city.png").data(), &x, &y, &channels, 4);
+    //m_pokemon_texture = rex::gfx::gal::instance()->create_texture2d(x, y, rex::gfx::TextureFormat::Unorm4, data);
 
     // Sampler is currently hardcoded
     rex::gfx::SamplerDesc desc{};

@@ -1,4 +1,4 @@
-#include "rex_engine/gfx/scenegraph/scene.h"
+#include "rex_engine/gfx/scenegraph/gfx_scene.h"
 
 #include "rex_engine/gfx/rendering/renderer.h"
 #include "rex_engine/gfx/rendering/scene_renderer.h"

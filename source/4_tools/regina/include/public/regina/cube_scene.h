@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rex_engine/gfx/scenegraph/scene.h"
+#include "rex_engine/gfx/scenegraph/gfx_scene.h"
 #include "rex_engine/gfx/materials/material.h"
 
 namespace regina

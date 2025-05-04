@@ -13,6 +13,7 @@ namespace rex
 namespace regina
 {
   class ContentManager;
+  class SceneManager;
   class Widget;
   class Project;
 
@@ -26,6 +27,9 @@ namespace regina
 
   private:
     // Initialization
+    void init_serializers();
+    void init_content_scope();
+    void init_scene_view();
     void spawn_main_widget();
 
     // Project management
@@ -35,6 +39,7 @@ namespace regina
   private:
     rsl::unique_ptr<Project> m_project;
     rsl::unique_ptr<ContentManager> m_content_manager;
+    rsl::unique_ptr<SceneManager> m_scene_manager;
     rsl::unique_ptr<Widget> m_active_widget;
   };
 

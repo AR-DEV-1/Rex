@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rex_engine/gfx/primitives/mesh_factory.h"
-#include "rex_engine/gfx/scenegraph/scene.h"
+#include "rex_engine/gfx/scenegraph/gfx_scene.h"
 #include "rex_engine/gfx/core/vertex.h"
 #include "rex_engine/gfx/materials/material.h"
 

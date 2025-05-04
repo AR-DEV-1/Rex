@@ -76,7 +76,7 @@ namespace regina
 		: m_thumbnail_manager(rsl::make_unique<ThumbnailManager>())
 	{
 		change_directory(rex::vfs::instance()->root());
-
+		m_hiearchy_items.reserve(m_directories_in_current_directory.size());
 		for (rsl::string_view dir : m_directories_in_current_directory)
 		{
 			m_hiearchy_items.emplace_back(dir);

@@ -26,8 +26,6 @@
 #include "rex_std/unordered_map.h"
 
 
-#include "rex_engine/images/image_loader.h"
-
 #include "rex_engine/gfx/resources/vertex_buffer.h"
 #include "rex_engine/gfx/resources/index_buffer.h"
 
@@ -47,22 +45,23 @@ namespace pokemon
 
 	rsl::unique_ptr<rex::gfx::Texture2D> create_tileset_texture(rsl::string_view filepath)
 	{
-		rex::ImageLoadResult tileset_img_load_res = rex::load_image(filepath);
+		return nullptr;
+		//rex::ImageLoadResult tileset_img_load_res = rex::load_image(filepath);
 
-		// A tileset only holds 1 channel, we have to convert it to 4 channels as that's what the GPU expects
-		rsl::unique_array<rsl::Rgba> tileset_rgba = rsl::make_unique<rsl::Rgba[]>(tileset_img_load_res.width * tileset_img_load_res.height * sizeof(rsl::Rgba));
-		for (s32 color_idx = 0; color_idx < tileset_img_load_res.width * tileset_img_load_res.height; ++color_idx)
-		{
-			u8 color = tileset_img_load_res.data[color_idx];
-			rsl::Rgba& rgba = tileset_rgba[color_idx];
-			rgba.red = color;
-			rgba.green = color;
-			rgba.blue = color;
-			rgba.alpha = 255;
-		}
+		//// A tileset only holds 1 channel, we have to convert it to 4 channels as that's what the GPU expects
+		//rsl::unique_array<rsl::Rgba> tileset_rgba = rsl::make_unique<rsl::Rgba[]>(tileset_img_load_res.width * tileset_img_load_res.height * sizeof(rsl::Rgba));
+		//for (s32 color_idx = 0; color_idx < tileset_img_load_res.width * tileset_img_load_res.height; ++color_idx)
+		//{
+		//	u8 color = tileset_img_load_res.data[color_idx];
+		//	rsl::Rgba& rgba = tileset_rgba[color_idx];
+		//	rgba.red = color;
+		//	rgba.green = color;
+		//	rgba.blue = color;
+		//	rgba.alpha = 255;
+		//}
 
-		rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::gal::instance()->create_texture2d(tileset_img_load_res.width, tileset_img_load_res.height, rex::gfx::TextureFormat::Unorm4, tileset_rgba.get());
-		return tileset_texture;
+		//rsl::unique_ptr<rex::gfx::Texture2D> tileset_texture = rex::gfx::gal::instance()->create_texture2d(tileset_img_load_res.width, tileset_img_load_res.height, rex::gfx::TextureFormat::Unorm4, tileset_rgba.get());
+		//return tileset_texture;
 	}
 
 	MapRenderData load_map_render_data(rsl::string_view filepath)

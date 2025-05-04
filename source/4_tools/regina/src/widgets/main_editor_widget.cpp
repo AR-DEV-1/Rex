@@ -1,6 +1,7 @@
 #include "regina/widgets/main_editor_widget.h"
 
 #include "regina/widgets/content_browser_widget.h"
+#include "regina/widgets/viewport_widget.h"
 
 #include "rex_engine/event_system/event_system.h"
 #include "rex_engine/event_system/events/app/quit_app.h"
@@ -29,6 +30,7 @@ namespace regina
 		//}
 
 		m_widgets.emplace_back(rsl::make_unique<ContentBrowserWidget>());
+		m_widgets.emplace_back(rsl::make_unique<ViewportWidget>());
 	}
 
 	bool MainEditorWidget::on_update()
@@ -125,15 +127,6 @@ namespace regina
 		for (auto& widget : m_widgets)
 		{
 			widget->update();
-		}
-
-		ImGuiWindowFlags window_flags{};
-		window_flags |= ImGuiWindowFlags_NoTitleBar;
-
-		if (auto widget = rex::imgui::ScopedWidget("Viewport", nullptr, window_flags))
-		{
-			ImGui::GetCurrentWindow()->WindowClass.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_HiddenTabBar;
-			ImGui::Text("This is the viewport");
 		}
 
 		if (auto widget = rex::imgui::ScopedWidget("Scene Hierachy"))
