@@ -13,6 +13,11 @@ namespace rex
     return malloc(size);                                                // NOLINT(cppcoreguidelines-no-malloc)
   }
 
+  UntrackedAllocator::pointer UntrackedAllocator::reallocate(pointer p, size_type newSize)
+  {
+    return realloc(p, newSize);
+  }
+
   void UntrackedAllocator::deallocate(pointer ptr, rsl::memory_size size) // NOLINT(readability-convert-member-functions-to-static)
   {
     deallocate(ptr, size.size_in_bytes());

@@ -68,24 +68,31 @@ namespace rex
       // allocate the memory with enough extra memory to fit the memory header pointer
       pointer ptr = m_allocator->allocate(num_mem_needed);
 
-      m_total_mem_allocated += static_cast<s32>(num_mem_needed);
-      ++m_total_num_allocations;
-      rex::MemoryHeader* dbg_header_ptr = mem_tracker().track_alloc(ptr, num_mem_needed);
-
-      // put the memory header pointer in front of the data blob we're going to return
-      rex::InlineMemoryHeader inline_mem_header{};
-      inline_mem_header.ptr = dbg_header_ptr;
-      rsl::memcpy(ptr, &inline_mem_header, sizeof(inline_mem_header)); // NOLINT(bugprone-sizeof-expression)
-
-      // get the right address to return from the function
-      rsl::byte* mem_block = static_cast<rsl::byte*>(jump_forward(ptr, sizeof(inline_mem_header)));
-
-      return mem_block;
+      return track_alloc(ptr, num_mem_needed);
     }
     template <typename T>
     REX_NO_DISCARD T* allocate()
     {
       return static_cast<T*>(allocate(sizeof(T)));
+    }
+
+    REX_NO_DISCARD pointer reallocate(void* ptr, size_type size)
+    {
+      if (ptr == nullptr)
+      {
+        return allocate(size);
+      }
+
+      // calculate the number of bytes are needed for the allocation
+      size_type num_mem_needed = size;
+      num_mem_needed += sizeof(InlineMemoryHeader);
+
+      track_dealloc(ptr);
+      
+      rsl::byte* mem_block = static_cast<rsl::byte*>(jump_backward(ptr, sizeof(InlineMemoryHeader)));
+      void* new_ptr = m_allocator->reallocate(mem_block, num_mem_needed);
+
+      return track_alloc(new_ptr, num_mem_needed);
     }
 
     void deallocate(pointer ptr, rsl::memory_size size = 0)
@@ -99,25 +106,7 @@ namespace rex
         return;
       }
 
-      ++m_total_num_frees;
-
-      rsl::byte* mem_block = static_cast<rsl::byte*>(jump_backward(ptr, sizeof(InlineMemoryHeader)));
-      InlineMemoryHeader* header = reinterpret_cast<InlineMemoryHeader*>(mem_block); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-      if (header->magic_number != header->s_magic_number_value)
-      {
-        // the compiler stores an integer value in front of array the size of intptr
-        // if the array holds data type that has a destructor
-        // There's no way we know this in the allocator as we're dealing with void pointers
-        // So we check if the memory header is valid, if not, we subtract another few bytes, the size of intptr.
-        mem_block -= sizeof(intptr);
-        header = reinterpret_cast<InlineMemoryHeader*>(mem_block); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-      }
-
-      REX_ASSERT_X(header->magic_number == header->s_magic_number_value, "Invalid memory header found when trying to delete a ptr");
-
-      m_total_mem_allocated -= static_cast<s32>(header->ptr->size());
-
-      mem_tracker().track_dealloc(header->ptr);
+      void* mem_block = track_dealloc(ptr);
       m_allocator->deallocate(mem_block, size);
     }
 
@@ -141,6 +130,47 @@ namespace rex
       return !(*this == rhs);
     }
 
+  private:
+    void* track_alloc(void* ptr, size_type size)
+    {
+      m_total_mem_allocated += static_cast<s32>(size);
+      ++m_total_num_allocations;
+      rex::MemoryHeader* dbg_header_ptr = mem_tracker().track_alloc(ptr, size);
+
+      // put the memory header pointer in front of the data blob we're going to return
+      rex::InlineMemoryHeader inline_mem_header{};
+      inline_mem_header.ptr = dbg_header_ptr;
+      rsl::memcpy(ptr, &inline_mem_header, sizeof(inline_mem_header)); // NOLINT(bugprone-sizeof-expression)
+
+      // get the right address to return from the function
+      rsl::byte* mem_block = static_cast<rsl::byte*>(jump_forward(ptr, sizeof(inline_mem_header)));
+
+      return mem_block;
+
+    }
+    void* track_dealloc(pointer ptr)
+    {
+      ++m_total_num_frees;
+
+      rsl::byte* mem_block = static_cast<rsl::byte*>(jump_backward(ptr, sizeof(InlineMemoryHeader)));
+      InlineMemoryHeader* header = reinterpret_cast<InlineMemoryHeader*>(mem_block); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      if (header->magic_number != header->s_magic_number_value)
+      {
+        // the compiler stores an integer value in front of array the size of intptr
+        // if the array holds data type that has a destructor
+        // There's no way we know this in the allocator as we're dealing with void pointers
+        // So we check if the memory header is valid, if not, we subtract another few bytes, the size of intptr.
+        mem_block -= sizeof(intptr);
+        header = reinterpret_cast<InlineMemoryHeader*>(mem_block); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+      }
+
+      REX_ASSERT_X(header->magic_number == header->s_magic_number_value, "Invalid memory header found when trying to delete a ptr");
+
+      m_total_mem_allocated -= static_cast<s32>(header->ptr->size());
+
+      mem_tracker().track_dealloc(header->ptr);
+      return mem_block;
+    }
   private:
     Allocator* m_allocator;
     s32 m_total_num_allocations;

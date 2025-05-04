@@ -42,6 +42,8 @@ namespace rex
       return deallocate(ptr, sizeof(T));
     }
 
+    void* reallocate(pointer ptr, size_type size);
+
     template <typename U, typename... Args>
     void construct(U* p, Args&&... args)
     {
