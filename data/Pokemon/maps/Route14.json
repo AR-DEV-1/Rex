@@ -2,7 +2,7 @@
   "name": "ROUTE 14",
   "width": 10,
   "height": 27,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route14.blk",
   "border_block_idx": 67,
   "connections": [
@@ -54,7 +54,7 @@
       "x": 4,
       "y": 4,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route14_cooltrainer_m1"
     },
@@ -62,7 +62,7 @@
       "x": 15,
       "y": 6,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route14_cooltrainer_m2"
     },
@@ -70,7 +70,7 @@
       "x": 12,
       "y": 11,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route14_cooltrainer_m3"
     },
@@ -78,7 +78,7 @@
       "x": 14,
       "y": 15,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route14_cooltrainer_m4"
     },
@@ -86,7 +86,7 @@
       "x": 15,
       "y": 31,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route14_cooltrainer_m5"
     },
@@ -94,7 +94,7 @@
       "x": 6,
       "y": 49,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route14_cooltrainer_m6"
     },
@@ -102,7 +102,7 @@
       "x": 5,
       "y": 39,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route14_biker1"
     },
@@ -110,7 +110,7 @@
       "x": 4,
       "y": 30,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route14_biker2"
     },
@@ -118,7 +118,7 @@
       "x": 15,
       "y": 30,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route14_biker3"
     },
@@ -126,7 +126,7 @@
       "x": 4,
       "y": 31,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route14_biker4"
     }

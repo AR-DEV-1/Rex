@@ -2,7 +2,7 @@
   "name": "CeladonMansion3F",
   "width": 4,
   "height": 6,
-  "tileset": "Pokemon\\tilesets\\MANSION.json",
+  "blockset": "Pokemon\\tilesets\\MANSION.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonMansion3F.blk",
   "border_block_idx": 15,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 0,
       "y": 4,
       "sprite": "sprite_bike_shop_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_celadonmansion3f_programmer"
     },
@@ -33,7 +33,7 @@
       "x": 3,
       "y": 4,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_celadonmansion3f_graphic_artist"
     },
@@ -41,7 +41,7 @@
       "x": 0,
       "y": 7,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_celadonmansion3f_writer"
     },
@@ -49,7 +49,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_celadonmansion3f_game_designer"
     }

@@ -2,7 +2,7 @@
   "name": "SaffronMart",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\MART.json",
+  "blockset": "Pokemon\\tilesets\\MART.json",
   "map_blocks": "Pokemon\\map_blocks\\SaffronMart.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 0,
       "y": 5,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_saffronmart_clerk"
     },
@@ -30,7 +30,7 @@
       "x": 4,
       "y": 2,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_saffronmart_super_nerd"
     },
@@ -38,7 +38,7 @@
       "x": 6,
       "y": 5,
       "sprite": "sprite_cooltrainer_f",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_saffronmart_cooltrainer_f"
     }

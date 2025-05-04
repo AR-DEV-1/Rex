@@ -2,7 +2,7 @@
   "name": "LoreleisRoom",
   "width": 5,
   "height": 6,
-  "tileset": "Pokemon\\tilesets\\GYM.json",
+  "blockset": "Pokemon\\tilesets\\GYM.json",
   "map_blocks": "Pokemon\\map_blocks\\LoreleisRoom.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 5,
       "y": 2,
       "sprite": "sprite_lorelei",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_loreleisroom_lorelei"
     }

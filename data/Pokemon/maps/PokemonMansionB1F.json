@@ -2,7 +2,7 @@
   "name": "PokemonMansionB1F",
   "width": 15,
   "height": 14,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+  "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\PokemonMansionB1F.blk",
   "border_block_idx": 1,
   "connections": [],
@@ -37,7 +37,7 @@
       "x": 16,
       "y": 23,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansionb1f_burglar"
     },
@@ -45,7 +45,7 @@
       "x": 27,
       "y": 11,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_pokemonmansionb1f_scientist"
     },
@@ -53,7 +53,7 @@
       "x": 10,
       "y": 2,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansionb1f_rare_candy"
     },
@@ -61,7 +61,7 @@
       "x": 1,
       "y": 22,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansionb1f_full_restore"
     },
@@ -69,7 +69,7 @@
       "x": 19,
       "y": 25,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansionb1f_tm_blizzard"
     },
@@ -77,7 +77,7 @@
       "x": 5,
       "y": 4,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansionb1f_tm_solarbeam"
     },
@@ -85,7 +85,7 @@
       "x": 16,
       "y": 20,
       "sprite": "sprite_pokedex",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansionb1f_diary"
     },
@@ -93,7 +93,7 @@
       "x": 5,
       "y": 13,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansionb1f_secret_key"
     }

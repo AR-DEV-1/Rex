@@ -2,7 +2,7 @@
   "name": "PewterMart",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\MART.json",
+  "blockset": "Pokemon\\tilesets\\MART.json",
   "map_blocks": "Pokemon\\map_blocks\\PewterMart.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 0,
       "y": 5,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_pewtermart_clerk"
     },
@@ -30,7 +30,7 @@
       "x": 3,
       "y": 3,
       "sprite": "sprite_youngster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_pewtermart_youngster"
     },
@@ -38,7 +38,7 @@
       "x": 5,
       "y": 5,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pewtermart_super_nerd"
     }

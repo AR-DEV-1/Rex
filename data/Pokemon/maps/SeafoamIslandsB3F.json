@@ -2,7 +2,7 @@
   "name": "SeafoamIslandsB3F",
   "width": 15,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+  "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\SeafoamIslandsB3F.blk",
   "border_block_idx": 125,
   "connections": [],
@@ -31,7 +31,7 @@
       "x": 5,
       "y": 14,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_seafoamislandsb3f_boulder1"
     },
@@ -39,7 +39,7 @@
       "x": 3,
       "y": 15,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_seafoamislandsb3f_boulder2"
     },
@@ -47,7 +47,7 @@
       "x": 8,
       "y": 14,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_seafoamislandsb3f_boulder3"
     },
@@ -55,7 +55,7 @@
       "x": 9,
       "y": 14,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_seafoamislandsb3f_boulder4"
     },
@@ -63,7 +63,7 @@
       "x": 18,
       "y": 6,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_seafoamislandsb3f_boulder5"
     },
@@ -71,7 +71,7 @@
       "x": 19,
       "y": 6,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_seafoamislandsb3f_boulder6"
     }

@@ -2,7 +2,7 @@
   "name": "CinnabarMart",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\MART.json",
+  "blockset": "Pokemon\\tilesets\\MART.json",
   "map_blocks": "Pokemon\\map_blocks\\CinnabarMart.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 0,
       "y": 5,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_cinnabarmart_clerk"
     },
@@ -30,7 +30,7 @@
       "x": 6,
       "y": 2,
       "sprite": "sprite_silph_worker_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_cinnabarmart_silph_worker_f"
     },
@@ -38,7 +38,7 @@
       "x": 3,
       "y": 4,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_cinnabarmart_scientist"
     }

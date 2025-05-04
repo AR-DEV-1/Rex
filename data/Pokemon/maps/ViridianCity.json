@@ -2,7 +2,7 @@
   "name": "VIRIDIAN CITY",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\ViridianCity.blk",
   "border_block_idx": 15,
   "connections": [
@@ -50,7 +50,7 @@
       "x": 13,
       "y": 20,
       "sprite": "sprite_youngster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_viridiancity_youngster1"
     },
@@ -58,7 +58,7 @@
       "x": 30,
       "y": 8,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_viridiancity_gambler1"
     },
@@ -66,7 +66,7 @@
       "x": 30,
       "y": 25,
       "sprite": "sprite_youngster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_viridiancity_youngster2"
     },
@@ -74,7 +74,7 @@
       "x": 17,
       "y": 9,
       "sprite": "sprite_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_viridiancity_girl"
     },
@@ -82,7 +82,7 @@
       "x": 18,
       "y": 9,
       "sprite": "sprite_gambler_asleep",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_viridiancity_old_man_sleepy"
     },
@@ -90,7 +90,7 @@
       "x": 6,
       "y": 23,
       "sprite": "sprite_fisher",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridiancity_fisher"
     },
@@ -98,7 +98,7 @@
       "x": 17,
       "y": 5,
       "sprite": "sprite_gambler",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_viridiancity_old_man"
     }

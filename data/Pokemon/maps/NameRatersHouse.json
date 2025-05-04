@@ -2,7 +2,7 @@
   "name": "NameRatersHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\NameRatersHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_silph_president",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_nameratershouse_name_rater"
     }

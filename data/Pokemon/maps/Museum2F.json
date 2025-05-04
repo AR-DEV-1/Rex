@@ -2,7 +2,7 @@
   "name": "Museum2F",
   "width": 7,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\MUSEUM.json",
+  "blockset": "Pokemon\\tilesets\\MUSEUM.json",
   "map_blocks": "Pokemon\\map_blocks\\Museum2F.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 1,
       "y": 7,
       "sprite": "sprite_youngster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_museum2f_youngster"
     },
@@ -36,7 +36,7 @@
       "x": 0,
       "y": 5,
       "sprite": "sprite_gramps",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_museum2f_gramps"
     },
@@ -44,7 +44,7 @@
       "x": 7,
       "y": 5,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_museum2f_scientist"
     },
@@ -52,7 +52,7 @@
       "x": 11,
       "y": 5,
       "sprite": "sprite_brunette_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_museum2f_brunette_girl"
     },
@@ -60,7 +60,7 @@
       "x": 12,
       "y": 5,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_museum2f_hiker"
     }

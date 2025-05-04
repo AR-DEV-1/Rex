@@ -2,7 +2,7 @@
   "name": "ROUTE 6",
   "width": 10,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route6.blk",
   "border_block_idx": 15,
   "connections": [
@@ -42,7 +42,7 @@
       "x": 10,
       "y": 21,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route6_cooltrainer_m1"
     },
@@ -50,7 +50,7 @@
       "x": 11,
       "y": 21,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route6_cooltrainer_f1"
     },
@@ -58,7 +58,7 @@
       "x": 0,
       "y": 15,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route6_youngster1"
     },
@@ -66,7 +66,7 @@
       "x": 11,
       "y": 31,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route6_cooltrainer_m2"
     },
@@ -74,7 +74,7 @@
       "x": 11,
       "y": 30,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route6_cooltrainer_f2"
     },
@@ -82,7 +82,7 @@
       "x": 19,
       "y": 26,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route6_youngster2"
     }

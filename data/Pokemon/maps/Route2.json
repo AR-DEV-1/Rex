@@ -2,7 +2,7 @@
   "name": "ROUTE 2",
   "width": 10,
   "height": 36,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route2.blk",
   "border_block_idx": 15,
   "connections": [
@@ -30,7 +30,7 @@
       "x": 13,
       "y": 54,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_route2_moon_stone"
     },
@@ -38,7 +38,7 @@
       "x": 13,
       "y": 45,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_route2_hp_up"
     }

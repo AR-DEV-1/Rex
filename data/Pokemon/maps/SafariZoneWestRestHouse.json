@@ -2,7 +2,7 @@
   "name": "SafariZoneWestRestHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+  "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\SafariZoneWestRestHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 4,
       "y": 4,
       "sprite": "sprite_scientist",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_safarizonewestresthouse_scientist"
     },
@@ -30,7 +30,7 @@
       "x": 0,
       "y": 2,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_safarizonewestresthouse_cooltrainer_m"
     },
@@ -38,7 +38,7 @@
       "x": 6,
       "y": 2,
       "sprite": "sprite_silph_worker_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_safarizonewestresthouse_silph_worker_f"
     }

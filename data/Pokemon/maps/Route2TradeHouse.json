@@ -2,7 +2,7 @@
   "name": "Route2TradeHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\Route2TradeHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 2,
       "y": 4,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route2tradehouse_scientist"
     },
@@ -27,7 +27,7 @@
       "x": 4,
       "y": 1,
       "sprite": "sprite_gameboy_kid",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route2tradehouse_gameboy_kid"
     }

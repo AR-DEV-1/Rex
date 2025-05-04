@@ -2,7 +2,7 @@
   "name": "SilphCo10F",
   "width": 8,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+  "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\SilphCo10F.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -31,7 +31,7 @@
       "x": 1,
       "y": 9,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_silphco10f_rocket"
     },
@@ -39,7 +39,7 @@
       "x": 10,
       "y": 2,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_silphco10f_scientist"
     },
@@ -47,7 +47,7 @@
       "x": 9,
       "y": 15,
       "sprite": "sprite_silph_worker_f",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_silphco10f_silph_worker_f"
     },
@@ -55,7 +55,7 @@
       "x": 2,
       "y": 12,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco10f_tm_earthquake"
     },
@@ -63,7 +63,7 @@
       "x": 4,
       "y": 14,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco10f_rare_candy"
     },
@@ -71,7 +71,7 @@
       "x": 5,
       "y": 11,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco10f_carbos"
     }

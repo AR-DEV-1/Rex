@@ -2,7 +2,7 @@
   "name": "DIGLETT's CAVE",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+  "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\DiglettsCave.blk",
   "border_block_idx": 25,
   "connections": [],

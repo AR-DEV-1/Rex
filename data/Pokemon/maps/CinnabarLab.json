@@ -2,7 +2,7 @@
   "name": "CinnabarLab",
   "width": 9,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\LAB.json",
+  "blockset": "Pokemon\\tilesets\\LAB.json",
   "map_blocks": "Pokemon\\map_blocks\\CinnabarLab.blk",
   "border_block_idx": 23,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 1,
       "y": 3,
       "sprite": "sprite_fishing_guru",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_cinnabarlab_fishing_guru"
     }

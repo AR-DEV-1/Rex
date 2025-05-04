@@ -2,7 +2,7 @@
   "name": "ROUTE 5",
   "width": 10,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route5.blk",
   "border_block_idx": 10,
   "connections": [

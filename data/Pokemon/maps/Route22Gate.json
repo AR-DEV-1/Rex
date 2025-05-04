@@ -2,7 +2,7 @@
   "name": "Route22Gate",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+  "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\Route22Gate.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 6,
       "y": 2,
       "sprite": "sprite_guard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route22gate_guard"
     }

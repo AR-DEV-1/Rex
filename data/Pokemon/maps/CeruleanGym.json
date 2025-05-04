@@ -2,7 +2,7 @@
   "name": "CeruleanGym",
   "width": 5,
   "height": 7,
-  "tileset": "Pokemon\\tilesets\\GYM.json",
+  "blockset": "Pokemon\\tilesets\\GYM.json",
   "map_blocks": "Pokemon\\map_blocks\\CeruleanGym.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 4,
       "y": 2,
       "sprite": "sprite_brunette_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleangym_misty"
     },
@@ -33,7 +33,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_ceruleangym_cooltrainer_f"
     },
@@ -41,7 +41,7 @@
       "x": 8,
       "y": 7,
       "sprite": "sprite_swimmer",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_ceruleangym_swimmer"
     },
@@ -49,7 +49,7 @@
       "x": 7,
       "y": 10,
       "sprite": "sprite_gym_guide",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleangym_gym_guide"
     }

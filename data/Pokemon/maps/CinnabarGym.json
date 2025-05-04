@@ -2,7 +2,7 @@
   "name": "CinnabarGym",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+  "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\CinnabarGym.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -40,7 +40,7 @@
       "x": 3,
       "y": 3,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_blaine"
     },
@@ -48,7 +48,7 @@
       "x": 17,
       "y": 2,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_super_nerd1"
     },
@@ -56,7 +56,7 @@
       "x": 17,
       "y": 8,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_super_nerd2"
     },
@@ -64,7 +64,7 @@
       "x": 11,
       "y": 4,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_super_nerd3"
     },
@@ -72,7 +72,7 @@
       "x": 11,
       "y": 8,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_super_nerd4"
     },
@@ -80,7 +80,7 @@
       "x": 11,
       "y": 14,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_super_nerd5"
     },
@@ -88,7 +88,7 @@
       "x": 3,
       "y": 14,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_super_nerd6"
     },
@@ -96,7 +96,7 @@
       "x": 3,
       "y": 8,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_super_nerd7"
     },
@@ -104,7 +104,7 @@
       "x": 16,
       "y": 13,
       "sprite": "sprite_gym_guide",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_cinnabargym_gym_guide"
     }

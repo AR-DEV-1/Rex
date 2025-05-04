@@ -2,7 +2,7 @@
   "name": "LavenderCuboneHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\LavenderCuboneHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 3,
       "y": 5,
       "sprite": "sprite_monster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_lavendercubonehouse_cubone"
     },
@@ -27,7 +27,7 @@
       "x": 2,
       "y": 4,
       "sprite": "sprite_brunette_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_lavendercubonehouse_brunette_girl"
     }

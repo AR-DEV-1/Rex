@@ -2,7 +2,7 @@
   "name": "Route16FlyHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\Route16FlyHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_brunette_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route16flyhouse_brunette_girl"
     },
@@ -27,7 +27,7 @@
       "x": 6,
       "y": 4,
       "sprite": "sprite_bird",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_route16flyhouse_fearow"
     }

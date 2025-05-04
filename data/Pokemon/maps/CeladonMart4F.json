@@ -2,7 +2,7 @@
   "name": "CeladonMart4F",
   "width": 10,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\LOBBY.json",
+  "blockset": "Pokemon\\tilesets\\LOBBY.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonMart4F.blk",
   "border_block_idx": 15,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 5,
       "y": 7,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_celadonmart4f_clerk"
     },
@@ -30,7 +30,7 @@
       "x": 15,
       "y": 5,
       "sprite": "sprite_super_nerd",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_celadonmart4f_super_nerd"
     },
@@ -38,7 +38,7 @@
       "x": 5,
       "y": 2,
       "sprite": "sprite_youngster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_celadonmart4f_youngster"
     }

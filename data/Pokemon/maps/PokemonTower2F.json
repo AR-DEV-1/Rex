@@ -2,7 +2,7 @@
   "name": "PokemonTower2F",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\CEMETERY.json",
+  "blockset": "Pokemon\\tilesets\\CEMETERY.json",
   "map_blocks": "Pokemon\\map_blocks\\PokemonTower2F.blk",
   "border_block_idx": 1,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 14,
       "y": 5,
       "sprite": "sprite_blue",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemontower2f_rival"
     },
@@ -27,7 +27,7 @@
       "x": 3,
       "y": 7,
       "sprite": "sprite_channeler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_pokemontower2f_channeler"
     }

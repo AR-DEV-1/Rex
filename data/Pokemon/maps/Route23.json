@@ -2,7 +2,7 @@
   "name": "ROUTE 23",
   "width": 10,
   "height": 72,
-  "tileset": "Pokemon\\tilesets\\PLATEAU.json",
+  "blockset": "Pokemon\\tilesets\\PLATEAU.json",
   "map_blocks": "Pokemon\\map_blocks\\Route23.blk",
   "border_block_idx": 15,
   "connections": [
@@ -45,7 +45,7 @@
       "x": 4,
       "y": 35,
       "sprite": "sprite_guard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route23_guard1"
     },
@@ -53,7 +53,7 @@
       "x": 10,
       "y": 56,
       "sprite": "sprite_guard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route23_guard2"
     },
@@ -61,7 +61,7 @@
       "x": 8,
       "y": 85,
       "sprite": "sprite_swimmer",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route23_swimmer1"
     },
@@ -69,7 +69,7 @@
       "x": 11,
       "y": 96,
       "sprite": "sprite_swimmer",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route23_swimmer2"
     },
@@ -77,7 +77,7 @@
       "x": 12,
       "y": 105,
       "sprite": "sprite_guard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route23_guard3"
     },
@@ -85,7 +85,7 @@
       "x": 8,
       "y": 119,
       "sprite": "sprite_guard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route23_guard4"
     },
@@ -93,7 +93,7 @@
       "x": 8,
       "y": 136,
       "sprite": "sprite_guard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route23_guard5"
     }

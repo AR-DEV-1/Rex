@@ -2,7 +2,7 @@
   "name": "RockTunnel1F",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+  "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\RockTunnel1F.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -34,7 +34,7 @@
       "x": 7,
       "y": 5,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rocktunnel1f_hiker1"
     },
@@ -42,7 +42,7 @@
       "x": 5,
       "y": 16,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rocktunnel1f_hiker2"
     },
@@ -50,7 +50,7 @@
       "x": 17,
       "y": 15,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_rocktunnel1f_hiker3"
     },
@@ -58,7 +58,7 @@
       "x": 23,
       "y": 8,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_rocktunnel1f_super_nerd"
     },
@@ -66,7 +66,7 @@
       "x": 37,
       "y": 21,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_rocktunnel1f_cooltrainer_f1"
     },
@@ -74,7 +74,7 @@
       "x": 22,
       "y": 24,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rocktunnel1f_cooltrainer_f2"
     },
@@ -82,7 +82,7 @@
       "x": 32,
       "y": 24,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_rocktunnel1f_cooltrainer_f3"
     }

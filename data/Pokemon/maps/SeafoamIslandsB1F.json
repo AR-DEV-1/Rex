@@ -2,7 +2,7 @@
   "name": "SeafoamIslandsB1F",
   "width": 15,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+  "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\SeafoamIslandsB1F.blk",
   "border_block_idx": 125,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 17,
       "y": 6,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_seafoamislandsb1f_boulder1"
     },
@@ -27,7 +27,7 @@
       "x": 22,
       "y": 6,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_seafoamislandsb1f_boulder2"
     }

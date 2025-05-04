@@ -2,7 +2,7 @@
   "name": "DiglettsCaveRoute11",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+  "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\DiglettsCaveRoute11.blk",
   "border_block_idx": 125,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_diglettscaveroute11_gambler"
     }

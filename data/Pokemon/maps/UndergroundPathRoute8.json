@@ -2,7 +2,7 @@
   "name": "UndergroundPathRoute8",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+  "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\UndergroundPathRoute8.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 3,
       "y": 4,
       "sprite": "sprite_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_undergroundpathroute8_girl"
     }

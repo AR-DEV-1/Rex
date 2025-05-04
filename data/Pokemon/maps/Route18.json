@@ -2,7 +2,7 @@
   "name": "ROUTE 18",
   "width": 25,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route18.blk",
   "border_block_idx": 67,
   "connections": [
@@ -33,7 +33,7 @@
       "x": 36,
       "y": 11,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route18_cooltrainer_m1"
     },
@@ -41,7 +41,7 @@
       "x": 40,
       "y": 15,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route18_cooltrainer_m2"
     },
@@ -49,7 +49,7 @@
       "x": 42,
       "y": 13,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route18_cooltrainer_m3"
     }

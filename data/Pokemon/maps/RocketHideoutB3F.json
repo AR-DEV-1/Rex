@@ -2,7 +2,7 @@
   "name": "RocketHideoutB3F",
   "width": 15,
   "height": 14,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+  "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\RocketHideoutB3F.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 10,
       "y": 22,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_rockethideoutb3f_rocket1"
     },
@@ -33,7 +33,7 @@
       "x": 26,
       "y": 12,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_rockethideoutb3f_rocket2"
     },
@@ -41,7 +41,7 @@
       "x": 26,
       "y": 17,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_rockethideoutb3f_tm_double_edge"
     },
@@ -49,7 +49,7 @@
       "x": 20,
       "y": 14,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_rockethideoutb3f_rare_candy"
     }

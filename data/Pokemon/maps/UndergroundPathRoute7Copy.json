@@ -2,7 +2,7 @@
   "name": "UndergroundPathRoute7Copy",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+  "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\UndergroundPathRoute7Copy.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 3,
       "y": 2,
       "sprite": "sprite_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_undergroundpathroute7copy_unused_girl"
     },
@@ -27,7 +27,7 @@
       "x": 2,
       "y": 4,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_undergroundpathroute7copy_unused_middle_aged_man"
     }

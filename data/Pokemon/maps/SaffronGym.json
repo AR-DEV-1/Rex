@@ -2,7 +2,7 @@
   "name": "SaffronGym",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+  "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\SaffronGym.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -40,7 +40,7 @@
       "x": 9,
       "y": 8,
       "sprite": "sprite_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_sabrina"
     },
@@ -48,7 +48,7 @@
       "x": 10,
       "y": 1,
       "sprite": "sprite_channeler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_channeler1"
     },
@@ -56,7 +56,7 @@
       "x": 17,
       "y": 1,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_youngster1"
     },
@@ -64,7 +64,7 @@
       "x": 3,
       "y": 7,
       "sprite": "sprite_channeler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_channeler2"
     },
@@ -72,7 +72,7 @@
       "x": 17,
       "y": 7,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_youngster2"
     },
@@ -80,7 +80,7 @@
       "x": 3,
       "y": 13,
       "sprite": "sprite_channeler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_channeler3"
     },
@@ -88,7 +88,7 @@
       "x": 17,
       "y": 13,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_youngster3"
     },
@@ -96,7 +96,7 @@
       "x": 3,
       "y": 1,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_youngster4"
     },
@@ -104,7 +104,7 @@
       "x": 10,
       "y": 15,
       "sprite": "sprite_gym_guide",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffrongym_gym_guide"
     }

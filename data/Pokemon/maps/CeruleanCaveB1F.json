@@ -2,7 +2,7 @@
   "name": "CeruleanCaveB1F",
   "width": 15,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+  "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\CeruleanCaveB1F.blk",
   "border_block_idx": 125,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 27,
       "y": 13,
       "sprite": "sprite_monster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleancaveb1f_mewtwo"
     },
@@ -30,7 +30,7 @@
       "x": 16,
       "y": 9,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ceruleancaveb1f_ultra_ball"
     },
@@ -38,7 +38,7 @@
       "x": 18,
       "y": 1,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ceruleancaveb1f_max_revive"
     }

@@ -2,7 +2,7 @@
   "name": "CopycatsHouse1F",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\REDS_HOUSE_1.json",
+  "blockset": "Pokemon\\tilesets\\REDS_HOUSE_1.json",
   "map_blocks": "Pokemon\\map_blocks\\CopycatsHouse1F.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 2,
       "y": 2,
       "sprite": "sprite_middle_aged_woman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_copycatshouse1f_middle_aged_woman"
     },
@@ -30,7 +30,7 @@
       "x": 5,
       "y": 4,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_copycatshouse1f_middle_aged_man"
     },
@@ -38,7 +38,7 @@
       "x": 1,
       "y": 4,
       "sprite": "sprite_fairy",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_copycatshouse1f_chansey"
     }

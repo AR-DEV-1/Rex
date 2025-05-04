@@ -2,7 +2,7 @@
   "name": "SilphCo6F",
   "width": 13,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+  "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\SilphCo6F.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -43,7 +43,7 @@
       "x": 10,
       "y": 6,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco6f_silph_worker_m1"
     },
@@ -51,7 +51,7 @@
       "x": 20,
       "y": 6,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco6f_silph_worker_m2"
     },
@@ -59,7 +59,7 @@
       "x": 21,
       "y": 6,
       "sprite": "sprite_silph_worker_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_silphco6f_silph_worker_f1"
     },
@@ -67,7 +67,7 @@
       "x": 11,
       "y": 10,
       "sprite": "sprite_silph_worker_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_silphco6f_silph_worker_f2"
     },
@@ -75,7 +75,7 @@
       "x": 18,
       "y": 13,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_silphco6f_silph_worker_m3"
     },
@@ -83,7 +83,7 @@
       "x": 17,
       "y": 3,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_silphco6f_rocket1"
     },
@@ -91,7 +91,7 @@
       "x": 7,
       "y": 8,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_silphco6f_scientist"
     },
@@ -99,7 +99,7 @@
       "x": 14,
       "y": 15,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_silphco6f_rocket2"
     },
@@ -107,7 +107,7 @@
       "x": 3,
       "y": 12,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco6f_hp_up"
     },
@@ -115,7 +115,7 @@
       "x": 2,
       "y": 15,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco6f_x_accuracy"
     }

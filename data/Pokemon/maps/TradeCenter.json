@@ -2,7 +2,7 @@
   "name": "TradeCenter",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\CLUB.json",
+  "blockset": "Pokemon\\tilesets\\CLUB.json",
   "map_blocks": "Pokemon\\map_blocks\\TradeCenter.blk",
   "border_block_idx": 14,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 2,
       "y": 2,
       "sprite": "sprite_red",
-      "action": "stay",
+      "movement": "stay",
       "direction": "0",
       "text": "text_tradecenter_opponent"
     }

@@ -2,7 +2,7 @@
   "name": "ROUTE 1",
   "width": 10,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route1.blk",
   "border_block_idx": 11,
   "connections": [
@@ -30,7 +30,7 @@
       "x": 5,
       "y": 24,
       "sprite": "sprite_youngster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_route1_youngster1"
     },
@@ -38,7 +38,7 @@
       "x": 15,
       "y": 13,
       "sprite": "sprite_youngster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_route1_youngster2"
     }

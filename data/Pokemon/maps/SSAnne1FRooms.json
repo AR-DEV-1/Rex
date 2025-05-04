@@ -2,7 +2,7 @@
   "name": "SSAnne1FRooms",
   "width": 12,
   "height": 8,
-  "tileset": "Pokemon\\tilesets\\SHIP.json",
+  "blockset": "Pokemon\\tilesets\\SHIP.json",
   "map_blocks": "Pokemon\\map_blocks\\SSAnne1FRooms.blk",
   "border_block_idx": 12,
   "connections": [],
@@ -46,7 +46,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_gentleman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_ssanne1frooms_gentleman1"
     },
@@ -54,7 +54,7 @@
       "x": 11,
       "y": 4,
       "sprite": "sprite_gentleman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_ssanne1frooms_gentleman2"
     },
@@ -62,7 +62,7 @@
       "x": 11,
       "y": 14,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_ssanne1frooms_youngster"
     },
@@ -70,7 +70,7 @@
       "x": 13,
       "y": 11,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_ssanne1frooms_cooltrainer_f"
     },
@@ -78,7 +78,7 @@
       "x": 22,
       "y": 3,
       "sprite": "sprite_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_ssanne1frooms_girl1"
     },
@@ -86,7 +86,7 @@
       "x": 0,
       "y": 14,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssanne1frooms_middle_aged_man"
     },
@@ -94,7 +94,7 @@
       "x": 2,
       "y": 11,
       "sprite": "sprite_little_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ssanne1frooms_little_girl"
     },
@@ -102,7 +102,7 @@
       "x": 3,
       "y": 11,
       "sprite": "sprite_fairy",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ssanne1frooms_wigglytuff"
     },
@@ -110,7 +110,7 @@
       "x": 10,
       "y": 13,
       "sprite": "sprite_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_ssanne1frooms_girl2"
     },
@@ -118,7 +118,7 @@
       "x": 12,
       "y": 15,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssanne1frooms_tm_body_slam"
     },
@@ -126,7 +126,7 @@
       "x": 21,
       "y": 13,
       "sprite": "sprite_gentleman",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_ssanne1frooms_gentleman3"
     }

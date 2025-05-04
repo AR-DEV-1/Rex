@@ -2,7 +2,7 @@
   "name": "Route12Gate2F",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+  "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\Route12Gate2F.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 3,
       "y": 4,
       "sprite": "sprite_brunette_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_route12gate2f_brunette_girl"
     }

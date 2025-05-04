@@ -2,7 +2,7 @@
   "name": "RedsHouse1F",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\REDS_HOUSE_1.json",
+  "blockset": "Pokemon\\tilesets\\REDS_HOUSE_1.json",
   "map_blocks": "Pokemon\\map_blocks\\RedsHouse1F.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 5,
       "y": 4,
       "sprite": "sprite_mom",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_redshouse1f_mom"
     }

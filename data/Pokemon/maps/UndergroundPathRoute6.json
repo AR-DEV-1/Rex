@@ -2,7 +2,7 @@
   "name": "UndergroundPathRoute6",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+  "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\UndergroundPathRoute6.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_undergroundpathroute6_girl"
     }

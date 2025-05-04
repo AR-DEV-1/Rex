@@ -2,7 +2,7 @@
   "name": "CeruleanBadgeHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\SHIP.json",
+  "blockset": "Pokemon\\tilesets\\SHIP.json",
   "map_blocks": "Pokemon\\map_blocks\\CeruleanBadgeHouse.blk",
   "border_block_idx": 12,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_ceruleanbadgehouse_middle_aged_man"
     }

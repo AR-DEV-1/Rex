@@ -2,7 +2,7 @@
   "name": "CINNABAR ISLAND",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\CinnabarIsland.blk",
   "border_block_idx": 67,
   "connections": [
@@ -30,7 +30,7 @@
       "x": 12,
       "y": 5,
       "sprite": "sprite_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_cinnabarisland_girl"
     },
@@ -38,7 +38,7 @@
       "x": 14,
       "y": 6,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_cinnabarisland_gambler"
     }

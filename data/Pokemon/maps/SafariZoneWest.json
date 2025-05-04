@@ -2,7 +2,7 @@
   "name": "SafariZoneWest",
   "width": 15,
   "height": 13,
-  "tileset": "Pokemon\\tilesets\\FOREST.json",
+  "blockset": "Pokemon\\tilesets\\FOREST.json",
   "map_blocks": "Pokemon\\map_blocks\\SafariZoneWest.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 8,
       "y": 20,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizonewest_max_potion"
     },
@@ -33,7 +33,7 @@
       "x": 9,
       "y": 7,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizonewest_tm_double_team"
     },
@@ -41,7 +41,7 @@
       "x": 18,
       "y": 18,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizonewest_max_revive"
     },
@@ -49,7 +49,7 @@
       "x": 19,
       "y": 7,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizonewest_gold_teeth"
     }

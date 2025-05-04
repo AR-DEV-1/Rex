@@ -2,7 +2,7 @@
   "name": "CeladonMartRoof",
   "width": 10,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\LOBBY.json",
+  "blockset": "Pokemon\\tilesets\\LOBBY.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonMartRoof.blk",
   "border_block_idx": 66,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 10,
       "y": 4,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_celadonmartroof_super_nerd"
     },
@@ -27,7 +27,7 @@
       "x": 5,
       "y": 5,
       "sprite": "sprite_little_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_celadonmartroof_little_girl"
     }

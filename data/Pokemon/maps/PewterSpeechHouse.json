@@ -2,7 +2,7 @@
   "name": "PewterSpeechHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\PewterSpeechHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_pewterspeechhouse_gambler"
     },
@@ -27,7 +27,7 @@
       "x": 4,
       "y": 5,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pewterspeechhouse_youngster"
     }

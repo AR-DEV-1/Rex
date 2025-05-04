@@ -2,7 +2,7 @@
   "name": "CopycatsHouse2F",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\REDS_HOUSE_2.json",
+  "blockset": "Pokemon\\tilesets\\REDS_HOUSE_2.json",
   "map_blocks": "Pokemon\\map_blocks\\CopycatsHouse2F.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 4,
       "y": 3,
       "sprite": "sprite_brunette_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_copycatshouse2f_copycat"
     },
@@ -36,7 +36,7 @@
       "x": 4,
       "y": 6,
       "sprite": "sprite_bird",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_copycatshouse2f_doduo"
     },
@@ -44,7 +44,7 @@
       "x": 5,
       "y": 1,
       "sprite": "sprite_monster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_copycatshouse2f_monster"
     },
@@ -52,7 +52,7 @@
       "x": 2,
       "y": 0,
       "sprite": "sprite_bird",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_copycatshouse2f_bird"
     },
@@ -60,7 +60,7 @@
       "x": 1,
       "y": 6,
       "sprite": "sprite_fairy",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_copycatshouse2f_fairy"
     }

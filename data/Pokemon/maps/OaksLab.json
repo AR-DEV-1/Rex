@@ -2,7 +2,7 @@
   "name": "OaksLab",
   "width": 5,
   "height": 6,
-  "tileset": "Pokemon\\tilesets\\DOJO.json",
+  "blockset": "Pokemon\\tilesets\\DOJO.json",
   "map_blocks": "Pokemon\\map_blocks\\OaksLab.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -46,7 +46,7 @@
       "x": 4,
       "y": 3,
       "sprite": "sprite_blue",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_oakslab_rival"
     },
@@ -54,7 +54,7 @@
       "x": 6,
       "y": 3,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_oakslab_charmander_poke_ball"
     },
@@ -62,7 +62,7 @@
       "x": 7,
       "y": 3,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_oakslab_squirtle_poke_ball"
     },
@@ -70,7 +70,7 @@
       "x": 8,
       "y": 3,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_oakslab_bulbasaur_poke_ball"
     },
@@ -78,7 +78,7 @@
       "x": 5,
       "y": 2,
       "sprite": "sprite_oak",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_oakslab_oak1"
     },
@@ -86,7 +86,7 @@
       "x": 2,
       "y": 1,
       "sprite": "sprite_pokedex",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_oakslab_pokedex1"
     },
@@ -94,7 +94,7 @@
       "x": 3,
       "y": 1,
       "sprite": "sprite_pokedex",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_oakslab_pokedex2"
     },
@@ -102,7 +102,7 @@
       "x": 5,
       "y": 10,
       "sprite": "sprite_oak",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_oakslab_oak2"
     },
@@ -110,7 +110,7 @@
       "x": 1,
       "y": 9,
       "sprite": "sprite_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_oakslab_girl"
     },
@@ -118,7 +118,7 @@
       "x": 2,
       "y": 10,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_oakslab_scientist1"
     },
@@ -126,7 +126,7 @@
       "x": 8,
       "y": 10,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_oakslab_scientist2"
     }

@@ -2,7 +2,7 @@
   "name": "MtMoonPokecenter",
   "width": 7,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\POKECENTER.json",
+  "blockset": "Pokemon\\tilesets\\POKECENTER.json",
   "map_blocks": "Pokemon\\map_blocks\\MtMoonPokecenter.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -31,7 +31,7 @@
       "x": 3,
       "y": 1,
       "sprite": "sprite_nurse",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_mtmoonpokecenter_nurse"
     },
@@ -39,7 +39,7 @@
       "x": 4,
       "y": 3,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_mtmoonpokecenter_youngster"
     },
@@ -47,7 +47,7 @@
       "x": 7,
       "y": 3,
       "sprite": "sprite_gentleman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_mtmoonpokecenter_gentleman"
     },
@@ -55,7 +55,7 @@
       "x": 10,
       "y": 6,
       "sprite": "sprite_middle_aged_man",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_mtmoonpokecenter_magikarp_salesman"
     },
@@ -63,7 +63,7 @@
       "x": 7,
       "y": 2,
       "sprite": "sprite_clipboard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_mtmoonpokecenter_clipboard"
     },
@@ -71,7 +71,7 @@
       "x": 11,
       "y": 2,
       "sprite": "sprite_link_receptionist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_mtmoonpokecenter_link_receptionist"
     }

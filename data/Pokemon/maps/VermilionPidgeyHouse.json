@@ -2,7 +2,7 @@
   "name": "VermilionPidgeyHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\VermilionPidgeyHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_vermilionpidgeyhouse_youngster"
     },
@@ -30,7 +30,7 @@
       "x": 3,
       "y": 5,
       "sprite": "sprite_bird",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_vermilionpidgeyhouse_pidgey"
     },
@@ -38,7 +38,7 @@
       "x": 4,
       "y": 3,
       "sprite": "sprite_paper",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_vermilionpidgeyhouse_letter"
     }

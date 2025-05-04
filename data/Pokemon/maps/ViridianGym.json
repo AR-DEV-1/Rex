@@ -2,7 +2,7 @@
   "name": "ViridianGym",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\GYM.json",
+  "blockset": "Pokemon\\tilesets\\GYM.json",
   "map_blocks": "Pokemon\\map_blocks\\ViridianGym.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -46,7 +46,7 @@
       "x": 2,
       "y": 1,
       "sprite": "sprite_giovanni",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridiangym_giovanni"
     },
@@ -54,7 +54,7 @@
       "x": 12,
       "y": 7,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridiangym_cooltrainer_m1"
     },
@@ -62,7 +62,7 @@
       "x": 11,
       "y": 11,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_viridiangym_hiker1"
     },
@@ -70,7 +70,7 @@
       "x": 10,
       "y": 7,
       "sprite": "sprite_rocker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridiangym_rocker1"
     },
@@ -78,7 +78,7 @@
       "x": 3,
       "y": 7,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_viridiangym_hiker2"
     },
@@ -86,7 +86,7 @@
       "x": 13,
       "y": 5,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_viridiangym_cooltrainer_m2"
     },
@@ -94,7 +94,7 @@
       "x": 10,
       "y": 1,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridiangym_hiker3"
     },
@@ -102,7 +102,7 @@
       "x": 2,
       "y": 16,
       "sprite": "sprite_rocker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_viridiangym_rocker2"
     },
@@ -110,7 +110,7 @@
       "x": 6,
       "y": 5,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridiangym_cooltrainer_m3"
     },
@@ -118,7 +118,7 @@
       "x": 16,
       "y": 15,
       "sprite": "sprite_gym_guide",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridiangym_gym_guide"
     },
@@ -126,7 +126,7 @@
       "x": 16,
       "y": 9,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_viridiangym_revive"
     }

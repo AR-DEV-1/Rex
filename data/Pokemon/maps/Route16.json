@@ -2,7 +2,7 @@
   "name": "ROUTE 16",
   "width": 20,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route16.blk",
   "border_block_idx": 15,
   "connections": [
@@ -45,7 +45,7 @@
       "x": 17,
       "y": 12,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route16_biker1"
     },
@@ -53,7 +53,7 @@
       "x": 14,
       "y": 13,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route16_biker2"
     },
@@ -61,7 +61,7 @@
       "x": 11,
       "y": 12,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route16_biker3"
     },
@@ -69,7 +69,7 @@
       "x": 9,
       "y": 11,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route16_biker4"
     },
@@ -77,7 +77,7 @@
       "x": 6,
       "y": 10,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route16_biker5"
     },
@@ -85,7 +85,7 @@
       "x": 3,
       "y": 12,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route16_biker6"
     },
@@ -93,7 +93,7 @@
       "x": 26,
       "y": 10,
       "sprite": "sprite_snorlax",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route16_snorlax"
     }

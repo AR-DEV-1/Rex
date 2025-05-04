@@ -2,7 +2,7 @@
   "name": "ROUTE 15",
   "width": 30,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route15.blk",
   "border_block_idx": 67,
   "connections": [
@@ -57,7 +57,7 @@
       "x": 41,
       "y": 11,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route15_cooltrainer_f1"
     },
@@ -65,7 +65,7 @@
       "x": 53,
       "y": 10,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route15_cooltrainer_f2"
     },
@@ -73,7 +73,7 @@
       "x": 31,
       "y": 13,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route15_cooltrainer_m1"
     },
@@ -81,7 +81,7 @@
       "x": 35,
       "y": 13,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route15_cooltrainer_m2"
     },
@@ -89,7 +89,7 @@
       "x": 53,
       "y": 11,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route15_beauty1"
     },
@@ -97,7 +97,7 @@
       "x": 41,
       "y": 10,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route15_beauty2"
     },
@@ -105,7 +105,7 @@
       "x": 48,
       "y": 10,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route15_biker1"
     },
@@ -113,7 +113,7 @@
       "x": 46,
       "y": 10,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route15_biker2"
     },
@@ -121,7 +121,7 @@
       "x": 37,
       "y": 5,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route15_cooltrainer_f3"
     },
@@ -129,7 +129,7 @@
       "x": 18,
       "y": 13,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route15_cooltrainer_f4"
     },
@@ -137,7 +137,7 @@
       "x": 18,
       "y": 5,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_route15_tm_rage"
     }

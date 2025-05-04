@@ -2,7 +2,7 @@
   "name": "SSAnneKitchen",
   "width": 7,
   "height": 8,
-  "tileset": "Pokemon\\tilesets\\SHIP.json",
+  "blockset": "Pokemon\\tilesets\\SHIP.json",
   "map_blocks": "Pokemon\\map_blocks\\SSAnneKitchen.blk",
   "border_block_idx": 12,
   "connections": [],
@@ -34,7 +34,7 @@
       "x": 1,
       "y": 8,
       "sprite": "sprite_cook",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_ssannekitchen_cook1"
     },
@@ -42,7 +42,7 @@
       "x": 5,
       "y": 8,
       "sprite": "sprite_cook",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_ssannekitchen_cook2"
     },
@@ -50,7 +50,7 @@
       "x": 9,
       "y": 7,
       "sprite": "sprite_cook",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_ssannekitchen_cook3"
     },
@@ -58,7 +58,7 @@
       "x": 13,
       "y": 6,
       "sprite": "sprite_cook",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssannekitchen_cook4"
     },
@@ -66,7 +66,7 @@
       "x": 13,
       "y": 8,
       "sprite": "sprite_cook",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssannekitchen_cook5"
     },
@@ -74,7 +74,7 @@
       "x": 13,
       "y": 10,
       "sprite": "sprite_cook",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssannekitchen_cook6"
     },
@@ -82,7 +82,7 @@
       "x": 11,
       "y": 13,
       "sprite": "sprite_cook",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_ssannekitchen_cook7"
     }

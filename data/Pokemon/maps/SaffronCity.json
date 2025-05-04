@@ -2,7 +2,7 @@
   "name": "SAFFRON CITY",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\SaffronCity.blk",
   "border_block_idx": 15,
   "connections": [
@@ -79,7 +79,7 @@
       "x": 7,
       "y": 6,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_saffroncity_rocket1"
     },
@@ -87,7 +87,7 @@
       "x": 20,
       "y": 8,
       "sprite": "sprite_rocket",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_saffroncity_rocket2"
     },
@@ -95,7 +95,7 @@
       "x": 34,
       "y": 4,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_saffroncity_rocket3"
     },
@@ -103,7 +103,7 @@
       "x": 13,
       "y": 12,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_saffroncity_rocket4"
     },
@@ -111,7 +111,7 @@
       "x": 11,
       "y": 25,
       "sprite": "sprite_rocket",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_saffroncity_rocket5"
     },
@@ -119,7 +119,7 @@
       "x": 32,
       "y": 13,
       "sprite": "sprite_rocket",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_saffroncity_rocket6"
     },
@@ -127,7 +127,7 @@
       "x": 18,
       "y": 30,
       "sprite": "sprite_rocket",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_saffroncity_rocket7"
     },
@@ -135,7 +135,7 @@
       "x": 8,
       "y": 14,
       "sprite": "sprite_scientist",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_saffroncity_scientist"
     },
@@ -143,7 +143,7 @@
       "x": 23,
       "y": 23,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_saffroncity_silph_worker_m"
     },
@@ -151,7 +151,7 @@
       "x": 17,
       "y": 30,
       "sprite": "sprite_silph_worker_f",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_saffroncity_silph_worker_f"
     },
@@ -159,7 +159,7 @@
       "x": 30,
       "y": 12,
       "sprite": "sprite_gentleman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffroncity_gentleman"
     },
@@ -167,7 +167,7 @@
       "x": 31,
       "y": 12,
       "sprite": "sprite_bird",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffroncity_pidgeot"
     },
@@ -175,7 +175,7 @@
       "x": 18,
       "y": 8,
       "sprite": "sprite_rocker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_saffroncity_rocker"
     },
@@ -183,7 +183,7 @@
       "x": 18,
       "y": 22,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffroncity_rocket8"
     },
@@ -191,7 +191,7 @@
       "x": 19,
       "y": 22,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_saffroncity_rocket9"
     }
