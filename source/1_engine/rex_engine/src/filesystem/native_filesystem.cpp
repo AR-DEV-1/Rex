@@ -125,7 +125,7 @@ namespace rex
   bool NativeFileSystem::exists(rsl::string_view path)
   {
     path = path::remove_quotes(path);
-    path = path::unsafe_abs_path(path);
+    path = abs_path(path);
 
     return directory::exists_abspath(path) || file::exists_abspath(path);
   }

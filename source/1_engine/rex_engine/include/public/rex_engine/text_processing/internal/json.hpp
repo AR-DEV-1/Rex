@@ -23366,11 +23366,11 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     friend rsl::ostream& operator<<(rsl::ostream& o, const basic_json& j)
     {
         // read width member and use it as indentation parameter if nonzero
-        const bool pretty_print = o.width() > 0;
-        const auto indentation = pretty_print ? o.width() : 0;
+        const bool pretty_print = true; // o.width() > 0;
+        const auto indentation = 2; // pretty_print ? o.width() : 0;
 
         // reset width to 0 for subsequent calls to this stream
-        o.width(0);
+        //o.width(0);
 
         // do the actual serialization
         serializer s(detail::output_adapter<char>(o), o.fill());

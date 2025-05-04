@@ -2,6 +2,7 @@
 
 #include "rex_std/string_view.h"
 #include "rex_engine/engine/types.h"
+#include "rex_engine/memory/memory_types.h"
 
 namespace rex
 {
@@ -27,7 +28,7 @@ namespace rex
   rsl::string_view rstrip(rsl::string_view input, rsl::string_view characters);
 
   // Add quotes around a string
-  rsl::string quoted(rsl::string_view input);
+  scratch_string quoted(rsl::string_view input);
 
   // Removes all spaces from a string
   // we're taking a string by ref
@@ -38,11 +39,6 @@ namespace rex
     input.replace(" ", "");
     return input;
   }
-
-  // Removes all spaces from a string
-  // we're taking a string by ref
-  // to reuse the memory
-  void remove_spaces(char8* begin, char8* end);
 
   // removes leading and trailing quotes from a path
   rsl::string_view remove_quotes(rsl::string_view path);
