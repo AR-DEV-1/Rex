@@ -2,7 +2,7 @@
   "name": "ViridianPokecenter",
   "width": 7,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\POKECENTER.json",
+  "blockset": "Pokemon\\tilesets\\POKECENTER.json",
   "map_blocks": "Pokemon\\map_blocks\\ViridianPokecenter.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 3,
       "y": 1,
       "sprite": "sprite_nurse",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridianpokecenter_nurse"
     },
@@ -33,7 +33,7 @@
       "x": 10,
       "y": 5,
       "sprite": "sprite_gentleman",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_viridianpokecenter_gentleman"
     },
@@ -41,7 +41,7 @@
       "x": 4,
       "y": 3,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_viridianpokecenter_cooltrainer_m"
     },
@@ -49,7 +49,7 @@
       "x": 11,
       "y": 2,
       "sprite": "sprite_link_receptionist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridianpokecenter_link_receptionist"
     }

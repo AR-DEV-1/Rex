@@ -2,7 +2,7 @@
   "name": "WardensHouse",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\LAB.json",
+  "blockset": "Pokemon\\tilesets\\LAB.json",
   "map_blocks": "Pokemon\\map_blocks\\WardensHouse.blk",
   "border_block_idx": 23,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_warden",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_wardenshouse_warden"
     },
@@ -30,7 +30,7 @@
       "x": 8,
       "y": 3,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_wardenshouse_rare_candy"
     },
@@ -38,7 +38,7 @@
       "x": 8,
       "y": 4,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_wardenshouse_boulder"
     }

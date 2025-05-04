@@ -2,7 +2,7 @@
   "name": "ViridianNicknameHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\ViridianNicknameHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_balding_guy",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_viridiannicknamehouse_balding_guy"
     },
@@ -33,7 +33,7 @@
       "x": 1,
       "y": 4,
       "sprite": "sprite_little_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_viridiannicknamehouse_little_girl"
     },
@@ -41,7 +41,7 @@
       "x": 5,
       "y": 5,
       "sprite": "sprite_bird",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_viridiannicknamehouse_spearow"
     },
@@ -49,7 +49,7 @@
       "x": 4,
       "y": 0,
       "sprite": "sprite_clipboard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_viridiannicknamehouse_speary_sign"
     }
