@@ -4,6 +4,8 @@
 
 #include "rex_std/memory.h"
 
+#include "regina/asset_graph.h"
+
 namespace rex
 {
   struct ApplicationCreationParams;
@@ -41,6 +43,7 @@ namespace regina
     rsl::unique_ptr<ContentManager> m_content_manager;
     rsl::unique_ptr<SceneManager> m_scene_manager;
     rsl::unique_ptr<Widget> m_active_widget;
+    AssetGraph m_asset_graph;
   };
 
 } // namespace regina

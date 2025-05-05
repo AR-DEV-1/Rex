@@ -3,6 +3,10 @@
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/text_processing/text_processing.h"
 
+#include "rex_engine/event_system/event_system.h"
+#include "rex_engine/event_system/events/loading/begin_asset_load.h"
+#include "rex_engine/event_system/events/loading/end_asset_load.h"
+
 namespace rex
 {
 	DEFINE_LOG_CATEGORY(LogAssetDatabase);
@@ -56,9 +60,15 @@ namespace rex
 			return nullptr;
 		}
 
+		// We know we can load the asset, so fire the event that it's beginning to load
+		event_system::instance()->fire_event(BeginAssetLoad(assetPath));
+
 		// Deserialize, initialize and cache the asset
 		rsl::unique_ptr<Asset> asset = m_serializers.at(asset_type_name)->serialize_from_json(asset_json);
 		auto emplace_result = m_path_to_asset.emplace(assetPath, rsl::move(asset));
+
+		// Asset is loaded, so fire the event that is has fully loaded
+		event_system::instance()->fire_event(EndAssetLoad(assetPath, asset.get()));
 
 		return emplace_result.inserted_element->value.get();
 	}
@@ -90,9 +100,15 @@ namespace rex
 			return nullptr;
 		}
 
+		// We know we can load the asset, so fire the event that it's beginning to load
+		event_system::instance()->fire_event(BeginAssetLoad(assetPath));
+
 		// Deserialize, initialize and cache the asset
 		rsl::unique_ptr<Asset> asset = m_serializers.at(assetTypeId.name())->serialize_from_binary(asset_blob);
 		auto emplace_result = m_path_to_asset.emplace(assetPath, rsl::move(asset));
+
+		// Asset is loaded, so fire the event that is has fully loaded
+		event_system::instance()->fire_event(EndAssetLoad(assetPath, asset.get()));
 
 		return emplace_result.inserted_element->value.get();
 	}

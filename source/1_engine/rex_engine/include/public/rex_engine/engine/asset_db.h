@@ -6,12 +6,15 @@
 #include "rex_engine/serialization/serializer_base.h"
 #include "rex_engine/filesystem/vfs.h"
 
+#include "rex_std/bonus/algorithms.h"
 #include "rex_std/bonus/utility.h"
 #include "rex_std/string_view.h"
 #include "rex_std/unordered_map.h"
 
 namespace rex
 {
+	// Asset dependency tracking should not be done in asset DB
+
 	class AssetDb
 	{
 	public:
@@ -45,7 +48,7 @@ namespace rex
 
 	private:
 		rsl::unordered_map<rsl::string_view, rsl::unique_ptr<Serializer>> m_serializers;
-		rsl::unordered_map<rsl::string_view, rsl::unique_ptr<Asset>> m_path_to_asset;
+		rsl::unordered_map<rsl::string, rsl::unique_ptr<Asset>> m_path_to_asset;
 	};
 
 	namespace asset_db
