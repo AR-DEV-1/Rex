@@ -8,6 +8,10 @@ namespace rex
   {
     return engine::instance()->temp_alloc(count);
   }
+  void* GlobalSingleFrameAllocator::reallocate(void* ptr, s64 count)
+  {
+    return engine::instance()->temp_realloc(ptr, count);
+  }
   void GlobalSingleFrameAllocator::deallocate(void* const ptr, s32 /*count*/)
   {
     engine::instance()->temp_free(ptr);

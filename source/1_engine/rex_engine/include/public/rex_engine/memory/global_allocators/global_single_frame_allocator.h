@@ -8,6 +8,7 @@ namespace rex
 	{
 	public:
     void* allocate(const s32 count);    // deallocates the storage reference by the pointer p.
+    void* reallocate(void* ptr, s64 count);
     void deallocate(void* const ptr, s32 count);
 
     s64 max_size() const;

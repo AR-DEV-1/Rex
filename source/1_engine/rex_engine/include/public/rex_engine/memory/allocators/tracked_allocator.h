@@ -171,7 +171,8 @@ namespace rex
       mem_tracker().track_dealloc(header->ptr);
       return mem_block;
     }
-  private:
+ 
+ private:
     Allocator* m_allocator;
     s32 m_total_num_allocations;
     s32 m_total_num_frees;

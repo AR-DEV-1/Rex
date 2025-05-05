@@ -95,6 +95,10 @@ namespace rex
 	{
 		return m_scratch_allocator->allocate(size);
 	}
+	void* EngineGlobals::scratch_realloc(void* ptr, s64 size)
+	{
+		return m_scratch_allocator->reallocate(ptr, size);
+	}
 	void EngineGlobals::scratch_free(void* ptr)
 	{
 		return m_scratch_allocator->deallocate(ptr);
@@ -111,6 +115,10 @@ namespace rex
 	void* EngineGlobals::temp_alloc(s64 size)
 	{
 		return m_single_frame_allocator->allocate(size);
+	}
+	void* EngineGlobals::temp_realloc(void* ptr, s64 count)
+	{
+		return m_single_frame_allocator->reallocate(ptr, count);
 	}
 	void EngineGlobals::temp_free(void* ptr)
 	{

@@ -40,6 +40,7 @@ namespace rex
 			return m_scratch_allocator->allocate<T>();
 		}
 		void* scratch_alloc(s64 size);
+		void* scratch_realloc(void* ptr, s64 size);
 		void scratch_free(void* ptr);
 		bool is_scratch_alloc(void* ptr) const;
 		s64 scratch_buffer_size() const;
@@ -50,6 +51,7 @@ namespace rex
 			return m_single_frame_allocator->allocate<T>();
 		}
 		void* temp_alloc(s64 size);
+		void* temp_realloc(void* ptr, s64 size);
 		void temp_free(void* ptr);
 		bool is_temp_alloc(void* ptr) const;
 		s64 temp_buffer_size() const;

@@ -44,6 +44,10 @@ namespace rex
     {
       return static_cast<T*>(allocate(sizeof(T)));
     }
+    void* reallocate(pointer ptr, size_type size)
+    {
+      return m_allocator->reallocate(ptr, size);
+    }
     void deallocate(pointer ptr, size_type size = 0)
     {
       m_allocator->deallocate(ptr, size);

@@ -8,6 +8,10 @@ namespace rex
   {
     return engine::instance()->scratch_alloc(count);
   }
+  void* GlobalScratchAllocator::reallocate(void* ptr, s64 count)
+  {
+    return engine::instance()->scratch_realloc(ptr, count);
+  }
   void GlobalScratchAllocator::deallocate(void* const ptr, s64 /*count*/)
   {
     engine::instance()->scratch_free(ptr);
