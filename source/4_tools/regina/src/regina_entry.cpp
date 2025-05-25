@@ -3,6 +3,7 @@
 #include "regina/project_manager.h"
 
 #include "rex_engine/engine/globals.h"
+#include "rex_engine/engine/engine.h"
 
 #include "rex_engine/cmdline/cmdline.h"
 #include "rex_engine/diagnostics/log.h"

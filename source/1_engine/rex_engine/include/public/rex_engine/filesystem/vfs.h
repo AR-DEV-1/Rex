@@ -5,6 +5,7 @@
 #include "rex_engine/filesystem/mounting_point.h"
 #include "rex_engine/filesystem/directory.h"
 #include "rex_engine/filesystem/read_request.h"
+#include "rex_engine/filesystem/go_recursive_enum.h"
 #include "rex_engine/diagnostics/error.h"
 #include "rex_engine/memory/blob.h"
 #include "rex_engine/memory/memory_types.h"
@@ -122,24 +123,28 @@ namespace rex
     // --------------------------------
     // CONVERTING
     // --------------------------------
-    scratch_string abs_path(MountingPoint root, rsl::string_view path)          ;
-    rsl::string_view mount_path(MountingPoint mount)                            ;
+    scratch_string abs_path(MountingPoint root, rsl::string_view path) const          ;
+    rsl::string_view mount_path(MountingPoint mount) const                            ;
     
-    virtual scratch_string abs_path(rsl::string_view path)                              = 0;
+    virtual scratch_string abs_path(rsl::string_view path) const                              = 0;
 
     // --------------------------------
     // QUERYING
     // --------------------------------
-    bool exists(MountingPoint root, rsl::string_view path)       ;
-    bool is_mounted(MountingPoint mount)                         ;
+    bool is_directory(MountingPoint root, rsl::string_view path) const       ;
+    bool is_file(MountingPoint root, rsl::string_view path) const       ;
+    bool exists(MountingPoint root, rsl::string_view path) const      ;
+    bool is_mounted(MountingPoint mount) const                         ;
     
-    virtual bool exists(rsl::string_view path)                           = 0;
+    virtual bool is_directory(rsl::string_view path) const                     = 0;
+    virtual bool is_file(rsl::string_view path) const                          = 0;
+    virtual bool exists(rsl::string_view path) const                           = 0;
 
-    REX_NO_DISCARD rsl::vector<rsl::string> list_entries(MountingPoint root, rsl::string_view path)      ;
+    REX_NO_DISCARD rsl::vector<rsl::string> list_entries(MountingPoint root, rsl::string_view path, Recursive recursive)      ;
     REX_NO_DISCARD rsl::vector<rsl::string> list_dirs(MountingPoint root, rsl::string_view path)         ;
     REX_NO_DISCARD rsl::vector<rsl::string> list_files(MountingPoint root, rsl::string_view path)        ;
     
-    REX_NO_DISCARD virtual rsl::vector<rsl::string> list_entries(rsl::string_view path)                          = 0;
+    REX_NO_DISCARD virtual rsl::vector<rsl::string> list_entries(rsl::string_view path, Recursive recursive)    = 0;
     REX_NO_DISCARD virtual rsl::vector<rsl::string> list_dirs(rsl::string_view path)                             = 0;
     REX_NO_DISCARD virtual rsl::vector<rsl::string> list_files(rsl::string_view path)                            = 0;
 

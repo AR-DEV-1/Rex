@@ -55,14 +55,16 @@ namespace rex
     // --------------------------------
     // CONVERTING
     // --------------------------------
-    scratch_string abs_path(rsl::string_view path) override;
+    scratch_string abs_path(rsl::string_view path) const override;
 
     // --------------------------------
     // QUERYING
     // --------------------------------
-    bool exists(rsl::string_view path) override;
+    bool is_directory(rsl::string_view path) const override;
+    bool is_file(rsl::string_view path) const override;
+    bool exists(rsl::string_view path) const override;
 
-    REX_NO_DISCARD rsl::vector<rsl::string> list_entries(rsl::string_view path) override;
+    REX_NO_DISCARD rsl::vector<rsl::string> list_entries(rsl::string_view path, Recursive recursive) override;
     REX_NO_DISCARD rsl::vector<rsl::string> list_dirs(rsl::string_view path) override;
     REX_NO_DISCARD rsl::vector<rsl::string> list_files(rsl::string_view path) override;
 	};

@@ -110,6 +110,11 @@ namespace rex
 				});
 		}
 
+		const RenderTarget* RenderPass::render_target(s32 idx) const
+		{
+			return m_framebuffer->render_target(idx);
+		}
+
 		void RenderPass::bind_params_to_pipeline(ShaderParametersStore* paramsStore, RenderContext* ctx)
 		{
 			const rsl::vector<rsl::unique_ptr<ShaderParameter>>& shader_params = paramsStore->params();

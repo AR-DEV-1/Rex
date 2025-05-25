@@ -90,7 +90,14 @@ namespace rex
 			ImVec2 texSize{};
 			texSize.x = static_cast<f32>(tex->width());
 			texSize.y = static_cast<f32>(tex->height());
-			ImGui::Image((ImTextureID)tex, texSize);
+			ImGui::Image((ImTextureID)tex->resource_view(), texSize);
+		}
+		void image(const rex::gfx::RenderTarget* renderTarget)
+		{
+			ImVec2 texSize{};
+			texSize.x = static_cast<f32>(renderTarget->width());
+			texSize.y = static_cast<f32>(renderTarget->height());
+			ImGui::Image((ImTextureID)renderTarget->view(), texSize);
 		}
 	}
 }

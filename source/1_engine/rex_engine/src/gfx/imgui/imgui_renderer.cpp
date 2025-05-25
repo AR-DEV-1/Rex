@@ -73,7 +73,7 @@ namespace rex
       if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
       {
         ImGuiWindowRenderParams render_params{};
-        render_params.render_pass = m_imgui_renderpass.get();
+        render_params.run_pass = m_imgui_renderpass.get();
 
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault(nullptr, &render_params);

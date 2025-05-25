@@ -1,0 +1,19 @@
+{
+    "pso": {
+        "vertex_shader": "",
+        "pixel_shader": "",
+        "raster_state":{
+
+        },
+        "input_layout":
+        [
+            {}
+        ]
+    },
+    "shader_params":[
+        {
+            "name":"default_sampler",
+            "value":""
+        }
+    ]
+}

@@ -2,6 +2,8 @@
 
 #include "regina//widgets/widget.h"
 
+#include "regina/scene_manager.h"
+
 #include "rex_std/vector.h"
 
 struct ImGuiWindow;
@@ -11,7 +13,7 @@ namespace regina
 	class MainEditorWidget : public Widget
 	{
 	public:
-		MainEditorWidget();
+		MainEditorWidget(SceneManager* sceneManager);
 
 	protected:
 		bool on_update() override;
@@ -27,5 +29,9 @@ namespace regina
 
 		ImGuiWindow* m_docking_backpanel;
 		rsl::vector<rsl::unique_ptr<Widget>> m_widgets;
+
+		// This is used to query information about the scene.
+		// This info is often passed to widgets
+		SceneManager* m_scene_manager;
 	};
 }

@@ -118,5 +118,10 @@ namespace rex
 				ctx->clear_render_target(m_attachments.front().render_target(), m_depth_stencil_buffer.get());
 			}
 		}
+
+		const RenderTarget* FrameBuffer::render_target(s32 idx) const
+		{
+			return m_attachments[idx].render_target();
+		}
 	}
 }

@@ -10,7 +10,7 @@ namespace rex
 {
 	namespace gfx
 	{
-		class GpuCache
+		class ResourceCache
 		{
 		public:
 			// Load an input layout from the cache, or store a new one
@@ -26,10 +26,10 @@ namespace rex
 			rsl::unordered_map<InputLayoutDesc, rsl::unique_ptr<InputLayout>> m_input_layout_cache;
 		};
 
-		namespace gpu_cache
+		namespace resource_cache
 		{
-			void init(globals::GlobalUniquePtr<GpuCache> cache);
-			GpuCache* instance();
+			void init(globals::GlobalUniquePtr<ResourceCache> cache);
+			ResourceCache* instance();
 			void shutdown();
 		}
 	}

@@ -10,12 +10,12 @@ namespace rex
   }
   UntrackedAllocator::pointer UntrackedAllocator::allocate(card64 size) // NOLINT(readability-convert-member-functions-to-static)
   {
-    return malloc(size);                                                // NOLINT(cppcoreguidelines-no-malloc)
+    return ::malloc(size);                                                // NOLINT(cppcoreguidelines-no-malloc)
   }
 
   UntrackedAllocator::pointer UntrackedAllocator::reallocate(pointer p, size_type newSize)
   {
-    return realloc(p, newSize);
+    return ::realloc(p, newSize);
   }
 
   void UntrackedAllocator::deallocate(pointer ptr, rsl::memory_size size) // NOLINT(readability-convert-member-functions-to-static)
@@ -24,6 +24,6 @@ namespace rex
   }
   void UntrackedAllocator::deallocate(pointer ptr, card64 /*size*/) // NOLINT(readability-convert-member-functions-to-static)
   {
-    free(ptr);                                                      // NOLINT(cppcoreguidelines-no-malloc)
+    ::free(ptr);                                                      // NOLINT(cppcoreguidelines-no-malloc)
   }
 } // namespace rex

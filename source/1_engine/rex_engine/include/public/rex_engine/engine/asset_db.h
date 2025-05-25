@@ -19,6 +19,19 @@ namespace rex
 	{
 	public:
 		template <typename T>
+		T* load(rsl::string_view assetPath)
+		{
+			if (path::extension(assetPath) == ".json")
+			{
+				return load_from_json<T>(assetPath);
+			}
+			else
+			{
+				return load_from_binary<T>(assetPath);
+			}
+		}
+
+		template <typename T>
 		T* load_from_json(rsl::string_view assetPath)
 		{
 			scratch_string fullpath = rex::vfs::instance()->abs_path(assetPath);
@@ -36,6 +49,7 @@ namespace rex
 		void add_serializer(rsl::unique_ptr<Serializer> serializer)
 		{
 			rsl::string_view type_name = rsl::type_id<T>().name();
+			REX_ASSERT_X(!m_serializers.contains(type_name), "A serializer is already present for {}", type_name);
 			m_serializers.emplace(type_name, rsl::move(serializer));
 		}
 

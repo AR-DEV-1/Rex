@@ -2,8 +2,8 @@
 
 #include "rex_engine/diagnostics/logging/log_macros.h"
 #include "rex_engine/diagnostics/error.h"
+#include "rex_engine/filesystem/go_recursive_enum.h"
 #include "rex_std/bonus/time/timepoint.h"
-#include "rex_std/bonus/utility/yes_no.h"
 #include "rex_std/string.h"
 #include "rex_std/string_view.h"
 #include "rex_std/vector.h"
@@ -51,7 +51,6 @@ namespace rex
     // Move/Rename a directory
     Error move(rsl::string_view src, rsl::string_view dst);
 
-    DEFINE_YES_NO_ENUM(Recursive);
     // Returns true if the directory is empty, 
     // as in, it has no files or directories
     bool is_empty(rsl::string_view path);

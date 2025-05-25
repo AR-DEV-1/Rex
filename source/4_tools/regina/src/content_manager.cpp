@@ -21,7 +21,7 @@ namespace regina
 	{
 		REX_INFO(LogContentManager, "Adding directory {}", directory);
 
-		m_entries = rex::directory::list_entries(directory, rex::directory::Recursive::yes);
+		m_entries = rex::directory::list_entries(directory, rex::Recursive::yes);
 	}
 
 }

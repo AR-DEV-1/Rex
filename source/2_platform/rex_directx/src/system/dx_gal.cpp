@@ -57,7 +57,7 @@
 
 #include "rex_engine/gfx/materials/material_library.h"
 #include "rex_engine/gfx/rendering/render_pass.h"
-#include "rex_engine/gfx/system/gpu_cache.h"
+#include "rex_engine/gfx/system/resource_cache.h"
 
 
 
@@ -108,7 +108,7 @@ namespace rex
 
 		DirectXInterface::~DirectXInterface()
 		{
-			gpu_cache::shutdown();
+			resource_cache::shutdown();
 			shader_reflection::shutdown();
 			material_lib::shutdown();
 		}
@@ -308,8 +308,8 @@ namespace rex
 			REX_ASSERT_X(desc.shader_pipeline.vs, "No vertex shader specified for the pso");
 			REX_ASSERT_X(desc.shader_pipeline.ps, "No pixel shader specified for the pso");
 
-			InputLayout* input_layout = gpu_cache::instance()->load_input_layout(desc.input_layout);
-			RootSignature* root_signature = gpu_cache::instance()->load_root_signature(desc.shader_pipeline);
+			InputLayout* input_layout = resource_cache::instance()->load_input_layout(desc.input_layout);
+			RootSignature* root_signature = resource_cache::instance()->load_root_signature(desc.shader_pipeline);
 
 			// Make sure our critical required parameters are specified
 			REX_ASSERT_X(input_layout, "No input layout for the pso");
@@ -604,7 +604,7 @@ namespace rex
 
 			material_lib::init(globals::make_unique<MaterialLibrary>());
 			shader_reflection::init(globals::make_unique<DxShaderReflection>());
-			gpu_cache::init(globals::make_unique<GpuCache>());
+			resource_cache::init(globals::make_unique<ResourceCache>());
 		}
 
 		// Allocate a 1D buffer on the gpu, returning a DirectX resource

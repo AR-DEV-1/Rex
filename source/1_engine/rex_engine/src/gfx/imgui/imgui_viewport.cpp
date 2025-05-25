@@ -116,8 +116,8 @@ namespace rex
           rect.right = clip_max.x;
           rect.bottom = clip_max.y;
 
-          Texture2D* tex = (Texture2D*)pcmd->TextureId;
-					ctx->bind_texture2d(textureSlot, tex);
+          const ResourceView* textureView = (const ResourceView*)pcmd->TextureId;
+					ctx->bind_texture2d(textureSlot, textureView);
           ctx->set_scissor_rect(rect);
           ctx->draw_indexed_instanced(pcmd->ElemCount, 1, pcmd->IdxOffset + global_idx_offset, pcmd->VtxOffset + global_vtx_offset, 0);
         }

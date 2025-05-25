@@ -18,9 +18,10 @@
 
 namespace regina
 {
-	MainEditorWidget::MainEditorWidget()
+	MainEditorWidget::MainEditorWidget(SceneManager* sceneManager)
 		: m_show_imgui_demo(false)
 		, m_show_imgui_style_editor(false)
+		, m_scene_manager(sceneManager)
 	{
 		//ImGuiIO& io = ImGui::GetIO();
 		//if (!rex::file::exists(rsl::string_view(io.IniFilename)))
@@ -30,7 +31,7 @@ namespace regina
 		//}
 
 		m_widgets.emplace_back(rsl::make_unique<ContentBrowserWidget>());
-		m_widgets.emplace_back(rsl::make_unique<ViewportWidget>());
+		m_widgets.emplace_back(rsl::make_unique<ViewportWidget>(m_scene_manager->current_scene()));
 	}
 
 	bool MainEditorWidget::on_update()
