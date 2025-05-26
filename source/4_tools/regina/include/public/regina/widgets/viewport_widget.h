@@ -95,10 +95,10 @@ namespace regina
 		s32 major_dimension_in_tiles() const;
 
 		// Returns the block index at the location
-		s32 index_at(BlockCoord blockCoord) const;
+		s32 index_at_blockcoord(rsl::pointi8 blockCoord) const;
 
 		// Returns the block index of the block the tile belongs to
-		s32 index_at(TileCoord tileCoord) const;
+		s32 index_at_tilecoord(rsl::pointi8 tileCoord) const;
 
 	private:
 		void init_blocks(s8 borderBlockIdx);
@@ -111,15 +111,7 @@ namespace regina
 		s8 m_total_height;
 	};
 
-	struct TilesetDesc
-	{
-		const rex::TextureAsset* tileset_texture;
-		const rex::Blockset* blockset;
 
-		// Store how big the tiles are in pixels
-		s32 tile_width_px;
-		s32 tile_height_px;
-	};
 
 	struct ViewportWidgetDesc
 	{

@@ -36,60 +36,57 @@ namespace rex
 
 	struct WarpEvent
 	{
-		s8 x;
-		s8 y;
+		rsl::pointi8 pos;
 		s8 dst_map_id;
 		s8 dst_warp_id;
 	};
 
 	struct TextEvent // BgEvent in pokemon code
 	{
-		s8 x;
-		s8 y;
+		rsl::pointi8 pos;
 		rsl::string text;
 		s8 sign_id;
 	};
 
-	struct MapObject // Characters
-	{
-		rsl::string name;
-	};
+	//struct MapObject // Characters
+	//{
+	//	rsl::string name;
+	//};
 
-	enum class ObjectEventType
-	{
-		Character, // By default
-		Item,
-		Trainer,
-		Pokemon
-	};
+	//enum class ObjectEventType
+	//{
+	//	Character, // By default
+	//	Item,
+	//	Trainer,
+	//	Pokemon
+	//};
 
-	struct ObjectEvent
-	{
-		s8 x;
-		s8 y;
-		rsl::string text_id;
-		rsl::string direction;
-		rsl::string movement; // walk/stay
-		rsl::string sprite_id;
-	};
-	struct CharacterObjectEvent : ObjectEvent
-	{
-		// Has no extra members
-	};
-	struct ItemObjectEvent : ObjectEvent
-	{
-		s8 item;
-	};
-	struct TrainerObjectEvent : ObjectEvent
-	{
-		s8 trainer_class;
-		s8 trainer_number;
-	};
-	struct PokemonObjectEvent : ObjectEvent
-	{
-		s8 pokemon_id;
-		s8 pokemon_level;
-	};
+	//struct ObjectEvent
+	//{
+	//	rsl::pointi8 pos;
+	//	rsl::string text_id;
+	//	rsl::string direction;
+	//	rsl::string movement; // walk/stay
+	//	rsl::string sprite_id;
+	//};
+	//struct CharacterObjectEvent : ObjectEvent
+	//{
+	//	// Has no extra members
+	//};
+	//struct ItemObjectEvent : ObjectEvent
+	//{
+	//	s8 item;
+	//};
+	//struct TrainerObjectEvent : ObjectEvent
+	//{
+	//	s8 trainer_class;
+	//	s8 trainer_number;
+	//};
+	//struct PokemonObjectEvent : ObjectEvent
+	//{
+	//	s8 pokemon_id;
+	//	s8 pokemon_level;
+	//};
 
 	struct Trainer
 	{
@@ -105,18 +102,72 @@ namespace rex
 		rsl::string name;
 	};
 
+	class MapObject
+	{
+	public:
+
+	private:
+		rsl::string m_name;
+		rsl::string m_text_id;
+		rsl::string m_sprite_id;
+
+		rsl::pointi8 m_pos;
+	};
+
+	enum class MapCharacterMovement
+	{
+		Walk,
+		Stay
+	};
+	enum class MapCharacterMovementDirection
+	{
+		None,
+		UpDown,
+		LeftRight,
+		AnyDir
+	};
+	class MapCharacter : public MapObject
+	{
+	private:
+		MapCharacterMovementDirection m_direction;
+		MapCharacterMovement m_movement;
+	};
+	class MapTrainer : public MapCharacter
+	{
+	private:
+		s8 m_trainer_class;
+		s8 m_trainer_number;
+	};
+	class MapPickup : public MapObject
+	{
+		s8 m_pickup_id;
+	};
+	class MapPokemon : public MapObject
+	{
+	private:
+		s8 m_pokemon_id;
+		s8 m_pokemon_level;
+	};
+	class MapTextBoard : public MapObject
+	{
+
+	};
+
 	// This is the data that gets saved to disk
 	struct MapDesc
 	{
 		// The connections of a map. This means where a player can walk to from this map without going through a warp
 		rsl::unique_array<MapConnection> connections;
 
+		// Holds all the pickups, text signs, trainers, ... that are present in the current map
+		rsl::unique_array<rsl::unique_ptr<MapObject>> objects;
+
 		// The objects within a map (characters, items, pokemon, ...)
 		// This should be merged with object and text events
 		// An object is "something" in a map the player can interact with
-		rsl::unique_array<MapObject> objects;
-		rsl::unique_array<rsl::unique_ptr<ObjectEvent>> object_events;
-		rsl::unique_array<TextEvent> text_events;
+		//rsl::unique_array<MapObject> objects;
+		//rsl::unique_array<rsl::unique_ptr<ObjectEvent>> object_events;
+		//rsl::unique_array<TextEvent> text_events;
 
 		// A warp is a space that teleports to the player into another map
 		// A good example of this is a door
@@ -126,7 +177,7 @@ namespace rex
 		rsl::unique_array<rsl::string> scripts;
 
 		// The block indices of the map. This is required for rendering
-		rsl::unique_array<s8> blocks;
+		rsl::unique_array<u8> blocks;
 
 		// The map header, holding high level info of the map
 		// This holds all the information to identify the map without needing to load all the objects of the map
@@ -143,6 +194,7 @@ namespace rex
 		s32 border_block_idx() const;
 
 		const rsl::unique_array<MapConnection>& connections() const;
+		const rsl::unique_array<u8>& blocks() const;
 
 	private:
 		MapDesc m_desc;

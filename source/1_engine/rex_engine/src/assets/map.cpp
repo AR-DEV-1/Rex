@@ -23,4 +23,13 @@ namespace rex
 	{
 		return m_desc.connections;
 	}
+	const Blockset* Map::blockset() const
+	{
+		return m_desc.blocks;
+	}
+
+	const rsl::unique_array<s8>& Map::blocks() const
+	{
+		return m_desc.blocks;
+	}
 }
