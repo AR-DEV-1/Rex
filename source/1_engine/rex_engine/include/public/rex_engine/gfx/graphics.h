@@ -44,6 +44,7 @@
 #include "rex_engine/gfx/system/command_allocator.h"
 #include "rex_engine/gfx/system/debug_interface.h"
 #include "rex_engine/gfx/system/swapchain.h"
+#include "rex_engine/gfx/rendering/renderer.h"
 #include "rex_engine/gfx/resources/vertex_buffer.h"
 #include "rex_engine/gfx/resources/index_buffer.h"
 #include "rex_engine/gfx/resources/root_signature.h"

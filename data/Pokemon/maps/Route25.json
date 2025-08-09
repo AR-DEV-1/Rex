@@ -2,14 +2,14 @@
   "name": "ROUTE 25",
   "width": 30,
   "height": 9,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route25.blk",
   "border_block_idx": 44,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route24.json",
-      "offset": 0
+      "offset": 18
     }
   ],
   "objects": [

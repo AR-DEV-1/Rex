@@ -2,19 +2,19 @@
   "name": "ROUTE 24",
   "width": 10,
   "height": 18,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route24.blk",
   "border_block_idx": 44,
   "connections": [
     {
       "direction": "South",
       "map": "Pokemon\\maps\\ceruleancity.json",
-      "offset": -5
+      "offset": 0
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route25.json",
-      "offset": 0
+      "offset": -18
     }
   ],
   "objects": [

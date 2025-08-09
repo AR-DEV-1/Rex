@@ -2,14 +2,14 @@
   "name": "ROUTE 8",
   "width": 30,
   "height": 9,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route8.blk",
   "border_block_idx": 44,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\saffroncity.json",
-      "offset": -4
+      "offset": 2
     },
     {
       "direction": "East",

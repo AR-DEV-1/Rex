@@ -18,119 +18,119 @@
 # [bugprone-exception-escape]
 #  we don't use exceptions so makes no sense in having this
 #
-# [bugprone-forward-declaration-namespace]
+# [bugprone-forward-declaration-namespace] off
 #  this would be resolved when all includes to C++ STL have been removed
 #
-# [bugprone-forwarding-reference-overload]
+# [bugprone-forwarding-reference-overload] on
 #  this is caused because clang-tidy can't resolve rsl::enable_if to avoid overloading
 #
-# [bugprone-macro-parentheses]
+# [bugprone-macro-parentheses] on
 #  this can cause some compilation issues
 #
-# [cert-dcl21-cpp]
+# [cert-dcl21-cpp] off
 #  it's possible some operator++ or operator-- return constexpr instead of const.
 #  such cases prompt a false positive with this enabled.
 #
-# [cert-dcl50-cpp]
+# [cert-dcl50-cpp] off
 #  in a way, this is an alias of cppcoreguidelines-pro-type-vararg, although this is not document
 #  we disable it so we don't have to double disable it in the codebase
 #
-# [cert-err58-cpp]
+# [cert-err58-cpp] off
 #  this check flags all static or thread_local variable declarations where the initializer for the object may throw an exception
 #  because we don't exceptions in rex, so there's no point in having this enabled
 #
-# [cppcoreguidelines-macro-usage]
+# [cppcoreguidelines-macro-usage] off
 #  this breaks too much C code, so we're disabling this for now
 #
-# [cppcoreguidelines-owning-memory]
+# [cppcoreguidelines-owning-memory] off
 #  we're not using gsl::owner in the codebase yet and heavily rely on smart pointers.
 #  because we try to step away from the C standard library, we don't need to use this check
 #
-# [cppcoreguidelines-pro-bounds-array-to-pointer-decay]
+# [cppcoreguidelines-pro-bounds-array-to-pointer-decay] off, investigate later
 #  pointers should not be used as arrays, span should be used instead.
 #  span is not implemented yet, which is why this check is disabled at the moment
 #
-# [cppcoreguidelines-pro-bounds-constant-array-index]
+# [cppcoreguidelines-pro-bounds-constant-array-index] off, investigate later
 #  this check would break too much C code, which is why we disable it for now
 #
-# [cppcoreguidelines-pro-bounds-pointer-arithmetic]
+# [cppcoreguidelines-pro-bounds-pointer-arithmetic] on
 #  this comes from the statement that pointers should only point to single objects
 #  this check would break too much C code, which is why we disable it for now
 #
-# [cppcoreguidelines-pro-type-vararg]
+# [cppcoreguidelines-pro-type-vararg] off
 #  C-style vararg functions is not allowed in Rex
 #
-# [fuchsia-default-arguments-calls]
+# [fuchsia-default-arguments-calls] off
 #  Rex allows default arguments, although they're not recommended
 #
-# [fuchsia-default-arguments-declarations]
+# [fuchsia-default-arguments-declarations] off
 #  Rex allows default arguments, although they're not recommended
 #
-# [fuchsia-overloaded-operator]
+# [fuchsia-overloaded-operator] off
 #  We allow operator overloads in Rex, they're required by a lot of classes
 #
-# [fuchsia-virtual-inheritance]
+# [fuchsia-virtual-inheritance] off
 #  virtual inheritance is not recommended in Rex, it hurts performance
 #
-# [google-readability-todo]
+# [google-readability-todo] on
 #  this needs to get enabled again when we have better parsing of our todos in the codebase
 #
-# [google-runtime-int]
+# [google-runtime-int] on
 #  we use shorts sometimes to improve memory usage
 #
-# [llvm-header-guard]
+# [llvm-header-guard] off
 #  we use #pragma once instead of header guards
 #
-# [llvmlibc-callee-namespace]
+# [llvmlibc-callee-namespace] off
 #  this check doesn't apply to us, we're creating our own standard library after all
 #
-# [llvmlibc-implementation-in-namespace]
+# [llvmlibc-implementation-in-namespace] off
 #  this check doesn't apply to us, we're creating our own standard library after all
 #
-# [llvmlibc-restrict-system-libc-headers]
+# [llvmlibc-restrict-system-libc-headers] off
 #  this check doesn't apply to us, we're creating our own standard library after all
 #
-# [modernize-concat-nested-namespaces]
+# [modernize-concat-nested-namespaces] off
 #  we don't use concatenated namespaces 
 #
-# [modernize-macro-to-enum]
+# [modernize-macro-to-enum] off (enabled rs code?)
 #  this would break too many C macros
 #
-# [modernize-return-braced-init-list]
+# [modernize-return-braced-init-list] off
 #  this is not following the rex guidelines, this hurts readability
 #
-# [modernize-use-auto]
+# [modernize-use-auto] off
 #  rex has strict rules regarding auto
 #
-# [modernize-use-default-member-init]
+# [modernize-use-default-member-init] on
 #  we don't use default member init for now
 #  as we'd have to recompile a lot when we change a value
 #
-# [modernize-use-nodiscard]
+# [modernize-use-nodiscard] off
 #  nodiscard clutters up the codebase, we don't have many issues yet by not using it
 #
-# [modernize-use-trailing-return-type]
+# [modernize-use-trailing-return-type] off
 #  we don't use trailing return type
 #
-# [performance-noexcept-move-constructor]
+# [performance-noexcept-move-constructor] off
 #  we don't use exceptions, so no point in using this
 #
-# [readability-else-after-return]
+# [readability-else-after-return] on
 #  we don't follow the single return design
 #
-# [readability-identifier-length]
+# [readability-identifier-length] off, investigate required
 #  some variables names can be short, we have rules for that
 #
-# [readability-magic-number]
+# [readability-magic-number] on
 #  this would break too much C code
 #
-# [readability-redundant-access-specifiers]
+# [readability-redundant-access-specifiers] on
 #  for readability, we specify extra access specifiers to split functions from fields
 #
-# [readability-redundant-member-init]
+# [readability-redundant-member-init] on
 #  for readability, we define member inits, even when they're not needed
 #
-# [readability-uppercase-literal-suffix]
+# [readability-uppercase-literal-suffix] off
 #  we use lowercase literal suffix
 #
 #

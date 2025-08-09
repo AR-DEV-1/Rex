@@ -2,19 +2,19 @@
   "name": "ROUTE 14",
   "width": 10,
   "height": 27,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route14.blk",
   "border_block_idx": 67,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route15.json",
-      "offset": 18
+      "offset": 36
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route13.json",
-      "offset": 0
+      "offset": -36
     }
   ],
   "objects": [

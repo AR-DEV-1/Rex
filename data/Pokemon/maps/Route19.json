@@ -2,19 +2,19 @@
   "name": "SEA ROUTE 19",
   "width": 10,
   "height": 27,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route19.blk",
   "border_block_idx": 67,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\fuchsiacity.json",
-      "offset": -5
+      "offset": 0
     },
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route20.json",
-      "offset": 18
+      "offset": 36
     }
   ],
   "objects": [

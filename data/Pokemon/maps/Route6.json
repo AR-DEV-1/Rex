@@ -2,19 +2,19 @@
   "name": "ROUTE 6",
   "width": 10,
   "height": 18,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route6.blk",
   "border_block_idx": 15,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\saffroncity.json",
-      "offset": -5
+      "offset": 0
     },
     {
       "direction": "South",
       "map": "Pokemon\\maps\\vermilioncity.json",
-      "offset": -5
+      "offset": 0
     }
   ],
   "objects": [

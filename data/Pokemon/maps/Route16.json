@@ -2,19 +2,19 @@
   "name": "ROUTE 16",
   "width": 20,
   "height": 9,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route16.blk",
   "border_block_idx": 15,
   "connections": [
     {
       "direction": "South",
       "map": "Pokemon\\maps\\route17.json",
-      "offset": 0
+      "offset": -20
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\celadoncity.json",
-      "offset": -4
+      "offset": 2
     }
   ],
   "objects": [

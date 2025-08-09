@@ -98,6 +98,10 @@ namespace rex
 			texSize.x = static_cast<f32>(renderTarget->width());
 			texSize.y = static_cast<f32>(renderTarget->height());
 			ImGui::Image((ImTextureID)renderTarget->view(), texSize);
+
+			char buffsize[128];
+			ImGui::InputText("#something", buffsize, sizeof(buffsize));
+
 		}
 	}
 }

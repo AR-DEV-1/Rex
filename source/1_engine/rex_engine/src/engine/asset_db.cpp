@@ -14,6 +14,12 @@ namespace rex
 	void AssetDb::unload_all()
 	{
 		m_path_to_asset.clear();
+		m_asset_to_path.clear();
+	}
+
+	rsl::string_view AssetDb::asset_path(const Asset* asset)
+	{
+		return m_asset_to_path.at(asset);
 	}
 
 	Asset* AssetDb::load_from_json(rsl::type_id_t assetTypeId, rsl::string_view assetPath)
@@ -65,6 +71,7 @@ namespace rex
 
 		// Deserialize, initialize and cache the asset
 		rsl::unique_ptr<Asset> asset = m_serializers.at(asset_type_name)->serialize_from_json(asset_json);
+		m_asset_to_path.emplace(asset.get(), assetPath);
 		auto emplace_result = m_path_to_asset.emplace(assetPath, rsl::move(asset));
 
 		// Asset is loaded, so fire the event that is has fully loaded
@@ -105,6 +112,7 @@ namespace rex
 
 		// Deserialize, initialize and cache the asset
 		rsl::unique_ptr<Asset> asset = m_serializers.at(assetTypeId.name())->serialize_from_binary(asset_blob);
+		m_asset_to_path.emplace(asset.get(), assetPath);
 		auto emplace_result = m_path_to_asset.emplace(assetPath, rsl::move(asset));
 
 		// Asset is loaded, so fire the event that is has fully loaded

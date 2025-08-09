@@ -6,9 +6,11 @@
 
 #include "rex_engine/gfx/rendering/camera.h"
 #include "rex_engine/gfx/resources/render_target.h"
+#include "rex_std/bonus/math/point.h"
 
 namespace rex
 {
+	class Tileset;
 	class Map;
 }
 
@@ -81,10 +83,18 @@ namespace regina
 
 
 
-
-	class MapMatrix
+	class TileMap
 	{
 	public:
+		using tile_idx = s8;
+
+		TileMap(s32 width, s32 height);
+
+		void set(s32 row, s32 column, tile_idx tileIdx);
+		void set(s32 row, s32 column, tile_idx* indices, s32 count);
+
+
+
 		void build(const rex::Map* mapObject);
 
 		s32 width_in_blocks() const;
@@ -106,9 +116,15 @@ namespace regina
 		void fill_inner_map(const rex::Map* mapObject);
 
 	private:
-		rsl::unique_array<u8> m_block_indices;
-		s8 m_total_width;
-		s8 m_total_height;
+		rsl::unique_array<tile_idx> m_tile_indices;
+		rex::Tileset* m_tileset;
+
+		s32 m_width;
+		s32 m_height;
+
+		//rsl::unique_array<u8> m_block_indices;
+		//s8 m_total_width;
+		//s8 m_total_height;
 	};
 
 
@@ -120,8 +136,8 @@ namespace regina
 		s32 height;
 		rsl::pointi8 camera_pos;
 
-		TilesetDesc tileset_desc;
-		const Map* map;
+		//TilesetDesc tileset_desc;
+		//const Map* map;
 	};
 
 	class ViewportWidget : public Widget
@@ -136,6 +152,8 @@ namespace regina
 		void process_input();
 		void update_renderpass_data();
 		void draw_imgui();
+
+		void update_static_tiles();
 
 	private:
 		TilePass* m_render_pass;		// The renderpass used for rendering the viewport

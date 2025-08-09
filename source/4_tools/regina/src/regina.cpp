@@ -31,9 +31,9 @@ namespace regina
 		init_serializers();
 		init_content_scope();
 		init_settings();
-		init_start_scene();
 
 		init_scene_view();
+		init_start_scene();
 		init_ui();
 	}
 	Regina::~Regina() = default;
@@ -41,10 +41,6 @@ namespace regina
 	void Regina::update()
 	{
 		REX_ASSERT_X(m_active_widget, "No active widget in the editor");
-
-		// Ideal desired code
-		const Texture* last_frame = m_tile_renderer->last_rendered_frame();
-		m_viewport->update(last_frame);
 
 		if (m_active_widget->update())
 		{
@@ -69,15 +65,18 @@ namespace regina
 	}
 	void Regina::init_start_scene()
 	{
+		m_scene_manager = rsl::make_unique<SceneManager>();
+
 		rex::scratch_string start_scene = rex::path::join(rex::engine::instance()->data_root(), rex::settings::instance()->get_string("StartScene"));
+		REX_INFO(LogRegina, "Loading {}", start_scene);
+
 		if (!rex::vfs::instance()->is_file(start_scene))
 		{
-			REX_ERROR(LogRegina, "Start scene {} does not exist, loading default", rex::quoted(start_scene));
-			start_scene.assign("default_map.json");
+			REX_ERROR(LogRegina, "Start scene {} does not exist", rex::quoted(start_scene));
+			return;
 		}
 
-		m_scene_manager = rsl::make_unique<SceneManager>();
-		m_scene_manager->load_scene(start_scene);
+		m_active_scene = rex::asset_db::instance()->load_from_json<Scene>(start_scene);
 	}
 	void Regina::init_scene_view()
 	{
@@ -97,7 +96,22 @@ namespace regina
 	{
 		REX_ASSERT_X(m_project, "Cannot spawn the main widget if we don't have a project. project is null");
 
-		m_active_widget = rsl::make_unique<MainEditorWidget>(m_scene_manager.get());
+		rsl::unique_ptr<MainEditorWidget> main_editor_widget = rsl::make_unique<MainEditorWidget>();
+		//main_editor_widget->set_active_scene(m_active_scene);
+
+		rex::scratch_string start_scene = rex::path::join(rex::engine::instance()->data_root(), rex::settings::instance()->get_string("StartScene"));
+		REX_INFO(LogRegina, "Loading {}", start_scene);
+
+		if (!rex::vfs::instance()->is_file(start_scene))
+		{
+			REX_ERROR(LogRegina, "Start scene {} does not exist", rex::quoted(start_scene));
+			return;
+		}
+
+		rex::Map* active_map = rex::asset_db::instance()->load_from_json<rex::Map>(start_scene);
+		main_editor_widget->set_active_map(active_map);
+
+		m_active_widget = rsl::move(main_editor_widget);
 	}
 
 	// Project management

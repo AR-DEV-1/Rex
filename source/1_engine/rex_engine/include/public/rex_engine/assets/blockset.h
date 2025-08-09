@@ -3,6 +3,7 @@
 #include "rex_engine/assets/asset.h"
 
 #include "rex_engine/engine/types.h"
+#include "rex_engine/assets/tileset.h"
 
 #include "rex_std/memory.h"
 #include "rex_std/bonus/math.h"

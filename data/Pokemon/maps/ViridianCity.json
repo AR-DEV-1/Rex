@@ -1,4 +1,5 @@
 {
+  "type_name": "Map",
   "name": "VIRIDIAN CITY",
   "width": 20,
   "height": 18,
@@ -9,12 +10,12 @@
     {
       "direction": "North",
       "map": "Pokemon\\maps\\route2.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "South",
       "map": "Pokemon\\maps\\route1.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "West",

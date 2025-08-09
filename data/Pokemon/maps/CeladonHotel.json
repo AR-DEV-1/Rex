@@ -2,7 +2,7 @@
   "name": "CeladonHotel",
   "width": 7,
   "height": 4,
-  "blockset": "Pokemon\\tilesets\\POKECENTER.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\POKECENTER.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonHotel.blk",
   "border_block_idx": 0,
   "connections": [],

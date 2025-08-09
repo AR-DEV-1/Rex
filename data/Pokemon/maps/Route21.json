@@ -1,7 +1,9 @@
 {
+  "type_name": "Map",
   "name": "SEA ROUTE 21",
   "width": 10,
   "height": 45,
+  "type_name": "Map", 
   "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route21.blk",
   "border_block_idx": 67,

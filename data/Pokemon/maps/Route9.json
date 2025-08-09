@@ -2,19 +2,19 @@
   "name": "ROUTE 9",
   "width": 30,
   "height": 9,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route9.blk",
   "border_block_idx": 44,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\ceruleancity.json",
-      "offset": -4
+      "offset": 2
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route10.json",
-      "offset": 0
+      "offset": 54
     }
   ],
   "objects": [

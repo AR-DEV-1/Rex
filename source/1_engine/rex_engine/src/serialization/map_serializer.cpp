@@ -12,7 +12,7 @@ namespace rex
 	rsl::unique_ptr<Asset> MapSerializer::serialize_from_json(const rex::json::json& jsonContent)
 	{
 		MapDesc map_desc{};
-		map_desc.blocks = vfs::instance()->read_file(jsonContent["map_blocks"]).release_as_array<s8>();
+		//map_desc.blocks = vfs::instance()->read_file(jsonContent["map_blocks"]).release_as_array<s8>();
 
 		init_map_header(jsonContent, map_desc);
 		init_connections(jsonContent, map_desc);
@@ -52,17 +52,18 @@ namespace rex
 			connection.direction = rsl::enum_refl::enum_cast<Direction>(conn["direction"].get<rsl::string_view>()).value();
 			connection.map = load_map_header_from_json(json::read_from_file(conn["map"]));
 			connection.offset = conn["offset"]; // is in squares (2x2 tiles)
+			++idx;
 		}
 	}
 	void MapSerializer::init_objects(const json::json& jsonContent, MapDesc& desc)
 	{
-		s32 idx = 0;
-		desc.objects = rsl::make_unique<MapObject[]>(jsonContent["objects"].size());
-		for (const json::json& obj : jsonContent["objects"])
-		{
-			desc.objects[idx].name = obj["name"];
-			++idx;
-		}
+		//s32 idx = 0;
+		//desc.objects = rsl::make_unique<MapObject[]>(jsonContent["objects"].size());
+		//for (const json::json& obj : jsonContent["objects"])
+		//{
+		//	desc.objects[idx]->name = obj["name"];
+		//	++idx;
+		//}
 	}
 	void MapSerializer::init_object_events(const json::json& jsonContent, MapDesc& desc)
 	{
@@ -81,8 +82,8 @@ namespace rex
 		desc.warps = rsl::make_unique<WarpEvent[]>(jsonContent["warps"].size());
 		for (const json::json& warp : jsonContent["warps"])
 		{
-			desc.warps[idx].x = warp["x"];
-			desc.warps[idx].y = warp["y"];
+			desc.warps[idx].pos.x = warp["x"];
+			desc.warps[idx].pos.y = warp["y"];
 			desc.warps[idx].dst_map_id = warp["dst_map_id"];
 			desc.warps[idx].dst_warp_id = warp["dst_warp_id"];
 			++idx;
@@ -94,8 +95,8 @@ namespace rex
 		desc.text_events = rsl::make_unique<TextEvent[]>(jsonContent["bg_events"].size());
 		for (const json::json& evt : jsonContent["bg_events"])
 		{
-			desc.text_events[idx].x = evt["x"];
-			desc.text_events[idx].y = evt["y"];
+			desc.text_events[idx].pos.x = evt["x"];
+			desc.text_events[idx].pos.y = evt["y"];
 			desc.text_events[idx].text = evt["text"];
 			desc.text_events[idx].sign_id = -1;
 			++idx;
@@ -117,8 +118,8 @@ namespace rex
 		MapHeader header{};
 
 		header.name = jsonContent["name"];
-		header.width = jsonContent["width"];
-		header.height = jsonContent["height"];
+		header.width_in_blocks = jsonContent["width"];
+		header.height_in_blocks = jsonContent["height"];
 		header.tileset = asset_db::instance()->load_from_json<Blockset>(jsonContent["blockset"]);
 		header.border_block_idx = jsonContent["border_block_idx"];
 
@@ -158,8 +159,8 @@ namespace rex
 			res = rsl::move(char_evt);
 		}
 
-		res->x = jsonContent["x"];
-		res->y = jsonContent["y"];
+		res->pos.x = jsonContent["x"];
+		res->pos.y = jsonContent["y"];
 		res->sprite_id = jsonContent["sprite"];
 		res->movement = jsonContent["movement"];
 		res->direction = jsonContent["direction"];

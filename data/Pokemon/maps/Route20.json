@@ -2,7 +2,7 @@
   "name": "SEA ROUTE 20",
   "width": 50,
   "height": 9,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route20.blk",
   "border_block_idx": 67,
   "connections": [
@@ -14,7 +14,7 @@
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route19.json",
-      "offset": -18
+      "offset": -36
     }
   ],
   "objects": [

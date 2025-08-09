@@ -53,40 +53,40 @@ namespace rex
 	//	rsl::string name;
 	//};
 
-	//enum class ObjectEventType
-	//{
-	//	Character, // By default
-	//	Item,
-	//	Trainer,
-	//	Pokemon
-	//};
+	enum class ObjectEventType
+	{
+		Character, // By default
+		Item,
+		Trainer,
+		Pokemon
+	};
 
-	//struct ObjectEvent
-	//{
-	//	rsl::pointi8 pos;
-	//	rsl::string text_id;
-	//	rsl::string direction;
-	//	rsl::string movement; // walk/stay
-	//	rsl::string sprite_id;
-	//};
-	//struct CharacterObjectEvent : ObjectEvent
-	//{
-	//	// Has no extra members
-	//};
-	//struct ItemObjectEvent : ObjectEvent
-	//{
-	//	s8 item;
-	//};
-	//struct TrainerObjectEvent : ObjectEvent
-	//{
-	//	s8 trainer_class;
-	//	s8 trainer_number;
-	//};
-	//struct PokemonObjectEvent : ObjectEvent
-	//{
-	//	s8 pokemon_id;
-	//	s8 pokemon_level;
-	//};
+	struct ObjectEvent
+	{
+		rsl::pointi8 pos;
+		rsl::string text_id;
+		rsl::string direction;
+		rsl::string movement; // walk/stay
+		rsl::string sprite_id;
+	};
+	struct CharacterObjectEvent : ObjectEvent
+	{
+		// Has no extra members
+	};
+	struct ItemObjectEvent : ObjectEvent
+	{
+		s8 item;
+	};
+	struct TrainerObjectEvent : ObjectEvent
+	{
+		s8 trainer_class;
+		s8 trainer_number;
+	};
+	struct PokemonObjectEvent : ObjectEvent
+	{
+		s8 pokemon_id;
+		s8 pokemon_level;
+	};
 
 	struct Trainer
 	{
@@ -102,16 +102,13 @@ namespace rex
 		rsl::string name;
 	};
 
-	class MapObject
+	struct MapObject
 	{
-	public:
+		rsl::string name;
+		rsl::string text_id;
+		rsl::string sprite_id;
 
-	private:
-		rsl::string m_name;
-		rsl::string m_text_id;
-		rsl::string m_sprite_id;
-
-		rsl::pointi8 m_pos;
+		rsl::pointi8 pos;
 	};
 
 	enum class MapCharacterMovement
@@ -156,6 +153,10 @@ namespace rex
 	// This is the data that gets saved to disk
 	struct MapDesc
 	{
+		// The map header, holding high level info of the map
+		// This holds all the information to identify the map without needing to load all the objects of the map
+		MapHeader map_header;
+
 		// The connections of a map. This means where a player can walk to from this map without going through a warp
 		rsl::unique_array<MapConnection> connections;
 
@@ -166,8 +167,8 @@ namespace rex
 		// This should be merged with object and text events
 		// An object is "something" in a map the player can interact with
 		//rsl::unique_array<MapObject> objects;
-		//rsl::unique_array<rsl::unique_ptr<ObjectEvent>> object_events;
-		//rsl::unique_array<TextEvent> text_events;
+		rsl::unique_array<rsl::unique_ptr<ObjectEvent>> object_events;
+		rsl::unique_array<TextEvent> text_events;
 
 		// A warp is a space that teleports to the player into another map
 		// A good example of this is a door
@@ -178,10 +179,6 @@ namespace rex
 
 		// The block indices of the map. This is required for rendering
 		rsl::unique_array<u8> blocks;
-
-		// The map header, holding high level info of the map
-		// This holds all the information to identify the map without needing to load all the objects of the map
-		MapHeader map_header;
 	};
 
 	class Map : public Asset
@@ -189,12 +186,14 @@ namespace rex
 	public:
 		Map(MapDesc&& desc);
 
-		s32 width_in_blocks() const;
-		s32 height_in_blocks() const;
-		s32 border_block_idx() const;
+		MapDesc& desc() { return m_desc; }
 
-		const rsl::unique_array<MapConnection>& connections() const;
-		const rsl::unique_array<u8>& blocks() const;
+		//s32 width_in_blocks() const;
+		//s32 height_in_blocks() const;
+		//s32 border_block_idx() const;
+
+		//const rsl::unique_array<MapConnection>& connections() const;
+		//const rsl::unique_array<u8>& blocks() const;
 
 	private:
 		MapDesc m_desc;

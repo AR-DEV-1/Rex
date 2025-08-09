@@ -2,19 +2,19 @@
   "name": "ROUTE 15",
   "width": 30,
   "height": 9,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route15.blk",
   "border_block_idx": 67,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\fuchsiacity.json",
-      "offset": -4
+      "offset": 2
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route14.json",
-      "offset": -18
+      "offset": -36
     }
   ],
   "objects": [

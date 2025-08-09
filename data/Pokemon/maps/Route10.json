@@ -2,7 +2,7 @@
   "name": "ROUTE 10",
   "width": 10,
   "height": 36,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route10.blk",
   "border_block_idx": 44,
   "connections": [
@@ -14,7 +14,7 @@
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route9.json",
-      "offset": 0
+      "offset": -54
     }
   ],
   "objects": [

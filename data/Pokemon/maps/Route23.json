@@ -2,7 +2,7 @@
   "name": "ROUTE 23",
   "width": 10,
   "height": 72,
-  "blockset": "Pokemon\\tilesets\\PLATEAU.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\PLATEAU.json",
   "map_blocks": "Pokemon\\map_blocks\\Route23.blk",
   "border_block_idx": 15,
   "connections": [
@@ -14,7 +14,7 @@
     {
       "direction": "South",
       "map": "Pokemon\\maps\\route22.json",
-      "offset": 0
+      "offset": 16
     }
   ],
   "objects": [

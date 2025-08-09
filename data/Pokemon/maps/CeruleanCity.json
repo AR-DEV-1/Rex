@@ -2,29 +2,29 @@
   "name": "CERULEAN CITY",
   "width": 20,
   "height": 18,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\CeruleanCity.blk",
   "border_block_idx": 15,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\route24.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "South",
       "map": "Pokemon\\maps\\route5.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route4.json",
-      "offset": 4
+      "offset": -2
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route9.json",
-      "offset": 4
+      "offset": -2
     }
   ],
   "objects": [

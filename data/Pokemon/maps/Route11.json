@@ -2,19 +2,19 @@
   "name": "ROUTE 11",
   "width": 30,
   "height": 9,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route11.blk",
   "border_block_idx": 15,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\vermilioncity.json",
-      "offset": -4
+      "offset": 2
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route12.json",
-      "offset": -27
+      "offset": -18
     }
   ],
   "objects": [

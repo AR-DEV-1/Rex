@@ -2,7 +2,7 @@
 
 #include "rex_engine/engine/globals.h"
 
-#include "rex_engine/gfx/rendering/render_pass.h"
+//#include "rex_engine/gfx/rendering/render_pass.h"
 
 namespace rex
 {
@@ -38,18 +38,18 @@ namespace rex
 		class Renderer
 		{
 		public:
-			template <typename T, typename ... Args>
-			T* add_render_pass(Args&& ... args)
-			{
-				rsl::unique_ptr<T> new_pass = rsl::make_unique<T>(rsl::forward<Args>(args)...);
-				T* new_pass_ptr = new_pass.get();
-				m_passes.emplace_back(rsl::move(new_pass_ptr));
+		//	template <typename T, typename ... Args>
+		//	T* add_render_pass(Args&& ... args)
+		//	{
+		//		rsl::unique_ptr<T> new_pass = rsl::make_unique<T>(rsl::forward<Args>(args)...);
+		//		T* new_pass_ptr = new_pass.get();
+		//		m_passes.emplace_back(rsl::move(new_pass_ptr));
 
-				return new_pass_ptr;
-			}
+		//		return new_pass_ptr;
+		//	}
 
-		private:
-			rsl::vector<rsl::unique_ptr<RenderPass>> m_passes;
+		//private:
+		//	rsl::vector<rsl::unique_ptr<RenderPass>> m_passes;
 		};
 		namespace renderer
 		{

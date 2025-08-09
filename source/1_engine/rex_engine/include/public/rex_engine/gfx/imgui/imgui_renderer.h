@@ -27,16 +27,16 @@ namespace rex
       void* platformWindowHandle;
     };
 
-    class ImGuiRenderer : public Renderer
+    class ImGuiRenderer : public LegacyRenderer
     {
     public:
       ImGuiRenderer(const ImGuiRendererCreationInfo& creationInfo);
       ~ImGuiRenderer();
 
       // Prepare a new frame for imgui, enabling users to queue imgui objects
-      void new_frame() override;
+      void new_frame();
       // Render the queued imgui objects
-      void render() override;
+      void render();
 
     private:
       // Init imgui itself

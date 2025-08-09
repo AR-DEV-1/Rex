@@ -2,19 +2,19 @@
   "name": "PEWTER CITY",
   "width": 20,
   "height": 18,
-  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\PewterCity.blk",
   "border_block_idx": 10,
   "connections": [
     {
       "direction": "South",
       "map": "Pokemon\\maps\\route2.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route3.json",
-      "offset": 4
+      "offset": -2
     }
   ],
   "objects": [

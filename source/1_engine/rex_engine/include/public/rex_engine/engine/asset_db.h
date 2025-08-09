@@ -55,6 +55,8 @@ namespace rex
 
 		void unload_all();
 
+		rsl::string_view asset_path(const Asset* asset);
+
 	private:
 		Asset* load_from_json(rsl::type_id_t assetTypeId, rsl::string_view assetPath);
 		Asset* load_from_binary(rsl::type_id_t assetTypeId, rsl::string_view assetPath);
@@ -63,6 +65,7 @@ namespace rex
 	private:
 		rsl::unordered_map<rsl::string_view, rsl::unique_ptr<Serializer>> m_serializers;
 		rsl::unordered_map<rsl::string, rsl::unique_ptr<Asset>> m_path_to_asset;
+		rsl::unordered_map<const Asset*, rsl::string> m_asset_to_path;
 	};
 
 	namespace asset_db
