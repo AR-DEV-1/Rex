@@ -116,21 +116,21 @@ namespace regina
 		// depending on the connection's direction
 		if (conn.direction == rex::Direction::North || conn.direction == rex::Direction::South)
 		{
-			s8 conn_half_width_in_blocks = (conn.map.width_in_blocks / 2);
+			s8 conn_half_width_in_blocks = (conn.map->desc().map_header.width_in_blocks / 2);
 			s8 offsetted_start = mid_point_x - conn_half_width_in_blocks + conn.offset;
 			s32 max_end = /*map->width_in_blocks() +*/ constants::g_map_padding_blocks;
 
 			start = static_cast<s8>(rsl::clamp_min(offsetted_start, 0));
-			end = rex::narrow_cast<s8>(rsl::min(max_end, start + conn.map.width_in_blocks));
+			end = rex::narrow_cast<s8>(rsl::min(max_end, start + conn.map->desc().map_header.width_in_blocks));
 		}
 		else
 		{
-			s8 conn_half_height_in_blocks = (conn.map.height_in_blocks / 2);
+			s8 conn_half_height_in_blocks = (conn.map->desc().map_header.height_in_blocks / 2);
 			s8 offsetted_start = mid_point_y - conn_half_height_in_blocks + conn.offset;
 			s32 max_end = /*map->height_in_blocks() +*/ constants::g_map_padding_blocks;
 
 			start = static_cast<s8>(rsl::clamp_min(offsetted_start, 0));
-			end = rex::narrow_cast<s8>(rsl::min(max_end, start + conn.map.height_in_blocks));
+			end = rex::narrow_cast<s8>(rsl::min(max_end, start + conn.map->desc().map_header.height_in_blocks));
 		}
 
 		// Fill in the rex::Rect8 based on the direction of the connection
@@ -175,13 +175,13 @@ namespace regina
 		s8 projected_point = 0;
 		if (conn.direction == rex::Direction::North || conn.direction == rex::Direction::South)
 		{
-			s8 mid_point_x = conn.map.width_in_blocks / 2 - conn.offset;
+			s8 mid_point_x = conn.map->desc().map_header.width_in_blocks / 2 - conn.offset;
 			s8 offset_from_mid = constants::g_map_padding_blocks;// +(map->width_in_blocks() / 2) - coord.x;
 			projected_point = mid_point_x - offset_from_mid;
 		}
 		else
 		{
-			s8 mid_point_y = conn.map.height_in_blocks / 2 - conn.offset;
+			s8 mid_point_y = conn.map->desc().map_header.height_in_blocks / 2 - conn.offset;
 			s8 offset_from_mid = constants::g_map_padding_blocks;// +(map->height_in_blocks() / 2) - coord.y;
 			projected_point = mid_point_y - offset_from_mid;
 		}
@@ -192,7 +192,7 @@ namespace regina
 		{
 		case rex::Direction::North:
 			res.x = projected_point;
-			res.y = conn.map.height_in_blocks - constants::g_map_padding_blocks + coord.y;
+			res.y = conn.map->desc().map_header.height_in_blocks - constants::g_map_padding_blocks + coord.y;
 			break;
 		case rex::Direction::East:
 			res.x = coord.x - constants::g_map_padding_blocks;// +map->width_in_blocks();
@@ -203,7 +203,7 @@ namespace regina
 			res.y = coord.y - constants::g_map_padding_blocks;// +map->height_in_blocks();
 			break;
 		case rex::Direction::West:
-			res.x = conn.map.width_in_blocks - constants::g_map_padding_blocks + coord.x;
+			res.x = conn.map->desc().map_header.width_in_blocks - constants::g_map_padding_blocks + coord.x;
 			res.y = projected_point;
 			break;
 		}

@@ -10,7 +10,7 @@
 
 namespace rex
 {
-	enum class Direction
+	enum class Direction : s8
 	{
 		North,
 		East,
@@ -27,9 +27,11 @@ namespace rex
 		s8 border_block_idx;									// Index of the block used for the border if no connection blocks are present
 	};
 
+	class Map;
 	struct MapConnection
 	{
-		MapHeader map;
+		Map* map;
+		//MapHeader map;
 		Direction direction;
 		s8 offset;
 	};

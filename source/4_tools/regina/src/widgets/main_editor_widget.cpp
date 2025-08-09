@@ -182,197 +182,36 @@ namespace regina
 
 	void MainEditorWidget::on_new_active_scene()
 	{
-		// This min and max is represented in tiles
-		MinMax tilemap_bounding_box{};
-		//tilemap_bounding_box.min.x = -120;
-		//tilemap_bounding_box.min.y = -234;
-		//tilemap_bounding_box.max.x = 480;
-		//tilemap_bounding_box.max.y = 492;
-
-		//// Final results
-		//tilemap_bounding_box.min.x = 0;
-		//tilemap_bounding_box.min.y = 0;
-		//tilemap_bounding_box.max.y = 680;
-		//tilemap_bounding_box.max.y = 720;
-
-		rsl::vector<MinMax> min_max;
 		if (!is_map_in_tilemap(&m_active_map->desc()))
 		{
+			// 1. Load the active map and all connections recursively for all maps within the current area (eg. load all maps in kanto)
 			load_maps();
-			min_max = build_tilemap();
-			rsl::vector<MinMax> expected_results =
-			{
-				/*MinMax{ rsl::string("CELADON CITY"), {180 ,198 }, {280 ,270 } },
-				MinMax{ rsl::string("CERULEAN CITY"), {320 ,342 }, {400 ,414 } },
-				MinMax{ rsl::string("CINNABAR ISLAND"), {-20 ,-234 }, {20 ,-198 } },
-				MinMax{ rsl::string("FUCHSIA CITY"), {200 ,-126 }, {280 ,-54 } },
-				MinMax{ rsl::string("INDIGO PLATEAU"), {-116 ,428 }, {-76 ,464 } },
-				MinMax{ rsl::string("LAVENDER TOWN"), {520 ,218 }, {560 ,254 } },
-				MinMax{ rsl::string("PALLET TOWN"), {-20 ,-18 }, {20 ,18 } },
-				MinMax{ rsl::string("PEWTER CITY"), {-40 ,306 }, {40 ,378 } },
-				MinMax{ rsl::string("ROUTE 1"), {-20 ,18 }, {20 ,90 } },
-				MinMax{ rsl::string("ROUTE 10"), {520 ,254 }, {560 ,398 } },
-				MinMax{ rsl::string("ROUTE 11"), {400 ,74 }, {520 ,110 } },
-				MinMax{ rsl::string("ROUTE 12"), {520 ,2 }, {560 ,218 } },
-				MinMax{ rsl::string("ROUTE 13"), {440 ,-34 }, {560 ,2 } },
-				MinMax{ rsl::string("ROUTE 14"), {400 ,-106 }, {440 ,2 } },
-				MinMax{ rsl::string("ROUTE 15"), {280 ,-106 }, {400 ,-70 } },
-				MinMax{ rsl::string("ROUTE 16"), {100 ,218 }, {180 ,254 } },
-				MinMax{ rsl::string("ROUTE 17"), {100 ,-70 }, {140 ,218 } },
-				MinMax{ rsl::string("ROUTE 18"), {100 ,-106 }, {200 ,-70 } },
-				MinMax{ rsl::string("ROUTE 2"), {-20 ,162 }, {20 ,306 } },
-				MinMax{ rsl::string("ROUTE 22"), {-120 ,104 }, {-40 ,140 } },
-				MinMax{ rsl::string("ROUTE 23"), {-116 ,140 }, {-76 ,428 } },
-				MinMax{ rsl::string("ROUTE 24"), {340 ,414 }, {380 ,486 } },
-				MinMax{ rsl::string("ROUTE 25"), {380 ,450 }, {500 ,486 } },
-				MinMax{ rsl::string("ROUTE 3"), {40 ,326 }, {180 ,362 } },
-				MinMax{ rsl::string("ROUTE 4"), {140 ,362 }, {320 ,398 } },
-				MinMax{ rsl::string("ROUTE 5"), {340 ,270 }, {380 ,342 } },
-				MinMax{ rsl::string("ROUTE 6"), {340 ,126 }, {380 ,198 } },
-				MinMax{ rsl::string("ROUTE 7"), {280 ,218 }, {320 ,254 } },
-				MinMax{ rsl::string("ROUTE 8"), {400 ,218 }, {520 ,254 } },
-				MinMax{ rsl::string("ROUTE 9"), {400 ,362 }, {520 ,398 } },
-				MinMax{ rsl::string("SAFFRON CITY"), {320 ,198 }, {400 ,270 } },
-				MinMax{ rsl::string("SEA ROUTE 19"), {220 ,-234 }, {260 ,-126 } },
-				MinMax{ rsl::string("SEA ROUTE 20"), {20 ,-234 }, {220 ,-198 } },
-				MinMax{ rsl::string("SEA ROUTE 21"), {-20 ,-198 }, {20 ,-18 } },
-				MinMax{ rsl::string("VERMILION CITY"), {320 ,54 }, {400 ,126 } },
-				MinMax{ rsl::string("VIRIDIAN CITY"), {-40 ,90 }, {40 ,162 } },*/
 
-				MinMax{rsl::string("PALLET TOWN"), {100, 216 }, {140, 252 }},
-				MinMax{rsl::string("SEA ROUTE 21"), {100, 36 }, {140, 216 }},
-				MinMax{rsl::string("CINNABAR ISLAND"), {100, 0 }, {140, 36 }},
-				MinMax{rsl::string("SEA ROUTE 20"), {140, 0 }, {340, 36 }},
-				MinMax{rsl::string("SEA ROUTE 19"), {340, 0 }, {380, 108 }},
-				MinMax{rsl::string("FUCHSIA CITY"), {320, 108 }, {400, 180 }},
-				MinMax{rsl::string("ROUTE 15"), {400, 128 }, {520, 164 }},
-				MinMax{rsl::string("ROUTE 14"), {520, 128 }, {560, 236 }},
-				MinMax{rsl::string("ROUTE 13"), {560, 200 }, {680, 236 }},
-				MinMax{rsl::string("ROUTE 12"), {640, 236 }, {680, 452 }},
-				MinMax{rsl::string("ROUTE 11"), {520, 308 }, {640, 344 }},
-				MinMax{rsl::string("VERMILION CITY"), {440, 288 }, {520, 360 }},
-				MinMax{rsl::string("ROUTE 6"), {460, 360 }, {500, 432 }},
-				MinMax{rsl::string("SAFFRON CITY"), {440, 432 }, {520, 504 }},
-				MinMax{rsl::string("ROUTE 8"), {520, 452 }, {640, 488 }},
-				MinMax{rsl::string("LAVENDER TOWN"), {640, 452 }, {680, 488 }},
-				MinMax{rsl::string("ROUTE 10"), {640, 488 }, {680, 632 }},
-				MinMax{rsl::string("ROUTE 9"), {520, 596 }, {640, 632 }},
-				MinMax{rsl::string("CERULEAN CITY"), {440, 576 }, {520, 648 }},
-				MinMax{rsl::string("ROUTE 4"), {260, 596 }, {440, 632 }},
-				MinMax{rsl::string("ROUTE 3"), {160, 560 }, {300, 596 }},
-				MinMax{rsl::string("PEWTER CITY"), {80, 540 }, {160, 612 }},
-				MinMax{rsl::string("ROUTE 2"), {100, 396 }, {140, 540 }},
-				MinMax{rsl::string("VIRIDIAN CITY"), {80, 324 }, {160, 396 }},
-				MinMax{rsl::string("ROUTE 22"), {0, 338 }, {80, 374 }},
-				MinMax{rsl::string("ROUTE 23"), {4, 374 }, {44, 662 }},
-				MinMax{rsl::string("INDIGO PLATEAU"), {4, 662 }, {44, 698 }},
-				MinMax{rsl::string("ROUTE 1"), {100, 252 }, {140, 324 }},
-				MinMax{rsl::string("ROUTE 5"), {460, 504 }, {500, 576 }},
-				MinMax{rsl::string("ROUTE 24"), {460, 648 }, {500, 720 }},
-				MinMax{rsl::string("ROUTE 25"), {500, 684 }, {620, 720 }},
-				MinMax{rsl::string("ROUTE 7"), {400, 452 }, {440, 488 }},
-				MinMax{rsl::string("CELADON CITY"), {300, 432 }, {400, 504 }},
-				MinMax{rsl::string("ROUTE 16"), {220, 452 }, {300, 488 }},
-				MinMax{rsl::string("ROUTE 17"), {220, 164 }, {260, 452 }},
-				MinMax{rsl::string("ROUTE 18"), {220, 128 }, {320, 164 }}
-			};
-
-			
-			for (MinMax minmax : expected_results)
+			// 2. Calculate the AABB for each map, converted to absolute coordinates and cache these
+			build_tilemap();
+			// The min max results are stored relative from the active map
+			// We need to convert them to absolute positions
+			// We do this by getting the lowest possible point in the relative position
+			// and converting that point to be our origin
+			rsl::pointi32 min_pos{};
+			for (const auto& [name, minmax] : m_name_to_aabb)
 			{
-				tilemap_bounding_box.min.x = rsl::min(tilemap_bounding_box.min.x, minmax.min.x);
-				tilemap_bounding_box.min.y = rsl::min(tilemap_bounding_box.min.y, minmax.min.y);
-				tilemap_bounding_box.max.x = rsl::max(tilemap_bounding_box.max.x, minmax.max.x);
-				tilemap_bounding_box.max.y = rsl::max(tilemap_bounding_box.max.y, minmax.max.y);
-			}
-			MinMax rel_tilemap_bounding_box{};
-			for (MinMax minmax : min_max)
-			{
-				rel_tilemap_bounding_box.min.x = rsl::min(rel_tilemap_bounding_box.min.x, minmax.min.x);
-				rel_tilemap_bounding_box.min.y = rsl::min(rel_tilemap_bounding_box.min.y, minmax.min.y);
-				rel_tilemap_bounding_box.max.x = rsl::max(rel_tilemap_bounding_box.max.x, minmax.max.x);
-				rel_tilemap_bounding_box.max.y = rsl::max(rel_tilemap_bounding_box.max.y, minmax.max.y);
-			}
-			//for (MinMax& res : expected_results)
-			//{
-			//	res.min.x -= tilemap_bounding_box.min.x;
-			//	res.min.y -= tilemap_bounding_box.min.y;
-			//	res.max.x -= tilemap_bounding_box.min.x;
-			//	res.max.y -= tilemap_bounding_box.min.y;
-			//}
-			for (MinMax& minmax : min_max)
-			{
-				minmax.min.x -= rel_tilemap_bounding_box.min.x;
-				minmax.min.y -= rel_tilemap_bounding_box.min.y;
-				minmax.max.x -= rel_tilemap_bounding_box.min.x;
-				minmax.max.y -= rel_tilemap_bounding_box.min.y;
-
-				auto it = std::find_if(expected_results.cbegin(), expected_results.cend(), [&](const MinMax& minmax2) { return minmax2.name == minmax.name; });
-				if (it->min != minmax.min)
-				{
-					REX_INFO(LogMainEditor, "min differs for {}", minmax.name_with_conn);
-					REX_INFO(LogMainEditor, "expects: ({}, {})", it->min.x, it->min.y);
-					REX_INFO(LogMainEditor, "got: ({}, {})", minmax.min.x, minmax.min.y);
-					REX_INFO(LogMainEditor, "diff: ({}, {})", minmax.min.x - it->min.x, minmax.min.y - it->min.y);
-				}
-				if (it->max != minmax.max)
-				{
-					REX_INFO(LogMainEditor, "max differs for {}", minmax.name_with_conn);
-					REX_INFO(LogMainEditor, "expects: ({}, {})", it->max.x, it->max.y);
-					REX_INFO(LogMainEditor, "got: ({}, {})", minmax.max.x, minmax.max.y);
-					REX_INFO(LogMainEditor, "diff: ({}, {})", minmax.max.x - it->max.x, minmax.max.y - it->max.y);
-				}
+				min_pos.x = rsl::min(min_pos.x, minmax.min.x);
+				min_pos.y = rsl::min(min_pos.y, minmax.min.y);
 			}
 
-			
+			// Now go over all the minmax results and convert their coordinates
+			for (auto& [name, minmax] : m_name_to_aabb)
+			{
+				minmax.min.x -= min_pos.x;
+				minmax.min.y -= min_pos.y;
+				minmax.max.x -= min_pos.x;
+				minmax.max.y -= min_pos.y;
+			}
 		}
 
-		// Expected results
-		// { name = "CELADON CITY" min = { x = 180 y = 198 } max = { x = 280 y = 270 } }	regina::MinMax
-		// { name = "CERULEAN CITY" min = {x = 320 y = 342 } max = {x = 400 y = 414 } }	regina::MinMax
-		// { name = "CINNABAR ISLAND" min = {x = -20 y = -234 } max = {x = 20 y = -198 } }	regina::MinMax
-		// { name = "FUCHSIA CITY" min = {x = 200 y = -128 } max = {x = 280 y = -58 } }	regina::MinMax
-		// { name = "INDIGO PLATEAU" min = {x = -118 y = 434 } max = {x = -78 y = 470 } }	regina::MinMax
-		// { name = "LAVENDER TOWN" min = {x = 520 y = 218 } max = {x = 560 y = 254 } }	regina::MinMax
-		// { name = "PALLET TOWN" min = {x = -20 y = -18 } max = {x = 20 y = 18 } }	regina::MinMax
-		// { name = "PEWTER CITY" min = {x = -40 y = 306 } max = {x = 40 y = 378 } }	regina::MinMax
-		// { name = "ROUTE 1" min = {x = -20 y = 18 } max = {x = 20 y = 90 } }	regina::MinMax
-		// { name = "ROUTE 10" min = {x = 520 y = 254 } max = {x = 560 y = 398 } }	regina::MinMax
-		// { name = "ROUTE 11" min = {x = 400 y = 74 } max = {x = 520 y = 108 } }	regina::MinMax
-		// { name = "ROUTE 12" min = {x = 520 y = 2 } max = {x = 560 y = 218 } }	regina::MinMax
-		// { name = "ROUTE 13" min = {x = 440 y = -34 } max = {x = 560 y = 2 } }	regina::MinMax
-		// { name = "ROUTE 14" min = {x = 400 y = -104 } max = {x = 440 y = 2 } }	regina::MinMax
-		// { name = "ROUTE 15" min = {x = 280 y = -104 } max = {x = 400 y = -68 } }	regina::MinMax
-		// { name = "ROUTE 16" min = {x = 100 y = 218 } max = {x = 180 y = 254 } }	regina::MinMax
-		// { name = "ROUTE 17" min = {x = 100 y = -68 } max = {x = 140 y = -16 } }	regina::MinMax
-		// { name = "ROUTE 18" min = {x = 100 y = -104 } max = {x = 194 y = -68 } }	regina::MinMax
-		// { name = "ROUTE 2" min = {x = -20 y = 162 } max = {x = 20 y = 306 } }	regina::MinMax
-		// { name = "ROUTE 22" min = {x = -120 y = 104 } max = {x = -40 y = 140 } }	regina::MinMax
-		// { name = "ROUTE 23" min = {x = -116 y = 140 } max = {x = -96 y = 428 } }	regina::MinMax
-		// { name = "ROUTE 24" min = {x = 340 y = 414 } max = {x = 380 y = 486 } }	regina::MinMax
-		// { name = "ROUTE 25" min = {x = 380 y = 450 } max = {x = 500 y = 486 } }	regina::MinMax
-		// { name = "ROUTE 3" min = {x = 40 y = 326 } max = {x = 180 y = 362 } }	regina::MinMax
-		// { name = "ROUTE 4" min = {x = 140 y = 362 } max = {x = 320 y = 398 } }	regina::MinMax
-		// { name = "ROUTE 5" min = {x = 340 y = 270 } max = {x = 380 y = 342 } }	regina::MinMax
-		// { name = "ROUTE 6" min = {x = 340 y = 126 } max = {x = 380 y = 198 } }	regina::MinMax
-		// { name = "ROUTE 7" min = {x = 280 y = 28 } max = {x = 320 y = 254 } }	regina::MinMax
-		// { name = "ROUTE 8" min = {x = 400 y = 218 } max = {x = 520 y = 254 } }	regina::MinMax
-		// { name = "ROUTE 9" min = {x = 400 y = 362 } max = {x = 520 y = 398 } }	regina::MinMax
-		// { name = "SAFFRON CITY" min = {x = 320 y = 198 } max = {x = 400 y = 270 } }	regina::MinMax
-		// { name = "SEA ROUTE 19" min = {x = 220 y = -234 } max = {x = 260 y = -180 } }	regina::MinMax
-		// { name = "SEA ROUTE 20" min = {x = -10 y = -234 } max = {x = 190 y = -198 } }	regina::MinMax
-		// { name = "SEA ROUTE 21" min = {x = -20 y = -198 } max = {x = 20 y = -18 } }	regina::MinMax
-		// { name = "VERMILION CITY" min = {x = 320 y = 43 } max = {x = 400 y = 115 } }	regina::MinMax
-		// { name = "VIRIDIAN CITY" min = {x = -40 y = 90 } max = {x = 40 y = 162 } }	regina::MinMax
-
-		tilemap_bounding_box.max.x -= tilemap_bounding_box.min.x;
-		tilemap_bounding_box.min.x -= tilemap_bounding_box.min.x;
-
-		tilemap_bounding_box.max.y -= tilemap_bounding_box.min.y;
-		tilemap_bounding_box.min.y -= tilemap_bounding_box.min.y;
-
-
-		rsl::pointi32 pos_in_tilemap = find_map_pos_in_tilemap(&m_active_map->desc());
+		// 3. Move the camera to the active map
+		rsl::pointi32 pos_in_tilemap = m_name_to_aabb.at(m_active_map->desc().map_header.name).min;
 		move_camera_to_pos(pos_in_tilemap);
 	}
 	void MainEditorWidget::add_new_viewport()
@@ -416,11 +255,14 @@ namespace regina
 		{
 			rsl::string current_node = rsl::move(open_nodes.back());
 			open_nodes.pop_back();
+
+			// Do not reload a map if it's already progressed
 			if (rsl::find(closed_nodes.cbegin(), closed_nodes.cend(), current_node) != closed_nodes.cend())
 			{
 				continue;
 			}
 
+			// Load a map and add all its connections to the open node
 			MapJson map = load_map(current_node);
 			for (const MapConnectionJson& conn : map.connections)
 			{
@@ -429,23 +271,28 @@ namespace regina
 
 			m_map_jsons.push_back(rsl::move(map));
 			m_maps.push_back(rex::asset_db::instance()->load_from_json<rex::Map>(current_node));
+
+			for (const rex::MapConnection& conn : m_maps.back()->desc().connections)
+			{
+				rex::asset_db::instance()->hydra_asset(conn.map);
+			}
+
 			closed_nodes.push_back(current_node);
 		}
 	}
 
-	rsl::vector<MinMax> MainEditorWidget::build_tilemap()
+	void MainEditorWidget::build_tilemap()
 	{
 		struct MapWithPos
 		{
 			const rex::MapDesc* desc;
 			rsl::pointi32 pos;
-			const rex::MapDesc* parent;
 		};
 		rsl::pointi32 start_pos{};
 		std::vector<MapWithPos> open_nodes;
 
-		open_nodes.push_back({ &m_active_map->desc(), start_pos, nullptr});
-		rsl::vector<MinMax> map_rects{};
+		open_nodes.push_back({ &m_active_map->desc(), start_pos});
+		m_name_to_aabb.clear();
 
 		std::vector<MapWithPos> closed_nodes;
 		rsl::unordered_map<rsl::string_view, const rex::MapDesc*> name_to_map;
@@ -468,11 +315,7 @@ namespace regina
 
 			// 1. calculate bounding box of current map
 			MinMax map_rect = calc_map_rect(current_node.desc->map_header, current_node.pos);
-			if (current_node.parent)
-			{
-				map_rect.name_with_conn = rsl::string(rsl::format("{} -> {}", current_node.parent->map_header.name, current_node.desc->map_header.name));
-			}
-			map_rects.push_back(map_rect);
+			m_name_to_aabb.emplace(current_node.desc->map_header.name, map_rect);
 
 			// 2. add the map itself to the closed nodes
 			closed_nodes.push_back(current_node);
@@ -482,7 +325,7 @@ namespace regina
 			{
 				auto closed_node_it = std::find_if(closed_nodes.cbegin(), closed_nodes.cend(), [&](const MapWithPos& mapWithPos) 
 					{
-						return mapWithPos.desc->map_header.name == conn.map.name;
+						return mapWithPos.desc->map_header.name == conn.map->desc().map_header.name;
 					});
 				if (closed_node_it != closed_nodes.cend())
 				{
@@ -491,7 +334,7 @@ namespace regina
 
 				auto map_desc_it = std::find_if(m_maps.cbegin(), m_maps.cend(), [&](rex::Map* map) 
 					{
-						return map->desc().map_header.name == conn.map.name;
+						return map->desc().map_header.name == conn.map->desc().map_header.name;
 					});
 
 				const rex::MapDesc* conn_map = &(*map_desc_it)->desc();
@@ -500,8 +343,8 @@ namespace regina
 					const s32 tiles_per_block = 4;
 					s32 half_width_in_tiles = (current_node.desc->map_header.width_in_blocks * tiles_per_block / 2);
 					s32 half_height_in_tiles = (current_node.desc->map_header.height_in_blocks * tiles_per_block / 2);
-					s32 half_conn_width_in_tiles = (conn.map.width_in_blocks * tiles_per_block / 2);
-					s32 half_conn_height_in_tiles = (conn.map.height_in_blocks * tiles_per_block / 2);
+					s32 half_conn_width_in_tiles = (conn.map->desc().map_header.width_in_blocks * tiles_per_block / 2);
+					s32 half_conn_height_in_tiles = (conn.map->desc().map_header.height_in_blocks * tiles_per_block / 2);
 					rsl::pointi32 conn_pos;
 					if (conn.direction == rex::Direction::North)
 					{
@@ -523,12 +366,10 @@ namespace regina
 					{
 						conn_pos = { start_pos.x - half_width_in_tiles - half_conn_width_in_tiles, start_pos.y - conn.offset}; // offsets are stored in tiles
 					}
-					open_nodes.push_back({ conn_map, conn_pos, current_node.desc });
+					open_nodes.push_back({ conn_map, conn_pos });
 				}
 			}
 		}
-
-		return map_rects;
 	}
 
 	MinMax MainEditorWidget::calc_map_rect(const rex::MapHeader& map, rsl::pointi32 startPos)
@@ -539,7 +380,6 @@ namespace regina
 		s32 half_height_in_tiles = (map.height_in_blocks * tiles_per_block / 2);
 
 		MinMax res{};
-		res.name = map.name;
 		res.min.x = -half_width_in_tiles + startPos.x;
 		res.min.y = -half_height_in_tiles + startPos.y;
 		res.max.x = half_width_in_tiles + startPos.x;
@@ -611,10 +451,6 @@ namespace regina
 		return map;
 	}
 
-	rsl::pointi32 MainEditorWidget::find_map_pos_in_tilemap(const rex::MapDesc* map)
-	{
-		return {};
-	}
 	void MainEditorWidget::move_camera_to_pos(rsl::pointi32 pos)
 	{
 

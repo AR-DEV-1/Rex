@@ -14,7 +14,7 @@
 
 namespace rex
 {
-	rsl::unique_ptr<Asset> BlocksetSerializer::serialize_from_json(const rex::json::json& jsonContent)
+	rsl::unique_ptr<Asset> BlocksetSerializer::serialize_from_json(const rex::json::json& jsonContent, LoadFlags loadFlags)
 	{
 		rsl::string_view tileset_path = jsonContent["tileset"];
 		rsl::string_view blockset_path = jsonContent["blockset"];

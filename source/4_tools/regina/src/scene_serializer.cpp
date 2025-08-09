@@ -4,7 +4,7 @@
 
 namespace regina
 {
-	rsl::unique_ptr<rex::Asset> SceneSerializer::serialize_from_json(const rex::json::json& jsonContent)
+	rsl::unique_ptr<rex::Asset> SceneSerializer::serialize_from_json(const rex::json::json& jsonContent, rex::LoadFlags loadFlags)
 	{
 		rsl::string_view name = jsonContent["name"];
 

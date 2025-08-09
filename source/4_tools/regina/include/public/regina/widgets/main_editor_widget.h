@@ -15,10 +15,8 @@ namespace regina
 {
 	struct MinMax
 	{
-		rsl::string name;
 		rsl::pointi32 min;
 		rsl::pointi32 max;
-		rsl::string name_with_conn;
 	};
 
 	struct MapConnectionJson
@@ -98,8 +96,7 @@ namespace regina
 
 		bool is_map_in_tilemap(const rex::MapDesc* map);
 		void load_maps();
-		rsl::vector<MinMax> build_tilemap();
-		rsl::pointi32 find_map_pos_in_tilemap(const rex::MapDesc* map);
+		void build_tilemap();
 		void move_camera_to_pos(rsl::pointi32 pos);
 		MinMax calc_map_rect(const rex::MapHeader& map, rsl::pointi32 startPos);
 
@@ -123,5 +120,6 @@ namespace regina
 		std::vector<MapJson> m_map_jsons;
 		std::vector<rex::Map*> m_maps;
 		rsl::unordered_map<rsl::string, const rex::MapDesc*> m_name_to_map;
+		rsl::unordered_map<rsl::string, MinMax> m_name_to_aabb;
 	};
 }

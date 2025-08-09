@@ -6,7 +6,7 @@
 
 namespace rex
 {
-	rsl::unique_ptr<Asset> TextureSerializer::serialize_from_json(const rex::json::json& jsonContent)
+	rsl::unique_ptr<Asset> TextureSerializer::serialize_from_json(const rex::json::json& jsonContent, LoadFlags loadFlags)
 	{
 		REX_ASSERT("Textures cannot be loaded from json as they are binary assets");
 		return nullptr;

@@ -14,12 +14,17 @@
 namespace rex
 {
 	// Asset dependency tracking should not be done in asset DB
+	struct AssetMetaData
+	{
+		rsl::string path;
+		bool is_partially_loaded;
+	};
 
 	class AssetDb
 	{
 	public:
 		template <typename T>
-		T* load(rsl::string_view assetPath)
+		T* load(rsl::string_view assetPath, LoadFlags loadFlags = LoadFlags::None)
 		{
 			if (path::extension(assetPath) == ".json")
 			{
@@ -32,17 +37,27 @@ namespace rex
 		}
 
 		template <typename T>
-		T* load_from_json(rsl::string_view assetPath)
+		T* load_from_json(rsl::string_view assetPath, LoadFlags loadFlags = LoadFlags::None)
 		{
 			scratch_string fullpath = rex::vfs::instance()->abs_path(assetPath);
-			return static_cast<T*>(load_from_json(rsl::type_id<T>(), fullpath));
+			fullpath.replace("\\", "/");
+			rsl::to_lower(fullpath.cbegin(), fullpath.begin(), fullpath.length());
+			return static_cast<T*>(load_from_json(rsl::type_id<T>(), fullpath, loadFlags));
 		}
 
 		template <typename T>
-		T* load_from_binary(rsl::string_view assetPath)
+		T* load_from_binary(rsl::string_view assetPath, LoadFlags loadFlags = LoadFlags::None)
 		{
 			scratch_string fullpath = rex::vfs::instance()->abs_path(assetPath);
-			return static_cast<T*>(load_from_binary(rsl::type_id<T>(), fullpath));
+			fullpath.replace("\\", "/");
+			rsl::to_lower(fullpath.cbegin(), fullpath.begin(), fullpath.length());
+			return static_cast<T*>(load_from_binary(rsl::type_id<T>(), fullpath, loadFlags));
+		}
+
+		template <typename T>
+		void hydra_asset(T* asset)
+		{
+			hydra_asset(rsl::type_id<T>(), asset);
 		}
 
 		template <typename T>
@@ -58,14 +73,17 @@ namespace rex
 		rsl::string_view asset_path(const Asset* asset);
 
 	private:
-		Asset* load_from_json(rsl::type_id_t assetTypeId, rsl::string_view assetPath);
-		Asset* load_from_binary(rsl::type_id_t assetTypeId, rsl::string_view assetPath);
-		Asset* lookup_cached_asset(rsl::string_view assetPath);
+		Asset* load_from_json(rsl::type_id_t assetTypeId, rsl::string_view assetPath, LoadFlags loadFlags);
+		Asset* load_from_binary(rsl::type_id_t assetTypeId, rsl::string_view assetPath, LoadFlags loadFlags);
+		Asset* lookup_cached_asset(rsl::string_view assetPath, LoadFlags loadFlags);
+		void hydra_asset(rsl::type_id_t assetTypeId, Asset* asset);
+		bool is_partially_loaded(rsl::string_view assetPath);
+		bool is_partially_loaded(const Asset* asset);
 
 	private:
 		rsl::unordered_map<rsl::string_view, rsl::unique_ptr<Serializer>> m_serializers;
 		rsl::unordered_map<rsl::string, rsl::unique_ptr<Asset>> m_path_to_asset;
-		rsl::unordered_map<const Asset*, rsl::string> m_asset_to_path;
+		rsl::unordered_map<const Asset*, AssetMetaData> m_asset_to_metadata;
 	};
 
 	namespace asset_db

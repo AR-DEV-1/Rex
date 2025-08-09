@@ -7,7 +7,7 @@ namespace regina
 	class SceneSerializer : public rex::Serializer
 	{
 	public:
-		rsl::unique_ptr<rex::Asset> serialize_from_json(const rex::json::json& jsonContent) override;
+		rsl::unique_ptr<rex::Asset> serialize_from_json(const rex::json::json& jsonContent, rex::LoadFlags loadFlags) override;
 		rsl::unique_ptr<rex::Asset> serialize_from_binary(rex::memory::BlobView content) override;
 
 		rex::json::json serialize_to_json(rex::Asset* asset) override;

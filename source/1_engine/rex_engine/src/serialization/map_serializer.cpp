@@ -9,18 +9,15 @@
 
 namespace rex
 {
-	rsl::unique_ptr<Asset> MapSerializer::serialize_from_json(const rex::json::json& jsonContent)
+	rsl::unique_ptr<Asset> MapSerializer::serialize_from_json(const rex::json::json& jsonContent, LoadFlags loadFlags)
 	{
 		MapDesc map_desc{};
-		//map_desc.blocks = vfs::instance()->read_file(jsonContent["map_blocks"]).release_as_array<s8>();
 
 		init_map_header(jsonContent, map_desc);
-		init_connections(jsonContent, map_desc);
-		init_objects(jsonContent, map_desc);
-		init_object_events(jsonContent, map_desc);
-		init_warps(jsonContent, map_desc);
-		init_text_events(jsonContent, map_desc);
-		init_scripts(jsonContent, map_desc);
+		if (!rsl::has_flag(loadFlags, LoadFlags::PartialLoad))
+		{
+			hydrate_desc(jsonContent, map_desc);
+		}
 
 		return rsl::make_unique<Map>(rsl::move(map_desc));
 	}
@@ -29,6 +26,23 @@ namespace rex
 		return nullptr;
 	}
 
+	void MapSerializer::hydrate_asset(Asset* asset, const rex::json::json& jsonContent)
+	{
+		// Destroy the map at the location provided
+		Map* map = static_cast<Map*>(asset);
+		rsl::destroy_at(map);
+
+		// Initialize the map
+		MapDesc map_desc{};
+		init_map_header(jsonContent, map_desc);
+		hydrate_desc(jsonContent, map_desc);
+
+		// Construct a new map object at the old asset's location
+		rsl::construct_at(map, rsl::move(map_desc));
+	}
+	void MapSerializer::hydrate_asset(Asset* asset, memory::BlobView content)
+	{}
+
 	rex::json::json MapSerializer::serialize_to_json(Asset* asset)
 	{
 		return rex::json::json{};
@@ -36,6 +50,16 @@ namespace rex
 	rex::memory::Blob MapSerializer::serialize_to_binary(Asset* asset)
 	{
 		return rex::memory::Blob{ };
+	}
+
+	void MapSerializer::hydrate_desc(const json::json& jsonContent, MapDesc& desc)
+	{
+		init_connections(jsonContent, desc);
+		init_objects(jsonContent, desc);
+		init_object_events(jsonContent, desc);
+		init_warps(jsonContent, desc);
+		init_text_events(jsonContent, desc);
+		init_scripts(jsonContent, desc);
 	}
 
 	void MapSerializer::init_map_header(const json::json& jsonContent, MapDesc& desc)
@@ -50,8 +74,9 @@ namespace rex
 		{
 			MapConnection& connection = desc.connections[idx];
 			connection.direction = rsl::enum_refl::enum_cast<Direction>(conn["direction"].get<rsl::string_view>()).value();
-			connection.map = load_map_header_from_json(json::read_from_file(conn["map"]));
 			connection.offset = conn["offset"]; // is in squares (2x2 tiles)
+			connection.map = asset_db::instance()->load_from_json<Map>(conn["map"], LoadFlags::PartialLoad);
+			//connection.map = load_map_header_from_json(json::read_from_file(conn["map"]));
 			++idx;
 		}
 	}
