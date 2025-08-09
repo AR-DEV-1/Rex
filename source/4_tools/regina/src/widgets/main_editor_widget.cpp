@@ -202,7 +202,7 @@ namespace regina
 			min_max = build_tilemap();
 			rsl::vector<MinMax> expected_results =
 			{
-				MinMax{ rsl::string("CELADON CITY"), {180 ,198 }, {280 ,270 } },
+				/*MinMax{ rsl::string("CELADON CITY"), {180 ,198 }, {280 ,270 } },
 				MinMax{ rsl::string("CERULEAN CITY"), {320 ,342 }, {400 ,414 } },
 				MinMax{ rsl::string("CINNABAR ISLAND"), {-20 ,-234 }, {20 ,-198 } },
 				MinMax{ rsl::string("FUCHSIA CITY"), {200 ,-126 }, {280 ,-54 } },
@@ -237,11 +237,76 @@ namespace regina
 				MinMax{ rsl::string("SEA ROUTE 20"), {20 ,-234 }, {220 ,-198 } },
 				MinMax{ rsl::string("SEA ROUTE 21"), {-20 ,-198 }, {20 ,-18 } },
 				MinMax{ rsl::string("VERMILION CITY"), {320 ,54 }, {400 ,126 } },
-				MinMax{ rsl::string("VIRIDIAN CITY"), {-40 ,90 }, {40 ,162 } },
+				MinMax{ rsl::string("VIRIDIAN CITY"), {-40 ,90 }, {40 ,162 } },*/
+
+				MinMax{rsl::string("PALLET TOWN"), {100, 216 }, {140, 252 }},
+				MinMax{rsl::string("SEA ROUTE 21"), {100, 36 }, {140, 216 }},
+				MinMax{rsl::string("CINNABAR ISLAND"), {100, 0 }, {140, 36 }},
+				MinMax{rsl::string("SEA ROUTE 20"), {140, 0 }, {340, 36 }},
+				MinMax{rsl::string("SEA ROUTE 19"), {340, 0 }, {380, 108 }},
+				MinMax{rsl::string("FUCHSIA CITY"), {320, 108 }, {400, 180 }},
+				MinMax{rsl::string("ROUTE 15"), {400, 128 }, {520, 164 }},
+				MinMax{rsl::string("ROUTE 14"), {520, 128 }, {560, 236 }},
+				MinMax{rsl::string("ROUTE 13"), {560, 200 }, {680, 236 }},
+				MinMax{rsl::string("ROUTE 12"), {640, 236 }, {680, 452 }},
+				MinMax{rsl::string("ROUTE 11"), {520, 308 }, {640, 344 }},
+				MinMax{rsl::string("VERMILION CITY"), {440, 288 }, {520, 360 }},
+				MinMax{rsl::string("ROUTE 6"), {460, 360 }, {500, 432 }},
+				MinMax{rsl::string("SAFFRON CITY"), {440, 432 }, {520, 504 }},
+				MinMax{rsl::string("ROUTE 8"), {520, 452 }, {640, 488 }},
+				MinMax{rsl::string("LAVENDER TOWN"), {640, 452 }, {680, 488 }},
+				MinMax{rsl::string("ROUTE 10"), {640, 488 }, {680, 632 }},
+				MinMax{rsl::string("ROUTE 9"), {520, 596 }, {640, 632 }},
+				MinMax{rsl::string("CERULEAN CITY"), {440, 576 }, {520, 648 }},
+				MinMax{rsl::string("ROUTE 4"), {260, 596 }, {440, 632 }},
+				MinMax{rsl::string("ROUTE 3"), {160, 560 }, {300, 596 }},
+				MinMax{rsl::string("PEWTER CITY"), {80, 540 }, {160, 612 }},
+				MinMax{rsl::string("ROUTE 2"), {100, 396 }, {140, 540 }},
+				MinMax{rsl::string("VIRIDIAN CITY"), {80, 324 }, {160, 396 }},
+				MinMax{rsl::string("ROUTE 22"), {0, 338 }, {80, 374 }},
+				MinMax{rsl::string("ROUTE 23"), {4, 374 }, {44, 662 }},
+				MinMax{rsl::string("INDIGO PLATEAU"), {4, 662 }, {44, 698 }},
+				MinMax{rsl::string("ROUTE 1"), {100, 252 }, {140, 324 }},
+				MinMax{rsl::string("ROUTE 5"), {460, 504 }, {500, 576 }},
+				MinMax{rsl::string("ROUTE 24"), {460, 648 }, {500, 720 }},
+				MinMax{rsl::string("ROUTE 25"), {500, 684 }, {620, 720 }},
+				MinMax{rsl::string("ROUTE 7"), {400, 452 }, {440, 488 }},
+				MinMax{rsl::string("CELADON CITY"), {300, 432 }, {400, 504 }},
+				MinMax{rsl::string("ROUTE 16"), {220, 452 }, {300, 488 }},
+				MinMax{rsl::string("ROUTE 17"), {220, 164 }, {260, 452 }},
+				MinMax{rsl::string("ROUTE 18"), {220, 128 }, {320, 164 }}
 			};
 
+			
+			for (MinMax minmax : expected_results)
+			{
+				tilemap_bounding_box.min.x = rsl::min(tilemap_bounding_box.min.x, minmax.min.x);
+				tilemap_bounding_box.min.y = rsl::min(tilemap_bounding_box.min.y, minmax.min.y);
+				tilemap_bounding_box.max.x = rsl::max(tilemap_bounding_box.max.x, minmax.max.x);
+				tilemap_bounding_box.max.y = rsl::max(tilemap_bounding_box.max.y, minmax.max.y);
+			}
+			MinMax rel_tilemap_bounding_box{};
 			for (MinMax minmax : min_max)
 			{
+				rel_tilemap_bounding_box.min.x = rsl::min(rel_tilemap_bounding_box.min.x, minmax.min.x);
+				rel_tilemap_bounding_box.min.y = rsl::min(rel_tilemap_bounding_box.min.y, minmax.min.y);
+				rel_tilemap_bounding_box.max.x = rsl::max(rel_tilemap_bounding_box.max.x, minmax.max.x);
+				rel_tilemap_bounding_box.max.y = rsl::max(rel_tilemap_bounding_box.max.y, minmax.max.y);
+			}
+			//for (MinMax& res : expected_results)
+			//{
+			//	res.min.x -= tilemap_bounding_box.min.x;
+			//	res.min.y -= tilemap_bounding_box.min.y;
+			//	res.max.x -= tilemap_bounding_box.min.x;
+			//	res.max.y -= tilemap_bounding_box.min.y;
+			//}
+			for (MinMax& minmax : min_max)
+			{
+				minmax.min.x -= rel_tilemap_bounding_box.min.x;
+				minmax.min.y -= rel_tilemap_bounding_box.min.y;
+				minmax.max.x -= rel_tilemap_bounding_box.min.x;
+				minmax.max.y -= rel_tilemap_bounding_box.min.y;
+
 				auto it = std::find_if(expected_results.cbegin(), expected_results.cend(), [&](const MinMax& minmax2) { return minmax2.name == minmax.name; });
 				if (it->min != minmax.min)
 				{
@@ -259,13 +324,7 @@ namespace regina
 				}
 			}
 
-			for (MinMax minmax : expected_results)
-			{
-				tilemap_bounding_box.min.x = rsl::min(tilemap_bounding_box.min.x, minmax.min.x);
-				tilemap_bounding_box.min.y = rsl::min(tilemap_bounding_box.min.y, minmax.min.y);
-				tilemap_bounding_box.max.x = rsl::max(tilemap_bounding_box.max.x, minmax.max.x);
-				tilemap_bounding_box.max.y = rsl::max(tilemap_bounding_box.max.y, minmax.max.y);
-			}
+			
 		}
 
 		// Expected results
