@@ -188,7 +188,7 @@ namespace rex
 	public:
 		Map(MapDesc&& desc);
 
-		MapDesc& desc() { return m_desc; }
+		const MapDesc& desc() const { return m_desc; }
 
 		//s32 width_in_blocks() const;
 		//s32 height_in_blocks() const;

@@ -58,9 +58,9 @@ namespace rex
 
 		// Hydrate a previously loaded asset, filling it with data
 		template <typename T>
-		void hydra_asset(T* asset)
+		void hydrate_asset(T* asset)
 		{
-			hydra_asset(rsl::type_id<T>(), asset);
+			hydrate_asset(rsl::type_id<T>(), asset);
 		}
 
 		template <typename T>
@@ -100,7 +100,7 @@ namespace rex
 
 		void serialize(rsl::type_id_t assetTypeId, Asset* asset, rsl::string_view assetPath);
 
-		void hydra_asset(rsl::type_id_t assetTypeId, Asset* asset);
+		void hydrate_asset(rsl::type_id_t assetTypeId, Asset* asset);
 		bool is_partially_loaded(rsl::string_view assetPath);
 		bool is_partially_loaded(const Asset* asset);
 

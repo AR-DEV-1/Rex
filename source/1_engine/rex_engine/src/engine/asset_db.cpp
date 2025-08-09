@@ -166,9 +166,15 @@ namespace rex
 	{
 	}
 
-	void AssetDb::hydra_asset(rsl::type_id_t assetTypeId, Asset* asset)
+	void AssetDb::hydrate_asset(rsl::type_id_t assetTypeId, Asset* asset)
 	{
 		if (!m_asset_to_metadata.contains(asset))
+		{
+			return;
+		}
+
+		// If it's already hydrated
+		if (m_asset_to_metadata.at(asset).is_partially_loaded == false)
 		{
 			return;
 		}

@@ -41,7 +41,6 @@ namespace regina
 	MainEditorWidget::MainEditorWidget()
 		: m_show_imgui_demo(false)
 		, m_show_imgui_style_editor(false)
-		, m_scene_manager(nullptr)
 		, m_viewports_controller(nullptr)
 		, m_active_map(nullptr)
 	{
@@ -58,17 +57,6 @@ namespace regina
 		add_new_viewport();
 	}
 
-	void MainEditorWidget::set_active_scene(Scene* scene)
-	{
-		if (m_active_scene == scene)
-		{
-			return;
-		}
-
-		m_active_scene = scene;
-		on_new_active_scene();
-	}
-
 	void MainEditorWidget::set_active_map(rex::Map* map)
 	{
 		if (m_active_map == map)
@@ -77,7 +65,7 @@ namespace regina
 		}
 
 		m_active_map = map;
-		on_new_active_scene();
+		on_new_active_map();
 	}
 
 	bool MainEditorWidget::on_update()
@@ -180,38 +168,19 @@ namespace regina
 		}
 	}
 
-	void MainEditorWidget::on_new_active_scene()
+	void MainEditorWidget::on_new_active_map()
 	{
-		if (!is_map_in_tilemap(&m_active_map->desc()))
+		if (!is_map_in_tilemap(m_active_map))
 		{
 			// 1. Load the active map and all connections recursively for all maps within the current area (eg. load all maps in kanto)
 			load_maps();
 
 			// 2. Calculate the AABB for each map, converted to absolute coordinates and cache these
-			build_tilemap();
-			// The min max results are stored relative from the active map
-			// We need to convert them to absolute positions
-			// We do this by getting the lowest possible point in the relative position
-			// and converting that point to be our origin
-			rsl::pointi32 min_pos{};
-			for (const auto& [name, minmax] : m_name_to_aabb)
-			{
-				min_pos.x = rsl::min(min_pos.x, minmax.min.x);
-				min_pos.y = rsl::min(min_pos.y, minmax.min.y);
-			}
-
-			// Now go over all the minmax results and convert their coordinates
-			for (auto& [name, minmax] : m_name_to_aabb)
-			{
-				minmax.min.x -= min_pos.x;
-				minmax.min.y -= min_pos.y;
-				minmax.max.x -= min_pos.x;
-				minmax.max.y -= min_pos.y;
-			}
+			m_map_to_metadata = build_tilemap();
 		}
 
 		// 3. Move the camera to the active map
-		rsl::pointi32 pos_in_tilemap = m_name_to_aabb.at(m_active_map->desc().map_header.name).min;
+		rsl::pointi32 pos_in_tilemap = map_pos(m_active_map);
 		move_camera_to_pos(pos_in_tilemap);
 	}
 	void MainEditorWidget::add_new_viewport()
@@ -232,144 +201,196 @@ namespace regina
 		}
 	}
 
-	bool MainEditorWidget::is_map_in_tilemap(const rex::MapDesc* map)
+	bool MainEditorWidget::is_map_in_tilemap(const rex::Map* map)
 	{
 		if (!map)
 		{
 			return false;
 		}
 
-		return m_name_to_map.contains(map->map_header.name);
+		return m_map_to_metadata.contains(map);
 	}
 
 	void MainEditorWidget::load_maps()
 	{
 		// load the active map and all its connections, recursively until there are none left
-		rsl::vector<rsl::string> open_nodes;
-		rsl::vector<rsl::string> closed_nodes;
+		// It's not required to do this here, we can load it in the tilemap building as well
 
-		rsl::string_view asset_path = rex::asset_db::instance()->asset_path(m_active_map);
-		open_nodes.push_back(rsl::string(asset_path));
+		rsl::vector<rex::Map*> open_nodes = { m_active_map };
+		rsl::vector<const rex::Map*> closed_nodes;
 
 		while (!open_nodes.empty())
 		{
-			rsl::string current_node = rsl::move(open_nodes.back());
+			rex::Map* current_node = open_nodes.back();
 			open_nodes.pop_back();
-
-			// Do not reload a map if it's already progressed
 			if (rsl::find(closed_nodes.cbegin(), closed_nodes.cend(), current_node) != closed_nodes.cend())
 			{
 				continue;
 			}
 
-			// Load a map and add all its connections to the open node
-			MapJson map = load_map(current_node);
-			for (const MapConnectionJson& conn : map.connections)
-			{
-				open_nodes.push_back(rsl::string(rex::path::join(rex::engine::instance()->data_root(), conn.map)));
-			}
-
-			m_map_jsons.push_back(rsl::move(map));
-			m_maps.push_back(rex::asset_db::instance()->load<rex::Map>(current_node));
-
-			for (const rex::MapConnection& conn : m_maps.back()->desc().connections)
-			{
-				rex::asset_db::instance()->hydra_asset(conn.map);
-			}
-
 			closed_nodes.push_back(current_node);
+			rex::asset_db::instance()->hydrate_asset(current_node);
+
+			for (const rex::MapConnection& conn : current_node->desc().connections)
+			{
+				open_nodes.push_back(conn.map);
+			}
 		}
 	}
 
-	void MainEditorWidget::build_tilemap()
+	rsl::unordered_map<const rex::Map*, MapMetaData> MainEditorWidget::build_tilemap()
 	{
+		// Loop over all the maps we have, starting from the first and save their relative position
+		// Afterwards, creating a AABB over that encapsulates all the AABBs of every map and change the origin to point to the top left of the encapsulating AABB
+		//
+		//                                              --- EXAMPLE ---
+		// In the example below, we start from map A and recursively loop over all connections until we've explored all maps
+		// this means that all map AABB would be relative from map A
+		// we need to calculate the AABB that encapsulates all maps and then recalculate the AABB of each map relative to the origin of the encapsulating AABB
+		//
+		// +-----------------------------------------------------------------------------------------------------------------------+
+		// |																																																											 |
+		// |																																					+--------------------------+								 |
+		// |		+--------------------------+																					|													 |								 |
+		// |		|                          |																					|													 |								 |
+		// |		|                          |																					|													 |								 |
+		// |		|             A            |  ----------------------------------------|					  	C						 |								 |
+		// |		|                          |																					|													 |								 |
+		// |		|                          |																					|													 |								 |
+		// |		|                          |																					|													 |								 |
+		// |		+--------------------------+																					+--------------------------+								 |
+		// |									|                                                                     |															 |
+		// |									|																																			|															 |
+		// |									|																																			|															 |
+		// |									|																																			|															 |
+		// |									|																																			|															 |
+		// |									|																																			|															 |
+		// |									|																																			|															 |
+		// |									|																																			|															 |
+		// |									|																																			|															 |
+		// |									|																																			|															 |
+		// |								  |																																			|									  					 |
+		// |		+--------------------------+																					+--------------------------+								 |
+		// |		|                          | 																					|                          |								 |
+		// |		|                          | 																					|                          |								 |
+		// |		|                          | 																					|                          |								 |
+		// |		|             B            | ---------------------------------------- |             D            |	  						 |
+		// |		|                          | 																					|                          |								 |
+		// |		|                          | 																					|                          |								 |
+		// |		|                          | 																					|                          |								 |
+		// |		+--------------------------+																					+--------------------------+								 |
+		// |																																																											 |
+		// |																																																											 |
+		// +-----------------------------------------------------------------------------------------------------------------------+
+		// 
+		// 
+		// 
+		// 
+		//
+
 		struct MapWithPos
 		{
-			const rex::MapDesc* desc;
+			const rex::Map* map;
 			rsl::pointi32 pos;
 		};
-		rsl::pointi32 start_pos{};
 		std::vector<MapWithPos> open_nodes;
-
-		open_nodes.push_back({ &m_active_map->desc(), start_pos});
-		m_name_to_aabb.clear();
-
 		std::vector<MapWithPos> closed_nodes;
-		rsl::unordered_map<rsl::string_view, const rex::MapDesc*> name_to_map;
-		name_to_map.reserve(m_map_jsons.size());
+
+		open_nodes.push_back({ m_active_map, rsl::pointi32{} });
+		rsl::unordered_map<const rex::Map*, MapMetaData> map_to_metadata;
 
 		while (!open_nodes.empty())
 		{
 			MapWithPos current_node = open_nodes.back();
 			open_nodes.pop_back();
+
+			// skip any maps that are already processed
 			auto closed_node_it = std::find_if(closed_nodes.cbegin(), closed_nodes.cend(), [&](const MapWithPos& mapWithPos)
 				{
-					return mapWithPos.desc->map_header.name == current_node.desc->map_header.name;
+					return mapWithPos.map == current_node.map;
 				});
 			if (closed_node_it != closed_nodes.cend())
 			{
 				continue;
 			}
 
-			start_pos = current_node.pos;
-
 			// 1. calculate bounding box of current map
-			MinMax map_rect = calc_map_rect(current_node.desc->map_header, current_node.pos);
-			m_name_to_aabb.emplace(current_node.desc->map_header.name, map_rect);
+			MinMax map_rect = calc_map_rect(current_node.map->desc().map_header, current_node.pos);
+			MapMetaData map_meta_data{};
+			map_meta_data.aabb = map_rect;
+			map_to_metadata.emplace(current_node.map, map_meta_data);
 
 			// 2. add the map itself to the closed nodes
 			closed_nodes.push_back(current_node);
 
 			// 3. add the map's connections to the open nodes
-			for (const rex::MapConnection& conn : current_node.desc->connections)
+			for (const rex::MapConnection& conn : current_node.map->desc().connections)
 			{
-				auto closed_node_it = std::find_if(closed_nodes.cbegin(), closed_nodes.cend(), [&](const MapWithPos& mapWithPos) 
+				// skip any maps that are already processed
+				auto closed_node_it = std::find_if(closed_nodes.cbegin(), closed_nodes.cend(), [&](const MapWithPos& mapWithPos)
 					{
-						return mapWithPos.desc->map_header.name == conn.map->desc().map_header.name;
+						return mapWithPos.map == conn.map;
 					});
 				if (closed_node_it != closed_nodes.cend())
 				{
 					continue;
 				}
 
-				auto map_desc_it = std::find_if(m_maps.cbegin(), m_maps.cend(), [&](rex::Map* map) 
-					{
-						return map->desc().map_header.name == conn.map->desc().map_header.name;
-					});
+				const s32 tiles_per_block = 4;
+				s32 half_width_in_tiles = (current_node.map->desc().map_header.width_in_blocks * tiles_per_block / 2);
+				s32 half_height_in_tiles = (current_node.map->desc().map_header.height_in_blocks * tiles_per_block / 2);
+				s32 half_conn_width_in_tiles = (conn.map->desc().map_header.width_in_blocks * tiles_per_block / 2);
+				s32 half_conn_height_in_tiles = (conn.map->desc().map_header.height_in_blocks * tiles_per_block / 2);
+				rsl::pointi32 conn_pos;
 
-				const rex::MapDesc* conn_map = &(*map_desc_it)->desc();
-				if (rsl::find_if(closed_nodes.cbegin(), closed_nodes.cend(), [&](const MapWithPos& mapWithPos) { return mapWithPos.desc == conn_map; }) == closed_nodes.cend())
+				// calculate the middle position of the connecting map
+				if (conn.direction == rex::Direction::North)
 				{
-					const s32 tiles_per_block = 4;
-					s32 half_width_in_tiles = (current_node.desc->map_header.width_in_blocks * tiles_per_block / 2);
-					s32 half_height_in_tiles = (current_node.desc->map_header.height_in_blocks * tiles_per_block / 2);
-					s32 half_conn_width_in_tiles = (conn.map->desc().map_header.width_in_blocks * tiles_per_block / 2);
-					s32 half_conn_height_in_tiles = (conn.map->desc().map_header.height_in_blocks * tiles_per_block / 2);
-					rsl::pointi32 conn_pos;
-					if (conn.direction == rex::Direction::North)
-					{
-						conn_pos = { start_pos.x + conn.offset, start_pos.y + half_height_in_tiles + half_conn_height_in_tiles };
-					}
-					else if (conn.direction == rex::Direction::South)
-					{
-						conn_pos = { start_pos.x + conn.offset, start_pos.y - half_height_in_tiles - half_conn_height_in_tiles };
-					}
-
-					// Positive offset -> move conn map down
-					// Negative offset -> move conn map up
-
-					else if (conn.direction == rex::Direction::East)
-					{
-						conn_pos = { start_pos.x + half_width_in_tiles + half_conn_width_in_tiles, start_pos.y - conn.offset}; // offsets are stored in tiles
-					}
-					else if (conn.direction == rex::Direction::West)
-					{
-						conn_pos = { start_pos.x - half_width_in_tiles - half_conn_width_in_tiles, start_pos.y - conn.offset}; // offsets are stored in tiles
-					}
-					open_nodes.push_back({ conn_map, conn_pos });
+					conn_pos = { current_node.pos.x + conn.offset, current_node.pos.y + half_height_in_tiles + half_conn_height_in_tiles };
 				}
+				else if (conn.direction == rex::Direction::South)
+				{
+					conn_pos = { current_node.pos.x + conn.offset, current_node.pos.y - half_height_in_tiles - half_conn_height_in_tiles };
+				}
+				else if (conn.direction == rex::Direction::East)
+				{
+					conn_pos = { current_node.pos.x + half_width_in_tiles + half_conn_width_in_tiles, current_node.pos.y - conn.offset }; // offsets are stored in tiles
+				}
+				else if (conn.direction == rex::Direction::West)
+				{
+					conn_pos = { current_node.pos.x - half_width_in_tiles - half_conn_width_in_tiles, current_node.pos.y - conn.offset }; // offsets are stored in tiles
+				}
+
+				open_nodes.push_back({ conn.map, conn_pos });
 			}
 		}
+
+		// The min max results are stored relative from the active map
+		// We need to convert them to absolute positions
+		// We do this by getting the lowest possible point in the relative position
+		// and converting that point to be our origin
+		rsl::pointi32 min_pos{};
+		for (const auto& [name, metadata] : map_to_metadata)
+		{
+			min_pos.x = rsl::min(min_pos.x, metadata.aabb.min.x);
+			min_pos.y = rsl::min(min_pos.y, metadata.aabb.min.y);
+		}
+
+		// Now go over all the minmax results and convert their coordinates
+		for (auto& [name, metadata] : map_to_metadata)
+		{
+			metadata.aabb.min.x -= min_pos.x;
+			metadata.aabb.min.y -= min_pos.y;
+			metadata.aabb.max.x -= min_pos.x;
+			metadata.aabb.max.y -= min_pos.y;
+		}
+
+		return map_to_metadata;
+	}
+
+	rsl::pointi32 MainEditorWidget::map_pos(const rex::Map* map)
+	{
+		return m_map_to_metadata.at(m_active_map).aabb.min;
 	}
 
 	MinMax MainEditorWidget::calc_map_rect(const rex::MapHeader& map, rsl::pointi32 startPos)
@@ -388,71 +409,8 @@ namespace regina
 		return res;
 	}
 
-	MapJson MainEditorWidget::load_map(rsl::string_view mapPath)
-	{
-		rex::json::json map_json = rex::json::read_from_file(mapPath);
-		MapJson map{};
-
-		map.name = map_json["name"];
-		map.width = map_json["width"];
-		map.height = map_json["height"];
-		map.blockset = map_json["blockset"];
-		map.map_blocks = map_json["map_blocks"];
-		map.border_block_idx = map_json["border_block_idx"];
-		map.connections.reserve(map_json["connections"].size());
-		for (const rex::json::json& conn : map_json["connections"])
-		{
-			MapConnectionJson& connection = map.connections.emplace_back();
-			connection.direction = conn["direction"];
-			connection.map = conn["map"];
-			connection.offset = conn["offset"];
-		}
-		map.objects.reserve(map_json["objects"].size());
-		for (const rex::json::json& obj_json : map_json["objects"])
-		{
-			MapObjectJson& object = map.objects.emplace_back();
-			object.name = obj_json["name"];
-		}
-		map.object_events.reserve(map_json["object_events"].size());
-		for (const rex::json::json& obj_ev_json : map_json["object_events"])
-		{
-			MapObjectEventJson& object_ev = map.object_events.emplace_back();
-			object_ev.pos.x = obj_ev_json["x"];
-			object_ev.pos.y = obj_ev_json["y"];
-			object_ev.sprite = obj_ev_json["sprite"];
-			object_ev.movement = obj_ev_json["movement"];
-			object_ev.direction = obj_ev_json["direction"];
-			object_ev.text = obj_ev_json["text"];
-		}
-		map.warps.reserve(map_json["warps"].size());
-		for (const rex::json::json& warp_json : map_json["warps"])
-		{
-			MapWarpJson& warp = map.warps.emplace_back();
-			warp.pos.x = warp_json["x"];
-			warp.pos.y = warp_json["y"];
-			warp.dst_map_id = warp_json["dst_map_id"];
-			warp.dst_warp_id = warp_json["dst_warp_id"];
-		}
-		map.bg_events.reserve(map_json["bg_events"].size());
-		for (const rex::json::json& bg_ev_json : map_json["bg_events"])
-		{
-			MapBgEventJson& bg_event = map.bg_events.emplace_back();
-			bg_event.pos.x = bg_ev_json["x"];
-			bg_event.pos.y = bg_ev_json["y"];
-			bg_event.text = bg_ev_json["text"];
-		}
-		map.scripts.reserve(map_json["scripts"].size());
-		for (const rex::json::json& script_json : map_json["scripts"])
-		{
-			MapScriptJson& script = map.scripts.emplace_back();
-			script.name = script_json;
-		}
-
-		return map;
-	}
-
 	void MainEditorWidget::move_camera_to_pos(rsl::pointi32 pos)
 	{
-
+		REX_INFO(LogMainEditor, "Moving camera position to ({}, {})", pos.x, pos.y);
 	}
 }

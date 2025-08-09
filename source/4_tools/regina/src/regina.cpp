@@ -33,7 +33,7 @@ namespace regina
 		init_settings();
 
 		init_scene_view();
-		init_start_scene();
+		//init_start_scene();
 		init_ui();
 	}
 	Regina::~Regina() = default;
@@ -97,7 +97,6 @@ namespace regina
 		REX_ASSERT_X(m_project, "Cannot spawn the main widget if we don't have a project. project is null");
 
 		rsl::unique_ptr<MainEditorWidget> main_editor_widget = rsl::make_unique<MainEditorWidget>();
-		//main_editor_widget->set_active_scene(m_active_scene);
 
 		rex::scratch_string start_scene = rex::path::join(rex::engine::instance()->data_root(), rex::settings::instance()->get_string("StartScene"));
 		REX_INFO(LogRegina, "Loading {}", start_scene);

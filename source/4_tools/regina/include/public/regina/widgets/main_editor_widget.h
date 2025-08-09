@@ -19,59 +19,9 @@ namespace regina
 		rsl::pointi32 max;
 	};
 
-	struct MapConnectionJson
+	struct MapMetaData
 	{
-		rsl::string direction;
-		rsl::string map;
-		s32 offset;
-	};
-
-	struct MapObjectJson
-	{
-		rsl::string name;
-	};
-
-	struct MapObjectEventJson
-	{
-		rsl::pointi32 pos;
-		rsl::string sprite;
-		rsl::string movement;
-		rsl::string direction;
-		rsl::string text;
-	};
-
-	struct MapWarpJson
-	{
-		rsl::pointi32 pos;
-		s32 dst_map_id;
-		s32 dst_warp_id;
-	};
-
-	struct MapBgEventJson
-	{
-		rsl::pointi32 pos;
-		rsl::string text;
-	};
-
-	struct MapScriptJson
-	{
-		rsl::string name;
-	};
-
-	struct MapJson
-	{
-		rsl::string name;
-		s32 width;
-		s32 height;
-		rsl::string blockset;
-		rsl::string map_blocks;
-		s32 border_block_idx;
-		rsl::vector<MapConnectionJson> connections;
-		rsl::vector<MapObjectJson> objects;
-		rsl::vector<MapObjectEventJson> object_events;
-		rsl::vector<MapWarpJson> warps;
-		rsl::vector<MapBgEventJson> bg_events;
-		rsl::vector<MapScriptJson> scripts;
+		MinMax aabb;
 	};
 
 	class MainEditorWidget : public Widget
@@ -79,7 +29,6 @@ namespace regina
 	public:
 		MainEditorWidget();
 
-		void set_active_scene(Scene* scene);
 		void set_active_map(rex::Map* map);
 
 	protected:
@@ -91,16 +40,15 @@ namespace regina
 		void render_widgets();
 		void render_imgui_widgets();
 
-		void on_new_active_scene();
 		void add_new_viewport();
+		void on_new_active_map();
 
-		bool is_map_in_tilemap(const rex::MapDesc* map);
+		bool is_map_in_tilemap(const rex::Map* map);
 		void load_maps();
-		void build_tilemap();
+		rsl::unordered_map<const rex::Map*, MapMetaData> build_tilemap();
+		rsl::pointi32 map_pos(const rex::Map* map);
 		void move_camera_to_pos(rsl::pointi32 pos);
 		MinMax calc_map_rect(const rex::MapHeader& map, rsl::pointi32 startPos);
-
-		MapJson load_map(rsl::string_view mapPath);
 
 	private:
 		bool m_show_imgui_demo;
@@ -111,15 +59,6 @@ namespace regina
 		ViewportsController m_viewports_controller;
 
 		rex::Map* m_active_map;
-		Scene* m_active_scene;
-
-		// This is used to query information about the scene.
-		// This info is often passed to widgets
-		SceneManager* m_scene_manager;
-
-		std::vector<MapJson> m_map_jsons;
-		std::vector<rex::Map*> m_maps;
-		rsl::unordered_map<rsl::string, const rex::MapDesc*> m_name_to_map;
-		rsl::unordered_map<rsl::string, MinMax> m_name_to_aabb;
+		rsl::unordered_map<const rex::Map*, MapMetaData> m_map_to_metadata;
 	};
 }
