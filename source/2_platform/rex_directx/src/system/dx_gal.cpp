@@ -535,7 +535,7 @@ namespace rex
 		{
 			D3D12_DESCRIPTOR_HEAP_DESC desc{};
 
-			s32 num_descriptors = 128;
+			s32 num_descriptors = 1024;
 
 			desc.Type = type;
 			desc.NumDescriptors = num_descriptors;

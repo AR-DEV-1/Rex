@@ -75,7 +75,7 @@ namespace rex
 			MapConnection& connection = desc.connections[idx];
 			connection.direction = rsl::enum_refl::enum_cast<Direction>(conn["direction"].get<rsl::string_view>()).value();
 			connection.offset = conn["offset"]; // is in squares (2x2 tiles)
-			connection.map = asset_db::instance()->load_from_json<Map>(conn["map"], LoadFlags::PartialLoad);
+			connection.map = asset_db::instance()->load<Map>(conn["map"], LoadFlags::PartialLoad);
 			//connection.map = load_map_header_from_json(json::read_from_file(conn["map"]));
 			++idx;
 		}
@@ -145,7 +145,7 @@ namespace rex
 		header.name = jsonContent["name"];
 		header.width_in_blocks = jsonContent["width"];
 		header.height_in_blocks = jsonContent["height"];
-		header.tileset = asset_db::instance()->load_from_json<Blockset>(jsonContent["blockset"]);
+		header.tileset = asset_db::instance()->load<Blockset>(jsonContent["blockset"]);
 		header.border_block_idx = jsonContent["border_block_idx"];
 
 		return header;

@@ -15,6 +15,13 @@ namespace regina
 		return nullptr;
 	}
 
+	void SceneSerializer::hydrate_asset(rex::Asset* asset, const rex::json::json& jsonContent)
+	{
+	}
+	void SceneSerializer::hydrate_asset(rex::Asset* asset, rex::memory::BlobView content)
+	{
+	}
+
 	rex::json::json SceneSerializer::serialize_to_json(rex::Asset* asset)
 	{
 		return rex::json::json{};

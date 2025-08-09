@@ -39,6 +39,11 @@ namespace rex
 		return rsl::make_unique<Tileset>(rsl::move(texture));
 	}
 
+	void TilesetSerializer::hydrate_asset(Asset* asset, const rex::json::json& jsonContent)
+	{}
+	void TilesetSerializer::hydrate_asset(Asset* asset, memory::BlobView content)
+	{}
+
 	rex::json::json TilesetSerializer::serialize_to_json(Asset* asset)
 	{
 		return json::json{};

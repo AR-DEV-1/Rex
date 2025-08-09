@@ -17,6 +17,11 @@ namespace rex
 		return rsl::make_unique<TextureAsset>(rsl::move(image_load_res.data), image_load_res.width, image_load_res.height, image_load_res.num_channels);
 	}
 
+	void TextureSerializer::hydrate_asset(Asset* asset, const rex::json::json& jsonContent)
+	{}
+	void TextureSerializer::hydrate_asset(Asset* asset, memory::BlobView content)
+	{}
+
 	rex::json::json TextureSerializer::serialize_to_json(Asset* asset)
 	{
 		return json::json{};

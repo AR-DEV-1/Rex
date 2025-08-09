@@ -21,6 +21,6 @@ namespace regina
 
 		REX_INFO(LogSceneManager, "Loading {}", scenePath);
 
-		m_active_scene = rex::asset_db::instance()->load_from_json<rex::Map>(scenePath);
+		//m_active_scene = rex::asset_db::instance()->load<rex::Map>(scenePath);
 	}
 }

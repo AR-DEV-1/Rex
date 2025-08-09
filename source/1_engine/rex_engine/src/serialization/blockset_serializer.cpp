@@ -19,7 +19,7 @@ namespace rex
 		rsl::string_view tileset_path = jsonContent["tileset"];
 		rsl::string_view blockset_path = jsonContent["blockset"];
 
-		Tileset* tileset = asset_db::instance()->load_from_binary<Tileset>(tileset_path);
+		Tileset* tileset = asset_db::instance()->load<Tileset>(tileset_path);
 		rsl::unique_array<Block> blocks = load_block_indices(blockset_path);
 
 		return rsl::make_unique<Blockset>(tileset, rsl::move(blocks));
@@ -28,6 +28,11 @@ namespace rex
 	{
 		return nullptr;
 	}
+
+	void BlocksetSerializer::hydrate_asset(Asset* asset, const rex::json::json& jsonContent)
+	{}
+	void BlocksetSerializer::hydrate_asset(Asset* asset, memory::BlobView content) 
+	{}
 
 	rex::json::json BlocksetSerializer::serialize_to_json(Asset* asset)
 	{

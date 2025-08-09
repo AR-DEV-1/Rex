@@ -2,7 +2,8 @@
   "name": "ROUTE 23",
   "width": 10,
   "height": 72,
-    "type_name": "Map", "blockset": "Pokemon\\tilesets\\PLATEAU.json",
+  "type_name": "Map",
+  "blockset": "Pokemon\\blocksets\\PLATEAU.json",
   "map_blocks": "Pokemon\\map_blocks\\Route23.blk",
   "border_block_idx": 15,
   "connections": [

@@ -162,6 +162,10 @@ namespace rex
 		return asset;
 	}
 
+	void AssetDb::serialize(rsl::type_id_t assetTypeId, Asset* asset, rsl::string_view assetPath)
+	{
+	}
+
 	void AssetDb::hydra_asset(rsl::type_id_t assetTypeId, Asset* asset)
 	{
 		if (!m_asset_to_metadata.contains(asset))

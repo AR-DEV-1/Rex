@@ -13,9 +13,9 @@ namespace regina
 {
 	ThumbnailManager::ThumbnailManager()
 	{
-		m_directory_thumbnail = rsl::make_unique<Thumbnail>(rex::asset_db::instance()->load_from_binary<rex::TextureAsset>(rex::path::join("regina", "icons", "folder.png")));
-		m_file_thumbnail = rsl::make_unique<Thumbnail>(rex::asset_db::instance()->load_from_binary<rex::TextureAsset>(rex::path::join("regina", "icons", "file.png")));
-		m_unknown_thumbnail = rsl::make_unique<Thumbnail>(rex::asset_db::instance()->load_from_binary<rex::TextureAsset>(rex::path::join("regina", "icons", "unknown.png")));
+		m_directory_thumbnail = rsl::make_unique<Thumbnail>(rex::asset_db::instance()->load<rex::TextureAsset>(rex::path::join("regina", "icons", "folder.png")));
+		m_file_thumbnail = rsl::make_unique<Thumbnail>(rex::asset_db::instance()->load<rex::TextureAsset>(rex::path::join("regina", "icons", "file.png")));
+		m_unknown_thumbnail = rsl::make_unique<Thumbnail>(rex::asset_db::instance()->load<rex::TextureAsset>(rex::path::join("regina", "icons", "unknown.png")));
 	}
 
 	bool ThumbnailManager::has_thumbnail(rsl::string_view path) const

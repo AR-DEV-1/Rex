@@ -76,7 +76,7 @@ namespace regina
 			return;
 		}
 
-		m_active_scene = rex::asset_db::instance()->load_from_json<Scene>(start_scene);
+		m_active_scene = rex::asset_db::instance()->load<Scene>(start_scene);
 	}
 	void Regina::init_scene_view()
 	{
@@ -108,7 +108,7 @@ namespace regina
 			return;
 		}
 
-		rex::Map* active_map = rex::asset_db::instance()->load_from_json<rex::Map>(start_scene);
+		rex::Map* active_map = rex::asset_db::instance()->load<rex::Map>(start_scene);
 		main_editor_widget->set_active_map(active_map);
 
 		m_active_widget = rsl::move(main_editor_widget);

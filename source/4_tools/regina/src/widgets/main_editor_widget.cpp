@@ -270,7 +270,7 @@ namespace regina
 			}
 
 			m_map_jsons.push_back(rsl::move(map));
-			m_maps.push_back(rex::asset_db::instance()->load_from_json<rex::Map>(current_node));
+			m_maps.push_back(rex::asset_db::instance()->load<rex::Map>(current_node));
 
 			for (const rex::MapConnection& conn : m_maps.back()->desc().connections)
 			{
