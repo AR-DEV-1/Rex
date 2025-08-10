@@ -32,7 +32,6 @@ namespace rex
 	struct MapConnection
 	{
 		Map* map;
-		//MapHeader map;
 		Direction direction;
 		s8 offset;
 	};
