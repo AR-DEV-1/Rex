@@ -3,6 +3,7 @@
 #include "rex_engine/assets/asset.h"
 
 #include "rex_engine/assets/blockset.h"
+#include "rex_engine/serialization/serializer_base.h"
 
 #include "rex_engine/engine/types.h"
 #include "rex_std/string.h"
@@ -181,14 +182,21 @@ namespace rex
 
 		// The block indices of the map. This is required for rendering
 		rsl::unique_array<u8> blocks;
+
+		rsl::string blockset; // path to blockset
+		rsl::string blockmap; // path to block map
 	};
 
 	class Map : public Asset
 	{
 	public:
-		Map(MapDesc&& desc);
+		Map(MapDesc&& desc, LoadFlags loadFlags);
 
-		const MapDesc& desc() const { return m_desc; }
+		const MapDesc& desc() const;
+		const u8* tiles() const;
+
+	private:
+		void load_tiles();
 
 		//s32 width_in_blocks() const;
 		//s32 height_in_blocks() const;
@@ -199,5 +207,6 @@ namespace rex
 
 	private:
 		MapDesc m_desc;
+		rsl::unique_array<u8> m_tiles;
 	};
 }

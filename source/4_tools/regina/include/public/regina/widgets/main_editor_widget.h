@@ -5,6 +5,7 @@
 #include "regina/scene_manager.h"
 #include "regina/viewports_controller.h"
 #include "rex_engine/assets/map.h"
+#include "rex_engine/assets/tilemap.h"
 
 #include "rex_std/bonus/math/point.h"
 #include "rex_std/vector.h"
@@ -60,5 +61,6 @@ namespace regina
 
 		rex::Map* m_active_map;
 		rsl::unordered_map<const rex::Map*, MapMetaData> m_map_to_metadata;
+		rsl::unique_ptr<rex::Tilemap> m_tilemap;
 	};
 }

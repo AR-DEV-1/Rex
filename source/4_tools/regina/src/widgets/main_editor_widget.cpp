@@ -369,20 +369,40 @@ namespace regina
 		// We need to convert them to absolute positions
 		// We do this by getting the lowest possible point in the relative position
 		// and converting that point to be our origin
-		rsl::pointi32 min_pos{};
+		MinMax big_aabb;
 		for (const auto& [name, metadata] : map_to_metadata)
 		{
-			min_pos.x = rsl::min(min_pos.x, metadata.aabb.min.x);
-			min_pos.y = rsl::min(min_pos.y, metadata.aabb.min.y);
+			big_aabb.min.x = rsl::min(big_aabb.min.x, metadata.aabb.min.x);
+			big_aabb.min.y = rsl::min(big_aabb.min.y, metadata.aabb.min.y);
+			big_aabb.max.x = rsl::max(big_aabb.max.x, metadata.aabb.max.x);
+			big_aabb.max.y = rsl::max(big_aabb.max.y, metadata.aabb.max.y);
 		}
 
 		// Now go over all the minmax results and convert their coordinates
 		for (auto& [name, metadata] : map_to_metadata)
 		{
-			metadata.aabb.min.x -= min_pos.x;
-			metadata.aabb.min.y -= min_pos.y;
-			metadata.aabb.max.x -= min_pos.x;
-			metadata.aabb.max.y -= min_pos.y;
+			metadata.aabb.min.x -= big_aabb.min.x;
+			metadata.aabb.min.y -= big_aabb.min.y;
+			metadata.aabb.max.x -= big_aabb.min.x;
+			metadata.aabb.max.y -= big_aabb.min.y;
+		}
+
+		// Create the tilemap and fill in the tile values of each map
+		s32 width = big_aabb.max.x - big_aabb.min.x;
+		s32 height = big_aabb.max.y - big_aabb.min.y;
+		m_tilemap = rsl::make_unique<rex::Tilemap>(width, height);
+
+		for (const auto& [map, metadata] : map_to_metadata)
+		{
+			s32 map_width = metadata.aabb.max.x - metadata.aabb.min.x;
+			s32 map_height = metadata.aabb.max.y - metadata.aabb.min.y;
+
+			rsl::pointi32 pos = metadata.aabb.min;
+			for (s32 row_idx = 0; row_idx < map_height; ++row_idx)
+			{
+				const u8* row_tiles = &map->tiles()[row_idx * map_width];
+				m_tilemap->set(row_tiles, map_width, pos.x + (row_idx * width));
+			}
 		}
 
 		return map_to_metadata;

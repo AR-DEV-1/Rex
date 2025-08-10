@@ -19,7 +19,7 @@ namespace rex
 			hydrate_desc(jsonContent, map_desc);
 		}
 
-		return rsl::make_unique<Map>(rsl::move(map_desc));
+		return rsl::make_unique<Map>(rsl::move(map_desc), loadFlags);
 	}
 	rsl::unique_ptr<Asset> MapSerializer::serialize_from_binary(memory::BlobView content)
 	{
@@ -38,7 +38,7 @@ namespace rex
 		hydrate_desc(jsonContent, map_desc);
 
 		// Construct a new map object at the old asset's location
-		rsl::construct_at(map, rsl::move(map_desc));
+		rsl::construct_at(map, rsl::move(map_desc), LoadFlags::None);
 	}
 	void MapSerializer::hydrate_asset(Asset* asset, memory::BlobView content)
 	{}
@@ -60,6 +60,9 @@ namespace rex
 		init_warps(jsonContent, desc);
 		init_text_events(jsonContent, desc);
 		init_scripts(jsonContent, desc);
+
+		desc.blockset = jsonContent["blockset"];
+		desc.blockmap = jsonContent["map_blocks"];
 	}
 
 	void MapSerializer::init_map_header(const json::json& jsonContent, MapDesc& desc)
