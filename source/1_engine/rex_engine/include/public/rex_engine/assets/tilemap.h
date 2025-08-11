@@ -12,9 +12,14 @@ namespace rex
 
 		void set(const u8* data, s32 len, s32 offset);
 
+		s32 tile_width_px() const;
+		s32 tile_height_px() const;
+
 	private:
 		s32 m_width;
 		s32 m_height;
+		s32 m_tile_width_px;
+		s32 m_tile_height_px;
 		rsl::unique_array<u8> m_tiles;
 	};
 }
