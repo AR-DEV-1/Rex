@@ -5,10 +5,6 @@ namespace regina
 	Viewport::Viewport(rsl::string_view name, rex::Tilemap* tilemap)
 		: m_name(name)
 		, m_tilemap(tilemap)
-		, m_min_zoom_level(0.1f)
-		, m_max_zoom_level(1.0f)
-		, m_current_zoom_level(m_max_zoom_level)
-		, m_zoom_step_rate(0.125f)
 		, m_screen_tile_resolution({20, 18})
 	{}
 
@@ -43,6 +39,21 @@ namespace regina
 		// the inv tile size of a single tile on the screen
 
 		rsl::unique_array<u8> tile_indices = tilemap_bounds(top_left);
+
+		struct TilemapRenderData
+		{
+
+		};
+		TilemapRenderData tilemap_render_data{};
+		tilemap_render_data.tiles = tile_indices.get();
+		tilemap_render_data.num_tiles = tile_indices.count();
+		tilemap_render_data.tileset = m_tilemap->texture();
+		tilemap_render_data.tile_size_x = m_tilemap->tile_width_px();
+		tilemap_render_data.screen_width_in_tiles = m_screen_tile_resolution.x;
+		tilemap_render_data.inv_tile_screen_width = 2.0f / m_screen_tile_resolution.x;
+		tilemap_render_data.inv_tile_screen_height = 2.0f / m_screen_tile_resolution.y;
+
+		rex::gfx::renderer::instance()->submit_tilemap(tilemap_render_data);
 
 		//TilemapInfo info{};
 

@@ -22,9 +22,5 @@ namespace regina
 		rex::Tilemap* m_tilemap;
 		rsl::pointi32 m_camera_pos;
 		rsl::pointi32 m_screen_tile_resolution;
-		f32 m_min_zoom_level;
-		f32 m_max_zoom_level;
-		f32 m_current_zoom_level;
-		f32 m_zoom_step_rate;
 	};
 }
