@@ -7,6 +7,8 @@ namespace rex
 	Tilemap::Tilemap(s32 width, s32 height)
 		: m_width(width)
 		, m_height(height)
+		, m_tile_width_px(8)
+		, m_tile_height_px(8)
 	{
 		m_tiles = rsl::make_unique<u8[]>(m_width * m_height);
 	}
@@ -17,4 +19,26 @@ namespace rex
 
 		rsl::memcpy(m_tiles.get() + offset, data, len);
 	}
+
+	s32 Tilemap::width_in_tiles() const
+	{
+		return m_width;
+	}
+	s32 Tilemap::height_in_tiles() const
+	{
+		return m_height;
+	}
+	s32 Tilemap::tile_width_px() const
+	{
+		return m_tile_width_px;
+	}
+	s32 Tilemap::tile_height_px() const
+	{
+		return m_tile_height_px;
+	}
+	const u8* Tilemap::tiles() const
+	{
+		return m_tiles.get();
+	}
+
 }

@@ -15,11 +15,13 @@ namespace regina
 		void update();
 
 		rsl::pointi32 top_left_from_camera_pos(rsl::pointi32 cameraPos);
+		rsl::unique_array<u8> tilemap_bounds(rsl::pointi32 topLeftStart);
 
 	private:
 		rsl::string m_name;
 		rex::Tilemap* m_tilemap;
 		rsl::pointi32 m_camera_pos;
+		rsl::pointi32 m_screen_tile_resolution;
 		f32 m_min_zoom_level;
 		f32 m_max_zoom_level;
 		f32 m_current_zoom_level;

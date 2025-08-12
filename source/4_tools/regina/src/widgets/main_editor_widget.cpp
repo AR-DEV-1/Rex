@@ -18,6 +18,8 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 
+#include "regina/viewport.h"
+
 DEFINE_LOG_CATEGORY(LogMainEditor);
 
 namespace regina
@@ -75,6 +77,9 @@ namespace regina
 		m_viewports_controller.update();
 	
 		render_widgets();
+
+		Viewport viewport("test viewport", m_tilemap.get());
+		viewport.update();
 
 		render_imgui_widgets();
 
