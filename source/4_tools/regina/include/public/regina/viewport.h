@@ -2,6 +2,7 @@
 
 #include "rex_engine/engine/types.h"
 #include "rex_engine/assets/tilemap.h"
+#include "rex_engine/assets/tileset.h"
 #include "rex_std/string.h"
 #include "rex_std/bonus/math.h"
 
@@ -15,11 +16,13 @@ namespace regina
 		void update();
 
 		rsl::pointi32 top_left_from_camera_pos(rsl::pointi32 cameraPos);
-		rsl::unique_array<u8> tilemap_bounds(rsl::pointi32 topLeftStart);
+		void update_screen_tilemap(rsl::pointi32 topLeftStart);
 
 	private:
 		rsl::string m_name;
+		rex::Tileset* m_tileset;
 		rex::Tilemap* m_tilemap;
+		rsl::unique_ptr<rex::Tilemap> m_screen_tilemap;
 		rsl::pointi32 m_camera_pos;
 		rsl::pointi32 m_screen_tile_resolution;
 	};

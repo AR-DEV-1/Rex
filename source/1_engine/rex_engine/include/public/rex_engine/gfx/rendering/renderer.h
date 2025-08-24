@@ -2,6 +2,11 @@
 
 #include "rex_engine/engine/globals.h"
 
+#include "rex_engine/assets/tilemap.h"
+#include "rex_engine/assets/tileset.h"
+
+#include "rex_engine/gfx/resources/unordered_access_buffer.h"
+
 //#include "rex_engine/gfx/rendering/render_pass.h"
 
 namespace rex
@@ -35,9 +40,28 @@ namespace rex
 			virtual void render() = 0;
 		};
 
+		struct TilemapRenderRequest
+		{
+			rex::Tilemap* tilemap;
+			rex::Tileset* tileset;
+		};
+
+		struct TilemapRenderData
+		{
+			rsl::unique_ptr<rex::gfx::VertexBuffer> tiles_vb_gpu;
+			rsl::unique_ptr<rex::gfx::IndexBuffer> tiles_ib_gpu;
+			rsl::unique_ptr<rex::gfx::ConstantBuffer> tile_render_info;
+			rsl::unique_ptr<rex::gfx::UnorderedAccessBuffer> tile_indices_buffer;
+		};
+
 		class Renderer
 		{
 		public:
+			void render_tilemap(const TilemapRenderRequest& tilemapRenderRequest);
+
+		private:
+			rsl::vector<TilemapRenderData> m_tilemap_render_data;
+
 		//	template <typename T, typename ... Args>
 		//	T* add_render_pass(Args&& ... args)
 		//	{

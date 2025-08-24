@@ -53,13 +53,17 @@ float4 calculate_vertex_position(VertexIn vin)
   // Calculate where on the screen the tile needs to go
   // The result holds 2D coordinate as indices
   // eg (x: 1, y: 3) -> tile on the 4th row, at 2nd column
-  uint2 screen_tile_coord_idx = index_to_coord(vin.instanceId, screen_width_in_tiles);
+  uint2 screen_tile_coord_idx = index_to_coord(vin.instanceId, screen_tiles_per_row);
 
   // Calculate the position of this cell, starting from top left
   float2 pos = { -1, 1 };
   pos.x += screen_tile_coord_idx.x * inv_tile_screen_width;
   pos.y -= screen_tile_coord_idx.y * inv_tile_screen_height;
 
+  // If we ever want to render the tilemap at an offset from the top left, this is how that'd be done
+  // pos.x += screen_start_offset.x;
+  // pos.x += screen_start_offset.y;
+  
   // Offset the position to this position
   return float4(vin.PosL + pos, 0.0, 1.0f);
 }

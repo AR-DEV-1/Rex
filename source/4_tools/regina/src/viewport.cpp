@@ -1,5 +1,7 @@
 #include "regina/viewport.h"
 
+#include "rex_engine/gfx/rendering/renderer.h"
+
 namespace regina
 {
 	Viewport::Viewport(rsl::string_view name, rex::Tilemap* tilemap)
@@ -38,22 +40,16 @@ namespace regina
 		// number of tiles in a single row on screen
 		// the inv tile size of a single tile on the screen
 
-		rsl::unique_array<u8> tile_indices = tilemap_bounds(top_left);
+		update_screen_tilemap(top_left);
 
-		struct TilemapRenderData
-		{
+		rex::gfx::TilemapRenderRequest tilemap_render_request{};
 
-		};
-		TilemapRenderData tilemap_render_data{};
-		tilemap_render_data.tiles = tile_indices.get();
-		tilemap_render_data.num_tiles = tile_indices.count();
-		tilemap_render_data.tileset = m_tilemap->texture();
-		tilemap_render_data.tile_size_x = m_tilemap->tile_width_px();
-		tilemap_render_data.screen_width_in_tiles = m_screen_tile_resolution.x;
-		tilemap_render_data.inv_tile_screen_width = 2.0f / m_screen_tile_resolution.x;
-		tilemap_render_data.inv_tile_screen_height = 2.0f / m_screen_tile_resolution.y;
+		tilemap_render_request.render_target = m_render_target.get();
+		
+		tilemap_render_request.tilemap = m_screen_tilemap.get();
+		tilemap_render_request.tileset = m_tileset;
 
-		rex::gfx::renderer::instance()->submit_tilemap(tilemap_render_data);
+		rex::gfx::renderer::instance()->render_tilemap(tilemap_render_request);
 
 		//TilemapInfo info{};
 
@@ -96,22 +92,24 @@ namespace regina
 		return top_left;
 	}
 
-	rsl::unique_array<u8> Viewport::tilemap_bounds(rsl::pointi32 topLeftStart)
+	void Viewport::update_screen_tilemap(rsl::pointi32 topLeftStart)
 	{
+		if (m_screen_tilemap->width_in_tiles() != m_screen_tile_resolution.x || m_screen_tilemap->height_in_tiles() != m_screen_tile_resolution.y)
+		{
+			m_screen_tilemap = rsl::make_unique<rex::Tilemap>(m_screen_tile_resolution.x, m_screen_tile_resolution.y);
+		}
+
 		s32 num_tiles_until_end_of_row = m_tilemap->width_in_tiles() - topLeftStart.x;
 		s32 num_to_copy = rsl::min(m_screen_tile_resolution.x, num_tiles_until_end_of_row);
 
-		rsl::unique_array<u8> tile_bounds = rsl::make_unique<u8[]>(m_screen_tile_resolution.x * m_screen_tile_resolution.y);
-		u8* dst = tile_bounds.get();
 		s32 start_idx = topLeftStart.y * m_tilemap->width_in_tiles() + topLeftStart.x;
 		const u8* src = m_tilemap->tiles() + start_idx;
+		s32 offset = 0;
 		for (s32 row = 0; row < m_screen_tile_resolution.y; ++row)
 		{
-			rsl::memcpy(dst, src, num_to_copy);
-			dst += m_screen_tile_resolution.x;
+			m_screen_tilemap->set(src, num_to_copy, offset);
+			offset += m_screen_tile_resolution.x;
 			src += m_tilemap->width_in_tiles();
 		}
-
-		return tile_bounds;
 	}
 }
