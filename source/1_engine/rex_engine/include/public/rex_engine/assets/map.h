@@ -22,7 +22,7 @@ namespace rex
 	struct MapHeader
 	{
 		rsl::string name;											// name of the map
-		Blockset* tileset;										// the blockset to be used by the map
+		Blockset* blockset;										// the blockset to be used by the map
 		s8 width_in_blocks;										// represented in block count
 		s8 height_in_blocks;									// represented in block count
 		s8 border_block_idx;									// Index of the block used for the border if no connection blocks are present

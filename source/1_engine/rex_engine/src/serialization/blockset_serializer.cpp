@@ -19,7 +19,7 @@ namespace rex
 		rsl::string_view tileset_path = jsonContent["tileset"];
 		rsl::string_view blockset_path = jsonContent["blockset"];
 
-		Tileset* tileset = asset_db::instance()->load<Tileset>(tileset_path);
+		TilesetAsset* tileset = asset_db::instance()->load<TilesetAsset>(tileset_path);
 		rsl::unique_array<Block> blocks = load_block_indices(blockset_path);
 
 		return rsl::make_unique<Blockset>(tileset, rsl::move(blocks));

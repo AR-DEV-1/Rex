@@ -4,6 +4,8 @@
 
 #include "rex_engine/serialization/image_loading.h"
 
+#include "rex_std/bonus/math.h"
+
 namespace rex
 {
 	rsl::unique_ptr<Asset> TextureSerializer::serialize_from_json(const rex::json::json& jsonContent, LoadFlags loadFlags)
@@ -14,6 +16,7 @@ namespace rex
 	rsl::unique_ptr<Asset> TextureSerializer::serialize_from_binary(memory::BlobView content)
 	{
 		ImageLoadResult image_load_res = load_image(content);
+
 		return rsl::make_unique<TextureAsset>(rsl::move(image_load_res.data), image_load_res.width, image_load_res.height, image_load_res.num_channels);
 	}
 

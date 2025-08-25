@@ -15,9 +15,18 @@ namespace rex
 
 	void Tilemap::set(const u8* data, s32 len, s32 offset)
 	{
-		REX_ASSERT_X(offset + len < m_tiles.count(), "would write out of bounds of tiles array");
+		REX_ASSERT_X(offset + len <= m_tiles.count(), "would write out of bounds of tiles array");
 
 		rsl::memcpy(m_tiles.get() + offset, data, len);
+	}
+
+	s32 Tilemap::width_in_px() const
+	{
+		return m_width * m_tile_width_px;
+	}
+	s32 Tilemap::height_in_px() const
+	{
+		return m_height * m_tile_height_px;
 	}
 
 	s32 Tilemap::width_in_tiles() const
@@ -35,6 +44,10 @@ namespace rex
 	s32 Tilemap::tile_height_px() const
 	{
 		return m_tile_height_px;
+	}
+	s32 Tilemap::num_tiles() const
+	{
+		return m_tiles.count();
 	}
 	const u8* Tilemap::tiles() const
 	{

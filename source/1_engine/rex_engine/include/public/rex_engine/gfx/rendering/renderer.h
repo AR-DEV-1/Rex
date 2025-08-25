@@ -49,8 +49,8 @@ namespace rex
 
 		struct TilemapRenderRequest : RenderRequest
 		{
-			rex::Tilemap* tilemap;
-			rex::TilesetAsset* tileset;
+			const rex::Tilemap* tilemap;
+			const rex::TilesetAsset* tileset;
 		};
 
 		struct TilemapRenderData

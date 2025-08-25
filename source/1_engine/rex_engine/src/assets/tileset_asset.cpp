@@ -2,21 +2,24 @@
 
 namespace rex
 {
-	const rex::TextureAsset* TilesetAsset::tileset_texture() const
+	TilesetAsset::TilesetAsset(rsl::pointi8 tileSize, const Tileset* texture)
+		: m_tile_size(tileSize)
+		, m_tileset_texture(texture)
+	{
+		
+	}
+
+	const Tileset* TilesetAsset::tileset_texture() const
 	{
 		return m_tileset_texture;
 	}
-	const rex::Blockset* TilesetAsset::blockset() const
-	{
-		return m_blockset;
-	}
+	//const rex::Blockset* TilesetAsset::blockset() const
+	//{
+	//	return m_blockset;
+	//}
 
-	s32 TilesetAsset::tile_width_px() const
+	rsl::pointi8 TilesetAsset::tile_size() const
 	{
-		return m_tile_width_px;
-	}
-	s32 TilesetAsset::tile_height_px() const
-	{
-		return m_tile_height_px;
+		return m_tile_size;
 	}
 }

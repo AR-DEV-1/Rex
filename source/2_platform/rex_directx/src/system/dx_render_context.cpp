@@ -120,6 +120,7 @@ namespace rex
         dx_depth_render_target_view = &dx_depth_render_target->cpu_handle();
       }
 
+      transition_buffer(colorRenderTarget, ResourceState::RenderTarget);
       m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->dx_view().cpu_handle(), true, dx_depth_render_target_view);
     }
     // Clear the render target of the context

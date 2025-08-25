@@ -18,8 +18,6 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 
-#include "regina/viewport.h"
-
 DEFINE_LOG_CATEGORY(LogMainEditor);
 
 namespace regina
@@ -78,8 +76,10 @@ namespace regina
 	
 		render_widgets();
 
-		Viewport viewport("test viewport", m_tilemap.get());
-		viewport.update();
+		if (m_viewport)
+		{ 
+			m_viewport->update();
+		}
 
 		render_imgui_widgets();
 
@@ -183,6 +183,9 @@ namespace regina
 			// 2. Calculate the AABB for each map, converted to absolute coordinates and cache these
 			m_map_to_metadata = build_tilemap();
 		}
+
+		m_viewport = rsl::make_unique<Viewport>("test viewport", rsl::pointi32{160, 144}, m_tilemap.get(), nullptr);
+		m_viewport->set_tileset(m_active_map->desc().map_header.blockset->tileset());
 
 		// 3. Move the camera to the active map
 		rsl::pointi32 pos_in_tilemap = map_pos(m_active_map);

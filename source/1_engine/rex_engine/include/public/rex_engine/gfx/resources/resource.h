@@ -10,6 +10,8 @@ namespace rex
     public:
       virtual ~Resource() = default;
 
+      virtual void debug_set_name(rsl::string_view name) {}
+
     private:
 
     };

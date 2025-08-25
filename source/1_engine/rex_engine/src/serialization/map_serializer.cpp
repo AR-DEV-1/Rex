@@ -148,7 +148,7 @@ namespace rex
 		header.name = jsonContent["name"];
 		header.width_in_blocks = jsonContent["width"];
 		header.height_in_blocks = jsonContent["height"];
-		header.tileset = asset_db::instance()->load<Blockset>(jsonContent["blockset"]);
+		header.blockset = asset_db::instance()->load<Blockset>(jsonContent["blockset"]);
 		header.border_block_idx = jsonContent["border_block_idx"];
 
 		return header;

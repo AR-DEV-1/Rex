@@ -12,10 +12,15 @@ namespace rex
 
 		void set(const u8* data, s32 len, s32 offset);
 
+		s32 width_in_px() const;
+		s32 height_in_px() const;
+
 		s32 width_in_tiles() const;
 		s32 height_in_tiles() const;
 		s32 tile_width_px() const;
 		s32 tile_height_px() const;
+
+		s32 num_tiles() const;
 		const u8* tiles() const;
 
 	private:

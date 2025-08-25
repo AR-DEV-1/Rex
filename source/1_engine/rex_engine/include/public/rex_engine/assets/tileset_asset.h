@@ -1,9 +1,9 @@
 #pragma once
 
 #include "rex_engine/assets/asset.h"
-#include "rex_engine/assets/texture_asset.h"
+#include "rex_engine/assets/tileset.h"
 
-#include "rex_engine/assets/blockset.h"
+#include "rex_std/bonus/math.h"
 
 namespace rex
 {
@@ -15,19 +15,19 @@ namespace rex
 	class TilesetAsset : public Asset
 	{
 	public:
-		const rex::TextureAsset* tileset_texture() const;
-		const rex::Blockset* blockset() const;
+		TilesetAsset(rsl::pointi8 tileSize, const Tileset* texture);
 
-		s32 tile_width_px() const;
-		s32 tile_height_px() const;
+		const Tileset* tileset_texture() const;
+		//const rex::Blockset* blockset() const;
+
+		rsl::pointi8 tile_size() const;
 
 	private:
-		const rex::TextureAsset* m_tileset_texture;
-		const rex::Blockset* m_blockset;
+		const Tileset* m_tileset_texture;
+		//const rex::Blockset* m_blockset;
 
 		// Store how big the tiles are in pixels
-		s32 m_tile_width_px;
-		s32 m_tile_height_px;
+		rsl::pointi8 m_tile_size;
 	};
 
 }

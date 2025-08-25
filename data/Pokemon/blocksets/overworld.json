@@ -1,5 +1,5 @@
 {
   "type_name": "Blockset",
-  "tileset": "Pokemon/tilesets/overworld.png",
+  "tileset": "Pokemon/tilesets/overworld.json",
   "blockset": "Pokemon/blocksets/overworld.bst"
 }

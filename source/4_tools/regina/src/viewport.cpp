@@ -2,13 +2,20 @@
 
 #include "rex_engine/gfx/rendering/renderer.h"
 
+#include "rex_engine/gfx/resources/render_target.h"
+#include "rex_engine/gfx/graphics.h"
+
 namespace regina
 {
-	Viewport::Viewport(rsl::string_view name, rex::Tilemap* tilemap)
+	Viewport::Viewport(rsl::string_view name, rsl::pointi32 resolution, rex::Tilemap* tilemap, rex::TilesetAsset* tileset)
 		: m_name(name)
 		, m_tilemap(tilemap)
+		, m_tileset(tileset)
 		, m_screen_tile_resolution({20, 18})
-	{}
+	{
+		m_render_target = rex::gfx::gal::instance()->create_render_target(resolution.x, resolution.y, rex::gfx::TextureFormat::Unorm4);
+		m_render_target->debug_set_name("viewport render target");
+	}
 
 	void Viewport::update()
 	{
@@ -45,7 +52,6 @@ namespace regina
 		rex::gfx::TilemapRenderRequest tilemap_render_request{};
 
 		tilemap_render_request.render_target = m_render_target.get();
-		
 		tilemap_render_request.tilemap = m_screen_tilemap.get();
 		tilemap_render_request.tileset = m_tileset;
 
@@ -68,6 +74,11 @@ namespace regina
 		//rex::gfx::submit_tilemap()
 	}
 
+	void Viewport::set_tileset(const rex::TilesetAsset* tileset)
+	{
+		m_tileset = tileset;
+	}
+
 	rsl::pointi32 Viewport::top_left_from_camera_pos(rsl::pointi32 cameraPos)
 	{
 		// The camera position is in tile coordinates, which will always point to the middle of the screen
@@ -76,8 +87,14 @@ namespace regina
 		// using the current zoom level and the number of pixels a single tile takes on screen.
 		// Using this information, we subtract half the width and height from the camera pos
 		// so it points to the top left of the screen
-		cameraPos.x = 120;
-		cameraPos.y = 486;
+
+		// AABB of pallet town
+		// min:	{x = 100 y = 468 }	
+		// max: {x = 140 y = 504 }	
+
+		// put the camera pos to this to make the top left of the viewport the top left of pallet town
+		cameraPos.x = 100 + m_screen_tile_resolution.x / 2;
+		cameraPos.y = 468 + m_screen_tile_resolution.y / 2;
 
 		rsl::pointi32 top_left = cameraPos;
 		top_left.x -= m_screen_tile_resolution.x / 2;
@@ -94,7 +111,7 @@ namespace regina
 
 	void Viewport::update_screen_tilemap(rsl::pointi32 topLeftStart)
 	{
-		if (m_screen_tilemap->width_in_tiles() != m_screen_tile_resolution.x || m_screen_tilemap->height_in_tiles() != m_screen_tile_resolution.y)
+		if (m_screen_tilemap == nullptr || m_screen_tilemap->width_in_tiles() != m_screen_tile_resolution.x || m_screen_tilemap->height_in_tiles() != m_screen_tile_resolution.y)
 		{
 			m_screen_tilemap = rsl::make_unique<rex::Tilemap>(m_screen_tile_resolution.x, m_screen_tile_resolution.y);
 		}

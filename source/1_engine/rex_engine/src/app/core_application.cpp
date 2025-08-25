@@ -30,6 +30,7 @@
 
 #include "rex_engine/serialization/map_serializer.h"
 #include "rex_engine/serialization/tileset_serializer.h"
+#include "rex_engine/serialization/tileset_asset_serializer.h"
 #include "rex_engine/serialization/blockset_serializer.h"
 #include "rex_engine/serialization/texture_serializer.h"
 
@@ -328,6 +329,7 @@ namespace rex
     asset_db::instance()->add_serializer<Map>(rsl::make_unique<MapSerializer>());
     asset_db::instance()->add_serializer<Blockset>(rsl::make_unique<BlocksetSerializer>());
     asset_db::instance()->add_serializer<Tileset>(rsl::make_unique<TilesetSerializer>());
+    asset_db::instance()->add_serializer<TilesetAsset>(rsl::make_unique<TilesetAssetSerializer>());
     asset_db::instance()->add_serializer<TextureAsset>(rsl::make_unique<TextureSerializer>());
   }
 

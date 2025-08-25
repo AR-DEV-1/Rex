@@ -300,7 +300,7 @@ namespace rex
 
 		rsl::unique_ptr<RenderTarget>         DirectXInterface::create_render_target(s32 width, s32 height, TextureFormat format)
 		{
-			wrl::ComPtr<ID3D12Resource> d3d_texture = allocate_texture2d(width, height, format);
+			wrl::ComPtr<ID3D12Resource> d3d_texture = allocate_render_target(width, height, format);
 			return create_render_target(d3d_texture);
 		}
 		rsl::unique_ptr<PipelineState>        DirectXInterface::create_pso(const PipelineStateDesc& desc)
@@ -623,6 +623,12 @@ namespace rex
 			DXGI_FORMAT d3d_format = d3d::to_dx12(format);
 			return m_heap->create_texture2d(d3d_format, width, height);
 		}
+		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_render_target(s32 width, s32 height, TextureFormat format)
+		{
+			DXGI_FORMAT d3d_format = d3d::to_dx12(format);
+			return m_heap->create_texture2d(d3d_format, width, height, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+		}
+
 		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_depth_stencil(s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc)
 		{
 			DXGI_FORMAT d3d_format = d3d::to_dx12(format);

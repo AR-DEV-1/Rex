@@ -18,6 +18,8 @@ namespace rex
     Tileset(rsl::unique_ptr<gfx::Texture2D> texture);
     //const u8* tile_pixel_row(u8 tileIdx, s8 pxRow) const;
 
+    const gfx::Texture2D* texture_resource() const;
+
   private:
     //const u8* tile_data(u8 tileIdx) const;
 

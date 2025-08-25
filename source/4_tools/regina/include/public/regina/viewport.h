@@ -2,19 +2,31 @@
 
 #include "rex_engine/engine/types.h"
 #include "rex_engine/assets/tilemap.h"
-#include "rex_engine/assets/tileset.h"
+#include "rex_engine/assets/tileset_asset.h"
+#include "rex_engine/assets/blockset.h"
 #include "rex_std/string.h"
 #include "rex_std/bonus/math.h"
+
+namespace rex
+{
+	namespace gfx
+	{
+		class RenderTarget;
+	}
+}
 
 namespace regina
 {
 	class Viewport
 	{
 	public:
-		Viewport(rsl::string_view name, rex::Tilemap* tilemap);
+		Viewport(rsl::string_view name, rsl::pointi32 resolution, rex::Tilemap* tilemap, rex::TilesetAsset* tileset);
 
 		void update();
 
+		void set_tileset(const rex::TilesetAsset* tileset);
+
+	private:
 		rsl::pointi32 top_left_from_camera_pos(rsl::pointi32 cameraPos);
 		void update_screen_tilemap(rsl::pointi32 topLeftStart);
 
@@ -24,7 +36,7 @@ namespace regina
 
 		// The tileset to use for the viewport
 		// We currently only support 1 tileset per viewport
-		rex::Tileset* m_tileset;
+		const rex::TilesetAsset* m_tileset;
 
 		// the tilemap of the entire world, only a subset of this is rendered at a time
 		rex::Tilemap* m_tilemap;

@@ -8,6 +8,11 @@ namespace rex
 		: m_texture_resource(rsl::move(texture))
 	{}
 
+	const gfx::Texture2D* Tileset::texture_resource() const
+	{
+		return m_texture_resource.get();
+	}
+
 	//Tileset::Tileset(const u8* tilesetData)
 	//	: m_tileset_data(tilesetData)
 	//{}
