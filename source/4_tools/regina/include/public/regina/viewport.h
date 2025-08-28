@@ -12,6 +12,7 @@ namespace rex
 	namespace gfx
 	{
 		class RenderTarget;
+		class ResourceView;
 	}
 }
 
@@ -49,5 +50,6 @@ namespace regina
 		rsl::pointi32 m_screen_tile_resolution;
 
 		rsl::unique_ptr<rex::gfx::RenderTarget> m_render_target;
+		rsl::unique_ptr<rex::gfx::ResourceView> m_render_target_srv;
 	};
 }

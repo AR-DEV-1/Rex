@@ -107,6 +107,9 @@ namespace rex
       rsl::unique_ptr<Sampler2D>              create_sampler2d(const SamplerDesc& desc)                                                                       override;
       rsl::unique_ptr<UnorderedAccessBuffer>  create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr)                               override;
 
+      // View creation
+      rsl::unique_ptr<ResourceView> create_srv(RenderTarget* rt) override;
+
       // -------------------------
       // Resource creation from Direct X
       // -------------------------
@@ -119,6 +122,7 @@ namespace rex
 
       // Log live gpu objects using DirectX api
       void report_live_objects();
+
 
     protected:
       void api_init() override;

@@ -218,7 +218,7 @@ namespace rex
 
       m_fonts_texture = gfx::gal::instance()->create_texture2d(width, height, format, pixels);
 
-      io.Fonts->SetTexID((ImTextureID)m_fonts_texture.get());
+      io.Fonts->SetTexID((ImTextureID)m_fonts_texture->resource_view());
     }
     // Create the sampler, used by ImGui
     void ImGuiRenderer::init_font_sampler()

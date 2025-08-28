@@ -2,8 +2,13 @@
 
 #include "rex_engine/gfx/rendering/renderer.h"
 
+#include "rex_engine/assets/tileset_asset.h"
 #include "rex_engine/gfx/resources/render_target.h"
 #include "rex_engine/gfx/graphics.h"
+
+#include "imgui/imgui.h"
+#include "rex_engine/gfx/imgui/imgui_utils.h"
+#include "rex_engine/gfx/imgui/imgui_scoped_widget.h"
 
 namespace regina
 {
@@ -11,10 +16,11 @@ namespace regina
 		: m_name(name)
 		, m_tilemap(tilemap)
 		, m_tileset(tileset)
-		, m_screen_tile_resolution({20, 18})
+		, m_screen_tile_resolution({resolution.x / 8, resolution.y / 8 })
 	{
 		m_render_target = rex::gfx::gal::instance()->create_render_target(resolution.x, resolution.y, rex::gfx::TextureFormat::Unorm4);
 		m_render_target->debug_set_name("viewport render target");
+		m_render_target_srv = rex::gfx::gal::instance()->create_srv(m_render_target.get());
 	}
 
 	void Viewport::update()
@@ -57,6 +63,15 @@ namespace regina
 
 		rex::gfx::renderer::instance()->render_tilemap(tilemap_render_request);
 
+		if (auto widget = rex::imgui::ScopedWidget("Viewport"))
+		{
+			ImGui::GetCurrentWindow()->WindowClass.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_HiddenTabBar;
+			ImGui::Text("This is the viewport");
+
+			ImVec2 imageSize{ (f32)m_screen_tile_resolution.x * m_tileset->tile_size().x, (f32)m_screen_tile_resolution.y * m_tileset->tile_size().y };
+			ImGui::Image((ImTextureID)m_render_target_srv.get(), imageSize);
+		}
+
 		//TilemapInfo info{};
 
 		//// Provide the list of tile indices that we want to render
@@ -93,8 +108,20 @@ namespace regina
 		// max: {x = 140 y = 504 }	
 
 		// put the camera pos to this to make the top left of the viewport the top left of pallet town
-		cameraPos.x = 100 + m_screen_tile_resolution.x / 2;
-		cameraPos.y = 468 + m_screen_tile_resolution.y / 2;
+
+		static s32 x_start = 481;
+		static s32 y_start = 0;
+		static s32 counter = 0;
+
+		counter += 1;
+
+		if (counter == 100)
+		{
+			y_start += 1;
+		}
+
+		cameraPos.x = x_start + m_screen_tile_resolution.x / 2;
+		cameraPos.y = y_start + m_screen_tile_resolution.y / 2;
 
 		rsl::pointi32 top_left = cameraPos;
 		top_left.x -= m_screen_tile_resolution.x / 2;

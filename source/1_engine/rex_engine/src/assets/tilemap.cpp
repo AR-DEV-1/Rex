@@ -11,6 +11,7 @@ namespace rex
 		, m_tile_height_px(8)
 	{
 		m_tiles = rsl::make_unique<u8[]>(m_width * m_height);
+		rsl::memset(m_tiles.get(), 0, m_width * m_height);
 	}
 
 	void Tilemap::set(const u8* data, s32 len, s32 offset)

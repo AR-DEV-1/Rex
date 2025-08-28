@@ -185,6 +185,12 @@ namespace rex
       virtual rsl::unique_ptr<Material> create_material(const MaterialDesc& matDesc) = 0;
       virtual rsl::unique_ptr<Sampler2D> create_sampler2d(const SamplerDesc& desc) = 0;
       virtual rsl::unique_ptr<UnorderedAccessBuffer> create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr) = 0;
+      
+      // --------------------------------
+      // View creation
+      // --------------------------------
+      // Create a shader resource view pointing to a render target
+      virtual rsl::unique_ptr<ResourceView> create_srv(RenderTarget* rt) = 0;
 
       // --------------------------------
       // Contexts

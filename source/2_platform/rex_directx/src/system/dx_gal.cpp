@@ -497,6 +497,15 @@ namespace rex
 
 			return uab;
 		}
+		
+		// View creation
+		// -------------------------------------------
+		rsl::unique_ptr<ResourceView> DirectXInterface::create_srv(RenderTarget* rt)
+		{
+			DxResourceView view = create_texture2d_srv(d3d::to_dx12(rt)->dx_object());
+			return rsl::make_unique<DxResourceView>(view);
+		}
+
 
 		// API Specific functions
 		// -------------------------------------------

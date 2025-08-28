@@ -184,7 +184,7 @@ namespace regina
 			m_map_to_metadata = build_tilemap();
 		}
 
-		m_viewport = rsl::make_unique<Viewport>("test viewport", rsl::pointi32{160, 144}, m_tilemap.get(), nullptr);
+		m_viewport = rsl::make_unique<Viewport>("test viewport", rsl::pointi32{320, 288}, m_tilemap.get(), nullptr);
 		m_viewport->set_tileset(m_active_map->desc().map_header.blockset->tileset());
 
 		// 3. Move the camera to the active map

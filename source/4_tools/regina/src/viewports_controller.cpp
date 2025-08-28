@@ -73,15 +73,15 @@ namespace regina
 		ImGuiWindowFlags window_flags{};
 		window_flags |= ImGuiWindowFlags_NoTitleBar;
 
-		if (auto widget = rex::imgui::ScopedWidget("Viewport", nullptr, window_flags))
-		{
-			// Make sure that we hide the tab bar, it doesn't make sense to have it for our viewport
-			ImGui::GetCurrentWindow()->WindowClass.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_HiddenTabBar;
+		//if (auto widget = rex::imgui::ScopedWidget("Viewport", nullptr, window_flags))
+		//{
+		//	// Make sure that we hide the tab bar, it doesn't make sense to have it for our viewport
+		//	ImGui::GetCurrentWindow()->WindowClass.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_HiddenTabBar;
 
-			// Use the renderpass's render target as image for the viewport
-			//const rex::gfx::RenderTarget* render_target = m_render_pass->render_target();
-			//rex::imgui::image(render_target);
-		}
+		//	// Use the renderpass's render target as image for the viewport
+		//	//const rex::gfx::RenderTarget* render_target = m_render_pass->render_target();
+		//	//rex::imgui::image(render_target);
+		//}
 	}
 	TileMap ViewportsController::build_backend_tilemap(const rsl::vector<rex::MapDesc>& maps)
 	{
