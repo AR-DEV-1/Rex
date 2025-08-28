@@ -136,7 +136,7 @@ namespace rex
 			Viewport viewport = { glm::vec2(0.0f, 0.0f), viewport_width, viewport_height, 0.0f, 1.0f };
 			render_ctx->set_viewport(viewport);
 
-			ScissorRect rect = { 0, 0, viewport_width, viewport_height };
+			ScissorRect rect = { 0, 0, viewport_width/2, viewport_height };
 			render_ctx->set_scissor_rect(rect);
 
 			//render_ctx->use_swapchain_framebuffer();

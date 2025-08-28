@@ -12,6 +12,127 @@
 
 namespace regina
 {
+	class TileRenderPass
+	{
+	public:
+		TileRenderPass(rex::gfx::RenderTarget* rt, rex::Tilemap* tilemap, rex::TilesetAsset* tileset)
+			: m_render_target(rt)
+			, m_tilemap(tilemap)
+			, m_tileset(tileset)
+		{}
+
+
+		void render()
+		{
+
+		}
+
+	private:
+		void init()
+		{
+			init_vb();
+			init_ib();
+			init_render_info();
+			init_tile_indices_uab();
+		}
+		void init_vb()
+		{
+			// Perform the calculations required to initialize the VB and other render data
+			s32 render_target_width = tilemapRenderRequest.render_target->width();
+			s32 render_target_height = tilemapRenderRequest.render_target->height();
+			rsl::pointi8 tile_size = tilemapRenderRequest.tileset->tile_size();
+
+			s32 render_target_width_in_tiles = render_target_width / tile_size.x;
+			s32 render_target_height_in_tiles = render_target_height / tile_size.y;
+
+			f32 inv_tile_width = 2.0f / render_target_width_in_tiles;
+			f32 inv_tile_height = 2.0f / render_target_height_in_tiles;
+
+			s32 tileset_width = tilemapRenderRequest.tileset->tileset_texture()->texture_resource()->width();
+			s32 tileset_height = tilemapRenderRequest.tileset->tileset_texture()->texture_resource()->height();
+
+			f32 uv_width = tile_size.x / (f32)tileset_width;
+			f32 uv_height = tile_size.y / (f32)tileset_height;
+
+			const s32 num_vertices_per_tile = 4;
+
+			rsl::array<TileVertex, num_vertices_per_tile> tile_vertices{};
+
+			tile_vertices[0] = TileVertex{ rsl::point<f32>(0,              0),                rsl::point<f32>(0.0f,     0.0f) };
+			tile_vertices[1] = TileVertex{ rsl::point<f32>(inv_tile_width, 0),                rsl::point<f32>(uv_width, 0.0f) };
+			tile_vertices[2] = TileVertex{ rsl::point<f32>(0,              -inv_tile_height), rsl::point<f32>(0.0f,     uv_height) };
+			tile_vertices[3] = TileVertex{ rsl::point<f32>(inv_tile_width, -inv_tile_height), rsl::point<f32>(uv_width, uv_height) };
+
+			tilemap_render_data.tiles_vb_gpu = rex::gfx::gal::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
+			tilemap_render_data.tiles_ib_gpu = m_index_buffer.get();
+		}
+		void init_ib()
+		{
+			const s32 num_indices_per_tile = 6;
+			rsl::array<u16, 6> tile_ib{};
+
+			tile_ib[0] = 0;
+			tile_ib[1] = 1;
+			tile_ib[2] = 2;
+
+			tile_ib[3] = 1;
+			tile_ib[4] = 3;
+			tile_ib[5] = 2;
+
+			m_index_buffer = gal::instance()->create_index_buffer(num_indices_per_tile, IndexBufferFormat::Uint16);
+
+			// create the constant buffer
+			// -----------------------------------------
+			auto render_ctx = gal::instance()->new_render_ctx();
+			render_ctx->update_buffer(m_index_buffer.get(), tile_ib.data(), tile_ib.size() * sizeof(tile_ib[0]));
+			render_ctx->transition_buffer(m_index_buffer.get(), ResourceState::IndexBuffer);
+		}
+		void init_render_info()
+		{
+			struct TilemapRenderingMetaData
+			{
+				// Tile texture data
+				u32 texture_tiles_per_row;   // the number of tiles per row in the tileset texture
+				f32 inv_texture_width;       // the inverse width of the tileset texture, in pixels
+				f32 inv_texture_height;      // the inverse height of the tileset texture, in pixels
+
+				// Render target data
+				u32 screen_width_in_tiles;   // the number of tiles we render on a single row
+				f32 inv_tile_screen_width;   // the inverse of the width of a single tile on the screen
+				f32 inv_tile_screen_height;  // the inverse of the height of a single tile on the screen
+			};
+
+			TilemapRenderingMetaData render_metadata{};
+			render_metadata.texture_tiles_per_row = tileset_width / tile_size.x;
+			render_metadata.inv_texture_width = uv_width;
+			render_metadata.inv_texture_height = uv_height;
+
+			render_metadata.screen_width_in_tiles = tilemapRenderRequest.tilemap->width_in_tiles();
+			render_metadata.inv_tile_screen_width = inv_tile_width;
+			render_metadata.inv_tile_screen_height = inv_tile_height;
+
+			tilemap_render_data.tile_render_info = gal::instance()->create_constant_buffer(sizeof(TilemapRenderingMetaData));
+		}
+		void init_tile_indices_uab()
+		{
+			tilemap_render_data.tile_indices_buffer = gal::instance()->create_unordered_access_buffer(tilemapRenderRequest.tilemap->num_tiles());
+		}
+
+	private:
+		rsl::unique_ptr<rex::gfx::VertexBuffer> m_tiles_vb_gpu;
+		rsl::unique_ptr<rex::gfx::IndexBuffer*> m_tiles_ib_gpu;
+		rsl::unique_ptr<rex::gfx::ConstantBuffer> m_tile_render_info;
+		rsl::unique_ptr<rex::gfx::UnorderedAccessBuffer> m_tiles_indices_buffer;
+
+		rex::gfx::RenderTarget* m_render_target;
+		rex::Tilemap* m_tilemap;
+		rex::TilesetAsset* m_tileset;
+	};
+
+
+
+
+
 	Viewport::Viewport(rsl::string_view name, rsl::pointi32 resolution, rex::Tilemap* tilemap, rex::TilesetAsset* tileset)
 		: m_name(name)
 		, m_tilemap(tilemap)
@@ -115,10 +236,11 @@ namespace regina
 
 		counter += 1;
 
-		if (counter == 100)
-		{
-			y_start += 1;
-		}
+		//if (counter == 100)
+		//{
+		//	x_start = 100;
+		//	y_start = 140;
+		//}
 
 		cameraPos.x = x_start + m_screen_tile_resolution.x / 2;
 		cameraPos.y = y_start + m_screen_tile_resolution.y / 2;
