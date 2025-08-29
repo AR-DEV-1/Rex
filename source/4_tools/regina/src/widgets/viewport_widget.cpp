@@ -70,11 +70,11 @@ namespace regina
 		};
 	}
 
-	struct TileVertex
-	{
-		rsl::point<f32> pos;
-		rsl::point<f32> uv;
-	};
+	//struct TileVertex
+	//{
+	//	rsl::point<f32> pos;
+	//	rsl::point<f32> uv;
+	//};
 
 	// This struct is the mapping of the constant buffer with the same name in the shader
 	struct TileRenderingMetaData

@@ -12,121 +12,172 @@
 
 namespace regina
 {
-	class TileRenderPass
-	{
-	public:
-		TileRenderPass(rex::gfx::RenderTarget* rt, rex::Tilemap* tilemap, rex::TilesetAsset* tileset)
-			: m_render_target(rt)
-			, m_tilemap(tilemap)
-			, m_tileset(tileset)
-		{}
+	//struct TileVertex
+	//{
+	//	rsl::point<f32> pos;
+	//	rsl::point<f32> uv;
+	//};
 
+	//class TileRenderPass
+	//{
+	//public:
+	//	TileRenderPass(rex::gfx::RenderTarget* rt, const rex::Tilemap* tilemap, const rex::TilesetAsset* tileset)
+	//		: m_render_target(rt)
+	//		, m_tilemap(tilemap)
+	//		, m_tileset(tileset)
+	//	{}
 
-		void render()
-		{
+	//	void set_tileset(const rex::TilesetAsset* tileset)
+	//	{
+	//		m_tileset = tileset;
+	//	}
+	//	void render(rex::gfx::RenderContext* renderCtx)
+	//	{
+	//		const s32 tile_byte_size = sizeof(m_tilemap->tiles()[0]);
+	//		renderCtx->update_buffer(m_tiles_indices_buffer.get(), m_tilemap->tiles(), m_tilemap->num_tiles() * tile_byte_size);
 
-		}
+	//		// Bind all the resources to the gfx pipeline
+	//		renderCtx->set_vertex_buffer(m_tiles_vb_gpu.get(), 0);
+	//		renderCtx->set_index_buffer(m_tiles_ib_gpu.get());
+	//		renderCtx->set_render_target(m_render_target);
 
-	private:
-		void init()
-		{
-			init_vb();
-			init_ib();
-			init_render_info();
-			init_tile_indices_uab();
-		}
-		void init_vb()
-		{
-			// Perform the calculations required to initialize the VB and other render data
-			s32 render_target_width = m_render_target->width();
-			s32 render_target_height = m_render_target->height();
-			rsl::pointi8 tile_size = m_tileset->tile_size();
+	//		s32 render_target_width = m_render_target->width();
+	//		s32 render_target_height = m_render_target->height();
 
-			s32 render_target_width_in_tiles = render_target_width / tile_size.x;
-			s32 render_target_height_in_tiles = render_target_height / tile_size.y;
+	//		f32 viewport_width = static_cast<f32>(render_target_width);
+	//		f32 viewport_height = static_cast<f32>(render_target_height);
+	//		rex::gfx::Viewport viewport = { glm::vec2(0.0f, 0.0f), viewport_width, viewport_height, 0.0f, 1.0f };
+	//		renderCtx->set_viewport(viewport);
 
-			f32 inv_tile_width = 2.0f / render_target_width_in_tiles;
-			f32 inv_tile_height = 2.0f / render_target_height_in_tiles;
+	//		rex::gfx::ScissorRect rect = { 0, 0, viewport_width, viewport_height };
+	//		renderCtx->set_scissor_rect(rect);
 
-			s32 tileset_width = m_tileset->tileset_texture()->texture_resource()->width();
-			s32 tileset_height = m_tileset->tileset_texture()->texture_resource()->height();
+	//		// Send the draw command
+	//		const s32 index_count_per_instance = 6;
+	//		const s32 instance_count = m_tilemap->num_tiles();
+	//		renderCtx->draw_indexed_instanced(index_count_per_instance, instance_count, 0, 0, 0);
+	//	}
 
-			f32 uv_width = tile_size.x / (f32)tileset_width;
-			f32 uv_height = tile_size.y / (f32)tileset_height;
+	//private:
+	//	void init()
+	//	{
+	//		auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
 
-			const s32 num_vertices_per_tile = 4;
+	//		init_vb(render_ctx.get());
+	//		init_ib(render_ctx.get());
+	//		init_render_info(render_ctx.get());
+	//		init_tile_indices_uab(render_ctx.get());
+	//	}
+	//	void init_vb(rex::gfx::RenderContext* renderCtx)
+	//	{
+	//		// Perform the calculations required to initialize the VB and other render data
+	//		s32 render_target_width = m_render_target->width();
+	//		s32 render_target_height = m_render_target->height();
+	//		rsl::pointi8 tile_size = m_tileset->tile_size();
 
-			rsl::array<TileVertex, num_vertices_per_tile> tile_vertices{};
+	//		s32 render_target_width_in_tiles = render_target_width / tile_size.x;
+	//		s32 render_target_height_in_tiles = render_target_height / tile_size.y;
 
-			tile_vertices[0] = TileVertex{ rsl::point<f32>(0,              0),                rsl::point<f32>(0.0f,     0.0f) };
-			tile_vertices[1] = TileVertex{ rsl::point<f32>(inv_tile_width, 0),                rsl::point<f32>(uv_width, 0.0f) };
-			tile_vertices[2] = TileVertex{ rsl::point<f32>(0,              -inv_tile_height), rsl::point<f32>(0.0f,     uv_height) };
-			tile_vertices[3] = TileVertex{ rsl::point<f32>(inv_tile_width, -inv_tile_height), rsl::point<f32>(uv_width, uv_height) };
+	//		f32 inv_tile_width = 2.0f / render_target_width_in_tiles;
+	//		f32 inv_tile_height = 2.0f / render_target_height_in_tiles;
 
-			m_tiles_vb_gpu = rex::gfx::gal::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
-		}
-		void init_ib()
-		{
-			const s32 num_indices_per_tile = 6;
-			rsl::array<u16, 6> tile_ib{};
+	//		s32 tileset_width = m_tileset->tileset_texture()->texture_resource()->width();
+	//		s32 tileset_height = m_tileset->tileset_texture()->texture_resource()->height();
 
-			tile_ib[0] = 0;
-			tile_ib[1] = 1;
-			tile_ib[2] = 2;
+	//		f32 uv_width = tile_size.x / (f32)tileset_width;
+	//		f32 uv_height = tile_size.y / (f32)tileset_height;
 
-			tile_ib[3] = 1;
-			tile_ib[4] = 3;
-			tile_ib[5] = 2;
+	//		const s32 num_vertices_per_tile = 4;
 
-			m_tiles_ib_gpu = rex::gfx::gal::instance()->create_index_buffer(num_indices_per_tile, rex::gfx::IndexBufferFormat::Uint16);
+	//		rsl::array<TileVertex, num_vertices_per_tile> tile_vertices{};
 
-			// create the constant buffer
-			// -----------------------------------------
-			auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
-			render_ctx->update_buffer(m_tiles_ib_gpu.get(), tile_ib.data(), tile_ib.size() * sizeof(tile_ib[0]));
-			render_ctx->transition_buffer(m_tiles_ib_gpu.get(), rex::gfx::ResourceState::IndexBuffer);
-		}
-		void init_render_info()
-		{
-			struct TilemapRenderingMetaData
-			{
-				// Tile texture data
-				u32 texture_tiles_per_row;   // the number of tiles per row in the tileset texture
-				f32 inv_texture_width;       // the inverse width of the tileset texture, in pixels
-				f32 inv_texture_height;      // the inverse height of the tileset texture, in pixels
+	//		tile_vertices[0] = TileVertex{ rsl::point<f32>(0,              0),                rsl::point<f32>(0.0f,     0.0f) };
+	//		tile_vertices[1] = TileVertex{ rsl::point<f32>(inv_tile_width, 0),                rsl::point<f32>(uv_width, 0.0f) };
+	//		tile_vertices[2] = TileVertex{ rsl::point<f32>(0,              -inv_tile_height), rsl::point<f32>(0.0f,     uv_height) };
+	//		tile_vertices[3] = TileVertex{ rsl::point<f32>(inv_tile_width, -inv_tile_height), rsl::point<f32>(uv_width, uv_height) };
 
-				// Render target data
-				u32 screen_width_in_tiles;   // the number of tiles we render on a single row
-				f32 inv_tile_screen_width;   // the inverse of the width of a single tile on the screen
-				f32 inv_tile_screen_height;  // the inverse of the height of a single tile on the screen
-			};
+	//		m_tiles_vb_gpu = rex::gfx::gal::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
+	//		renderCtx->update_buffer(m_tiles_vb_gpu.get(), tile_vertices.data(), tile_vertices.size() * sizeof(TileVertex));
+	//		renderCtx->transition_buffer(m_tiles_vb_gpu.get(), rex::gfx::ResourceState::VertexAndConstantBuffer);
+	//	}
+	//	void init_ib(rex::gfx::RenderContext* renderCtx)
+	//	{
+	//		const s32 num_indices_per_tile = 6;
+	//		rsl::array<u16, 6> tile_ib{};
 
-			TilemapRenderingMetaData render_metadata{};
-			render_metadata.texture_tiles_per_row = tileset_width / tile_size.x;
-			render_metadata.inv_texture_width = uv_width;
-			render_metadata.inv_texture_height = uv_height;
+	//		tile_ib[0] = 0;
+	//		tile_ib[1] = 1;
+	//		tile_ib[2] = 2;
 
-			render_metadata.screen_width_in_tiles = tilemapRenderRequest.tilemap->width_in_tiles();
-			render_metadata.inv_tile_screen_width = inv_tile_width;
-			render_metadata.inv_tile_screen_height = inv_tile_height;
+	//		tile_ib[3] = 1;
+	//		tile_ib[4] = 3;
+	//		tile_ib[5] = 2;
 
-			tilemap_render_data.tile_render_info = rex::gfx::gal::instance()->create_constant_buffer(sizeof(TilemapRenderingMetaData));
-		}
-		void init_tile_indices_uab()
-		{
-			tilemap_render_data.tile_indices_buffer = rex::gfx::gal::instance()->create_unordered_access_buffer(m_tilemap->num_tiles());
-		}
+	//		m_tiles_ib_gpu = rex::gfx::gal::instance()->create_index_buffer(num_indices_per_tile, rex::gfx::IndexBufferFormat::Uint16);
 
-	private:
-		rsl::unique_ptr<rex::gfx::VertexBuffer> m_tiles_vb_gpu;
-		rsl::unique_ptr<rex::gfx::IndexBuffer*> m_tiles_ib_gpu;
-		rsl::unique_ptr<rex::gfx::ConstantBuffer> m_tile_render_info;
-		rsl::unique_ptr<rex::gfx::UnorderedAccessBuffer> m_tiles_indices_buffer;
+	//		// create the constant buffer
+	//		// -----------------------------------------
+	//		renderCtx->update_buffer(m_tiles_ib_gpu.get(), tile_ib.data(), tile_ib.size() * sizeof(tile_ib[0]));
+	//		renderCtx->transition_buffer(m_tiles_ib_gpu.get(), rex::gfx::ResourceState::IndexBuffer);
+	//	}
+	//	void init_render_info(rex::gfx::RenderContext* renderCtx)
+	//	{
+	//		struct TilemapRenderingMetaData
+	//		{
+	//			// Tile texture data
+	//			u32 texture_tiles_per_row;   // the number of tiles per row in the tileset texture
+	//			f32 inv_texture_width;       // the inverse width of the tileset texture, in pixels
+	//			f32 inv_texture_height;      // the inverse height of the tileset texture, in pixels
 
-		rex::gfx::RenderTarget* m_render_target;
-		rex::Tilemap* m_tilemap;
-		rex::TilesetAsset* m_tileset;
-	};
+	//			// Render target data
+	//			u32 screen_width_in_tiles;   // the number of tiles we render on a single row
+	//			f32 inv_tile_screen_width;   // the inverse of the width of a single tile on the screen
+	//			f32 inv_tile_screen_height;  // the inverse of the height of a single tile on the screen
+	//		};
+
+	//		s32 tileset_width = m_tileset->tileset_texture()->texture_resource()->width();
+	//		s32 tileset_height = m_tileset->tileset_texture()->texture_resource()->height();
+
+	//		s32 render_target_width = m_render_target->width();
+	//		s32 render_target_height = m_render_target->height();
+	//		rsl::pointi8 tile_size = m_tileset->tile_size();
+
+	//		s32 render_target_width_in_tiles = render_target_width / tile_size.x;
+	//		s32 render_target_height_in_tiles = render_target_height / tile_size.y;
+
+	//		f32 uv_width = tile_size.x / (f32)tileset_width;
+	//		f32 uv_height = tile_size.y / (f32)tileset_height;
+
+	//		f32 inv_tile_width = 2.0f / render_target_width_in_tiles;
+	//		f32 inv_tile_height = 2.0f / render_target_height_in_tiles;
+
+	//		TilemapRenderingMetaData render_metadata{};
+	//		render_metadata.texture_tiles_per_row = tileset_width / tile_size.x;
+	//		render_metadata.inv_texture_width = uv_width;
+	//		render_metadata.inv_texture_height = uv_height;
+
+	//		render_metadata.screen_width_in_tiles = m_tilemap->width_in_tiles();
+	//		render_metadata.inv_tile_screen_width = inv_tile_width;
+	//		render_metadata.inv_tile_screen_height = inv_tile_height;
+
+	//		m_tile_render_info = rex::gfx::gal::instance()->create_constant_buffer(sizeof(TilemapRenderingMetaData));
+	//		renderCtx->update_buffer(m_tile_render_info.get(), &render_metadata, sizeof(render_metadata));
+	//	}
+	//	void init_tile_indices_uab(rex::gfx::RenderContext* renderCtx)
+	//	{
+	//		m_tiles_indices_buffer = rex::gfx::gal::instance()->create_unordered_access_buffer(m_tilemap->num_tiles());
+	//	}
+
+	//private:
+	//	rsl::unique_ptr<rex::gfx::VertexBuffer> m_tiles_vb_gpu;
+	//	rsl::unique_ptr<rex::gfx::IndexBuffer> m_tiles_ib_gpu;
+	//	rsl::unique_ptr<rex::gfx::ConstantBuffer> m_tile_render_info;
+	//	rsl::unique_ptr<rex::gfx::UnorderedAccessBuffer> m_tiles_indices_buffer;
+
+	//	rex::gfx::RenderTarget* m_render_target;
+	//	const rex::Tilemap* m_tilemap;
+	//	const rex::TilesetAsset* m_tileset;
+	//};
 
 
 
@@ -141,6 +192,8 @@ namespace regina
 		m_render_target = rex::gfx::gal::instance()->create_render_target(resolution.x, resolution.y, rex::gfx::TextureFormat::Unorm4);
 		m_render_target->debug_set_name("viewport render target");
 		m_render_target_srv = rex::gfx::gal::instance()->create_srv(m_render_target.get());
+
+		m_tile_render_pass = rsl::make_unique<TileRenderPass>(m_render_target.get(), m_screen_tilemap.get(), m_tileset);
 	}
 
 	void Viewport::update()
@@ -175,13 +228,16 @@ namespace regina
 
 		update_screen_tilemap(top_left);
 
-		rex::gfx::TilemapRenderRequest tilemap_render_request{};
+		auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
+		m_tile_render_pass->render(render_ctx.get());
 
-		tilemap_render_request.render_target = m_render_target.get();
-		tilemap_render_request.tilemap = m_screen_tilemap.get();
-		tilemap_render_request.tileset = m_tileset;
+		//rex::gfx::TilemapRenderRequest tilemap_render_request{};
 
-		rex::gfx::renderer::instance()->render_tilemap(tilemap_render_request);
+		//tilemap_render_request.render_target = m_render_target.get();
+		//tilemap_render_request.tilemap = m_screen_tilemap.get();
+		//tilemap_render_request.tileset = m_tileset;
+
+		//rex::gfx::renderer::instance()->render_tilemap(tilemap_render_request);
 
 		if (auto widget = rex::imgui::ScopedWidget("Viewport"))
 		{
@@ -212,6 +268,7 @@ namespace regina
 	void Viewport::set_tileset(const rex::TilesetAsset* tileset)
 	{
 		m_tileset = tileset;
+		m_tile_render_pass->set_tileset(tileset);
 	}
 
 	rsl::pointi32 Viewport::top_left_from_camera_pos(rsl::pointi32 cameraPos)
@@ -262,6 +319,7 @@ namespace regina
 		if (m_screen_tilemap == nullptr || m_screen_tilemap->width_in_tiles() != m_screen_tile_resolution.x || m_screen_tilemap->height_in_tiles() != m_screen_tile_resolution.y)
 		{
 			m_screen_tilemap = rsl::make_unique<rex::Tilemap>(m_screen_tile_resolution.x, m_screen_tile_resolution.y);
+			m_tile_render_pass->set_tilemap(m_screen_tilemap.get());
 		}
 
 		s32 num_tiles_until_end_of_row = m_tilemap->width_in_tiles() - topLeftStart.x;
