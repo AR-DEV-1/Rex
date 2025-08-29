@@ -38,9 +38,9 @@ namespace regina
 		void init_vb()
 		{
 			// Perform the calculations required to initialize the VB and other render data
-			s32 render_target_width = tilemapRenderRequest.render_target->width();
-			s32 render_target_height = tilemapRenderRequest.render_target->height();
-			rsl::pointi8 tile_size = tilemapRenderRequest.tileset->tile_size();
+			s32 render_target_width = m_render_target->width();
+			s32 render_target_height = m_render_target->height();
+			rsl::pointi8 tile_size = m_tileset->tile_size();
 
 			s32 render_target_width_in_tiles = render_target_width / tile_size.x;
 			s32 render_target_height_in_tiles = render_target_height / tile_size.y;
@@ -48,8 +48,8 @@ namespace regina
 			f32 inv_tile_width = 2.0f / render_target_width_in_tiles;
 			f32 inv_tile_height = 2.0f / render_target_height_in_tiles;
 
-			s32 tileset_width = tilemapRenderRequest.tileset->tileset_texture()->texture_resource()->width();
-			s32 tileset_height = tilemapRenderRequest.tileset->tileset_texture()->texture_resource()->height();
+			s32 tileset_width = m_tileset->tileset_texture()->texture_resource()->width();
+			s32 tileset_height = m_tileset->tileset_texture()->texture_resource()->height();
 
 			f32 uv_width = tile_size.x / (f32)tileset_width;
 			f32 uv_height = tile_size.y / (f32)tileset_height;
@@ -63,8 +63,7 @@ namespace regina
 			tile_vertices[2] = TileVertex{ rsl::point<f32>(0,              -inv_tile_height), rsl::point<f32>(0.0f,     uv_height) };
 			tile_vertices[3] = TileVertex{ rsl::point<f32>(inv_tile_width, -inv_tile_height), rsl::point<f32>(uv_width, uv_height) };
 
-			tilemap_render_data.tiles_vb_gpu = rex::gfx::gal::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
-			tilemap_render_data.tiles_ib_gpu = m_index_buffer.get();
+			m_tiles_vb_gpu = rex::gfx::gal::instance()->create_vertex_buffer(num_vertices_per_tile, sizeof(TileVertex));
 		}
 		void init_ib()
 		{
@@ -79,13 +78,13 @@ namespace regina
 			tile_ib[4] = 3;
 			tile_ib[5] = 2;
 
-			m_index_buffer = gal::instance()->create_index_buffer(num_indices_per_tile, IndexBufferFormat::Uint16);
+			m_tiles_ib_gpu = rex::gfx::gal::instance()->create_index_buffer(num_indices_per_tile, rex::gfx::IndexBufferFormat::Uint16);
 
 			// create the constant buffer
 			// -----------------------------------------
-			auto render_ctx = gal::instance()->new_render_ctx();
-			render_ctx->update_buffer(m_index_buffer.get(), tile_ib.data(), tile_ib.size() * sizeof(tile_ib[0]));
-			render_ctx->transition_buffer(m_index_buffer.get(), ResourceState::IndexBuffer);
+			auto render_ctx = rex::gfx::gal::instance()->new_render_ctx();
+			render_ctx->update_buffer(m_tiles_ib_gpu.get(), tile_ib.data(), tile_ib.size() * sizeof(tile_ib[0]));
+			render_ctx->transition_buffer(m_tiles_ib_gpu.get(), rex::gfx::ResourceState::IndexBuffer);
 		}
 		void init_render_info()
 		{
@@ -111,11 +110,11 @@ namespace regina
 			render_metadata.inv_tile_screen_width = inv_tile_width;
 			render_metadata.inv_tile_screen_height = inv_tile_height;
 
-			tilemap_render_data.tile_render_info = gal::instance()->create_constant_buffer(sizeof(TilemapRenderingMetaData));
+			tilemap_render_data.tile_render_info = rex::gfx::gal::instance()->create_constant_buffer(sizeof(TilemapRenderingMetaData));
 		}
 		void init_tile_indices_uab()
 		{
-			tilemap_render_data.tile_indices_buffer = gal::instance()->create_unordered_access_buffer(tilemapRenderRequest.tilemap->num_tiles());
+			tilemap_render_data.tile_indices_buffer = rex::gfx::gal::instance()->create_unordered_access_buffer(m_tilemap->num_tiles());
 		}
 
 	private:
