@@ -2,7 +2,7 @@
   "name": "SSAnneB1FRooms",
   "width": 12,
   "height": 8,
-  "tileset": "Pokemon\\tilesets\\SHIP.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\SHIP.json",
   "map_blocks": "Pokemon\\map_blocks\\SSAnneB1FRooms.blk",
   "border_block_idx": 12,
   "connections": [],
@@ -46,7 +46,7 @@
       "x": 0,
       "y": 13,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ssanneb1frooms_sailor1"
     },
@@ -54,7 +54,7 @@
       "x": 2,
       "y": 11,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ssanneb1frooms_sailor2"
     },
@@ -62,7 +62,7 @@
       "x": 12,
       "y": 3,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_ssanneb1frooms_sailor3"
     },
@@ -70,7 +70,7 @@
       "x": 22,
       "y": 2,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ssanneb1frooms_sailor4"
     },
@@ -78,7 +78,7 @@
       "x": 0,
       "y": 2,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_ssanneb1frooms_sailor5"
     },
@@ -86,7 +86,7 @@
       "x": 0,
       "y": 4,
       "sprite": "sprite_fisher",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_ssanneb1frooms_fisher"
     },
@@ -94,7 +94,7 @@
       "x": 10,
       "y": 13,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_ssanneb1frooms_super_nerd"
     },
@@ -102,7 +102,7 @@
       "x": 11,
       "y": 12,
       "sprite": "sprite_monster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssanneb1frooms_machoke"
     },
@@ -110,7 +110,7 @@
       "x": 20,
       "y": 2,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssanneb1frooms_ether"
     },
@@ -118,7 +118,7 @@
       "x": 10,
       "y": 2,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssanneb1frooms_tm_rest"
     },
@@ -126,7 +126,7 @@
       "x": 12,
       "y": 11,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssanneb1frooms_max_potion"
     }

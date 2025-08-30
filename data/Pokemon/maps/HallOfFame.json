@@ -2,7 +2,7 @@
   "name": "HallOfFame",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GYM.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\GYM.json",
   "map_blocks": "Pokemon\\map_blocks\\HallOfFame.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 5,
       "y": 2,
       "sprite": "sprite_oak",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_halloffame_oak"
     }

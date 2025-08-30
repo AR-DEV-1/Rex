@@ -2,19 +2,19 @@
   "name": "CELADON CITY",
   "width": 25,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonCity.blk",
   "border_block_idx": 15,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route16.json",
-      "offset": 4
+      "offset": -2
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route7.json",
-      "offset": 4
+      "offset": -2
     }
   ],
   "objects": [
@@ -51,7 +51,7 @@
       "x": 8,
       "y": 17,
       "sprite": "sprite_little_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_celadoncity_little_girl"
     },
@@ -59,7 +59,7 @@
       "x": 11,
       "y": 28,
       "sprite": "sprite_gramps",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_celadoncity_gramps1"
     },
@@ -67,7 +67,7 @@
       "x": 14,
       "y": 19,
       "sprite": "sprite_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_celadoncity_girl"
     },
@@ -75,7 +75,7 @@
       "x": 25,
       "y": 22,
       "sprite": "sprite_gramps",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadoncity_gramps2"
     },
@@ -83,7 +83,7 @@
       "x": 22,
       "y": 16,
       "sprite": "sprite_gramps",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadoncity_gramps3"
     },
@@ -91,7 +91,7 @@
       "x": 32,
       "y": 12,
       "sprite": "sprite_fisher",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_celadoncity_fisher"
     },
@@ -99,7 +99,7 @@
       "x": 30,
       "y": 12,
       "sprite": "sprite_monster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_celadoncity_poliwrath"
     },
@@ -107,7 +107,7 @@
       "x": 32,
       "y": 29,
       "sprite": "sprite_rocket",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_celadoncity_rocket1"
     },
@@ -115,7 +115,7 @@
       "x": 42,
       "y": 14,
       "sprite": "sprite_rocket",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_celadoncity_rocket2"
     }

@@ -1,8 +1,9 @@
 {
+  "type_name": "Map",
   "name": "VictoryRoad1F",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+  "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\VictoryRoad1F.blk",
   "border_block_idx": 125,
   "connections": [],
@@ -34,7 +35,7 @@
       "x": 7,
       "y": 5,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_victoryroad1f_cooltrainer_f"
     },
@@ -42,7 +43,7 @@
       "x": 3,
       "y": 2,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_victoryroad1f_cooltrainer_m"
     },
@@ -50,7 +51,7 @@
       "x": 11,
       "y": 0,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_victoryroad1f_tm_sky_attack"
     },
@@ -58,7 +59,7 @@
       "x": 9,
       "y": 2,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_victoryroad1f_rare_candy"
     },
@@ -66,7 +67,7 @@
       "x": 5,
       "y": 15,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_victoryroad1f_boulder1"
     },
@@ -74,7 +75,7 @@
       "x": 14,
       "y": 2,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_victoryroad1f_boulder2"
     },
@@ -82,7 +83,7 @@
       "x": 2,
       "y": 10,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_victoryroad1f_boulder3"
     }

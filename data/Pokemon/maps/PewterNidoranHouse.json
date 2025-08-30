@@ -2,7 +2,7 @@
   "name": "PewterNidoranHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\PewterNidoranHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 4,
       "y": 5,
       "sprite": "sprite_monster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_pewternidoranhouse_nidoran"
     },
@@ -30,7 +30,7 @@
       "x": 3,
       "y": 5,
       "sprite": "sprite_little_boy",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_pewternidoranhouse_little_boy"
     },
@@ -38,7 +38,7 @@
       "x": 1,
       "y": 2,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pewternidoranhouse_middle_aged_man"
     }

@@ -2,7 +2,7 @@
   "name": "BikeShop",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\CLUB.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\CLUB.json",
   "map_blocks": "Pokemon\\map_blocks\\BikeShop.blk",
   "border_block_idx": 14,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 6,
       "y": 2,
       "sprite": "sprite_bike_shop_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_bikeshop_clerk"
     },
@@ -30,7 +30,7 @@
       "x": 5,
       "y": 6,
       "sprite": "sprite_middle_aged_woman",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_bikeshop_middle_aged_woman"
     },
@@ -38,7 +38,7 @@
       "x": 1,
       "y": 3,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_bikeshop_youngster"
     }

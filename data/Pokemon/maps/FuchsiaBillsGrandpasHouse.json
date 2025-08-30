@@ -2,7 +2,7 @@
   "name": "FuchsiaBillsGrandpasHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\FuchsiaBillsGrandpasHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_middle_aged_woman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_fuchsiabillsgrandpashouse_middle_aged_woman"
     },
@@ -30,7 +30,7 @@
       "x": 7,
       "y": 2,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_fuchsiabillsgrandpashouse_bills_grandpa"
     },
@@ -38,7 +38,7 @@
       "x": 5,
       "y": 5,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_fuchsiabillsgrandpashouse_youngster"
     }

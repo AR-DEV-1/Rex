@@ -2,7 +2,7 @@
   "name": "SSAnne3F",
   "width": 10,
   "height": 3,
-  "tileset": "Pokemon\\tilesets\\SHIP.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\SHIP.json",
   "map_blocks": "Pokemon\\map_blocks\\SSAnne3F.blk",
   "border_block_idx": 12,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 9,
       "y": 3,
       "sprite": "sprite_sailor",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_ssanne3f_sailor"
     }

@@ -72,10 +72,54 @@ namespace rex
     m_all_settings[name].assign(rsl::to_string(val));
   }
 
+  // Load a settings file or directory and adds all settings files found to the settings
+  void SettingsManager::load(rsl::string_view path)
+  {
+    if (!rex::vfs::instance()->exists(path))
+    {
+      REX_WARN(LogSettings, "{} does not exist, therefore its settings cannot be loaded", quoted(path));
+      return;
+    }
+
+    if (rex::vfs::instance()->is_directory(path))
+    {
+      load_directory(path);
+    }
+    else if (rex::vfs::instance()->is_file(path))
+    {
+      load_file(path);
+    }
+    else
+    {
+      REX_ASSERT("A path was provided that's neither a file nor a directory");
+    }
+  }
+
+  // Load a directory containing settings file and add all of them to the settings
+  void SettingsManager::load_directory(rsl::string_view path)
+  {
+    const rsl::vector<rsl::string> files = vfs::instance()->list_entries(path, Recursive::yes);
+
+    scratch_string fullpath;
+    for (const rsl::string_view file : files)
+    {
+      fullpath.clear();
+      path::join_to(fullpath, path, file);
+
+      if (!vfs::instance()->is_file(fullpath))
+      {
+        continue;
+      }
+
+      REX_DEBUG(LogSettings, "Loading settings file: {}", fullpath);
+      load_file(fullpath);
+    }
+  }
+
   // Load a settings file and adds it settings to the settings
   // This behaves the same as if you can "set" multiple times
   // for each setting in the file
-  void SettingsManager::load(rsl::string_view path)
+  void SettingsManager::load_file(rsl::string_view path)
   {
     // of course if the path doesn't exist, we exit early
     if (!file::exists(path))
@@ -89,7 +133,7 @@ namespace rex
     rex::ini::Ini ini_content = rex::ini::read_from_file(path);
     if (ini_content.is_discarded())
     {
-      REX_ERROR(LogSettings, "Cannot read settings file {}", rex::path::abs_path(path));
+      REX_ERROR(LogSettings, "Cannot read settings file as ini parsing failed: {}", rex::path::abs_path(path));
       REX_ERROR(LogSettings, ini_content.parse_error().error_msg());
     }
 

@@ -2,7 +2,7 @@
   "name": "SilphCo2F",
   "width": 15,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\SilphCo2F.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 10,
       "y": 1,
       "sprite": "sprite_silph_worker_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_silphco2f_silph_worker_f"
     },
@@ -36,7 +36,7 @@
       "x": 5,
       "y": 12,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_silphco2f_scientist1"
     },
@@ -44,7 +44,7 @@
       "x": 24,
       "y": 13,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_silphco2f_scientist2"
     },
@@ -52,7 +52,7 @@
       "x": 16,
       "y": 11,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_silphco2f_rocket1"
     },
@@ -60,7 +60,7 @@
       "x": 24,
       "y": 7,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_silphco2f_rocket2"
     }

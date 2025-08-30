@@ -2,7 +2,7 @@
   "name": "RockTunnelB1F",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\RockTunnelB1F.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -37,7 +37,7 @@
       "x": 11,
       "y": 13,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rocktunnelb1f_cooltrainer_f1"
     },
@@ -45,7 +45,7 @@
       "x": 6,
       "y": 10,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rocktunnelb1f_hiker1"
     },
@@ -53,7 +53,7 @@
       "x": 3,
       "y": 5,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rocktunnelb1f_super_nerd1"
     },
@@ -61,7 +61,7 @@
       "x": 20,
       "y": 21,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_rocktunnelb1f_super_nerd2"
     },
@@ -69,7 +69,7 @@
       "x": 30,
       "y": 10,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rocktunnelb1f_hiker2"
     },
@@ -77,7 +77,7 @@
       "x": 14,
       "y": 28,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_rocktunnelb1f_cooltrainer_f2"
     },
@@ -85,7 +85,7 @@
       "x": 33,
       "y": 5,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_rocktunnelb1f_hiker3"
     },
@@ -93,7 +93,7 @@
       "x": 26,
       "y": 30,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rocktunnelb1f_super_nerd3"
     }

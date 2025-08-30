@@ -2,19 +2,19 @@
   "name": "ROUTE 18",
   "width": 25,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route18.blk",
   "border_block_idx": 67,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\route17.json",
-      "offset": 0
+      "offset": -30
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\fuchsiacity.json",
-      "offset": -4
+      "offset": 2
     }
   ],
   "objects": [
@@ -33,7 +33,7 @@
       "x": 36,
       "y": 11,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route18_cooltrainer_m1"
     },
@@ -41,7 +41,7 @@
       "x": 40,
       "y": 15,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route18_cooltrainer_m2"
     },
@@ -49,7 +49,7 @@
       "x": 42,
       "y": 13,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route18_cooltrainer_m3"
     }

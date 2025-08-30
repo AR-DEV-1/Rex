@@ -6,7 +6,7 @@
 
 namespace pokemon
 {
-	class MapRenderer : public rex::gfx::Renderer
+	class MapRenderer : public rex::gfx::LegacyRenderer
 	{
 	public:
 		void new_frame() override;

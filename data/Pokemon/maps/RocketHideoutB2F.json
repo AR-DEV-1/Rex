@@ -2,7 +2,7 @@
   "name": "RocketHideoutB2F",
   "width": 15,
   "height": 14,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\RocketHideoutB2F.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 20,
       "y": 12,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_rockethideoutb2f_rocket"
     },
@@ -36,7 +36,7 @@
       "x": 1,
       "y": 11,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_rockethideoutb2f_moon_stone"
     },
@@ -44,7 +44,7 @@
       "x": 16,
       "y": 8,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_rockethideoutb2f_nugget"
     },
@@ -52,7 +52,7 @@
       "x": 6,
       "y": 12,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_rockethideoutb2f_tm_horn_drill"
     },
@@ -60,7 +60,7 @@
       "x": 3,
       "y": 21,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_rockethideoutb2f_super_potion"
     }

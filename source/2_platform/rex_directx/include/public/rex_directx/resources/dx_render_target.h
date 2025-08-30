@@ -14,6 +14,8 @@ namespace rex
     public:
       DxRenderTarget(const wrl::ComPtr<ID3D12Resource>& resource, DxResourceView view, const rsl::Color4f& clearColor);
 
+      void debug_set_name(rsl::string_view name) override;
+
       // Return the wrapped DirectX object
       ID3D12Resource* dx_object();
       // Return a view to the object

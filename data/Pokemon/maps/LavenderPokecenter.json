@@ -2,7 +2,7 @@
   "name": "LavenderPokecenter",
   "width": 7,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\POKECENTER.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\POKECENTER.json",
   "map_blocks": "Pokemon\\map_blocks\\LavenderPokecenter.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 3,
       "y": 1,
       "sprite": "sprite_nurse",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_lavenderpokecenter_nurse"
     },
@@ -33,7 +33,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_gentleman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_lavenderpokecenter_gentleman"
     },
@@ -41,7 +41,7 @@
       "x": 2,
       "y": 6,
       "sprite": "sprite_little_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_lavenderpokecenter_little_girl"
     },
@@ -49,7 +49,7 @@
       "x": 11,
       "y": 2,
       "sprite": "sprite_link_receptionist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_lavenderpokecenter_link_receptionist"
     }

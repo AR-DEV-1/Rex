@@ -1,8 +1,9 @@
 {
+  "type_name": "Map",
   "name": "VermilionTradeHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\VermilionTradeHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +17,7 @@
       "x": 3,
       "y": 5,
       "sprite": "sprite_little_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_vermiliontradehouse_little_girl"
     }

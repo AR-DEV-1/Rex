@@ -13,6 +13,10 @@ namespace rex
   {
     return m_debug_alloc.allocate(count);
   }
+  void* GlobalDebugAllocator::reallocate(void* ptr, s64 count)
+  {
+    return m_debug_alloc.reallocate(ptr, count);
+  }
   void GlobalDebugAllocator::deallocate(void* const ptr, s64 /*count*/)
   {
     return m_debug_alloc.deallocate(ptr);

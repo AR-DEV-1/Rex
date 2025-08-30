@@ -36,10 +36,17 @@ namespace rex
     // without it, the string_view overload is used
     // and for bools the integer one is used
 
+    // Load a settings file or directory and adds all settings files found to the settings
+    void load(rsl::string_view path);
+
+    // Load a directory containing settings file and add all of them to the settings
+    void load_directory(rsl::string_view path);
+
     // Load a settings file and adds it settings to the settings
     // This behaves the same as if you can "set" multiple times
     // for each setting in the file
-    void load(rsl::string_view path);
+    void load_file(rsl::string_view path);
+
 
     // unload all settings
     void unload();

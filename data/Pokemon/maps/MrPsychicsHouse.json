@@ -2,7 +2,7 @@
   "name": "MrPsychicsHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\MrPsychicsHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_fishing_guru",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_mrpsychicshouse_mr_psychic"
     }

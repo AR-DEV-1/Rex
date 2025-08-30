@@ -1,8 +1,9 @@
 {
+  "type_name": "Map",
   "name": "ViridianSchoolHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+  "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\ViridianSchoolHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +20,7 @@
       "x": 3,
       "y": 5,
       "sprite": "sprite_brunette_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_viridianschoolhouse_brunette_girl"
     },
@@ -27,7 +28,7 @@
       "x": 4,
       "y": 1,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_viridianschoolhouse_cooltrainer_f"
     }

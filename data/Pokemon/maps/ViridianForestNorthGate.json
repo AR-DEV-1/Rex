@@ -1,8 +1,9 @@
 {
+  "type_name": "Map",
   "name": "ViridianForestNorthGate",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\FOREST_GATE.json",
+  "blockset": "Pokemon\\tilesets\\FOREST_GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\ViridianForestNorthGate.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +20,7 @@
       "x": 3,
       "y": 2,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_viridianforestnorthgate_super_nerd"
     },
@@ -27,7 +28,7 @@
       "x": 2,
       "y": 5,
       "sprite": "sprite_gramps",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_viridianforestnorthgate_gramps"
     }

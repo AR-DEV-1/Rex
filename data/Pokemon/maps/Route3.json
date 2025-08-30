@@ -2,19 +2,19 @@
   "name": "ROUTE 3",
   "width": 35,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route3.blk",
   "border_block_idx": 44,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\route4.json",
-      "offset": 25
+      "offset": 120
     },
     {
       "direction": "West",
       "map": "Pokemon\\maps\\pewtercity.json",
-      "offset": -4
+      "offset": 2
     }
   ],
   "objects": [
@@ -51,7 +51,7 @@
       "x": 57,
       "y": 11,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_route3_super_nerd"
     },
@@ -59,7 +59,7 @@
       "x": 10,
       "y": 6,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route3_youngster1"
     },
@@ -67,7 +67,7 @@
       "x": 14,
       "y": 4,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route3_youngster2"
     },
@@ -75,7 +75,7 @@
       "x": 16,
       "y": 9,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route3_cooltrainer_f1"
     },
@@ -83,7 +83,7 @@
       "x": 19,
       "y": 5,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route3_youngster3"
     },
@@ -91,7 +91,7 @@
       "x": 23,
       "y": 4,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route3_cooltrainer_f2"
     },
@@ -99,7 +99,7 @@
       "x": 22,
       "y": 9,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route3_youngster4"
     },
@@ -107,7 +107,7 @@
       "x": 24,
       "y": 6,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route3_youngster5"
     },
@@ -115,7 +115,7 @@
       "x": 33,
       "y": 10,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route3_cooltrainer_f3"
     }

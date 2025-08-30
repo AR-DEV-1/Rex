@@ -2,7 +2,7 @@
   "name": "IndigoPlateauLobby",
   "width": 8,
   "height": 6,
-  "tileset": "Pokemon\\tilesets\\MART.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\MART.json",
   "map_blocks": "Pokemon\\map_blocks\\IndigoPlateauLobby.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 7,
       "y": 5,
       "sprite": "sprite_nurse",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_indigoplateaulobby_nurse"
     },
@@ -36,7 +36,7 @@
       "x": 4,
       "y": 9,
       "sprite": "sprite_gym_guide",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_indigoplateaulobby_gym_guide"
     },
@@ -44,7 +44,7 @@
       "x": 5,
       "y": 1,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_indigoplateaulobby_cooltrainer_f"
     },
@@ -52,7 +52,7 @@
       "x": 0,
       "y": 5,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_indigoplateaulobby_clerk"
     },
@@ -60,7 +60,7 @@
       "x": 13,
       "y": 6,
       "sprite": "sprite_link_receptionist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_indigoplateaulobby_link_receptionist"
     }

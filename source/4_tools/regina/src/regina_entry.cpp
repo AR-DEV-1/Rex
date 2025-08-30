@@ -1,8 +1,9 @@
 #include "regina/regina_entry.h"
 #include "regina/regina.h"
-#include "regina/project_manager.h"
+#include "regina/project.h"
 
 #include "rex_engine/engine/globals.h"
+#include "rex_engine/engine/engine.h"
 
 #include "rex_engine/cmdline/cmdline.h"
 #include "rex_engine/diagnostics/log.h"
@@ -22,7 +23,7 @@ namespace regina
     rsl::unique_ptr<Project> project;
     if (rex::cmdline::instance()->get_argument("project").has_value())
     {
-      project = project_manager::load_from_disk(rex::cmdline::instance()->get_argument("project").value());
+      project = project_loader::load_from_disk(rex::cmdline::instance()->get_argument("project").value());
       if (project == nullptr)
       {
         // Failed to load the project -> fail initialization

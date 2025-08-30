@@ -16,4 +16,42 @@ namespace rex
     dst.emplace_back(rsl::move(ctx));
     return dst.back();
   }
+
+  template <typename Container, typename Accessor>
+  class ContainerElement
+  {
+  public:
+    ContainerElement(Container& container, const Accessor& accessor)
+      : m_container(&container)
+      , m_accessor(accessor)
+    {}
+
+    auto operator->()
+    {
+      return &value()
+    }
+    auto operator->() const
+    {
+      return &value()
+    }
+    auto operator*()
+    {
+      return value();
+    }
+    auto operator*() const
+    {
+      return value();
+    }
+
+  private:
+    auto value()
+    {
+      Container& container_ref = *m_container;
+      return container_ref[m_accessor];
+    }
+
+  private:
+    Container* m_container;
+    Accessor m_accessor;
+  };
 }

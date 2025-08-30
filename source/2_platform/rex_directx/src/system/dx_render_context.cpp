@@ -120,6 +120,7 @@ namespace rex
         dx_depth_render_target_view = &dx_depth_render_target->cpu_handle();
       }
 
+      transition_buffer(colorRenderTarget, ResourceState::RenderTarget);
       m_cmd_list->OMSetRenderTargets(1, &dx_color_render_target->dx_view().cpu_handle(), true, dx_depth_render_target_view);
     }
     // Clear the render target of the context
@@ -204,14 +205,18 @@ namespace rex
     {
       m_cmd_list->SetGraphicsRootConstantBufferView(paramIdx, constantBuffer->gpu_address());
     }
-    void DxRenderContext::bind_texture2d(s32 paramIdx, Texture2D* texture)
+    void DxRenderContext::bind_texture2d(s32 paramIdx, const ResourceView* textureView)
     {
       rsl::vector<const ResourceView*> views;
-      views.push_back(texture->resource_view());
+      views.push_back(textureView);
       auto start_handle = copy_views(ResourceViewType::Texture2D, views);
 
-			// Textures need to be bind using a view table and cannot be bound directly
+      // Textures need to be bind using a view table and cannot be bound directly
       bind_view_table(paramIdx, start_handle);
+    }
+    void DxRenderContext::bind_texture2d(s32 paramIdx, Texture2D* texture)
+    {
+      bind_texture2d(paramIdx, texture->resource_view());
     }
     // Bind a shader resource to the context
     void DxRenderContext::bind_shader_resource(s32 paramIdx, u64 gpuAddress)

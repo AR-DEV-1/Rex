@@ -2,7 +2,7 @@
   "name": "SafariZoneEastRestHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\SafariZoneEastRestHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 1,
       "y": 3,
       "sprite": "sprite_scientist",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_safarizoneeastresthouse_scientist"
     },
@@ -30,7 +30,7 @@
       "x": 4,
       "y": 2,
       "sprite": "sprite_rocker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizoneeastresthouse_rocker"
     },
@@ -38,7 +38,7 @@
       "x": 5,
       "y": 2,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizoneeastresthouse_silph_worker_m"
     }

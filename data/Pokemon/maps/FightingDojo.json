@@ -2,7 +2,7 @@
   "name": "FightingDojo",
   "width": 5,
   "height": 6,
-  "tileset": "Pokemon\\tilesets\\DOJO.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\DOJO.json",
   "map_blocks": "Pokemon\\map_blocks\\FightingDojo.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -34,7 +34,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_fightingdojo_karate_master"
     },
@@ -42,7 +42,7 @@
       "x": 3,
       "y": 4,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_fightingdojo_blackbelt1"
     },
@@ -50,7 +50,7 @@
       "x": 3,
       "y": 6,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_fightingdojo_blackbelt2"
     },
@@ -58,7 +58,7 @@
       "x": 5,
       "y": 5,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_fightingdojo_blackbelt3"
     },
@@ -66,7 +66,7 @@
       "x": 5,
       "y": 7,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_fightingdojo_blackbelt4"
     },
@@ -74,7 +74,7 @@
       "x": 4,
       "y": 1,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_fightingdojo_hitmonlee_poke_ball"
     },
@@ -82,7 +82,7 @@
       "x": 5,
       "y": 1,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_fightingdojo_hitmonchan_poke_ball"
     }

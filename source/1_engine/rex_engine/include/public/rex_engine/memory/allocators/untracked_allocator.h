@@ -24,6 +24,8 @@ namespace rex
       return static_cast<T*>(allocate(sizeof(T)));
     }
 
+    REX_NO_DISCARD pointer reallocate(pointer p, size_type newSize);
+
     void deallocate(pointer ptr, rsl::memory_size size = 0);
     void deallocate(pointer ptr, size_type size = 0);
     template <typename T>

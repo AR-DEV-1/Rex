@@ -2,7 +2,7 @@
   "name": "Daycare",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\Daycare.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 2,
       "y": 3,
       "sprite": "sprite_gentleman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_daycare_gentleman"
     }

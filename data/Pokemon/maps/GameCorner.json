@@ -2,7 +2,7 @@
   "name": "GameCorner",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\LOBBY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\LOBBY.json",
   "map_blocks": "Pokemon\\map_blocks\\GameCorner.blk",
   "border_block_idx": 15,
   "connections": [],
@@ -46,7 +46,7 @@
       "x": 2,
       "y": 6,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_gamecorner_beauty1"
     },
@@ -54,7 +54,7 @@
       "x": 5,
       "y": 6,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_gamecorner_clerk1"
     },
@@ -62,7 +62,7 @@
       "x": 2,
       "y": 10,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_gamecorner_middle_aged_man1"
     },
@@ -70,7 +70,7 @@
       "x": 2,
       "y": 13,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_gamecorner_beauty2"
     },
@@ -78,7 +78,7 @@
       "x": 5,
       "y": 11,
       "sprite": "sprite_fishing_guru",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_gamecorner_fishing_guru"
     },
@@ -86,7 +86,7 @@
       "x": 8,
       "y": 11,
       "sprite": "sprite_middle_aged_woman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_gamecorner_middle_aged_woman"
     },
@@ -94,7 +94,7 @@
       "x": 8,
       "y": 14,
       "sprite": "sprite_gym_guide",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_gamecorner_gym_guide"
     },
@@ -102,7 +102,7 @@
       "x": 11,
       "y": 15,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_gamecorner_gambler"
     },
@@ -110,7 +110,7 @@
       "x": 14,
       "y": 11,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_gamecorner_clerk2"
     },
@@ -118,7 +118,7 @@
       "x": 17,
       "y": 13,
       "sprite": "sprite_gentleman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_gamecorner_gentleman"
     },
@@ -126,7 +126,7 @@
       "x": 9,
       "y": 5,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_gamecorner_rocket"
     }

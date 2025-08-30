@@ -3,6 +3,7 @@
 #include "rex_engine/diagnostics/debug.h"
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/diagnostics/logging/log_macros.h"
+#include "rex_engine/engine/asset_db.h"
 #include "rex_engine/engine/engine_params.h"
 #include "rex_engine/engine/module_manager.h"
 #include "rex_engine/filesystem/directory.h"
@@ -21,6 +22,17 @@
 #include "rex_engine/cmdline/cmdline.h"
 #include "rex_engine/filesystem/native_filesystem.h"
 #include "rex_engine/threading/thread_pool.h"
+
+#include "rex_engine/assets/map.h"
+#include "rex_engine/assets/tileset.h"
+#include "rex_engine/assets/blockset.h"
+#include "rex_engine/assets/texture_asset.h"
+
+#include "rex_engine/serialization/map_serializer.h"
+#include "rex_engine/serialization/tileset_serializer.h"
+#include "rex_engine/serialization/tileset_asset_serializer.h"
+#include "rex_engine/serialization/blockset_serializer.h"
+#include "rex_engine/serialization/texture_serializer.h"
 
 #include "rex_std/internal/exception/exit.h"
 
@@ -172,6 +184,8 @@ namespace rex
   {
     REX_INFO(LogCoreApp, "Shutting down application..");
 
+    asset_db::instance()->unload_all();
+
     platform_shutdown();
 
     REX_INFO(LogEngine, "Application shutdown with result: {0}", m_exit_code);
@@ -308,6 +322,18 @@ namespace rex
   }
 
   //--------------------------------------------------------------------------------------------
+  void CoreApplication::init_asset_db()
+  {
+    asset_db::init(globals::make_unique<AssetDb>());
+
+    asset_db::instance()->add_serializer<Map>(rsl::make_unique<MapSerializer>());
+    asset_db::instance()->add_serializer<Blockset>(rsl::make_unique<BlocksetSerializer>());
+    asset_db::instance()->add_serializer<Tileset>(rsl::make_unique<TilesetSerializer>());
+    asset_db::instance()->add_serializer<TilesetAsset>(rsl::make_unique<TilesetAssetSerializer>());
+    asset_db::instance()->add_serializer<TextureAsset>(rsl::make_unique<TextureSerializer>());
+  }
+
+  //--------------------------------------------------------------------------------------------
   void CoreApplication::init_globals()
   {
     REX_DEBUG(LogCoreApp, "Initializing virtual filesystem");
@@ -347,6 +373,9 @@ namespace rex
 
     REX_DEBUG(LogCoreApp, "Initializing profiling system");
     profiling_session::init(globals::make_unique<ProfilingSession>());
+
+    REX_DEBUG(LogCoreApp, "Initializing asset database");
+    init_asset_db();
   }
 
   //--------------------------------------------------------------------------------------------
@@ -368,6 +397,7 @@ namespace rex
   {
     REX_INFO(LogCoreApp, "Shutting down globals");
 
+    asset_db::shutdown();
     profiling_session::shutdown();
     event_system::shutdown();
     settings::shutdown();

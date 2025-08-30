@@ -2,7 +2,8 @@
   "name": "INDIGO PLATEAU",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\PLATEAU.json",
+  "type_name": "Map",
+  "blockset": "Pokemon\\blocksets\\PLATEAU.json",
   "map_blocks": "Pokemon\\map_blocks\\IndigoPlateau.blk",
   "border_block_idx": 14,
   "connections": [

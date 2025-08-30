@@ -2,19 +2,19 @@
   "name": "ROUTE 13",
   "width": 30,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route13.blk",
   "border_block_idx": 67,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\route12.json",
-      "offset": 20
+      "offset": 40
     },
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route14.json",
-      "offset": 0
+      "offset": 36
     }
   ],
   "objects": [
@@ -54,7 +54,7 @@
       "x": 49,
       "y": 10,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route13_cooltrainer_m1"
     },
@@ -62,7 +62,7 @@
       "x": 48,
       "y": 10,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route13_cooltrainer_f1"
     },
@@ -70,7 +70,7 @@
       "x": 27,
       "y": 9,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route13_cooltrainer_f2"
     },
@@ -78,7 +78,7 @@
       "x": 23,
       "y": 10,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route13_cooltrainer_f3"
     },
@@ -86,7 +86,7 @@
       "x": 50,
       "y": 5,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route13_cooltrainer_f4"
     },
@@ -94,7 +94,7 @@
       "x": 12,
       "y": 4,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route13_cooltrainer_m2"
     },
@@ -102,7 +102,7 @@
       "x": 33,
       "y": 6,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route13_beauty1"
     },
@@ -110,7 +110,7 @@
       "x": 32,
       "y": 6,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route13_beauty2"
     },
@@ -118,7 +118,7 @@
       "x": 10,
       "y": 7,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route13_biker"
     },
@@ -126,7 +126,7 @@
       "x": 7,
       "y": 13,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route13_cooltrainer_m3"
     }

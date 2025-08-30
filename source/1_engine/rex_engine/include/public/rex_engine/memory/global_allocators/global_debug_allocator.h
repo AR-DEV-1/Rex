@@ -17,6 +17,7 @@ namespace rex
     GlobalDebugAllocator();
 
     void* allocate(const s64 count);    // deallocates the storage reference by the pointer p.
+    void* reallocate(void* ptr, s64 count);
     void deallocate(void* const ptr, s64 count = 0);
     template <typename T>
     T* allocate()

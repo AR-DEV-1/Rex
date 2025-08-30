@@ -1,8 +1,9 @@
 {
+  "type_name": "Map",
   "name": "PALLET TOWN",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\blocksets\\OVERWORLD.json",
+  "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\PalletTown.blk",
   "border_block_idx": 11,
   "connections": [
@@ -15,7 +16,7 @@
       "direction": "South",
       "map": "Pokemon\\maps\\route21.json",
       "offset": 0
-    }
+    }    
   ],
   "objects": [
     {
@@ -33,7 +34,7 @@
       "x": 8,
       "y": 5,
       "sprite": "sprite_oak",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pallettown_oak"
     },
@@ -41,7 +42,7 @@
       "x": 3,
       "y": 8,
       "sprite": "sprite_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_pallettown_girl"
     },
@@ -49,7 +50,7 @@
       "x": 11,
       "y": 14,
       "sprite": "sprite_fisher",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_pallettown_fisher"
     }

@@ -12,6 +12,11 @@ namespace rex
       , m_view(view)
     {}
 
+    void DxRenderTarget::debug_set_name(rsl::string_view name)
+    {
+      d3d::set_debug_name_for(m_resource.Get(), name);
+    }
+
     ID3D12Resource* DxRenderTarget::dx_object()
     {
       return m_resource.Get();

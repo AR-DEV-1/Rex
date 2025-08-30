@@ -1,8 +1,9 @@
 {
+  "type_name": "Map",
   "name": "ViridianForestSouthGate",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\FOREST_GATE.json",
+  "blockset": "Pokemon\\tilesets\\FOREST_GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\ViridianForestSouthGate.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +20,7 @@
       "x": 8,
       "y": 4,
       "sprite": "sprite_girl",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_viridianforestsouthgate_girl"
     },
@@ -27,7 +28,7 @@
       "x": 2,
       "y": 4,
       "sprite": "sprite_little_girl",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_viridianforestsouthgate_little_girl"
     }

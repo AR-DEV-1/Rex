@@ -22,9 +22,6 @@ namespace regina
 		const Thumbnail* unknown_thumbnail() const;
 
 	private:
-		rsl::unique_ptr<Thumbnail> create_thumbnail_from_path(rsl::string_view path);
-
-	private:
 		rsl::unordered_map<rsl::string, rsl::unique_ptr<Thumbnail>> m_extension_to_thumbnail;
 
 		rsl::unique_ptr<Thumbnail> m_directory_thumbnail;

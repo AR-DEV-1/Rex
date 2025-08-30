@@ -2,19 +2,19 @@
   "name": "ROUTE 17",
   "width": 10,
   "height": 72,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route17.blk",
   "border_block_idx": 67,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\route16.json",
-      "offset": 0
+      "offset": 20
     },
     {
       "direction": "South",
       "map": "Pokemon\\maps\\route18.json",
-      "offset": 0
+      "offset": 30
     }
   ],
   "objects": [
@@ -54,7 +54,7 @@
       "x": 12,
       "y": 19,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route17_biker1"
     },
@@ -62,7 +62,7 @@
       "x": 11,
       "y": 16,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route17_biker2"
     },
@@ -70,7 +70,7 @@
       "x": 4,
       "y": 18,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route17_biker3"
     },
@@ -78,7 +78,7 @@
       "x": 7,
       "y": 32,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route17_biker4"
     },
@@ -86,7 +86,7 @@
       "x": 14,
       "y": 34,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route17_biker5"
     },
@@ -94,7 +94,7 @@
       "x": 17,
       "y": 58,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route17_biker6"
     },
@@ -102,7 +102,7 @@
       "x": 2,
       "y": 68,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route17_biker7"
     },
@@ -110,7 +110,7 @@
       "x": 14,
       "y": 98,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route17_biker8"
     },
@@ -118,7 +118,7 @@
       "x": 5,
       "y": 98,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route17_biker9"
     },
@@ -126,7 +126,7 @@
       "x": 10,
       "y": 118,
       "sprite": "sprite_biker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route17_biker10"
     }

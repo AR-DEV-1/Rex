@@ -248,7 +248,7 @@ namespace rex
   // --------------------------------
   // CONVERTING
   // --------------------------------
-  scratch_string VfsBase::abs_path(MountingPoint root, rsl::string_view path)
+  scratch_string VfsBase::abs_path(MountingPoint root, rsl::string_view path) const
   {
     REX_ASSERT_X(m_vfs_state_controller.has_state(VfsState::Running), "Trying to use vfs before it's initialized");
     REX_ASSERT_X(!path::is_absolute(path), "Passed an absolute path into a function that doesn't allow absolute paths");
@@ -257,7 +257,7 @@ namespace rex
 
     return abs_path(mount_root);
   }
-  rsl::string_view VfsBase::mount_path(MountingPoint mount)
+  rsl::string_view VfsBase::mount_path(MountingPoint mount) const
   {
     if (m_mounted_roots.contains(mount))
     {
@@ -270,24 +270,38 @@ namespace rex
   // --------------------------------
   // QUERYING
   // --------------------------------
-  bool VfsBase::exists(MountingPoint root, rsl::string_view path)
+  bool VfsBase::is_directory(MountingPoint root, rsl::string_view path) const
+  {
+    path = path::remove_quotes(path);
+
+    scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
+    return is_directory(fullpath);
+  }
+  bool VfsBase::is_file(MountingPoint root, rsl::string_view path) const
+  {
+    path = path::remove_quotes(path);
+
+    scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
+    return is_file(fullpath);
+  }
+  bool VfsBase::exists(MountingPoint root, rsl::string_view path) const
   {
     path = path::remove_quotes(path);
 
     scratch_string fullpath = path::join(m_mounted_roots.at(root), path);
     return exists(fullpath);
   }
-  bool VfsBase::is_mounted(MountingPoint mount)
+  bool VfsBase::is_mounted(MountingPoint mount) const
   {
     return m_mounted_roots.contains(mount);
   }
 
-  REX_NO_DISCARD rsl::vector<rsl::string> VfsBase::list_entries(MountingPoint root, rsl::string_view path)
+  REX_NO_DISCARD rsl::vector<rsl::string> VfsBase::list_entries(MountingPoint root, rsl::string_view path, Recursive recursive)
   {
     path = path::remove_quotes(path);
 
     const rsl::string_view fullpath = path::join(m_mounted_roots.at(root), path);
-    return list_entries(fullpath);
+    return list_entries(fullpath, recursive);
   }
 	REX_NO_DISCARD rsl::vector<rsl::string> VfsBase::list_dirs(MountingPoint root, rsl::string_view path)
 	{

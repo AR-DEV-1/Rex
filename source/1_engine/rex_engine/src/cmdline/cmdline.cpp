@@ -1,6 +1,5 @@
 #include "rex_engine/cmdline/cmdline.h"
 
-#include "rex_engine/cmdline/cmd_args.h"
 #include "rex_engine/diagnostics/assert.h"
 #include "rex_engine/diagnostics/log.h"
 #include "rex_engine/diagnostics/logging/log_macros.h"
@@ -226,14 +225,14 @@ namespace rex
 
     auto cmd_it = rsl::find_if(m_allowed_arguments.cbegin(), m_allowed_arguments.cend(), [key](const CommandLineArgument& cmdArg) { return key == cmdArg.name; });
 
-    if (cmd_it == g_command_line_args.cend())
-    {
-      if (!disableInvalidArgumentWarning)
-      {
-        REX_WARN(LogEngine, "Command '{}' passed in but it's not recognised as a valid command so will be ignored", key);
-      }
-      return;
-    }
+    //if (cmd_it == g_command_line_args.cend())
+    //{
+    //  if (!disableInvalidArgumentWarning)
+    //  {
+    //    REX_WARN(LogEngine, "Command '{}' passed in but it's not recognised as a valid command so will be ignored", key);
+    //  }
+    //  return;
+    //}
 
     auto active_it = rsl::find_if(m_active_arguments.cbegin(), m_active_arguments.cend(), [key](const ActiveArgument& activeArg) { return rsl::stricmp(key.data(), activeArg.argument.data()) == 0; });
 

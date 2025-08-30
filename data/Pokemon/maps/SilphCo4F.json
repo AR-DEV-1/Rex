@@ -2,7 +2,7 @@
   "name": "SilphCo4F",
   "width": 15,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\SilphCo4F.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -34,7 +34,7 @@
       "x": 6,
       "y": 2,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco4f_silph_worker_m"
     },
@@ -42,7 +42,7 @@
       "x": 9,
       "y": 14,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_silphco4f_rocket1"
     },
@@ -50,7 +50,7 @@
       "x": 14,
       "y": 6,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_silphco4f_scientist"
     },
@@ -58,7 +58,7 @@
       "x": 26,
       "y": 10,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_silphco4f_rocket2"
     },
@@ -66,7 +66,7 @@
       "x": 3,
       "y": 9,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco4f_full_heal"
     },
@@ -74,7 +74,7 @@
       "x": 4,
       "y": 7,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco4f_max_revive"
     },
@@ -82,7 +82,7 @@
       "x": 5,
       "y": 8,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco4f_escape_rope"
     }

@@ -44,6 +44,7 @@
 #include "rex_engine/gfx/system/command_allocator.h"
 #include "rex_engine/gfx/system/debug_interface.h"
 #include "rex_engine/gfx/system/swapchain.h"
+#include "rex_engine/gfx/rendering/renderer.h"
 #include "rex_engine/gfx/resources/vertex_buffer.h"
 #include "rex_engine/gfx/resources/index_buffer.h"
 #include "rex_engine/gfx/resources/root_signature.h"
@@ -184,6 +185,12 @@ namespace rex
       virtual rsl::unique_ptr<Material> create_material(const MaterialDesc& matDesc) = 0;
       virtual rsl::unique_ptr<Sampler2D> create_sampler2d(const SamplerDesc& desc) = 0;
       virtual rsl::unique_ptr<UnorderedAccessBuffer> create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr) = 0;
+      
+      // --------------------------------
+      // View creation
+      // --------------------------------
+      // Create a shader resource view pointing to a render target
+      virtual rsl::unique_ptr<ResourceView> create_srv(RenderTarget* rt) = 0;
 
       // --------------------------------
       // Contexts
@@ -296,7 +303,7 @@ namespace rex
       ResourceStateTracker m_resource_state_tracker;      // The global tracker of resource states
 
       rsl::unordered_map<u64, rsl::unique_ptr<ResourceView>> m_resources_on_gpu;                                    // Holds a map of all resources already present on the GPU and their views
-      rsl::vector<rsl::unique_ptr<Renderer>> m_renderers;                                                           // Holds all the renderers
+      rsl::vector<rsl::unique_ptr<LegacyRenderer>> m_renderers;                                                           // Holds all the renderers
       rsl::array<RasterStateDesc, rsl::enum_refl::enum_count<CommonRasterState>()> m_common_raster_states;          // Holds a list of common raster states
       rsl::array<rsl::unique_ptr<Sampler2D>, rsl::enum_refl::enum_count<CommonSampler>()> m_common_samplers;        // Holds a list of common samplers
     };

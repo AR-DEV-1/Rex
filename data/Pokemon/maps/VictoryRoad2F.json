@@ -1,8 +1,9 @@
 {
+  "type_name": "Map",
   "name": "VictoryRoad2F",
   "width": 15,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+  "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\VictoryRoad2F.blk",
   "border_block_idx": 125,
   "connections": [],
@@ -52,7 +53,7 @@
       "x": 12,
       "y": 9,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_victoryroad2f_hiker"
     },
@@ -60,7 +61,7 @@
       "x": 21,
       "y": 13,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_victoryroad2f_super_nerd1"
     },
@@ -68,7 +69,7 @@
       "x": 19,
       "y": 8,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_victoryroad2f_cooltrainer_m"
     },
@@ -76,7 +77,7 @@
       "x": 4,
       "y": 2,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_victoryroad2f_super_nerd2"
     },
@@ -84,7 +85,7 @@
       "x": 26,
       "y": 3,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_victoryroad2f_super_nerd3"
     },
@@ -92,7 +93,7 @@
       "x": 11,
       "y": 5,
       "sprite": "sprite_bird",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_victoryroad2f_moltres"
     },
@@ -100,7 +101,7 @@
       "x": 27,
       "y": 5,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_victoryroad2f_tm_submission"
     },
@@ -108,7 +109,7 @@
       "x": 18,
       "y": 9,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_victoryroad2f_full_heal"
     },
@@ -116,7 +117,7 @@
       "x": 9,
       "y": 11,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_victoryroad2f_tm_mega_kick"
     },
@@ -124,7 +125,7 @@
       "x": 11,
       "y": 0,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_victoryroad2f_guard_spec"
     },
@@ -132,7 +133,7 @@
       "x": 4,
       "y": 14,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_victoryroad2f_boulder1"
     },
@@ -140,7 +141,7 @@
       "x": 5,
       "y": 5,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_victoryroad2f_boulder2"
     },
@@ -148,7 +149,7 @@
       "x": 23,
       "y": 16,
       "sprite": "sprite_boulder",
-      "action": "stay",
+      "movement": "stay",
       "direction": "boulder_movement_byte_2",
       "text": "text_victoryroad2f_boulder3"
     }

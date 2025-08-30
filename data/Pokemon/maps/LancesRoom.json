@@ -2,7 +2,7 @@
   "name": "LancesRoom",
   "width": 13,
   "height": 13,
-  "tileset": "Pokemon\\tilesets\\DOJO.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\DOJO.json",
   "map_blocks": "Pokemon\\map_blocks\\LancesRoom.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 6,
       "y": 1,
       "sprite": "sprite_lance",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_lancesroom_lance"
     }

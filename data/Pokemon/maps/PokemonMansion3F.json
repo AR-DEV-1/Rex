@@ -2,7 +2,7 @@
   "name": "PokemonMansion3F",
   "width": 15,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\PokemonMansion3F.blk",
   "border_block_idx": 1,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 5,
       "y": 11,
       "sprite": "sprite_super_nerd",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_pokemonmansion3f_super_nerd"
     },
@@ -36,7 +36,7 @@
       "x": 20,
       "y": 11,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_pokemonmansion3f_scientist"
     },
@@ -44,7 +44,7 @@
       "x": 1,
       "y": 16,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansion3f_max_potion"
     },
@@ -52,7 +52,7 @@
       "x": 25,
       "y": 5,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansion3f_iron"
     },
@@ -60,7 +60,7 @@
       "x": 6,
       "y": 12,
       "sprite": "sprite_pokedex",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemonmansion3f_diary"
     }

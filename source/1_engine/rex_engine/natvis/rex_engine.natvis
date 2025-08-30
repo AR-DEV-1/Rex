@@ -271,4 +271,7 @@
         </Expand>
     </Type>
 
+	<Type Name="rex::Map">
+		<DisplayString>{m_desc.map_header.name} - {(int)m_desc.map_header.width_in_blocks}x{(int)m_desc.map_header.height_in_blocks}</DisplayString>
+	</Type>
 </AutoVisualizer>

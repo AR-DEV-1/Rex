@@ -2,19 +2,19 @@
   "name": "PEWTER CITY",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\PewterCity.blk",
   "border_block_idx": 10,
   "connections": [
     {
       "direction": "South",
       "map": "Pokemon\\maps\\route2.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route3.json",
-      "offset": 4
+      "offset": -2
     }
   ],
   "objects": [
@@ -39,7 +39,7 @@
       "x": 8,
       "y": 15,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pewtercity_cooltrainer_f"
     },
@@ -47,7 +47,7 @@
       "x": 17,
       "y": 25,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pewtercity_cooltrainer_m"
     },
@@ -55,7 +55,7 @@
       "x": 27,
       "y": 17,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pewtercity_super_nerd1"
     },
@@ -63,7 +63,7 @@
       "x": 26,
       "y": 25,
       "sprite": "sprite_super_nerd",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_pewtercity_super_nerd2"
     },
@@ -71,7 +71,7 @@
       "x": 35,
       "y": 16,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_pewtercity_youngster"
     }

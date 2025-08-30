@@ -64,7 +64,7 @@ namespace regina
 			//fullpath = rex::path::join(m_current_directory, item);
 			//const Thumbnail* thumbnail = thumbnail_for_path(fullpath);
 			ImVec2 imageSize{ 100.0f, 100.0f };
-			ImGui::Image((ImTextureID)m_thumbnail->texture(), imageSize);
+			ImGui::Image((ImTextureID)m_thumbnail->texture()->resource_view(), imageSize);
 		}
 		 //Render Info Panel
 		ImGui::BeginVertical(m_infopanel_name.c_str(), ImVec2(thumbnailSize - edgeOffset * 2.0f, infoPanelHeight - edgeOffset));

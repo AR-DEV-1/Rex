@@ -2,7 +2,7 @@
   "name": "FuchsiaMeetingRoom",
   "width": 7,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\LAB.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\LAB.json",
   "map_blocks": "Pokemon\\map_blocks\\FuchsiaMeetingRoom.blk",
   "border_block_idx": 23,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 4,
       "y": 1,
       "sprite": "sprite_safari_zone_worker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_fuchsiameetingroom_safari_zone_worker1"
     },
@@ -30,7 +30,7 @@
       "x": 0,
       "y": 2,
       "sprite": "sprite_safari_zone_worker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_fuchsiameetingroom_safari_zone_worker2"
     },
@@ -38,7 +38,7 @@
       "x": 10,
       "y": 1,
       "sprite": "sprite_safari_zone_worker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_fuchsiameetingroom_safari_zone_worker3"
     }

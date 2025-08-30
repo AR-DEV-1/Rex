@@ -2,7 +2,7 @@
   "name": "SilphCo8F",
   "width": 13,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\SilphCo8F.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 4,
       "y": 2,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco8f_silph_worker_m"
     },
@@ -33,7 +33,7 @@
       "x": 19,
       "y": 2,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_silphco8f_rocket1"
     },
@@ -41,7 +41,7 @@
       "x": 10,
       "y": 2,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_silphco8f_scientist"
     },
@@ -49,7 +49,7 @@
       "x": 12,
       "y": 15,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_silphco8f_rocket2"
     }

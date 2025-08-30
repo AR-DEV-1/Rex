@@ -24,7 +24,7 @@ namespace regina
 		rsl::vector<rsl::string> sub_dirs = rex::directory::list_dirs(path);
 		for (rsl::string_view dir : sub_dirs)
 		{
-			m_sub_items.emplace_back(rsl::make_unique<ContentBrowserHiearchyItem>(rex::path::join(path, dir)));
+			m_sub_items.emplace_back(rsl::make_unique<ContentBrowserHiearchyItem>(rex::path::join(m_fullpath, dir)));
 		}
 	}
 

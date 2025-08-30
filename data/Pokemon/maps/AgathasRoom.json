@@ -2,7 +2,7 @@
   "name": "AgathasRoom",
   "width": 5,
   "height": 6,
-  "tileset": "Pokemon\\tilesets\\CEMETERY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\CEMETERY.json",
   "map_blocks": "Pokemon\\map_blocks\\AgathasRoom.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 5,
       "y": 2,
       "sprite": "sprite_agatha",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_agathasroom_agatha"
     }

@@ -2,7 +2,7 @@
   "name": "SafariZoneCenter",
   "width": 15,
   "height": 13,
-  "tileset": "Pokemon\\tilesets\\FOREST.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FOREST.json",
   "map_blocks": "Pokemon\\map_blocks\\SafariZoneCenter.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 14,
       "y": 10,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizonecenter_nugget"
     }

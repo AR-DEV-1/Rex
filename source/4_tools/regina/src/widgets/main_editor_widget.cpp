@@ -5,21 +5,43 @@
 #include "rex_engine/event_system/event_system.h"
 #include "rex_engine/event_system/events/app/quit_app.h"
 
+#include "rex_engine/engine/asset_db.h"
 #include "rex_engine/gfx/imgui/imgui_utils.h"
 #include "rex_engine/gfx/imgui/imgui_scoped_widget.h"
 #include "rex_engine/filesystem/path.h"
 #include "rex_engine/filesystem/vfs.h"
 #include "rex_engine/filesystem/file.h"
 #include "rex_engine/filesystem/directory.h"
+#include "rex_engine/text_processing/json.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 
+DEFINE_LOG_CATEGORY(LogMainEditor);
+
 namespace regina
 {
+	// Example of how the main editor widget could look
+	// +--------------+-------------------------------------------------+-------------+
+	// |							| 																								| 					  |
+	// |							|  																								| 					  |
+	// |							|  																								| 					  |
+	// |	properties  |  							viewport													| 	details	  |
+	// |							|  																								| 					  |
+	// |							|  																								| 					  |
+	// |							|  																								| 					  |
+	// +----------+---+-------------------------------------------------+-------------+
+	// |  folder	|																																	  |
+	// | hiearchy |							         content browser															|
+	// |				  |																																	  |
+	// |				  |																																	  |
+	// +----------+-------------------------------------------------------------------+
+
+
 	MainEditorWidget::MainEditorWidget()
 		: m_show_imgui_demo(false)
 		, m_show_imgui_style_editor(false)
+		, m_active_map(nullptr)
 	{
 		//ImGuiIO& io = ImGui::GetIO();
 		//if (!rex::file::exists(rsl::string_view(io.IniFilename)))
@@ -28,30 +50,52 @@ namespace regina
 			ImGui::LoadIniSettingsFromDisk(main_layout_settings.data());
 		//}
 
-		m_widgets.emplace_back(rsl::make_unique<ContentBrowserWidget>());
+		add_default_widgets();
+	}
+
+	void MainEditorWidget::set_active_map(rex::Map* map)
+	{
+		if (m_active_map == map)
+		{
+			return;
+		}
+
+		m_active_map = map;
+		on_new_active_map();
 	}
 
 	bool MainEditorWidget::on_update()
 	{
-		render_menu_bar();
-		render_docking_backpanel();
-
-		if (m_show_imgui_demo)
-		{
-			ImGui::ShowDemoWindow();
-		}
-		if (m_show_imgui_style_editor)
-		{
-			rex::imgui::ScopedWidget widget("ImGui Style Editor");
-			ImGui::ShowStyleEditor();
-		}
+		update_widgets();
 	
-		render_viewports();
-
 		return false;
 	}
+	void MainEditorWidget::on_draw()
+	{
+		draw_menu_bar();
+		draw_docking_backpanel();
+		draw_widgets();
+		draw_imgui_widgets();
+	}
 
-	void MainEditorWidget::render_menu_bar()
+	void MainEditorWidget::add_default_widgets()
+	{
+		m_widgets.emplace_back(rsl::make_unique<ContentBrowserWidget>());
+
+		auto viewport = rsl::make_unique<Viewport>("test viewport", rsl::pointi32{ 640, 576 }, m_world_composer.tilemap(), nullptr);
+		m_viewport = viewport.get();
+		m_widgets.emplace_back(rsl::move(viewport));
+	}
+
+	void MainEditorWidget::update_widgets()
+	{
+		for (auto& widget : m_widgets)
+		{
+			widget->update();
+		}
+	}
+
+	void MainEditorWidget::draw_menu_bar()
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
@@ -75,7 +119,7 @@ namespace regina
 			ImGui::EndMainMenuBar();
 		}
 	}
-	void MainEditorWidget::render_docking_backpanel()
+	void MainEditorWidget::draw_docking_backpanel()
 	{
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 		// because it would be confusing to have two docking targets within each others.
@@ -120,20 +164,11 @@ namespace regina
 
 		ImGui::End();
 	}
-	void MainEditorWidget::render_viewports()
+	void MainEditorWidget::draw_widgets()
 	{
 		for (auto& widget : m_widgets)
 		{
-			widget->update();
-		}
-
-		ImGuiWindowFlags window_flags{};
-		window_flags |= ImGuiWindowFlags_NoTitleBar;
-
-		if (auto widget = rex::imgui::ScopedWidget("Viewport", nullptr, window_flags))
-		{
-			ImGui::GetCurrentWindow()->WindowClass.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_HiddenTabBar;
-			ImGui::Text("This is the viewport");
+			widget->draw();
 		}
 
 		if (auto widget = rex::imgui::ScopedWidget("Scene Hierachy"))
@@ -145,5 +180,36 @@ namespace regina
 		{
 			ImGui::Text("This is the properties panel");
 		}
+	}
+	void MainEditorWidget::draw_imgui_widgets()
+	{
+		if (m_show_imgui_demo)
+		{
+			ImGui::ShowDemoWindow();
+		}
+		if (m_show_imgui_style_editor)
+		{
+			rex::imgui::ScopedWidget widget("ImGui Style Editor");
+			ImGui::ShowStyleEditor();
+		}
+	}
+
+	void MainEditorWidget::on_new_active_map()
+	{
+		if (!m_world_composer.is_map_in_tilemap(m_active_map))
+		{
+			m_world_composer.build_world(m_active_map);
+		}
+
+		m_viewport->set_tilemap(m_world_composer.tilemap());
+		m_viewport->set_tileset(m_active_map->desc().map_header.blockset->tileset());
+
+		// 3. Move the camera to the active map
+		rsl::pointi32 pos_in_tilemap = m_world_composer.map_pos(m_active_map);
+		move_camera_to_pos(pos_in_tilemap);
+	}
+	void MainEditorWidget::move_camera_to_pos(rsl::pointi32 pos)
+	{
+		REX_INFO(LogMainEditor, "Moving camera position to ({}, {})", pos.x, pos.y);
 	}
 }

@@ -2,7 +2,7 @@
   "name": "SafariZoneNorthRestHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\SafariZoneNorthRestHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 6,
       "y": 3,
       "sprite": "sprite_scientist",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_safarizonenorthresthouse_scientist"
     },
@@ -30,7 +30,7 @@
       "x": 3,
       "y": 4,
       "sprite": "sprite_safari_zone_worker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizonenorthresthouse_safari_zone_worker"
     },
@@ -38,7 +38,7 @@
       "x": 1,
       "y": 5,
       "sprite": "sprite_gentleman",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_safarizonenorthresthouse_gentleman"
     }

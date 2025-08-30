@@ -85,6 +85,11 @@ namespace rex
     return internal::backend_allocator().allocate(size);
   }
 
+  GlobalAllocator::pointer GlobalAllocator::reallocate(pointer ptr, size_type size)
+  {
+    return internal::backend_allocator().reallocate(ptr, size);
+  }
+
   void GlobalAllocator::deallocate(pointer ptr, rsl::memory_size size) // NOLINT(readability-convert-member-functions-to-static)
   {
     internal::backend_allocator().deallocate(ptr, size.size_in_bytes());

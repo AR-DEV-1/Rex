@@ -98,14 +98,14 @@ namespace rex
   }
 
   // Add quotes around a string
-  rsl::string quoted(rsl::string_view input)
+  scratch_string quoted(rsl::string_view input)
   {
     if (input.starts_with('"') && input.ends_with('"'))
     {
-      return rsl::string(input);
+      return scratch_string(input);
     }
 
-    rsl::string res;
+    scratch_string res;
     res.reserve(input.size() + 2);
 
     res += "\"";

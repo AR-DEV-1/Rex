@@ -2,7 +2,7 @@
   "name": "Museum1F",
   "width": 10,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\MUSEUM.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\MUSEUM.json",
   "map_blocks": "Pokemon\\map_blocks\\Museum1F.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 12,
       "y": 4,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_museum1f_scientist1"
     },
@@ -36,7 +36,7 @@
       "x": 1,
       "y": 4,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_museum1f_gambler"
     },
@@ -44,7 +44,7 @@
       "x": 15,
       "y": 2,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_museum1f_scientist2"
     },
@@ -52,7 +52,7 @@
       "x": 17,
       "y": 4,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_museum1f_scientist3"
     },
@@ -60,7 +60,7 @@
       "x": 16,
       "y": 2,
       "sprite": "sprite_old_amber",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_museum1f_old_amber"
     }

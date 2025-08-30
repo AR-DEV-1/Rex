@@ -2,7 +2,7 @@
   "name": "SSAnneBow",
   "width": 10,
   "height": 7,
-  "tileset": "Pokemon\\tilesets\\SHIP.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\SHIP.json",
   "map_blocks": "Pokemon\\map_blocks\\SSAnneBow.blk",
   "border_block_idx": 35,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 5,
       "y": 2,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_ssannebow_super_nerd"
     },
@@ -36,7 +36,7 @@
       "x": 4,
       "y": 9,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssannebow_sailor1"
     },
@@ -44,7 +44,7 @@
       "x": 7,
       "y": 11,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ssannebow_cooltrainer_m"
     },
@@ -52,7 +52,7 @@
       "x": 4,
       "y": 4,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ssannebow_sailor2"
     },
@@ -60,7 +60,7 @@
       "x": 10,
       "y": 8,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_ssannebow_sailor3"
     }

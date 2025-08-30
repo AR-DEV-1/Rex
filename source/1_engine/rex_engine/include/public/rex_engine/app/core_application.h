@@ -59,6 +59,7 @@ namespace rex
     void mount_engine_paths();
     void load_settings();
     void init_thread_pool();
+    void init_asset_db();
 
     BootSettings parse_boot_settings(rsl::string_view bootSettingsPath);
 

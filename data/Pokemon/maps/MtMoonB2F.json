@@ -2,7 +2,7 @@
   "name": "MtMoonB2F",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\CAVERN.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\CAVERN.json",
   "map_blocks": "Pokemon\\map_blocks\\MtMoonB2F.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -40,7 +40,7 @@
       "x": 12,
       "y": 8,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_mtmoonb2f_super_nerd"
     },
@@ -48,7 +48,7 @@
       "x": 11,
       "y": 16,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_mtmoonb2f_rocket1"
     },
@@ -56,7 +56,7 @@
       "x": 15,
       "y": 22,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_mtmoonb2f_rocket2"
     },
@@ -64,7 +64,7 @@
       "x": 29,
       "y": 11,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_mtmoonb2f_rocket3"
     },
@@ -72,7 +72,7 @@
       "x": 29,
       "y": 17,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_mtmoonb2f_rocket4"
     },
@@ -80,7 +80,7 @@
       "x": 12,
       "y": 6,
       "sprite": "sprite_fossil",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_mtmoonb2f_dome_fossil"
     },
@@ -88,7 +88,7 @@
       "x": 13,
       "y": 6,
       "sprite": "sprite_fossil",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_mtmoonb2f_helix_fossil"
     },
@@ -96,7 +96,7 @@
       "x": 25,
       "y": 21,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_mtmoonb2f_hp_up"
     },
@@ -104,7 +104,7 @@
       "x": 29,
       "y": 5,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_mtmoonb2f_tm_mega_punch"
     }

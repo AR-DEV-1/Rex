@@ -71,7 +71,7 @@ namespace rex
       // Render the imgui viewport directly on the back buffer
       RenderTarget* render_target = m_swapchain->current_buffer();
 
-      renderParams->render_pass->bind_to(render_ctx.get());
+      renderParams->run_pass->bind_to(render_ctx.get());
 
       // Overwrite the render pass's default render target to the render target of this window's swapchain
       render_ctx->transition_buffer(render_target, ResourceState::RenderTarget);
@@ -82,7 +82,7 @@ namespace rex
         render_ctx->clear_render_target(render_target);
       }
 
-      m_viewport.render(render_ctx.get(), renderParams->render_pass);
+      m_viewport.render(render_ctx.get(), renderParams->run_pass);
       render_ctx->transition_buffer(render_target, ResourceState::Present);
     }
 

@@ -2,7 +2,7 @@
   "name": "POWER PLANT",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\PowerPlant.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -55,7 +55,7 @@
       "x": 9,
       "y": 20,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_voltorb1"
     },
@@ -63,7 +63,7 @@
       "x": 32,
       "y": 18,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_voltorb2"
     },
@@ -71,7 +71,7 @@
       "x": 21,
       "y": 25,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_voltorb3"
     },
@@ -79,7 +79,7 @@
       "x": 25,
       "y": 18,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_electrode1"
     },
@@ -87,7 +87,7 @@
       "x": 23,
       "y": 34,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_voltorb4"
     },
@@ -95,7 +95,7 @@
       "x": 26,
       "y": 28,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_voltorb5"
     },
@@ -103,7 +103,7 @@
       "x": 21,
       "y": 14,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_electrode2"
     },
@@ -111,7 +111,7 @@
       "x": 37,
       "y": 32,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_voltorb6"
     },
@@ -119,7 +119,7 @@
       "x": 4,
       "y": 9,
       "sprite": "sprite_bird",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_powerplant_zapdos"
     },
@@ -127,7 +127,7 @@
       "x": 7,
       "y": 25,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_carbos"
     },
@@ -135,7 +135,7 @@
       "x": 28,
       "y": 3,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_hp_up"
     },
@@ -143,7 +143,7 @@
       "x": 34,
       "y": 3,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_rare_candy"
     },
@@ -151,7 +151,7 @@
       "x": 26,
       "y": 32,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_tm_thunder"
     },
@@ -159,7 +159,7 @@
       "x": 20,
       "y": 32,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_powerplant_tm_reflect"
     }

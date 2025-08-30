@@ -1,4 +1,5 @@
 {
+    "type_name": "Blockset",
     "tileset":"Pokemon/tilesets/mansion.png",
     "blockset":"Pokemon/blocksets/mansion.bst"
 }

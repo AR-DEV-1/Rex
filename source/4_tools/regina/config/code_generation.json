@@ -4,9 +4,9 @@
       "Editor"
     ]
   },
-  "CommandLineArgs": {
+  "MountingPoints": {
     "Content": [
-      "\"project\", \"The project to load by the editor\""
+      "Editor"
     ]
   }
 }

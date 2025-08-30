@@ -2,7 +2,7 @@
   "name": "SafariZoneNorth",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\FOREST.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FOREST.json",
   "map_blocks": "Pokemon\\map_blocks\\SafariZoneNorth.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 25,
       "y": 1,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizonenorth_protein"
     },
@@ -27,7 +27,7 @@
       "x": 19,
       "y": 7,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_safarizonenorth_tm_skull_bash"
     }

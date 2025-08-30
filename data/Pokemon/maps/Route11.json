@@ -2,19 +2,19 @@
   "name": "ROUTE 11",
   "width": 30,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route11.blk",
   "border_block_idx": 15,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\vermilioncity.json",
-      "offset": -4
+      "offset": 2
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route12.json",
-      "offset": -27
+      "offset": -18
     }
   ],
   "objects": [
@@ -54,7 +54,7 @@
       "x": 10,
       "y": 14,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route11_gambler1"
     },
@@ -62,7 +62,7 @@
       "x": 26,
       "y": 9,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route11_gambler2"
     },
@@ -70,7 +70,7 @@
       "x": 13,
       "y": 5,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route11_youngster1"
     },
@@ -78,7 +78,7 @@
       "x": 36,
       "y": 11,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route11_super_nerd1"
     },
@@ -86,7 +86,7 @@
       "x": 22,
       "y": 4,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route11_youngster2"
     },
@@ -94,7 +94,7 @@
       "x": 45,
       "y": 7,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route11_gambler3"
     },
@@ -102,7 +102,7 @@
       "x": 33,
       "y": 3,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route11_gambler4"
     },
@@ -110,7 +110,7 @@
       "x": 43,
       "y": 5,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route11_youngster3"
     },
@@ -118,7 +118,7 @@
       "x": 45,
       "y": 16,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route11_super_nerd2"
     },
@@ -126,7 +126,7 @@
       "x": 22,
       "y": 12,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route11_youngster4"
     }

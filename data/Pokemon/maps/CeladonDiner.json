@@ -2,7 +2,7 @@
   "name": "CeladonDiner",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\LOBBY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\LOBBY.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonDiner.blk",
   "border_block_idx": 15,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 8,
       "y": 5,
       "sprite": "sprite_cook",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_celadondiner_cook"
     },
@@ -36,7 +36,7 @@
       "x": 7,
       "y": 2,
       "sprite": "sprite_middle_aged_woman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_celadondiner_middle_aged_woman"
     },
@@ -44,7 +44,7 @@
       "x": 1,
       "y": 4,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadondiner_middle_aged_man"
     },
@@ -52,7 +52,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_fisher",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_celadondiner_fisher"
     },
@@ -60,7 +60,7 @@
       "x": 0,
       "y": 1,
       "sprite": "sprite_gym_guide",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadondiner_gym_guide"
     }

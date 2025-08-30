@@ -57,7 +57,7 @@
 
 #include "rex_engine/gfx/materials/material_library.h"
 #include "rex_engine/gfx/rendering/render_pass.h"
-#include "rex_engine/gfx/system/gpu_cache.h"
+#include "rex_engine/gfx/system/resource_cache.h"
 
 
 
@@ -108,7 +108,7 @@ namespace rex
 
 		DirectXInterface::~DirectXInterface()
 		{
-			gpu_cache::shutdown();
+			resource_cache::shutdown();
 			shader_reflection::shutdown();
 			material_lib::shutdown();
 		}
@@ -300,7 +300,7 @@ namespace rex
 
 		rsl::unique_ptr<RenderTarget>         DirectXInterface::create_render_target(s32 width, s32 height, TextureFormat format)
 		{
-			wrl::ComPtr<ID3D12Resource> d3d_texture = allocate_texture2d(width, height, format);
+			wrl::ComPtr<ID3D12Resource> d3d_texture = allocate_render_target(width, height, format);
 			return create_render_target(d3d_texture);
 		}
 		rsl::unique_ptr<PipelineState>        DirectXInterface::create_pso(const PipelineStateDesc& desc)
@@ -308,8 +308,8 @@ namespace rex
 			REX_ASSERT_X(desc.shader_pipeline.vs, "No vertex shader specified for the pso");
 			REX_ASSERT_X(desc.shader_pipeline.ps, "No pixel shader specified for the pso");
 
-			InputLayout* input_layout = gpu_cache::instance()->load_input_layout(desc.input_layout);
-			RootSignature* root_signature = gpu_cache::instance()->load_root_signature(desc.shader_pipeline);
+			InputLayout* input_layout = resource_cache::instance()->load_input_layout(desc.input_layout);
+			RootSignature* root_signature = resource_cache::instance()->load_root_signature(desc.shader_pipeline);
 
 			// Make sure our critical required parameters are specified
 			REX_ASSERT_X(input_layout, "No input layout for the pso");
@@ -497,6 +497,15 @@ namespace rex
 
 			return uab;
 		}
+		
+		// View creation
+		// -------------------------------------------
+		rsl::unique_ptr<ResourceView> DirectXInterface::create_srv(RenderTarget* rt)
+		{
+			DxResourceView view = create_texture2d_srv(d3d::to_dx12(rt)->dx_object());
+			return rsl::make_unique<DxResourceView>(view);
+		}
+
 
 		// API Specific functions
 		// -------------------------------------------
@@ -535,7 +544,7 @@ namespace rex
 		{
 			D3D12_DESCRIPTOR_HEAP_DESC desc{};
 
-			s32 num_descriptors = 128;
+			s32 num_descriptors = 1024;
 
 			desc.Type = type;
 			desc.NumDescriptors = num_descriptors;
@@ -604,7 +613,7 @@ namespace rex
 
 			material_lib::init(globals::make_unique<MaterialLibrary>());
 			shader_reflection::init(globals::make_unique<DxShaderReflection>());
-			gpu_cache::init(globals::make_unique<GpuCache>());
+			resource_cache::init(globals::make_unique<ResourceCache>());
 		}
 
 		// Allocate a 1D buffer on the gpu, returning a DirectX resource
@@ -623,6 +632,12 @@ namespace rex
 			DXGI_FORMAT d3d_format = d3d::to_dx12(format);
 			return m_heap->create_texture2d(d3d_format, width, height);
 		}
+		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_render_target(s32 width, s32 height, TextureFormat format)
+		{
+			DXGI_FORMAT d3d_format = d3d::to_dx12(format);
+			return m_heap->create_texture2d(d3d_format, width, height, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+		}
+
 		wrl::ComPtr<ID3D12Resource> DirectXInterface::allocate_depth_stencil(s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc)
 		{
 			DXGI_FORMAT d3d_format = d3d::to_dx12(format);

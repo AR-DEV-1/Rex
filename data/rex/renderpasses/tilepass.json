@@ -1,0 +1,19 @@
+{
+  "name": "Tile Render Pass",
+  "pso": {
+    "vertex_shader": "shaders/tile_vertex.hlsl",
+    "pixel_shader": "shader/tile_pixel.hlsl",
+    "raster_state": {
+
+    },
+    "input_layout": [
+      {}
+    ]
+  },
+  "shader_params": [
+    {
+      "name": "default_sampler",
+      "value": ""
+    }
+  ]
+}

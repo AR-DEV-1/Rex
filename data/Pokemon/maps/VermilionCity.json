@@ -2,19 +2,19 @@
   "name": "VERMILION CITY",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\VermilionCity.blk",
   "border_block_idx": 67,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\route6.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route11.json",
-      "offset": 4
+      "offset": -2
     }
   ],
   "objects": [
@@ -42,7 +42,7 @@
       "x": 19,
       "y": 7,
       "sprite": "sprite_beauty",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_vermilioncity_beauty"
     },
@@ -50,7 +50,7 @@
       "x": 14,
       "y": 6,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_vermilioncity_gambler1"
     },
@@ -58,7 +58,7 @@
       "x": 19,
       "y": 30,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_vermilioncity_sailor1"
     },
@@ -66,7 +66,7 @@
       "x": 30,
       "y": 7,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_vermilioncity_gambler2"
     },
@@ -74,7 +74,7 @@
       "x": 29,
       "y": 9,
       "sprite": "sprite_monster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_vermilioncity_machop"
     },
@@ -82,7 +82,7 @@
       "x": 25,
       "y": 27,
       "sprite": "sprite_sailor",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_vermilioncity_sailor2"
     }

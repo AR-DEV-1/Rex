@@ -5,6 +5,7 @@
 #include "rex_std/string_view.h"
 
 #include "rex_engine/gfx/resources/texture_2d.h"
+#include "rex_engine/gfx/resources/render_target.h"
 #include "rex_engine/engine/types.h"
 
 // #TODO: Remaining cleanup of development/Pokemon -> main merge. ID: IMGUI UTILS
@@ -35,5 +36,6 @@ namespace rex
 		
 		// create an imgui image from a texture
 		void image(const rex::gfx::Texture2D* tex);
+		void image(const rex::gfx::RenderTarget* renderTarget);
 	}
 }

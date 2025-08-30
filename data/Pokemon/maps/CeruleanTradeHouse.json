@@ -2,7 +2,7 @@
   "name": "CeruleanTradeHouse",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\HOUSE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\HOUSE.json",
   "map_blocks": "Pokemon\\map_blocks\\CeruleanTradeHouse.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 5,
       "y": 4,
       "sprite": "sprite_granny",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_ceruleantradehouse_granny"
     },
@@ -27,7 +27,7 @@
       "x": 1,
       "y": 2,
       "sprite": "sprite_gambler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ceruleantradehouse_gambler"
     }

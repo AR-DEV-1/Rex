@@ -2,7 +2,7 @@
   "name": "GameCornerPrizeRoom",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\LOBBY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\LOBBY.json",
   "map_blocks": "Pokemon\\map_blocks\\GameCornerPrizeRoom.blk",
   "border_block_idx": 15,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 1,
       "y": 4,
       "sprite": "sprite_balding_guy",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_gamecornerprizeroom_balding_guy"
     },
@@ -27,7 +27,7 @@
       "x": 7,
       "y": 3,
       "sprite": "sprite_gambler",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_gamecornerprizeroom_gambler"
     }

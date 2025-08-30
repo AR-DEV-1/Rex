@@ -2,7 +2,7 @@
   "name": "SilphCo7F",
   "width": 13,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\FACILITY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\FACILITY.json",
   "map_blocks": "Pokemon\\map_blocks\\SilphCo7F.blk",
   "border_block_idx": 46,
   "connections": [],
@@ -49,7 +49,7 @@
       "x": 1,
       "y": 5,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco7f_silph_worker_m1"
     },
@@ -57,7 +57,7 @@
       "x": 13,
       "y": 13,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_silphco7f_silph_worker_m2"
     },
@@ -65,7 +65,7 @@
       "x": 7,
       "y": 10,
       "sprite": "sprite_silph_worker_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco7f_silph_worker_m3"
     },
@@ -73,7 +73,7 @@
       "x": 10,
       "y": 8,
       "sprite": "sprite_silph_worker_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco7f_silph_worker_m4"
     },
@@ -81,7 +81,7 @@
       "x": 13,
       "y": 1,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_silphco7f_rocket1"
     },
@@ -89,7 +89,7 @@
       "x": 2,
       "y": 13,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_silphco7f_scientist"
     },
@@ -97,7 +97,7 @@
       "x": 20,
       "y": 2,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_silphco7f_rocket2"
     },
@@ -105,7 +105,7 @@
       "x": 19,
       "y": 14,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_silphco7f_rocket3"
     },
@@ -113,7 +113,7 @@
       "x": 3,
       "y": 7,
       "sprite": "sprite_blue",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_silphco7f_rival"
     },
@@ -121,7 +121,7 @@
       "x": 1,
       "y": 9,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco7f_calcium"
     },
@@ -129,7 +129,7 @@
       "x": 24,
       "y": 11,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_silphco7f_tm_swords_dance"
     }

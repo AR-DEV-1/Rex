@@ -2,7 +2,7 @@
   "name": "CeladonGym",
   "width": 5,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\GYM.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\GYM.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonGym.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -37,7 +37,7 @@
       "x": 4,
       "y": 3,
       "sprite": "sprite_silph_worker_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadongym_erika"
     },
@@ -45,7 +45,7 @@
       "x": 2,
       "y": 11,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_celadongym_cooltrainer_f1"
     },
@@ -53,7 +53,7 @@
       "x": 7,
       "y": 10,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_celadongym_beauty1"
     },
@@ -61,7 +61,7 @@
       "x": 9,
       "y": 5,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadongym_cooltrainer_f2"
     },
@@ -69,7 +69,7 @@
       "x": 1,
       "y": 5,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadongym_beauty2"
     },
@@ -77,7 +77,7 @@
       "x": 6,
       "y": 3,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadongym_cooltrainer_f3"
     },
@@ -85,7 +85,7 @@
       "x": 3,
       "y": 3,
       "sprite": "sprite_beauty",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadongym_beauty3"
     },
@@ -93,7 +93,7 @@
       "x": 5,
       "y": 3,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadongym_cooltrainer_f4"
     }

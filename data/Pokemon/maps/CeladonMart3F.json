@@ -2,7 +2,7 @@
   "name": "CeladonMart3F",
   "width": 10,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\LOBBY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\LOBBY.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonMart3F.blk",
   "border_block_idx": 15,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 16,
       "y": 5,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_celadonmart3f_clerk"
     },
@@ -36,7 +36,7 @@
       "x": 11,
       "y": 6,
       "sprite": "sprite_gameboy_kid",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_celadonmart3f_gameboy_kid1"
     },
@@ -44,7 +44,7 @@
       "x": 7,
       "y": 2,
       "sprite": "sprite_gameboy_kid",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadonmart3f_gameboy_kid2"
     },
@@ -52,7 +52,7 @@
       "x": 8,
       "y": 2,
       "sprite": "sprite_gameboy_kid",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadonmart3f_gameboy_kid3"
     },
@@ -60,7 +60,7 @@
       "x": 2,
       "y": 5,
       "sprite": "sprite_little_boy",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_celadonmart3f_little_boy"
     }

@@ -2,29 +2,29 @@
   "name": "CERULEAN CITY",
   "width": 20,
   "height": 18,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\CeruleanCity.blk",
   "border_block_idx": 15,
   "connections": [
     {
       "direction": "North",
       "map": "Pokemon\\maps\\route24.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "South",
       "map": "Pokemon\\maps\\route5.json",
-      "offset": 5
+      "offset": 0
     },
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route4.json",
-      "offset": 4
+      "offset": -2
     },
     {
       "direction": "East",
       "map": "Pokemon\\maps\\route9.json",
-      "offset": 4
+      "offset": -2
     }
   ],
   "objects": [
@@ -67,7 +67,7 @@
       "x": 20,
       "y": 2,
       "sprite": "sprite_blue",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleancity_rival"
     },
@@ -75,7 +75,7 @@
       "x": 30,
       "y": 8,
       "sprite": "sprite_rocket",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_ceruleancity_rocket"
     },
@@ -83,7 +83,7 @@
       "x": 31,
       "y": 20,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleancity_cooltrainer_m"
     },
@@ -91,7 +91,7 @@
       "x": 15,
       "y": 18,
       "sprite": "sprite_super_nerd",
-      "action": "walk",
+      "movement": "walk",
       "direction": "up_down",
       "text": "text_ceruleancity_super_nerd1"
     },
@@ -99,7 +99,7 @@
       "x": 9,
       "y": 21,
       "sprite": "sprite_super_nerd",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_ceruleancity_super_nerd2"
     },
@@ -107,7 +107,7 @@
       "x": 28,
       "y": 12,
       "sprite": "sprite_guard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleancity_guard1"
     },
@@ -115,7 +115,7 @@
       "x": 29,
       "y": 26,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_ceruleancity_cooltrainer_f1"
     },
@@ -123,7 +123,7 @@
       "x": 28,
       "y": 26,
       "sprite": "sprite_monster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleancity_slowbro"
     },
@@ -131,7 +131,7 @@
       "x": 9,
       "y": 27,
       "sprite": "sprite_cooltrainer_f",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_ceruleancity_cooltrainer_f2"
     },
@@ -139,7 +139,7 @@
       "x": 4,
       "y": 12,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleancity_super_nerd3"
     },
@@ -147,7 +147,7 @@
       "x": 27,
       "y": 12,
       "sprite": "sprite_guard",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_ceruleancity_guard2"
     }

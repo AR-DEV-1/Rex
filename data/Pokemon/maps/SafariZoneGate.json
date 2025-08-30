@@ -2,7 +2,7 @@
   "name": "SafariZoneGate",
   "width": 4,
   "height": 3,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\SafariZoneGate.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 6,
       "y": 2,
       "sprite": "sprite_safari_zone_worker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_safarizonegate_safari_zone_worker1"
     },
@@ -27,7 +27,7 @@
       "x": 1,
       "y": 4,
       "sprite": "sprite_safari_zone_worker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_safarizonegate_safari_zone_worker2"
     }

@@ -69,6 +69,16 @@ namespace rex
 			// This is to prepare it for rendering, and reducing the number of PSO switches
 			void sort_draw_lists(rsl::vector<DrawList>& drawList);
 
+			// Setup the render pass
+			virtual void pre_pass() {};
+			// Go through the render pass
+			virtual void run_pass() {};
+			// Finish off the render pass
+			virtual void post_pass() {};
+
+		protected:
+			const RenderTarget* render_target(s32 idx) const;
+
 		private:
 			// Bind parameters of a store to the render pipeline
 			void bind_params_to_pipeline(ShaderParametersStore* paramStore, RenderContext* ctx);

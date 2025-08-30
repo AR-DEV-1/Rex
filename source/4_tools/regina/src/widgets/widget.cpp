@@ -7,6 +7,11 @@ namespace regina
 		return on_update();
 	}
 
+	void Widget::draw()
+	{
+		on_draw();
+	}
+
 	void Widget::close()
 	{
 		on_close();

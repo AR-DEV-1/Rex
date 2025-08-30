@@ -107,7 +107,7 @@ namespace rex
   // --------------------------------
   // CONVERTING
   // --------------------------------
-  scratch_string NativeFileSystem::abs_path(rsl::string_view path)
+  scratch_string NativeFileSystem::abs_path(rsl::string_view path) const
   {
     path = path::remove_quotes(path);
 
@@ -122,20 +122,34 @@ namespace rex
   // --------------------------------
   // QUERYING
   // --------------------------------
-  bool NativeFileSystem::exists(rsl::string_view path)
+  bool NativeFileSystem::is_directory(rsl::string_view path) const
   {
     path = path::remove_quotes(path);
-    path = path::unsafe_abs_path(path);
+    path = abs_path(path);
+
+    return directory::exists_abspath(path);
+  }
+  bool NativeFileSystem::is_file(rsl::string_view path) const
+  {
+    path = path::remove_quotes(path);
+    path = abs_path(path);
+
+    return file::exists_abspath(path);
+  }
+  bool NativeFileSystem::exists(rsl::string_view path) const
+  {
+    path = path::remove_quotes(path);
+    path = abs_path(path);
 
     return directory::exists_abspath(path) || file::exists_abspath(path);
   }
 
-  rsl::vector<rsl::string> NativeFileSystem::list_entries(rsl::string_view path)
+  rsl::vector<rsl::string> NativeFileSystem::list_entries(rsl::string_view path, Recursive recursive)
   {
     path = path::remove_quotes(path);
     path = path::unsafe_abs_path(path);
 
-    return directory::list_entries(path);
+    return directory::list_entries(path, recursive);
   }
   rsl::vector<rsl::string> NativeFileSystem::list_dirs(rsl::string_view path)
   {

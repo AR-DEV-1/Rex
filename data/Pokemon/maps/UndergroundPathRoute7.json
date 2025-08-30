@@ -2,7 +2,7 @@
   "name": "UndergroundPathRoute7",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\UndergroundPathRoute7.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -16,7 +16,7 @@
       "x": 2,
       "y": 4,
       "sprite": "sprite_middle_aged_man",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_undergroundpathroute7_middle_aged_man"
     }

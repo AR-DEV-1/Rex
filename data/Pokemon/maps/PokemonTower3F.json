@@ -2,7 +2,7 @@
   "name": "PokemonTower3F",
   "width": 10,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\CEMETERY.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\CEMETERY.json",
   "map_blocks": "Pokemon\\map_blocks\\PokemonTower3F.blk",
   "border_block_idx": 1,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 12,
       "y": 3,
       "sprite": "sprite_channeler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_pokemontower3f_channeler1"
     },
@@ -33,7 +33,7 @@
       "x": 9,
       "y": 8,
       "sprite": "sprite_channeler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_pokemontower3f_channeler2"
     },
@@ -41,7 +41,7 @@
       "x": 10,
       "y": 13,
       "sprite": "sprite_channeler",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_pokemontower3f_channeler3"
     },
@@ -49,7 +49,7 @@
       "x": 12,
       "y": 1,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_pokemontower3f_escape_rope"
     }

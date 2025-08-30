@@ -2,14 +2,14 @@
   "name": "ROUTE 25",
   "width": 30,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\OVERWORLD.json",
+    "type_name": "Map", "blockset": "Pokemon\\blocksets\\OVERWORLD.json",
   "map_blocks": "Pokemon\\map_blocks\\Route25.blk",
   "border_block_idx": 44,
   "connections": [
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route24.json",
-      "offset": 0
+      "offset": 18
     }
   ],
   "objects": [
@@ -49,7 +49,7 @@
       "x": 14,
       "y": 2,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route25_youngster1"
     },
@@ -57,7 +57,7 @@
       "x": 18,
       "y": 5,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route25_youngster2"
     },
@@ -65,7 +65,7 @@
       "x": 24,
       "y": 4,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route25_cooltrainer_m"
     },
@@ -73,7 +73,7 @@
       "x": 18,
       "y": 8,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route25_cooltrainer_f1"
     },
@@ -81,7 +81,7 @@
       "x": 32,
       "y": 3,
       "sprite": "sprite_youngster",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route25_youngster3"
     },
@@ -89,7 +89,7 @@
       "x": 37,
       "y": 4,
       "sprite": "sprite_cooltrainer_f",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_route25_cooltrainer_f2"
     },
@@ -97,7 +97,7 @@
       "x": 8,
       "y": 4,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route25_hiker1"
     },
@@ -105,7 +105,7 @@
       "x": 23,
       "y": 9,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "up",
       "text": "text_route25_hiker2"
     },
@@ -113,7 +113,7 @@
       "x": 13,
       "y": 7,
       "sprite": "sprite_hiker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_route25_hiker3"
     },
@@ -121,7 +121,7 @@
       "x": 22,
       "y": 2,
       "sprite": "sprite_poke_ball",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_route25_tm_seismic_toss"
     }

@@ -72,6 +72,8 @@ namespace rex
 			// Bind the framebuffer to the render context
 			void bind_to(RenderContext* ctx);
 
+			const RenderTarget* render_target(s32 idx) const;
+
 		private:
 			constexpr static s32 s_max_num_rendertargets = 8;
 			rsl::vector<ColorBufferAttachment> m_attachments;

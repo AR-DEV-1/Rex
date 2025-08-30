@@ -2,7 +2,7 @@
   "name": "VermilionGym",
   "width": 5,
   "height": 9,
-  "tileset": "Pokemon\\tilesets\\GYM.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\GYM.json",
   "map_blocks": "Pokemon\\map_blocks\\VermilionGym.blk",
   "border_block_idx": 3,
   "connections": [],
@@ -28,7 +28,7 @@
       "x": 5,
       "y": 1,
       "sprite": "sprite_rocker",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_vermiliongym_lt_surge"
     },
@@ -36,7 +36,7 @@
       "x": 9,
       "y": 6,
       "sprite": "sprite_gentleman",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_vermiliongym_gentleman"
     },
@@ -44,7 +44,7 @@
       "x": 3,
       "y": 8,
       "sprite": "sprite_super_nerd",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_vermiliongym_super_nerd"
     },
@@ -52,7 +52,7 @@
       "x": 0,
       "y": 10,
       "sprite": "sprite_sailor",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_vermiliongym_sailor"
     },
@@ -60,7 +60,7 @@
       "x": 4,
       "y": 14,
       "sprite": "sprite_gym_guide",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_vermiliongym_gym_guide"
     }

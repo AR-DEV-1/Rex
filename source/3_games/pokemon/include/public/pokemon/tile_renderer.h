@@ -54,7 +54,7 @@ namespace pokemon
     const BlockSet* blockset;
   };
 
-  class TileRenderer : public rex::gfx::Renderer
+  class TileRenderer : public rex::gfx::LegacyRenderer
   {
   public:
     TileRenderer(const TileRendererDesc& desc);

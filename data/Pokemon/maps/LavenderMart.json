@@ -2,7 +2,7 @@
   "name": "LavenderMart",
   "width": 4,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\MART.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\MART.json",
   "map_blocks": "Pokemon\\map_blocks\\LavenderMart.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -22,7 +22,7 @@
       "x": 0,
       "y": 5,
       "sprite": "sprite_clerk",
-      "action": "stay",
+      "movement": "stay",
       "direction": "right",
       "text": "text_lavendermart_clerk"
     },
@@ -30,7 +30,7 @@
       "x": 3,
       "y": 4,
       "sprite": "sprite_balding_guy",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_lavendermart_balding_guy"
     },
@@ -38,7 +38,7 @@
       "x": 7,
       "y": 2,
       "sprite": "sprite_cooltrainer_m",
-      "action": "stay",
+      "movement": "stay",
       "direction": "none",
       "text": "text_lavendermart_cooltrainer_m"
     }

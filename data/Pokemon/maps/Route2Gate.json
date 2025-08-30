@@ -2,7 +2,7 @@
   "name": "Route2Gate",
   "width": 5,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\GATE.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\GATE.json",
   "map_blocks": "Pokemon\\map_blocks\\Route2Gate.blk",
   "border_block_idx": 10,
   "connections": [],
@@ -19,7 +19,7 @@
       "x": 1,
       "y": 4,
       "sprite": "sprite_scientist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "left",
       "text": "text_route2gate_oaks_aide"
     },
@@ -27,7 +27,7 @@
       "x": 5,
       "y": 4,
       "sprite": "sprite_youngster",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_route2gate_youngster"
     }

@@ -107,6 +107,9 @@ namespace rex
       rsl::unique_ptr<Sampler2D>              create_sampler2d(const SamplerDesc& desc)                                                                       override;
       rsl::unique_ptr<UnorderedAccessBuffer>  create_unordered_access_buffer(rsl::memory_size size, const void* data = nullptr)                               override;
 
+      // View creation
+      rsl::unique_ptr<ResourceView> create_srv(RenderTarget* rt) override;
+
       // -------------------------
       // Resource creation from Direct X
       // -------------------------
@@ -119,6 +122,7 @@ namespace rex
 
       // Log live gpu objects using DirectX api
       void report_live_objects();
+
 
     protected:
       void api_init() override;
@@ -142,6 +146,8 @@ namespace rex
       wrl::ComPtr<ID3D12Resource> allocate_unordered_access_buffer(rsl::memory_size size);
       // Allocate a 2D buffer on the gpu, returning a DirectX resource
       wrl::ComPtr<ID3D12Resource> allocate_texture2d(s32 width, s32 height, TextureFormat format);
+      // Allocate a 2D buffer on the gpu, returning a DirectX resource
+      wrl::ComPtr<ID3D12Resource> allocate_render_target(s32 width, s32 height, TextureFormat format);
       // Allocate a 2D buffer on the gpu, used for depth stencil testing
       wrl::ComPtr<ID3D12Resource> allocate_depth_stencil(s32 width, s32 height, TextureFormat format, const ClearStateDesc& clearStateDesc);
 

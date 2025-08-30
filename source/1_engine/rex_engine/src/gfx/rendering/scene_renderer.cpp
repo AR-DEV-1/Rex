@@ -11,7 +11,7 @@
 #include "rex_engine/filesystem/vfs.h"
 
 #include "rex_engine/gfx/system/shader_library.h"
-#include "rex_engine/gfx/scenegraph/scene.h"
+#include "rex_engine/gfx/scenegraph/gfx_scene.h"
 
 #include "rex_engine/diagnostics/log.h"
 

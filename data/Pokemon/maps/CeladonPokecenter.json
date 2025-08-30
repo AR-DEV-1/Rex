@@ -2,7 +2,7 @@
   "name": "CeladonPokecenter",
   "width": 7,
   "height": 4,
-  "tileset": "Pokemon\\tilesets\\POKECENTER.json",
+    "type_name": "Map", "blockset": "Pokemon\\tilesets\\POKECENTER.json",
   "map_blocks": "Pokemon\\map_blocks\\CeladonPokecenter.blk",
   "border_block_idx": 0,
   "connections": [],
@@ -25,7 +25,7 @@
       "x": 3,
       "y": 1,
       "sprite": "sprite_nurse",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadonpokecenter_nurse"
     },
@@ -33,7 +33,7 @@
       "x": 7,
       "y": 3,
       "sprite": "sprite_gentleman",
-      "action": "walk",
+      "movement": "walk",
       "direction": "left_right",
       "text": "text_celadonpokecenter_gentleman"
     },
@@ -41,7 +41,7 @@
       "x": 10,
       "y": 5,
       "sprite": "sprite_beauty",
-      "action": "walk",
+      "movement": "walk",
       "direction": "any_dir",
       "text": "text_celadonpokecenter_beauty"
     },
@@ -49,7 +49,7 @@
       "x": 11,
       "y": 2,
       "sprite": "sprite_link_receptionist",
-      "action": "stay",
+      "movement": "stay",
       "direction": "down",
       "text": "text_celadonpokecenter_link_receptionist"
     }

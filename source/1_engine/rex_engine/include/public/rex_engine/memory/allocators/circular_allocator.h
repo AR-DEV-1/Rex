@@ -110,6 +110,12 @@ namespace rex
 			return static_cast<T*>(allocate(sizeof(T), alignof(T)));
 		}
 
+		REX_NO_DISCARD pointer reallocate(pointer ptr, size_type size)
+		{
+			deallocate(ptr);
+			return allocate(size);
+		}
+
 		void deallocate(pointer ptr, size_type size = 0)
 		{
 			// Nothing to implement
