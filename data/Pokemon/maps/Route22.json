@@ -14,7 +14,7 @@
     {
       "direction": "East",
       "map": "Pokemon\\maps\\viridiancity.json",
-      "offset": -4
+      "offset": 2
     }
   ],
   "objects": [

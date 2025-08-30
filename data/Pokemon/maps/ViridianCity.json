@@ -20,7 +20,7 @@
     {
       "direction": "West",
       "map": "Pokemon\\maps\\route22.json",
-      "offset": 4
+      "offset": -2
     }
   ],
   "objects": [
