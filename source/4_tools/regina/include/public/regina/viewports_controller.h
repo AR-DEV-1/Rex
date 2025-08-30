@@ -1,6 +1,6 @@
 #pragma once
 
-#include "regina/widgets/viewport_widget.h"
+#include "regina/widgets/viewport_widget_old.h"
 #include "rex_engine/gfx/rendering/render_passes/tile_pass.h"
 
 #include "rex_engine/assets/map.h"

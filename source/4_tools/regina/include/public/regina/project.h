@@ -15,9 +15,12 @@ namespace regina
 		rsl::string_view name() const;
 
 	private:
-		void parse_json(const rex::json::json& projectJson);
-
-	private:
 		rsl::string m_name;
 	};
+
+	namespace project_loader
+	{
+		rsl::unique_ptr<Project> create_new(rsl::string_view projectName);
+		rsl::unique_ptr<Project> load_from_disk(rsl::string_view projectName);
+	}
 }
