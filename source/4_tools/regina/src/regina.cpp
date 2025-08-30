@@ -4,7 +4,6 @@
 #include "regina/content_manager.h"
 #include "regina/scene_manager.h"
 #include "regina/scene_serializer.h"
-#include "regina/project_manager.h"
 #include "regina/widgets/create_project_widget.h"
 #include "regina/widgets/main_editor_widget.h"
 
@@ -32,8 +31,6 @@ namespace regina
 		init_content_scope();
 		init_settings();
 
-		init_scene_view();
-		//init_start_scene();
 		init_ui();
 	}
 	Regina::~Regina() = default;
@@ -45,6 +42,10 @@ namespace regina
 		if (m_active_widget->update())
 		{
 			m_active_widget->close();
+		}
+		else
+		{
+			m_active_widget->draw();
 		}
 	}
 
@@ -63,24 +64,7 @@ namespace regina
 		rex::scratch_string settings_path = rex::path::join(rex::vfs::instance()->mount_path(rex::MountingPoint::Editor), "settings");
 		rex::settings::instance()->load_directory(settings_path);
 	}
-	void Regina::init_start_scene()
-	{
-		m_scene_manager = rsl::make_unique<SceneManager>();
 
-		rex::scratch_string start_scene = rex::path::join(rex::engine::instance()->data_root(), rex::settings::instance()->get_string("StartScene"));
-		REX_INFO(LogRegina, "Loading {}", start_scene);
-
-		if (!rex::vfs::instance()->is_file(start_scene))
-		{
-			REX_ERROR(LogRegina, "Start scene {} does not exist", rex::quoted(start_scene));
-			return;
-		}
-
-		m_active_scene = rex::asset_db::instance()->load<Scene>(start_scene);
-	}
-	void Regina::init_scene_view()
-	{
-	}
 	void Regina::init_ui()
 	{
 		if (m_project)
@@ -98,6 +82,7 @@ namespace regina
 
 		rsl::unique_ptr<MainEditorWidget> main_editor_widget = rsl::make_unique<MainEditorWidget>();
 
+		REX_STATIC_TODO("This should be read from project/user settings");
 		rex::scratch_string start_scene = rex::path::join(rex::engine::instance()->data_root(), rex::settings::instance()->get_string("StartScene"));
 		REX_INFO(LogRegina, "Loading {}", start_scene);
 
@@ -117,7 +102,7 @@ namespace regina
 	void Regina::create_new_project(rsl::string_view projectName)
 	{
 		REX_INFO(LogRegina, "Creating new project with name \"{}\"", projectName);
-		m_project = project_manager::create_new(projectName);
+		m_project = project_loader::create_new(projectName);
 	}
 	void Regina::spawn_create_project_widget()
 	{

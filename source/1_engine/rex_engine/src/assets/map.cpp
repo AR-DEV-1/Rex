@@ -18,9 +18,9 @@ namespace rex
 	{
 		return m_desc;
 	}
-	const u8* Map::tiles() const
+	const u8* Map::tiles(s32 offset) const
 	{
-		return m_tiles.get();
+		return m_tiles.get() + offset;
 	}
 
 	void Map::load_tiles()

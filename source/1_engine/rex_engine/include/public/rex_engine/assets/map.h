@@ -192,7 +192,7 @@ namespace rex
 		Map(MapDesc&& desc, LoadFlags loadFlags);
 
 		const MapDesc& desc() const;
-		const u8* tiles() const;
+		const u8* tiles(s32 offset = 0) const;
 
 	private:
 		void load_tiles();

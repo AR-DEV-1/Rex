@@ -1,7 +1,6 @@
 #include "regina/widgets/main_editor_widget.h"
 
 #include "regina/widgets/content_browser_widget.h"
-#include "regina/widgets/viewport_widget.h"
 
 #include "rex_engine/event_system/event_system.h"
 #include "rex_engine/event_system/events/app/quit_app.h"
@@ -22,26 +21,26 @@ DEFINE_LOG_CATEGORY(LogMainEditor);
 
 namespace regina
 {
+	// Example of how the main editor widget could look
 	// +--------------+-------------------------------------------------+-------------+
 	// |							| 																								| 					  |
 	// |							|  																								| 					  |
 	// |							|  																								| 					  |
+	// |	properties  |  							viewport													| 	details	  |
 	// |							|  																								| 					  |
 	// |							|  																								| 					  |
 	// |							|  																								| 					  |
-	// |							|  																								| 					  |
-	// +--------+-----+-------------------------------------------------+-------------+
-	// |				| 																																	  |
-	// |				| 																																	  |
-	// |				| 																																	  |
-	// |				| 																																	  |
-	// +--------+---------------------------------------------------------------------+
+	// +----------+---+-------------------------------------------------+-------------+
+	// |  folder	|																																	  |
+	// | hiearchy |							         content browser															|
+	// |				  |																																	  |
+	// |				  |																																	  |
+	// +----------+-------------------------------------------------------------------+
 
 
 	MainEditorWidget::MainEditorWidget()
 		: m_show_imgui_demo(false)
 		, m_show_imgui_style_editor(false)
-		, m_viewports_controller(nullptr)
 		, m_active_map(nullptr)
 	{
 		//ImGuiIO& io = ImGui::GetIO();
@@ -51,10 +50,7 @@ namespace regina
 			ImGui::LoadIniSettingsFromDisk(main_layout_settings.data());
 		//}
 
-		m_widgets.emplace_back(rsl::make_unique<ContentBrowserWidget>());
-
-		// Always start with 1 viewport active by default
-		add_new_viewport();
+		add_default_widgets();
 	}
 
 	void MainEditorWidget::set_active_map(rex::Map* map)
@@ -70,23 +66,36 @@ namespace regina
 
 	bool MainEditorWidget::on_update()
 	{
-		render_menu_bar();
-		render_docking_backpanel();
-		m_viewports_controller.update();
+		update_widgets();
 	
-		render_widgets();
-
-		if (m_viewport)
-		{ 
-			m_viewport->update();
-		}
-
-		render_imgui_widgets();
-
 		return false;
 	}
+	void MainEditorWidget::on_draw()
+	{
+		draw_menu_bar();
+		draw_docking_backpanel();
+		draw_widgets();
+		draw_imgui_widgets();
+	}
 
-	void MainEditorWidget::render_menu_bar()
+	void MainEditorWidget::add_default_widgets()
+	{
+		m_widgets.emplace_back(rsl::make_unique<ContentBrowserWidget>());
+
+		auto viewport = rsl::make_unique<Viewport>("test viewport", rsl::pointi32{ 640, 576 }, m_world_composer.tilemap(), nullptr);
+		m_viewport = viewport.get();
+		m_widgets.emplace_back(rsl::move(viewport));
+	}
+
+	void MainEditorWidget::update_widgets()
+	{
+		for (auto& widget : m_widgets)
+		{
+			widget->update();
+		}
+	}
+
+	void MainEditorWidget::draw_menu_bar()
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
@@ -110,7 +119,7 @@ namespace regina
 			ImGui::EndMainMenuBar();
 		}
 	}
-	void MainEditorWidget::render_docking_backpanel()
+	void MainEditorWidget::draw_docking_backpanel()
 	{
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 		// because it would be confusing to have two docking targets within each others.
@@ -155,11 +164,11 @@ namespace regina
 
 		ImGui::End();
 	}
-	void MainEditorWidget::render_widgets()
+	void MainEditorWidget::draw_widgets()
 	{
 		for (auto& widget : m_widgets)
 		{
-			widget->update();
+			widget->draw();
 		}
 
 		if (auto widget = rex::imgui::ScopedWidget("Scene Hierachy"))
@@ -172,31 +181,7 @@ namespace regina
 			ImGui::Text("This is the properties panel");
 		}
 	}
-
-	void MainEditorWidget::on_new_active_map()
-	{
-		if (!is_map_in_tilemap(m_active_map))
-		{
-			// 1. Load the active map and all connections recursively for all maps within the current area (eg. load all maps in kanto)
-			load_maps();
-
-			// 2. Calculate the AABB for each map, converted to absolute coordinates and cache these
-			m_map_to_metadata = build_tilemap();
-		}
-
-		m_viewport = rsl::make_unique<Viewport>("test viewport", rsl::pointi32{320, 288}, m_tilemap.get(), nullptr);
-		m_viewport->set_tileset(m_active_map->desc().map_header.blockset->tileset());
-
-		// 3. Move the camera to the active map
-		rsl::pointi32 pos_in_tilemap = map_pos(m_active_map);
-		move_camera_to_pos(pos_in_tilemap);
-	}
-	void MainEditorWidget::add_new_viewport()
-	{
-		//ViewportWidget* new_viewport = m_widgets.emplace_back(rsl::make_unique<ViewportWidget>(m_scene_manager->current_scene())).get();
-		//m_viewports_controller.add_new_viewport(new_viewport);
-	}
-	void MainEditorWidget::render_imgui_widgets()
+	void MainEditorWidget::draw_imgui_widgets()
 	{
 		if (m_show_imgui_demo)
 		{
@@ -209,242 +194,20 @@ namespace regina
 		}
 	}
 
-	bool MainEditorWidget::is_map_in_tilemap(const rex::Map* map)
+	void MainEditorWidget::on_new_active_map()
 	{
-		if (!map)
+		if (!m_world_composer.is_map_in_tilemap(m_active_map))
 		{
-			return false;
+			m_world_composer.build_world(m_active_map);
 		}
 
-		return m_map_to_metadata.contains(map);
+		m_viewport->set_tilemap(m_world_composer.tilemap());
+		m_viewport->set_tileset(m_active_map->desc().map_header.blockset->tileset());
+
+		// 3. Move the camera to the active map
+		rsl::pointi32 pos_in_tilemap = m_world_composer.map_pos(m_active_map);
+		move_camera_to_pos(pos_in_tilemap);
 	}
-
-	void MainEditorWidget::load_maps()
-	{
-		// load the active map and all its connections, recursively until there are none left
-		// It's not required to do this here, we can load it in the tilemap building as well
-
-		rsl::vector<rex::Map*> open_nodes = { m_active_map };
-		rsl::vector<const rex::Map*> closed_nodes;
-
-		while (!open_nodes.empty())
-		{
-			rex::Map* current_node = open_nodes.back();
-			open_nodes.pop_back();
-			if (rsl::find(closed_nodes.cbegin(), closed_nodes.cend(), current_node) != closed_nodes.cend())
-			{
-				continue;
-			}
-
-			closed_nodes.push_back(current_node);
-			rex::asset_db::instance()->hydrate_asset(current_node);
-
-			for (const rex::MapConnection& conn : current_node->desc().connections)
-			{
-				open_nodes.push_back(conn.map);
-			}
-		}
-	}
-
-	rsl::unordered_map<const rex::Map*, MapMetaData> MainEditorWidget::build_tilemap()
-	{
-		// Loop over all the maps we have, starting from the first and save their relative position
-		// Afterwards, creating a AABB over that encapsulates all the AABBs of every map and change the origin to point to the top left of the encapsulating AABB
-		//
-		//                                              --- EXAMPLE ---
-		// In the example below, we start from map A and recursively loop over all connections until we've explored all maps
-		// this means that all map AABB would be relative from map A
-		// we need to calculate the AABB that encapsulates all maps and then recalculate the AABB of each map relative to the origin of the encapsulating AABB
-		//
-		// +-----------------------------------------------------------------------------------------------------------------------+
-		// |																																																											 |
-		// |																																					+--------------------------+								 |
-		// |		+--------------------------+																					|													 |								 |
-		// |		|                          |																					|													 |								 |
-		// |		|                          |																					|													 |								 |
-		// |		|             A            |  ----------------------------------------|					  	C						 |								 |
-		// |		|                          |																					|													 |								 |
-		// |		|                          |																					|													 |								 |
-		// |		|                          |																					|													 |								 |
-		// |		+--------------------------+																					+--------------------------+								 |
-		// |									|                                                                     |															 |
-		// |									|																																			|															 |
-		// |									|																																			|															 |
-		// |									|																																			|															 |
-		// |									|																																			|															 |
-		// |									|																																			|															 |
-		// |									|																																			|															 |
-		// |									|																																			|															 |
-		// |									|																																			|															 |
-		// |									|																																			|															 |
-		// |								  |																																			|									  					 |
-		// |		+--------------------------+																					+--------------------------+								 |
-		// |		|                          | 																					|                          |								 |
-		// |		|                          | 																					|                          |								 |
-		// |		|                          | 																					|                          |								 |
-		// |		|             B            | ---------------------------------------- |             D            |	  						 |
-		// |		|                          | 																					|                          |								 |
-		// |		|                          | 																					|                          |								 |
-		// |		|                          | 																					|                          |								 |
-		// |		+--------------------------+																					+--------------------------+								 |
-		// |																																																											 |
-		// |																																																											 |
-		// +-----------------------------------------------------------------------------------------------------------------------+
-		// 
-		// 
-		// 
-		// 
-		//
-
-		struct MapWithPos
-		{
-			const rex::Map* map;
-			rsl::pointi32 pos;
-		};
-		std::vector<MapWithPos> open_nodes;
-		std::vector<MapWithPos> closed_nodes;
-
-		open_nodes.push_back({ m_active_map, rsl::pointi32{} });
-		rsl::unordered_map<const rex::Map*, MapMetaData> map_to_metadata;
-
-		while (!open_nodes.empty())
-		{
-			MapWithPos current_node = open_nodes.back();
-			open_nodes.pop_back();
-
-			// skip any maps that are already processed
-			auto closed_node_it = std::find_if(closed_nodes.cbegin(), closed_nodes.cend(), [&](const MapWithPos& mapWithPos)
-				{
-					return mapWithPos.map == current_node.map;
-				});
-			if (closed_node_it != closed_nodes.cend())
-			{
-				continue;
-			}
-
-			// 1. calculate bounding box of current map
-			MinMax map_rect = calc_map_rect(current_node.map->desc().map_header, current_node.pos);
-			MapMetaData map_meta_data{};
-			map_meta_data.aabb = map_rect;
-			map_to_metadata.emplace(current_node.map, map_meta_data);
-
-			// 2. add the map itself to the closed nodes
-			closed_nodes.push_back(current_node);
-
-			// 3. add the map's connections to the open nodes
-			for (const rex::MapConnection& conn : current_node.map->desc().connections)
-			{
-				// skip any maps that are already processed
-				auto closed_node_it = std::find_if(closed_nodes.cbegin(), closed_nodes.cend(), [&](const MapWithPos& mapWithPos)
-					{
-						return mapWithPos.map == conn.map;
-					});
-				if (closed_node_it != closed_nodes.cend())
-				{
-					continue;
-				}
-
-				const s32 tiles_per_block = 4;
-				s32 half_width_in_tiles = (current_node.map->desc().map_header.width_in_blocks * tiles_per_block / 2);
-				s32 half_height_in_tiles = (current_node.map->desc().map_header.height_in_blocks * tiles_per_block / 2);
-				s32 half_conn_width_in_tiles = (conn.map->desc().map_header.width_in_blocks * tiles_per_block / 2);
-				s32 half_conn_height_in_tiles = (conn.map->desc().map_header.height_in_blocks * tiles_per_block / 2);
-				rsl::pointi32 conn_pos;
-
-				// calculate the middle position of the connecting map
-				if (conn.direction == rex::Direction::North)
-				{
-					conn_pos = { current_node.pos.x + conn.offset, current_node.pos.y + half_height_in_tiles + half_conn_height_in_tiles };
-				}
-				else if (conn.direction == rex::Direction::South)
-				{
-					conn_pos = { current_node.pos.x + conn.offset, current_node.pos.y - half_height_in_tiles - half_conn_height_in_tiles };
-				}
-				else if (conn.direction == rex::Direction::East)
-				{
-					conn_pos = { current_node.pos.x + half_width_in_tiles + half_conn_width_in_tiles, current_node.pos.y - conn.offset }; // offsets are stored in tiles
-				}
-				else if (conn.direction == rex::Direction::West)
-				{
-					conn_pos = { current_node.pos.x - half_width_in_tiles - half_conn_width_in_tiles, current_node.pos.y - conn.offset }; // offsets are stored in tiles
-				}
-
-				open_nodes.push_back({ conn.map, conn_pos });
-			}
-		}
-
-		// The min max results are stored relative from the active map
-		// We need to convert them to absolute positions
-		// We do this by getting the lowest possible point in the relative position
-		// and converting that point to be our origin
-		MinMax big_aabb;
-		for (const auto& [name, metadata] : map_to_metadata)
-		{
-			big_aabb.min.x = rsl::min(big_aabb.min.x, metadata.aabb.min.x);
-			big_aabb.min.y = rsl::min(big_aabb.min.y, metadata.aabb.min.y);
-			big_aabb.max.x = rsl::max(big_aabb.max.x, metadata.aabb.max.x);
-			big_aabb.max.y = rsl::max(big_aabb.max.y, metadata.aabb.max.y);
-		}
-		s32 width = big_aabb.max.x - big_aabb.min.x;
-		s32 height = big_aabb.max.y - big_aabb.min.y;
-
-		// Now go over all the minmax results and convert their coordinates
-		for (auto& [name, metadata] : map_to_metadata)
-		{
-			metadata.aabb.min.x -= big_aabb.min.x;
-			metadata.aabb.min.y -= big_aabb.min.y;
-			metadata.aabb.min.y = height - metadata.aabb.min.y;
-			metadata.aabb.max.x -= big_aabb.min.x;
-			metadata.aabb.max.y -= big_aabb.min.y;
-			metadata.aabb.max.y = height - metadata.aabb.max.y;
-
-			s32 min_y = rsl::min(metadata.aabb.min.y, metadata.aabb.max.y);
-			s32 max_y = rsl::max(metadata.aabb.min.y, metadata.aabb.max.y);
-
-			metadata.aabb.min.y = min_y;
-			metadata.aabb.max.y = max_y;
-		}
-
-		// Create the tilemap and fill in the tile values of each map
-		m_tilemap = rsl::make_unique<rex::Tilemap>(width, height);
-
-		for (const auto& [map, metadata] : map_to_metadata)
-		{
-			s32 map_width = metadata.aabb.max.x - metadata.aabb.min.x;
-			s32 map_height = metadata.aabb.max.y - metadata.aabb.min.y;
-
-			rsl::pointi32 pos = metadata.aabb.min;
-			for (s32 row_idx = 0; row_idx < map_height; ++row_idx)
-			{
-				const u8* row_tiles = &map->tiles()[row_idx * map_width];
-				m_tilemap->set(row_tiles, map_width, (pos.y * width) + pos.x + (row_idx * width));
-			}
-		}
-
-		return map_to_metadata;
-	}
-
-	rsl::pointi32 MainEditorWidget::map_pos(const rex::Map* map)
-	{
-		return m_map_to_metadata.at(m_active_map).aabb.min;
-	}
-
-	MinMax MainEditorWidget::calc_map_rect(const rex::MapHeader& map, rsl::pointi32 startPos)
-	{
-		const s32 tiles_per_block = 4;
-
-		s32 half_width_in_tiles = (map.width_in_blocks * tiles_per_block / 2);
-		s32 half_height_in_tiles = (map.height_in_blocks * tiles_per_block / 2);
-
-		MinMax res{};
-		res.min.x = -half_width_in_tiles + startPos.x;
-		res.min.y = -half_height_in_tiles + startPos.y;
-		res.max.x = half_width_in_tiles + startPos.x;
-		res.max.y = half_height_in_tiles + startPos.y;
-
-		return res;
-	}
-
 	void MainEditorWidget::move_camera_to_pos(rsl::pointi32 pos)
 	{
 		REX_INFO(LogMainEditor, "Moving camera position to ({}, {})", pos.x, pos.y);

@@ -33,8 +33,6 @@ namespace regina
     void init_serializers();
     void init_content_scope();
     void init_settings();
-    void init_start_scene();
-    void init_scene_view();
     void init_ui();
     void spawn_main_widget();
 

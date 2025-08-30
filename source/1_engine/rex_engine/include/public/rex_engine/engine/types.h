@@ -45,3 +45,23 @@ using a_bool = rsl::atomic<bool>;
 using a_s32  = rsl::atomic<s32>;
   #define rex_atomic_load(a) a.load() // NOLINT(readability-identifier-naming)
 #endif
+
+#include "rex_std/bonus/math.h"
+
+namespace rex
+{
+  struct MinMax
+  {
+    rsl::pointi32 min;
+    rsl::pointi32 max;
+
+    s32 width() const
+    {
+      return max.x - min.x;
+    }
+    s32 height() const
+    {
+      return max.y - min.y;
+    }
+  };
+}

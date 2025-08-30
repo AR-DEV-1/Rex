@@ -37,3 +37,7 @@
 //-------------------------------------------------------------------------
 // Execute a bit of code only once
 #define REX_EXECUTE_ONCE(expression) static auto RSL_MERGE(execute_once_var_,__LINE__) = [&]() {expression; return 1;}();
+
+//-------------------------------------------------------------------------
+// TODO
+#define REX_STATIC_TODO RSL_STATIC_TODO

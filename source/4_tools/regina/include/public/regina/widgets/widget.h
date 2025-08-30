@@ -17,6 +17,7 @@ namespace regina
 
 		// Returns true if widget should close
 		bool update();
+		void draw();
 		void close();
 
 		void set_callback(WidgetEvent evt, rsl::function<void()>&& callback);
@@ -24,6 +25,7 @@ namespace regina
 	protected:
 		// Returns true if widget should close
 		virtual bool on_update() { return false; }
+		virtual void on_draw() {}
 		virtual void on_close() {}
 
 	private:

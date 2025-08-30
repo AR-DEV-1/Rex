@@ -66,15 +66,9 @@ namespace rex
 		public:
 			Renderer();
 
-			void render_tilemap(const TilemapRenderRequest& tilemapRenderRequest);
+		private:
 
 		private:
-			void init_ib();
-
-		private:
-			rsl::vector<TilemapRenderData> m_tilemap_render_data;
-
-			rsl::unique_ptr<gfx::IndexBuffer> m_index_buffer;
 
 		//	template <typename T, typename ... Args>
 		//	T* add_render_pass(Args&& ... args)
