@@ -41,7 +41,6 @@ namespace regina
 	MainEditorWidget::MainEditorWidget()
 		: m_show_imgui_demo(false)
 		, m_show_imgui_style_editor(false)
-		, m_viewports_controller(nullptr)
 		, m_active_map(nullptr)
 	{
 		//ImGuiIO& io = ImGui::GetIO();
@@ -51,12 +50,7 @@ namespace regina
 			ImGui::LoadIniSettingsFromDisk(main_layout_settings.data());
 		//}
 
-		// Add default widgets
-		m_widgets.emplace_back(rsl::make_unique<ContentBrowserWidget>());
-		
-		auto viewport = rsl::make_unique<Viewport>("test viewport", rsl::pointi32{ 640, 576 }, m_world_composer.tilemap(), nullptr);
-		m_viewport = viewport.get();
-		m_widgets.emplace_back(rsl::move(viewport));
+		add_default_widgets();
 	}
 
 	void MainEditorWidget::set_active_map(rex::Map* map)
@@ -76,13 +70,21 @@ namespace regina
 	
 		return false;
 	}
-
 	void MainEditorWidget::on_draw()
 	{
 		draw_menu_bar();
 		draw_docking_backpanel();
 		draw_widgets();
 		draw_imgui_widgets();
+	}
+
+	void MainEditorWidget::add_default_widgets()
+	{
+		m_widgets.emplace_back(rsl::make_unique<ContentBrowserWidget>());
+
+		auto viewport = rsl::make_unique<Viewport>("test viewport", rsl::pointi32{ 640, 576 }, m_world_composer.tilemap(), nullptr);
+		m_viewport = viewport.get();
+		m_widgets.emplace_back(rsl::move(viewport));
 	}
 
 	void MainEditorWidget::update_widgets()
@@ -179,6 +181,18 @@ namespace regina
 			ImGui::Text("This is the properties panel");
 		}
 	}
+	void MainEditorWidget::draw_imgui_widgets()
+	{
+		if (m_show_imgui_demo)
+		{
+			ImGui::ShowDemoWindow();
+		}
+		if (m_show_imgui_style_editor)
+		{
+			rex::imgui::ScopedWidget widget("ImGui Style Editor");
+			ImGui::ShowStyleEditor();
+		}
+	}
 
 	void MainEditorWidget::on_new_active_map()
 	{
@@ -194,19 +208,6 @@ namespace regina
 		rsl::pointi32 pos_in_tilemap = m_world_composer.map_pos(m_active_map);
 		move_camera_to_pos(pos_in_tilemap);
 	}
-	void MainEditorWidget::draw_imgui_widgets()
-	{
-		if (m_show_imgui_demo)
-		{
-			ImGui::ShowDemoWindow();
-		}
-		if (m_show_imgui_style_editor)
-		{
-			rex::imgui::ScopedWidget widget("ImGui Style Editor");
-			ImGui::ShowStyleEditor();
-		}
-	}
-
 	void MainEditorWidget::move_camera_to_pos(rsl::pointi32 pos)
 	{
 		REX_INFO(LogMainEditor, "Moving camera position to ({}, {})", pos.x, pos.y);
