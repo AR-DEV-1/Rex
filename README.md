@@ -28,6 +28,11 @@ A project's sharpmake file is always found at the root of the source files. (eg.
 
 ## Development 
 
+We are always looking to work with people who will help use improve Rex! If you are having an issue, have a proposal or want to contribute, we would appreciate it. 
+
+
+### The main developers of Rex are:
+
 Dave De Breuck a.k.a. REX1
 
 3D Developer @ Twikit
@@ -44,4 +49,8 @@ nick.debreuck@outlook.com
 ## Standard Library
 
 Rex has developed its own standard library. This is to step away from the C++ standard library due to its performance implications and backwards compatibility problems. The standard library of Rex is standalone and be used within any project, therefore it's a standalone github repository which can be found [here](https://github.com/RisingLiberty/RexStl)
+
+### Security
+
+If you find a security vulnerability in Rex, see the [SECURITY.md](https://github.com/AR-DEV-1/Rex/blob/main/SECURITY.md)
 
