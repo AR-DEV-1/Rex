@@ -2,13 +2,13 @@
 
 Image here ...
 
-Rex is Game Engine is an 3D game engine written in C++. It's still in its early stages of development so almost everything is up for change in the future. The goal of rex is to implement a AAA game engine with a focus on safety, scale and performance. The goal is to develop games efficiently and safely, with clear visibility on dependencies and having testing (unit testing, automation and fuzzy testing) available to test any changes to a project.
+Welcome to Rex! A 3D game engine written in C++. It's still in its early stages of development so almost everything is up for change in the future. The goal of Rex is to implement a AAA game engine with a focus on safety, scale and performance. The goal is to develop games efficiently and safely, with clear visibility on dependencies and having testing (unit testing, automation and fuzzy testing) available to test any changes to a project.
 
 
 
 ## Getting Started
 
-there's no prerequisites for Rex other than having python installed.
+There's no prerequisites for Rex other than having Python installed.
 
 <ins>Downloading the repository:</ins>
 
